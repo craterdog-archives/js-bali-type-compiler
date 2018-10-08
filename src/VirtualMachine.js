@@ -201,6 +201,37 @@ function exportTask(taskContext) {
 }
 
 
+function extractProcedure(processor, targetComponent, typeReference, parameterValues, index) {
+    var type = processor.cloud.retrieveType(typeReference);
+    var key = type.getValue('$names').getString[index];
+    var procedures = type.getValue('$procedures');
+    var association = procedures.getValue(key);
+    var procedureName = association.key;
+    var procedure = association.value;
+    var iterator = type.getValue('$literals').iterator();
+    var literals = [];
+    while (iterator.hasNext()) {
+        literals.push(iterator.getNext().toString());
+    }
+    var literalValues = component.List.fromCollection(literals);
+    var variableValues = component.List.fromScratch();
+    var bytes = procedure.getValue('$bytecode').value;
+    var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
+    var procedureContext = {
+        targetComponent: targetComponent,
+        typeReference: typeReference,
+        procedureName: procedureName,
+        parameterValues: parameterValues,
+        literalValues: literalValues,
+        variableValues: variableValues,
+        bytecodeInstructions: bytecodeInstructions,
+        currentInstruction: 0,
+        nextAddress: 1
+    };
+    return procedureContext;
+}
+
+
 /*
  * This function imports a virtual machine procedure context from a Bali component.
  */
@@ -452,10 +483,8 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        // create an empty parameters list for the intrinsic function call
-        var parameters = component.Parameters.fromCollection([]);
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.intrinsicFunctions[index].apply(processor, parameters);
+        var result = intrinsics.invokeByIndex(processor, index, []);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.componentStack.pushItem(result);
     },
@@ -467,7 +496,7 @@ var instructionHandlers = [
         // pop the parameters to the intrinsic function call off of the component stack
         var parameter = processor.taskContext.componentStack.popItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.intrinsicFunctions[index].apply(processor, [parameter]);
+        var result = intrinsics.invokeByIndex(processor, index, [parameter]);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.componentStack.pushItem(result);
     },
@@ -480,7 +509,7 @@ var instructionHandlers = [
         var parameter1 = processor.taskContext.componentStack.popItem();
         var parameter2 = processor.taskContext.componentStack.popItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.intrinsicFunctions[index].apply(processor, [parameter1, parameter2]);
+        var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2]);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.componentStack.pushItem(result);
     },
@@ -494,7 +523,7 @@ var instructionHandlers = [
         var parameter2 = processor.taskContext.componentStack.popItem();
         var parameter3 = processor.taskContext.componentStack.popItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.intrinsicFunctions[index].apply(processor, [parameter1, parameter2, parameter3]);
+        var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2, parameter3]);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.componentStack.pushItem(result);
     },
@@ -505,28 +534,8 @@ var instructionHandlers = [
         var index = operand - 1;  // JS zero based indexing
         var targetComponent = component.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
-        var type = processor.cloud.retrieveDocument(typeReference);
-        var context = bali.parser.analyzeType(type);
-        var key = context.names[index];
-        var procedures = type.getValue('$procedures');
-        var association = procedures.getValue(key);
-        var procedureName = association.key;
-        var procedure = association.value;
         var parameterValues = component.List.fromScratch();
-        var variableValues = component.List.fromScratch();
-        var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
-        var procedureContext = {
-            targetComponent: targetComponent,
-            typeReference: typeReference,
-            procedureName: procedureName,
-            parameterValues: parameterValues,
-            literalValues: context.literals,
-            variableValues: variableValues,
-            bytecodeInstructions: bytecodeInstructions,
-            currentInstruction: 0,
-            nextAddress: 1
-        };
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
         processor.procedureContext = procedureContext;
         processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
     },
@@ -537,28 +546,8 @@ var instructionHandlers = [
         var index = operand - 1;  // JS zero based indexing
         var targetComponent = component.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
-        var type = processor.cloud.retrieveDocument(typeReference);
-        var context = bali.parser.analyzeType(type);
-        var key = context.names[index];
-        var procedures = type.getValue('$procedures');
-        var association = procedures.getValue(key);
-        var procedureName = association.key;
-        var procedure = association.value;
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = component.List.fromScratch();
-        var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
-        var procedureContext = {
-            targetComponent: targetComponent,
-            typeReference: typeReference,
-            procedureName: procedureName,
-            parameterValues: parameterValues,
-            literalValues: context.literals,
-            variableValues: variableValues,
-            bytecodeInstructions: bytecodeInstructions,
-            currentInstruction: 0,
-            nextAddress: 1
-        };
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
         processor.procedureContext = procedureContext;
         processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
     },
@@ -568,29 +557,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         var targetComponent = processor.taskContext.componentStack.popItem();
-        var typeReference = processor.taskContext.componentStack.popItem();
-        var type = processor.cloud.retrieveDocument(typeReference);
-        var context = bali.parser.analyzeType(type);
-        var key = context.names[index];
-        var procedures = type.getValue('$procedures');
-        var association = procedures.getValue(key);
-        var procedureName = association.key;
-        var procedure = association.value;
+        var typeReference = intrinsics.invokeByName(processor, '$getType', [targetComponent]);
         var parameterValues = component.List.fromScratch();
-        var variableValues = component.List.fromScratch();
-        var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
-        var procedureContext = {
-            targetComponent: targetComponent,
-            typeReference: typeReference,
-            procedureName: procedureName,
-            parameterValues: parameterValues,
-            literalValues: context.literals,
-            variableValues: variableValues,
-            bytecodeInstructions: bytecodeInstructions,
-            currentInstruction: 0,
-            nextAddress: 1
-        };
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
         processor.procedureContext = procedureContext;
         processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
     },
@@ -600,29 +569,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         var targetComponent = processor.taskContext.componentStack.popItem();
-        var typeReference = processor.taskContext.componentStack.popItem();
-        var type = processor.cloud.retrieveDocument(typeReference);
-        var context = bali.parser.analyzeType(type);
-        var key = context.names[index];
-        var procedures = type.getValue('$procedures');
-        var association = procedures.getValue(key);
-        var procedureName = association.key;
-        var procedure = association.value;
+        var typeReference = intrinsics.invokeByName(processor, '$getType', [targetComponent]);
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = component.List.fromScratch();
-        var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
-        var procedureContext = {
-            targetComponent: targetComponent,
-            typeReference: typeReference,
-            procedureName: procedureName,
-            parameterValues: parameterValues,
-            literalValues: context.literals,
-            variableValues: variableValues,
-            bytecodeInstructions: bytecodeInstructions,
-            currentInstruction: 0,
-            nextAddress: 1
-        };
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
         processor.procedureContext = procedureContext;
         processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
     },

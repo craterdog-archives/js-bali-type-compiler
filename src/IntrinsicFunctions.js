@@ -14,11 +14,23 @@
  * Virtual Machine™.
  */
 var primitives = require('bali-primitive-types');
+var compiler = require('bali-type-compiler');
 
 
-// PUBLIC FUNCTIONS
+exports.invokeByName = function(processor, name, parameters) {
+    var index = intrinsicNames.indexOf(name);
+    var result = intrinsicFunctions[index].apply(processor, parameters);
+    return result;
+};
 
-exports.intrinsicFunctions = [
+exports.invokeByIndex = function(processor, index, parameters) {
+    var result = intrinsicFunctions[index].apply(processor, parameters);
+    return result;
+};
+
+var intrinsicNames = compiler.intrinsics.intrinsicNames;
+
+var intrinsicFunctions = [
     // addItem
     function(list, item) {},
 
@@ -55,6 +67,11 @@ exports.intrinsicFunctions = [
         }
         var factorial = f(number.toNumber());
         return new primitives.Complex(String(factorial));
+    },
+
+    // getType
+    function(component) {
+
     },
 
     // getValue

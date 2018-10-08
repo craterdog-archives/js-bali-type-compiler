@@ -90,6 +90,27 @@ var TASK_TEMPLATE =
         ']($type: TaskContext)';
 
 
+function generateTaskContext(filename) {
+    var source = fs.readFileSync(filename, 'utf8');
+    var procedure = instructions.procedure.fromSource(source);
+    var context = {
+        literals: [],
+        names: []
+    };
+    compiler.assembler.analyzeProcedure(procedure, context);
+    var literals = component.List.fromCollection(context.literals);
+    var bytecode = compiler.assembler.assembleProcedure(procedure, context);
+    var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+    var base16 = bali.codex.base16Encode(bytes, '            ');
+    source = TASK_TEMPLATE;
+    source = source.replace(/%literalValues/, literals.toSource('            '));
+    source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
+    var task = bali.document.fromSource(source);
+    taskContext = component.importer.importComponent(task);
+    return taskContext;
+}
+
+
 describe('Bali Virtual Machine™', function() {
     var taskContext;
 
@@ -97,24 +118,8 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/JUMP.basm';
-            var source = fs.readFileSync(testFile, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.procedure.fromSource(source);
-            var context = {
-                literals: [],
-                procedures: []
-            };
-            compiler.assembler.analyzeProcedure(procedure, context);
-            var literals = component.List.fromCollection(context.literals);
-            expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
-            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
-            var base16 = bali.codex.base16Encode(bytes, '            ');
-            source = TASK_TEMPLATE;
-            source = source.replace(/%literalValues/, literals.toSource('            '));
-            source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = bali.document.fromSource(source);
-            taskContext = component.importer.importComponent(task);
+            taskContext = generateTaskContext(testFile);
+            expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
@@ -211,24 +216,8 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/PUSH-POP.basm';
-            var source = fs.readFileSync(testFile, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.procedure.fromSource(source);
-            var context = {
-                literals: [],
-                procedures: []
-            };
-            compiler.assembler.analyzeProcedure(procedure, context);
-            var literals = component.List.fromCollection(context.literals);
-            expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
-            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
-            var base16 = bali.codex.base16Encode(bytes, '            ');
-            source = TASK_TEMPLATE;
-            source = source.replace(/%literalValues/, literals.toSource('            '));
-            source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = bali.document.fromSource(source);
-            taskContext = component.importer.importComponent(task);
+            taskContext = generateTaskContext(testFile);
+            expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
@@ -273,24 +262,8 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/LOAD-STORE.basm';
-            var source = fs.readFileSync(testFile, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.procedure.fromSource(source);
-            var context = {
-                literals: [],
-                procedures: []
-            };
-            compiler.assembler.analyzeProcedure(procedure, context);
-            var literals = component.List.fromCollection(context.literals);
-            expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
-            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
-            var base16 = bali.codex.base16Encode(bytes, '            ');
-            source = TASK_TEMPLATE;
-            source = source.replace(/%literalValues/, literals.toSource('            '));
-            source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = bali.document.fromSource(source);
-            taskContext = component.importer.importComponent(task);
+            taskContext = generateTaskContext(testFile);
+            expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
@@ -359,24 +332,8 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/INVOKE.basm';
-            var source = fs.readFileSync(testFile, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.procedure.fromSource(source);
-            var context = {
-                literals: [],
-                procedures: []
-            };
-            compiler.assembler.analyzeProcedure(procedure, context);
-            var literals = component.List.fromCollection(context.literals);
-            expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
-            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
-            var base16 = bali.codex.base16Encode(bytes, '            ');
-            source = TASK_TEMPLATE;
-            source = source.replace(/%literalValues/, literals.toSource('            '));
-            source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = bali.document.fromSource(source);
-            taskContext = component.importer.importComponent(task);
+            taskContext = generateTaskContext(testFile);
+            expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
@@ -420,5 +377,23 @@ describe('Bali Virtual Machine™', function() {
         });
 
     });
+
+/*
+    describe('Test the EXECUTE and HANDLE instructions.', function() {
+
+        it('should create the initial task context', function() {
+            var testFile = 'test/instructions/EXECUTE-HANDLE.basm';
+            taskContext = generateTaskContext(testFile);
+            expect(taskContext).to.exist;  // jshint ignore:line
+        });
+
+        it('should execute the test instructions', function() {
+            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            expect(processor.procedureContext.nextAddress).to.equal(1);
+            // TODO: add implementation
+        });
+
+    });
+*/
 
 });
