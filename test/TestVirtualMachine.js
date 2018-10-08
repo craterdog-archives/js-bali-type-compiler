@@ -10,24 +10,22 @@
 var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
-var documents = require('bali-document-notation/BaliDocument');
-var codex = require('bali-document-notation/utilities/EncodingUtilities');
-var instructions = require('bali-instruction-set/BaliProcedure');
-var assembler = require('bali-type-compiler/compiler/ProcedureAssembler');
-var utilities = require('bali-type-compiler/utilities/BytecodeUtilities');
-var importer = require('bali-primitive-types/transformers/ComponentImporter');
-var List = require('bali-primitive-types/collections/List');
+var bali = require('bali-document-notation');
+var instructions = require('bali-instruction-set');
+var compiler = require('bali-type-compiler');
+var component = require('bali-primitive-types');
 
 var testDirectory = 'test/config/';
-var notaryKey = require('bali-digital-notary/BaliNotary').notaryKey(testDirectory);
-var repository = require('bali-cloud-api/LocalRepository').repository(testDirectory);
+var notaryKey = require('bali-digital-notary').notaryKey(testDirectory);
+var api = require('bali-cloud-api');
+var repository = api.local.repository(testDirectory);
 /*  uncomment to generate a new notary key and certificate
 var certificate = notaryKey.generateKeys();
 var citation = notaryKey.certificateCitation();
 repository.storeCertificate(certificate);
 /*                                                         */
-var cloud = require('bali-cloud-api/BaliAPI').cloud(notaryKey, repository);
-var VirtualMachine = require('../VirtualMachine');
+var cloud = api.client.cloud(notaryKey, repository);
+var VirtualMachine = require('../src/VirtualMachine');
 
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -101,22 +99,22 @@ describe('Bali Virtual Machine™', function() {
             var testFile = 'test/instructions/JUMP.basm';
             var source = fs.readFileSync(testFile, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.fromSource(source);
+            var procedure = instructions.procedure.fromSource(source);
             var context = {
                 literals: [],
                 procedures: []
             };
-            assembler.analyzeProcedure(procedure, context);
-            var literals = List.fromCollection(context.literals);
+            compiler.assembler.analyzeProcedure(procedure, context);
+            var literals = component.List.fromCollection(context.literals);
             expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = assembler.assembleProcedure(procedure, context);
-            var bytes = utilities.bytecodeToBytes(bytecode);
-            var base16 = codex.base16Encode(bytes, '            ');
+            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
+            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+            var base16 = bali.codex.base16Encode(bytes, '            ');
             source = TASK_TEMPLATE;
             source = source.replace(/%literalValues/, literals.toSource('            '));
             source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = documents.fromSource(source);
-            taskContext = importer.importComponent(task);
+            var task = bali.document.fromSource(source);
+            taskContext = component.importer.importComponent(task);
         });
 
         it('should execute the test instructions', function() {
@@ -215,22 +213,22 @@ describe('Bali Virtual Machine™', function() {
             var testFile = 'test/instructions/PUSH-POP.basm';
             var source = fs.readFileSync(testFile, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.fromSource(source);
+            var procedure = instructions.procedure.fromSource(source);
             var context = {
                 literals: [],
                 procedures: []
             };
-            assembler.analyzeProcedure(procedure, context);
-            var literals = List.fromCollection(context.literals);
+            compiler.assembler.analyzeProcedure(procedure, context);
+            var literals = component.List.fromCollection(context.literals);
             expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = assembler.assembleProcedure(procedure, context);
-            var bytes = utilities.bytecodeToBytes(bytecode);
-            var base16 = codex.base16Encode(bytes, '            ');
+            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
+            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+            var base16 = bali.codex.base16Encode(bytes, '            ');
             source = TASK_TEMPLATE;
             source = source.replace(/%literalValues/, literals.toSource('            '));
             source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = documents.fromSource(source);
-            taskContext = importer.importComponent(task);
+            var task = bali.document.fromSource(source);
+            taskContext = component.importer.importComponent(task);
         });
 
         it('should execute the test instructions', function() {
@@ -277,22 +275,22 @@ describe('Bali Virtual Machine™', function() {
             var testFile = 'test/instructions/LOAD-STORE.basm';
             var source = fs.readFileSync(testFile, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.fromSource(source);
+            var procedure = instructions.procedure.fromSource(source);
             var context = {
                 literals: [],
                 procedures: []
             };
-            assembler.analyzeProcedure(procedure, context);
-            var literals = List.fromCollection(context.literals);
+            compiler.assembler.analyzeProcedure(procedure, context);
+            var literals = component.List.fromCollection(context.literals);
             expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = assembler.assembleProcedure(procedure, context);
-            var bytes = utilities.bytecodeToBytes(bytecode);
-            var base16 = codex.base16Encode(bytes, '            ');
+            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
+            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+            var base16 = bali.codex.base16Encode(bytes, '            ');
             source = TASK_TEMPLATE;
             source = source.replace(/%literalValues/, literals.toSource('            '));
             source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = documents.fromSource(source);
-            taskContext = importer.importComponent(task);
+            var task = bali.document.fromSource(source);
+            taskContext = component.importer.importComponent(task);
         });
 
         it('should execute the test instructions', function() {
@@ -363,22 +361,22 @@ describe('Bali Virtual Machine™', function() {
             var testFile = 'test/instructions/INVOKE.basm';
             var source = fs.readFileSync(testFile, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = instructions.fromSource(source);
+            var procedure = instructions.procedure.fromSource(source);
             var context = {
                 literals: [],
                 procedures: []
             };
-            assembler.analyzeProcedure(procedure, context);
-            var literals = List.fromCollection(context.literals);
+            compiler.assembler.analyzeProcedure(procedure, context);
+            var literals = component.List.fromCollection(context.literals);
             expect(literals).to.exist;  // jshint ignore:line
-            var bytecode = assembler.assembleProcedure(procedure, context);
-            var bytes = utilities.bytecodeToBytes(bytecode);
-            var base16 = codex.base16Encode(bytes, '            ');
+            var bytecode = compiler.assembler.assembleProcedure(procedure, context);
+            var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+            var base16 = bali.codex.base16Encode(bytes, '            ');
             source = TASK_TEMPLATE;
             source = source.replace(/%literalValues/, literals.toSource('            '));
             source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-            var task = documents.fromSource(source);
-            taskContext = importer.importComponent(task);
+            var task = bali.document.fromSource(source);
+            taskContext = component.importer.importComponent(task);
         });
 
         it('should execute the test instructions', function() {

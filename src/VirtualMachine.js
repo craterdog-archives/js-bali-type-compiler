@@ -12,17 +12,10 @@
 /*
  * This class defines the Bali Virtual Machine™.
  */
-var codex = require('bali-document-notation/utilities/EncodingUtilities');
-var parser = require('bali-document-notation/transformers/DocumentParser');
-var Complex = require('bali-primitive-types/elements/Complex').Complex;
-var Probability = require('bali-primitive-types/elements/Probability').Probability;
-var Template = require('bali-primitive-types/elements/Template').Template;
-var Parameters = require('bali-primitive-types/collections/Parameters');
-var List = require('bali-primitive-types/collections/List');
-var Catalog = require('bali-primitive-types/collections/Catalog');
-var importer = require('bali-primitive-types/transformers/ComponentImporter');
-var intrinsics = require('bali-type-compiler/intrinsics/IntrinsicFunctions');
-var bytecode = require('bali-type-compiler/utilities/BytecodeUtilities');
+var bali = require('bali-document-notation');
+var primitives = require('bali-primitive-types');
+var compiler = require('bali-type-compiler');
+var intrinsics = require('./IntrinsicFunctions');
 
 var ACTIVE = '$active';
 var WAITING = '$waiting';
@@ -102,9 +95,9 @@ function fetchInstruction(processor) {
 function executeInstruction(processor) {
     // decode the bytecode instruction
     var instruction = processor.procedureContext.currentInstruction;
-    var operation = bytecode.decodeOperation(instruction);
-    var modifier = bytecode.decodeModifier(instruction);
-    var operand = bytecode.decodeOperand(instruction);
+    var operation = compiler.bytecode.decodeOperation(instruction);
+    var modifier = compiler.bytecode.decodeModifier(instruction);
+    var operand = compiler.bytecode.decodeOperand(instruction);
 
     // pass execution off to the correct operation handler
     var index = (operation << 2) | modifier;  // index: [0..31]
@@ -203,7 +196,7 @@ function importTask(task) {
  * This function exports a virtual machine task context to a Bali component.
  */
 function exportTask(taskContext) {
-    var task = Catalog.fromCollection(taskContext);
+    var task = primitives.Catalog.fromCollection(taskContext);
     return task;
 }
 
@@ -220,7 +213,7 @@ function importProcedure(procedure) {
     procedureContext.literalValues = procedure.getValue('$literalValues');
     procedureContext.variableValues = procedure.getValue('$variableValues');
     var bytes = procedure.getValue('$bytecodeInstructions').value;
-    procedureContext.bytecodeInstructions = bytecode.bytesToBytecode(bytes);
+    procedureContext.bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
     procedureContext.currentInstruction = procedure.getValue('$currentInstruction').toNumber();
     procedureContext.nextAddress = procedure.getValue('$nextAddress').toNumber();
     return procedureContext;
@@ -231,14 +224,14 @@ function importProcedure(procedure) {
  * This function exports a virtual machine procedure context to a Bali component.
  */
 function exportProcedure(procedureContext) {
-    var bytes = bytecode.bytecodeToBytes(procedureContext.bytecodeInstructions);
-    var base16 = codex.base16Encode(bytes);
+    var bytes = compiler.bytecode.bytecodeToBytes(procedureContext.bytecodeInstructions);
+    var base16 = bali.codex.base16Encode(bytes);
     var source = "'%bytecodeInstructions'($base: 16, $mediatype: \"application/bcod\")";
     source = source.replace(/%bytecodeInstructions/, base16);
-    var tree = parser.parseComponent(source);
+    var tree = bali.parser.parseComponent(source);
     var bytecodeInstructions = procedureContext.bytecodeInstructions;  // must save and restore!!!
-    procedureContext.bytecodeInstructions = importer.fromTree(tree);
-    var procedure = Catalog.fromCollection(procedureContext);
+    procedureContext.bytecodeInstructions = primitives.importer.fromTree(tree);
+    var procedure = primitives.Catalog.fromCollection(procedureContext);
     procedureContext.bytecodeInstructions = bytecodeInstructions;
     return procedure;
 }
@@ -265,7 +258,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (Template.NONE.equalTo(condition)) {
+        if (primitives.Template.NONE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -277,7 +270,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
-        if (Probability.TRUE.equalTo(condition)) {
+        if (primitives.Probability.TRUE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -289,7 +282,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
-        if (Probability.FALSE.equalTo(condition)) {
+        if (primitives.Probability.FALSE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -299,7 +292,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.taskContext.handlerStack.pushItem(new Complex(handlerAddress.toString()));
+        processor.taskContext.handlerStack.pushItem(new primitives.Complex(handlerAddress.toString()));
     },
 
     // PUSH ELEMENT literal
@@ -460,7 +453,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         // create an empty parameters list for the intrinsic function call
-        var parameters = Parameters.fromCollection([]);
+        var parameters = primitives.Parameters.fromCollection([]);
         // call the intrinsic function associated with the index operand
         var result = intrinsics.intrinsicFunctions[index].apply(processor, parameters);
         // push the result of the function call onto the top of the component stack
@@ -510,19 +503,19 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = Template.NONE;
+        var targetComponent = primitives.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
-        var context = parser.analyzeType(type);
+        var context = bali.parser.analyzeType(type);
         var key = context.names[index];
         var procedures = type.getValue('$procedures');
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
-        var parameterValues = List.fromScratch();
-        var variableValues = List.fromScratch();
+        var parameterValues = primitives.List.fromScratch();
+        var variableValues = primitives.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = bytecode.bytesToBytecode(bytes);
+        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
             targetComponent: targetComponent,
             typeReference: typeReference,
@@ -542,19 +535,19 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = Template.NONE;
+        var targetComponent = primitives.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
-        var context = parser.analyzeType(type);
+        var context = bali.parser.analyzeType(type);
         var key = context.names[index];
         var procedures = type.getValue('$procedures');
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = List.fromScratch();
+        var variableValues = primitives.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = bytecode.bytesToBytecode(bytes);
+        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
             targetComponent: targetComponent,
             typeReference: typeReference,
@@ -577,16 +570,16 @@ var instructionHandlers = [
         var targetComponent = processor.taskContext.componentStack.popItem();
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
-        var context = parser.analyzeType(type);
+        var context = bali.parser.analyzeType(type);
         var key = context.names[index];
         var procedures = type.getValue('$procedures');
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
-        var parameterValues = List.fromScratch();
-        var variableValues = List.fromScratch();
+        var parameterValues = primitives.List.fromScratch();
+        var variableValues = primitives.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = bytecode.bytesToBytecode(bytes);
+        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
             targetComponent: targetComponent,
             typeReference: typeReference,
@@ -609,16 +602,16 @@ var instructionHandlers = [
         var targetComponent = processor.taskContext.componentStack.popItem();
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
-        var context = parser.analyzeType(type);
+        var context = bali.parser.analyzeType(type);
         var key = context.names[index];
         var procedures = type.getValue('$procedures');
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = List.fromScratch();
+        var variableValues = primitives.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
-        var bytecodeInstructions = bytecode.bytesToBytecode(bytes);
+        var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
             targetComponent: targetComponent,
             typeReference: typeReference,
