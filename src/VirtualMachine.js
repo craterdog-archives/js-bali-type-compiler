@@ -13,7 +13,7 @@
  * This class defines the Bali Virtual Machine™.
  */
 var bali = require('bali-document-notation');
-var primitives = require('bali-primitive-types');
+var component = require('bali-primitive-types');
 var compiler = require('bali-type-compiler');
 var intrinsics = require('./IntrinsicFunctions');
 
@@ -196,7 +196,7 @@ function importTask(task) {
  * This function exports a virtual machine task context to a Bali component.
  */
 function exportTask(taskContext) {
-    var task = primitives.Catalog.fromCollection(taskContext);
+    var task = component.Catalog.fromCollection(taskContext);
     return task;
 }
 
@@ -230,8 +230,8 @@ function exportProcedure(procedureContext) {
     source = source.replace(/%bytecodeInstructions/, base16);
     var tree = bali.parser.parseComponent(source);
     var bytecodeInstructions = procedureContext.bytecodeInstructions;  // must save and restore!!!
-    procedureContext.bytecodeInstructions = primitives.importer.fromTree(tree);
-    var procedure = primitives.Catalog.fromCollection(procedureContext);
+    procedureContext.bytecodeInstructions = component.importer.fromTree(tree);
+    var procedure = component.Catalog.fromCollection(procedureContext);
     procedureContext.bytecodeInstructions = bytecodeInstructions;
     return procedure;
 }
@@ -258,7 +258,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (primitives.Template.NONE.equalTo(condition)) {
+        if (component.Template.NONE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -270,7 +270,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
-        if (primitives.Probability.TRUE.equalTo(condition)) {
+        if (component.Probability.TRUE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -282,7 +282,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.taskContext.componentStack.popItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
-        if (primitives.Probability.FALSE.equalTo(condition)) {
+        if (component.Probability.FALSE.equalTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -292,7 +292,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.taskContext.handlerStack.pushItem(new primitives.Complex(handlerAddress.toString()));
+        processor.taskContext.handlerStack.pushItem(new component.Complex(handlerAddress.toString()));
     },
 
     // PUSH ELEMENT literal
@@ -453,7 +453,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         // create an empty parameters list for the intrinsic function call
-        var parameters = primitives.Parameters.fromCollection([]);
+        var parameters = component.Parameters.fromCollection([]);
         // call the intrinsic function associated with the index operand
         var result = intrinsics.intrinsicFunctions[index].apply(processor, parameters);
         // push the result of the function call onto the top of the component stack
@@ -503,7 +503,7 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = primitives.Template.NONE;
+        var targetComponent = component.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
         var context = bali.parser.analyzeType(type);
@@ -512,8 +512,8 @@ var instructionHandlers = [
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
-        var parameterValues = primitives.List.fromScratch();
-        var variableValues = primitives.List.fromScratch();
+        var parameterValues = component.List.fromScratch();
+        var variableValues = component.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
         var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
@@ -535,7 +535,7 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = primitives.Template.NONE;
+        var targetComponent = component.Template.NONE;
         var typeReference = processor.taskContext.componentStack.popItem();
         var type = processor.cloud.retrieveDocument(typeReference);
         var context = bali.parser.analyzeType(type);
@@ -545,7 +545,7 @@ var instructionHandlers = [
         var procedureName = association.key;
         var procedure = association.value;
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = primitives.List.fromScratch();
+        var variableValues = component.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
         var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
@@ -576,8 +576,8 @@ var instructionHandlers = [
         var association = procedures.getValue(key);
         var procedureName = association.key;
         var procedure = association.value;
-        var parameterValues = primitives.List.fromScratch();
-        var variableValues = primitives.List.fromScratch();
+        var parameterValues = component.List.fromScratch();
+        var variableValues = component.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
         var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
@@ -609,7 +609,7 @@ var instructionHandlers = [
         var procedureName = association.key;
         var procedure = association.value;
         var parameterValues = processor.taskContext.componentStack.popItem();
-        var variableValues = primitives.List.fromScratch();
+        var variableValues = component.List.fromScratch();
         var bytes = procedure.getValue('$bytecode').value;
         var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
         var procedureContext = {
