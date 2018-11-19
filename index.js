@@ -9,4 +9,10 @@
  ************************************************************************/
 'use strict';
 
-module.exports = require('./src/VirtualMachine');
+exports.types = require('./src/Types');
+exports.bytecode = require('./src/BytecodeUtilities');
+exports.parser = require('./src/ProcedureParser');
+exports.formatter = require('./src/ProcedureFormatter');
+exports.assembler = require('./src/ProcedureAssembler');
+exports.compiler = require('./src/TypeCompiler');
+exports.machine = require('./src/VirtualMachine');
