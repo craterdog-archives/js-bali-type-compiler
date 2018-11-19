@@ -27,12 +27,12 @@
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-mocha-test": "^0.13.3",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "bali-digital-notary": "file:../js-bali-digital-notary"
   },
   "dependencies": {
     "antlr4": "^4.7.1",
     "bali-component-framework": "file:../js-bali-component-framework",
-    "bali-digital-notary": "file:../js-bali-digital-notary",
     "bali-cloud-api": "file:../js-bali-cloud-api"
   }
 }
