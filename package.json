@@ -30,11 +30,9 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "bali-document-notation": "file:../js-bali-document-notation",
-    "bali-instruction-set": "file:../js-bali-instruction-set",
+    "antlr4": "^4.7.1",
+    "bali-component-framework": "file:../js-bali-component-framework",
     "bali-digital-notary": "file:../js-bali-digital-notary",
-    "bali-cloud-api": "file:../js-bali-cloud-api",
-    "bali-primitive-types": "file:../js-bali-primitive-types",
-    "bali-type-compiler": "file:../js-bali-type-compiler"
+    "bali-cloud-api": "file:../js-bali-cloud-api"
   }
 }

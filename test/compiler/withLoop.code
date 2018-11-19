@@ -1,0 +1,27 @@
+ Addr     Bytes   Bytecode                  Instruction
+----------------------------------------------------------------------
+[001]:    2801    11     1    PUSH ELEMENT 1
+[002]:    D002    62     2    EXECUTE 2 ON TARGET
+[003]:    D005    62     5    EXECUTE 5 ON TARGET
+[004]:    8002    40     2    STORE VARIABLE 2
+[005]:    6002    30     2    LOAD VARIABLE 2
+[006]:    D004    62     4    EXECUTE 4 ON TARGET
+[007]:    1818    03 [018]    JUMP TO [018] ON FALSE
+[008]:    6002    30     2    LOAD VARIABLE 2
+[009]:    D003    62     3    EXECUTE 3 ON TARGET
+[00A]:    8001    40     1    STORE VARIABLE 1
+[00B]:    2804    11     4    PUSH ELEMENT 4
+[00C]:    8004    40     4    STORE VARIABLE 4
+[00D]:    0000    00     0    SKIP INSTRUCTION
+[00E]:    6004    30     4    LOAD VARIABLE 4
+[00F]:    D001    62     1    EXECUTE 1 ON TARGET
+[010]:    1814    03 [014]    JUMP TO [014] ON FALSE
+[011]:    2803    11     3    PUSH ELEMENT 3
+[012]:    8005    40     5    STORE VARIABLE 5
+[013]:    0018    00 [018]    JUMP TO [018]
+[014]:    0000    00     0    SKIP INSTRUCTION
+[015]:    2802    11     2    PUSH ELEMENT 2
+[016]:    8006    40     6    STORE VARIABLE 6
+[017]:    0005    00 [005]    JUMP TO [005]
+[018]:    6003    30     3    LOAD VARIABLE 3
+[019]:    E800    71     0    HANDLE RESULT

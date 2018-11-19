@@ -1,0 +1,48 @@
+SKIP INSTRUCTION
+
+1.jump:
+JUMP TO 2.push
+JUMP TO 3.pop ON NONE
+JUMP TO 4.load ON TRUE
+JUMP TO 5.store ON FALSE
+
+2.push:
+PUSH HANDLER 8.handle
+PUSH ELEMENT `"This is a literal text string
+containing an \` and spanning multiple lines."`
+PUSH SOURCE `{
+    $foo := bar
+    $bar := baz
+}`
+
+3.pop:
+POP HANDLER
+POP COMPONENT
+
+4.load:
+LOAD VARIABLE $variable
+LOAD PARAMETER $parameter
+LOAD DOCUMENT $reference
+LOAD MESSAGE $queue
+
+5.store:
+STORE VARIABLE $variable
+STORE DRAFT $reference
+STORE DOCUMENT $reference
+STORE MESSAGE $queue
+
+6.invoke:
+INVOKE $random
+INVOKE $factorial WITH PARAMETER
+INVOKE $sum WITH 2 PARAMETERS
+INVOKE $sort WITH 3 PARAMETERS
+
+7.execute:
+EXECUTE $generateKey
+EXECUTE $fibonacci WITH PARAMETERS
+EXECUTE $hasNext ON TARGET
+EXECUTE $addItem ON TARGET WITH PARAMETERS
+
+8.handle:
+HANDLE EXCEPTION
+HANDLE RESULT

@@ -1,0 +1,12 @@
+ Addr     Bytes   Bytecode                  Instruction
+----------------------------------------------------------------------
+[001]:    2801    11     1    PUSH ELEMENT 1
+[002]:    D001    62     1    EXECUTE 1 ON TARGET
+[003]:    8001    40     1    STORE VARIABLE 1
+[004]:    A002    50     2    INVOKE 2
+[005]:    2802    11     2    PUSH ELEMENT 2
+[006]:    6003    30     3    LOAD VARIABLE 3
+[007]:    B803    53     3    INVOKE 3 WITH 3 PARAMETERS
+[008]:    9801    43     1    STORE MESSAGE 1
+[009]:    6002    30     2    LOAD VARIABLE 2
+[00A]:    E800    71     0    HANDLE RESULT
