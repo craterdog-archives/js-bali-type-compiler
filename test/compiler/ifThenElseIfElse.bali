@@ -1,9 +1,9 @@
-
-if true then {
-    yes
-} else if false then {
-    no
-} else {
-    none
+{
+    if true then {
+        yes
+    } else if false then {
+        no
+    } else {
+        none
+    }
 }
-

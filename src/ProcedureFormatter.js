@@ -53,7 +53,7 @@ FormattingVisitor.prototype.visitList = function(procedure) {
 FormattingVisitor.prototype.visitCatalog = function(step) {
     var label = step.getValue('$label');
     if (label) {
-        this.source += '\n' + decodeText(label) + ':\n';
+        this.source += '\n' + label.getRawString() + ':\n';
     }
     var operation = step.getValue('$operation').toNumber();
     switch (operation) {
@@ -98,7 +98,8 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
         this.source += 'SKIP INSTRUCTION';
     } else {
         this.source += 'JUMP TO ';
-        this.source += decodeText(instruction.getValue('$operand'));
+        var operand = instruction.getValue('$operand').getRawString();
+        this.source += operand;
         modifier = modifier.toNumber();
         if (modifier !== types.ON_ANY) {
             this.source += ' ';
@@ -118,7 +119,15 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.pushModifierString(modifier);
     this.source += ' ';
-    this.source += decodeText(instruction.getValue('$operand'));
+    var operand = instruction.getValue('$operand');
+    if (modifier !== types.HANDLER) {
+        // format the operand as a literal
+        operand = '`' + operand + '`';
+    } else {
+        // format the operand as a label (which is stored as a Bali Text element)
+        operand = operand.getRawString();
+    }
+    this.source += operand;
     this.source += '\n';
 };
 
@@ -144,7 +153,8 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.loadModifierString(modifier);
     this.source += ' ';
-    this.source += decodeText(instruction.getValue('$operand'));
+    var operand = instruction.getValue('$operand').getRawString();
+    this.source += operand;
     this.source += '\n';
 };
 
@@ -159,7 +169,8 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.storeModifierString(modifier);
     this.source += ' ';
-    this.source += decodeText(instruction.getValue('$operand'));
+    var operand = instruction.getValue('$operand').getRawString();
+    this.source += operand;
     this.source += '\n';
 };
 
@@ -170,7 +181,8 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     this.source += 'INVOKE ';
-    this.source += decodeText(instruction.getValue('$operand'));
+    var operand = instruction.getValue('$operand').getRawString();
+    this.source += operand;
     var modifier = instruction.getValue('$modifier').toNumber();
     if (modifier > 0) {
         this.source += ' WITH ';
@@ -192,7 +204,8 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     this.source += 'EXECUTE ';
-    this.source += decodeText(instruction.getValue('$operand'));
+    var operand = instruction.getValue('$operand').getRawString();
+    this.source += operand;
     var modifier = instruction.getValue('$modifier').toNumber();
     if (modifier !== types.SANS) {
         this.source += ' ';
@@ -211,11 +224,3 @@ FormattingVisitor.prototype.visitHandleInstruction = function(instruction) {
     this.source += types.handleModifierString(modifier);
     this.source += '\n';
 };
-
-
-/*
- * This function decodes a Bali text string back into a JS string
- */
-function decodeText(text) {
-    return text.toString().slice(1, -1).replace(/\\"/g, '"');
-}

@@ -13,12 +13,12 @@
  * This library encapsulates the intrinsic functions supported by the Bali
  * Virtual Machine™.
  */
-var primitives = require('bali-primitive-types');
-var compiler = require('bali-type-compiler');
+var bali = require('bali-component-framework');
+var compiler = require('./TypeCompiler');
 
 
 exports.invokeByName = function(processor, name, parameters) {
-    var index = intrinsicNames.indexOf(name);
+    var index = exports.intrinsicNames.indexOf(name);
     var result = intrinsicFunctions[index].apply(processor, parameters);
     return result;
 };
@@ -27,8 +27,6 @@ exports.invokeByIndex = function(processor, index, parameters) {
     var result = intrinsicFunctions[index].apply(processor, parameters);
     return result;
 };
-
-var intrinsicNames = compiler.intrinsics.intrinsicNames;
 
 var intrinsicFunctions = [
     // addItem
@@ -66,7 +64,7 @@ var intrinsicFunctions = [
             return (n<2) ? 1 : f(n-1) * n;
         }
         var factorial = f(number.toNumber());
-        return new primitives.Complex(String(factorial));
+        return new bali.Complex(String(factorial));
     },
 
     // getType
@@ -113,7 +111,7 @@ var intrinsicFunctions = [
     // random
     function() {
         var random = Math.random();
-        return new primitives.Complex(String(random));
+        return new bali.Complex(String(random));
     },
 
     // range
@@ -134,7 +132,7 @@ var intrinsicFunctions = [
     // sum
     function(firstNumber, secondNumber) {
         var sum = firstNumber.toNumber() + secondNumber.toNumber();
-        return new primitives.Complex(String(sum));
+        return new bali.Complex(String(sum));
     },
 
     // xor

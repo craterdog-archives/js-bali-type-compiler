@@ -74,7 +74,8 @@ module.exports = function(grunt) {
           'test/TestBytecodeUtilities.js',
           'test/TestProcedureAssembler.js',
           'test/TestTypeCompiler.js',
-          'test/TestTransformers.js'
+          'test/TestTransformers.js',
+          'test/TestVirtualMachine.js'
         ]
       }
     },

@@ -26,8 +26,8 @@ var utilities = require('./BytecodeUtilities');
  * document citation.
  * 
  * @param {Object} cloud A singleton object that implements the Bali Cloud API™ interface.
- * @param {Reference} citation The citation referencing the type definition to be compiled.
- * @returns {Document} The resulting compiled type.
+ * @param {Catalog} citation The citation referencing the type definition to be compiled.
+ * @returns {Catalog} A document citation for the resulting compiled type.
  */
 exports.compileType = function(cloud, citation) {
     // retrieve the type definition
@@ -37,7 +37,7 @@ exports.compileType = function(cloud, citation) {
     var ancestry = bali.List.fromCollection([citation]);
     var parent = document.getValue('$parent');
     while (parent) {
-        ancestry.push(parent);
+        ancestry.addItem(parent);
         var superType = cloud.retrieveDocument(parent);
         parent = superType.getValue('$parent');
     }
@@ -64,11 +64,11 @@ exports.compileType = function(cloud, citation) {
         var context = exports.analyzeProcedure(procedure);
         var instructions = exports.compileProcedure(procedure, context);
         procedure = parser.parseProcedure(instructions);
-        instructions = bali.parser.parseExpression('"\n' + instructions.replace(/^/gm, '    ') + '\n"($mediatype: "application/basm")');
+        instructions = bali.parser.parseDocument('"\n' + instructions.replace(/^/gm, '    ') + '\n"($mediatype: "application/basm")');
         context = assembler.analyzeProcedure(procedure);
         var bytecode = assembler.assembleProcedure(procedure, context);
         var base16 = bali.codex.base16Encode(utilities.bytecodeToBytes(bytecode), '            ');
-        bytecode = bali.parser.parseExpression("'" + base16 + "\n            '" + '($base: 16, $mediatype: "application/bcod")');
+        bytecode = bali.parser.parseDocument("'" + base16 + "\n            '" + '($base: 16, $mediatype: "application/bcod")');
 
         var procedureContext = new bali.Catalog();
         procedureContext.addItems(context);
@@ -84,11 +84,9 @@ exports.compileType = function(cloud, citation) {
     typeContext.setValue('$procedures', procedures);
 
     // checkin the new compiled type
-    var typeCitation = cloud.createDraft(typeContext);
-    var type = cloud.retrieveDraft(typeCitation);
-    cloud.commitType(citation, type);
+    var typeCitation = cloud.commitType(citation, typeContext);
 
-    return type;
+    return typeCitation;
 };
         
 

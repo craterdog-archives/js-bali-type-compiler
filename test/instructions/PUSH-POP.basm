@@ -1,12 +1,12 @@
 
 1.PushHandler:
-PUSH HANDLER 3.PushCode
+PUSH HANDLER 3.PushSource
 
 2.PushElement:
 PUSH ELEMENT `"five"`
 
-3.PushCode:
-PUSH CODE `{return prefix + name + suffix}`
+3.PushSource:
+PUSH SOURCE `{return prefix + name + suffix}`
 
 4.PopHandler:
 POP HANDLER

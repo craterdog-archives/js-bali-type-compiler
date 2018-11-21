@@ -1,10 +1,10 @@
-
-with each $symbol in $sequence do {
-    $x := true
-    if x then {
-        $y := none
-        continue loop
+{
+    with each $symbol in $sequence do {
+        $x := true
+        if x then {
+            $y := none
+            continue loop
+        }
+        $z := any
     }
-    $z := any
 }
-

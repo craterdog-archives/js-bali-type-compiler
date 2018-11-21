@@ -13,6 +13,7 @@ containing an \` and spanning multiple lines."`
 PUSH SOURCE `{
     $foo := bar
     $bar := baz
+    $baz := foo
 }`
 
 3.pop:

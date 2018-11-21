@@ -10,21 +10,19 @@
 var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
-var bali = require('bali-document-notation');
-var instructions = require('bali-instruction-set');
-var compiler = require('bali-type-compiler');
-var component = require('bali-primitive-types');
+var bali = require('bali-component-framework');
+var notary = require('bali-digital-notary');
+var cloud = require('bali-cloud-api');
 
 var testDirectory = 'test/config/';
-var notaryKey = require('bali-digital-notary').notaryKey(testDirectory);
-var api = require('bali-cloud-api');
-var repository = api.local.repository(testDirectory);
-/*  uncomment to generate a new notary key and certificate
-var certificate = notaryKey.generateKeys();
-var citation = notaryKey.certificateCitation();
-repository.storeCertificate(certificate);
-/*                                                         */
-var cloud = api.client.cloud(notaryKey, repository);
+var notaryKey = notary.api(testDirectory);
+var repository = cloud.local(testDirectory);
+var api = cloud.api(notaryKey, repository);
+
+var parser = require('../src/ProcedureParser');
+var compiler = require('../src/TypeCompiler');
+var assembler = require('../src/ProcedureAssembler');
+var utilities = require('../src/BytecodeUtilities');
 var VirtualMachine = require('../src/VirtualMachine');
 
 
@@ -54,7 +52,7 @@ var TYPE_SOURCE =
         '            }\n' +
         '        ]\n' +
         '    ]\n' +
-        ']($type: Class)';
+        ']($type: $Class)';
 
 
 var TASK_TEMPLATE =
@@ -64,49 +62,44 @@ var TASK_TEMPLATE =
         '    $accountBalance: 1000\n' +
         '    $processorStatus: $active\n' +
         '    $clockCycles: 0\n' +
-        '    $componentStack: []($type: Stack)\n' +
-        '    $handlerStack: []($type: Stack)\n' +
+        '    $componentStack: []($type: $Stack)\n' +
+        '    $handlerStack: []($type: $Stack)\n' +
         '    $procedureStack: [\n' +
         '        [\n' +
         '            $targetComponent: none\n' +
         '            $typeReference: none\n' +
         '            $procedureName: $dummy\n' +
-        '            $parameterValues: [\n' +
-        '                "This is a text string."\n' +
-        '                2\n' +
-        '                5\n' +
-        '            ]\n' +
-        '            $literalValues: %literalValues\n' +
-        '            $variableValues: [\n' +
-        '                none\n' +
-        '                <bali:[$protocol:v1,$tag:#LGLHW28KH99AXZZDTFXV14BX8CF2F68N,$version:v2.3,$digest:none]>\n' +
-        '                #ZQMQ8BGN43Y146KCXX24ZASF0GDJ5YDZ\n' +
+        '            $parameters: [\n' +
+        '                1: "This is a text string."\n' +
+        '                2: 2\n' +
+        '                3: 5\n' +
+        '            ]($type: $Parameters)\n' +
+        '            $literals: %literals($type: $Set)\n' +
+        '            $variables: [\n' +
+        '                $x: none\n' +
+        '                $reference: <bali:[$protocol:v1,$tag:#LGLHW28KH99AXZZDTFXV14BX8CF2F68N,$version:v2.3,$digest:none]>\n' +
+        '                $tag: #ZQMQ8BGN43Y146KCXX24ZASF0GDJ5YDZ\n' +
         '            ]\n' +
         '            $bytecodeInstructions: %bytecodeInstructions\n' +
         '            $currentInstruction: 0\n' +
         '            $nextAddress: 1\n' +
-        '        ]($type: ProcedureContext)\n' +
-        '    ]($type: Stack)\n' +
-        ']($type: TaskContext)';
+        '        ]($type: $ProcedureContext)\n' +
+        '    ]($type: $Stack)\n' +
+        ']($type: $TaskContext)';
 
 
 function generateTaskContext(filename) {
     var source = fs.readFileSync(filename, 'utf8');
-    var procedure = instructions.procedure.fromSource(source);
-    var context = {
-        literals: [],
-        names: []
-    };
-    compiler.assembler.analyzeProcedure(procedure, context);
-    var literals = component.List.fromCollection(context.literals);
-    var bytecode = compiler.assembler.assembleProcedure(procedure, context);
-    var bytes = compiler.bytecode.bytecodeToBytes(bytecode);
+    var procedure = parser.parseProcedure(source, true);
+    var assemblerContext = assembler.analyzeProcedure(procedure);
+    var literals = bali.List.fromCollection(assemblerContext.getValue('$literals'));
+    var bytecode = assembler.assembleProcedure(procedure, assemblerContext);
+    var bytes = utilities.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
-    source = source.replace(/%literalValues/, literals.toSource('            '));
+    source = source.replace(/%literals/, literals.toDocument('            '));
     source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
-    var task = bali.document.fromSource(source);
-    taskContext = component.importer.importComponent(task);
+    var taskContext = bali.parser.parseDocument(source);
     return taskContext;
 }
 
@@ -123,7 +116,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            var processor = VirtualMachine.fromTask(api, taskContext);
             expect(processor.procedureContext.nextAddress).to.equal(1);
 
             // 1.IfStatement:
@@ -221,11 +214,11 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            var processor = VirtualMachine.fromTask(api, taskContext);
             expect(processor.procedureContext.nextAddress).to.equal(1);
 
             // 1.PushHandler:
-            // PUSH HANDLER 3.PushCode
+            // PUSH HANDLER 3.PushSource
             processor.step();
             expect(processor.taskContext.handlerStack.getSize()).to.equal(1);
 
@@ -234,8 +227,8 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
 
-            // 3.PushCode:
-            // PUSH CODE `{return prefix + name + suffix}`
+            // 3.PushSource:
+            // PUSH SOURCE `{return prefix + name + suffix}`
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(2);
 
@@ -263,30 +256,32 @@ describe('Bali Virtual Machine™', function() {
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/LOAD-STORE.basm';
             taskContext = generateTaskContext(testFile);
+            console.log('taskContext: ' + taskContext);
             expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            var processor = VirtualMachine.fromTask(api, taskContext);
             expect(processor.procedureContext.nextAddress).to.equal(1);
 
             // 1.LoadParameter:
             // LOAD PARAMETER $x
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().toSource()).to.equal('"This is a text string."');
+            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('"This is a text string."');
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
             processor.step();
+            console.log('processor: ' + processor);
             expect(processor.taskContext.componentStack.getSize()).to.equal(0);
-            expect(processor.procedureContext.variableValues.getItem(1).toSource()).to.equal('"This is a text string."');
+            expect(processor.procedureContext.variables.getItem(1).value.toString()).to.equal('"This is a text string."');
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().toSource()).to.equal('"This is a text string."');
+            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('"This is a text string."');
 
             // 4.StoreDraft:
             // STORE DRAFT $document
@@ -295,7 +290,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DOCUMENT $document
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().getDocumentContent().toSource()).to.equal('"This is a text string."');
+            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // 5.StoreDocument:
             // STORE DOCUMENT $document
@@ -306,7 +301,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DOCUMENT $document
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().getDocumentContent().toSource()).to.equal('"This is a text string."');
+            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // 7.StoreMessage:
             // STORE MESSAGE $queue
@@ -317,7 +312,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD MESSAGE $queue
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().getDocumentContent().toSource()).to.equal('"This is a text string."');
+            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -337,7 +332,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            var processor = VirtualMachine.fromTask(api, taskContext);
             expect(processor.procedureContext.nextAddress).to.equal(1);
 
             // 1.Invoke:
@@ -351,7 +346,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $factorial WITH PARAMETER
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(2);
-            expect(processor.taskContext.componentStack.getTop().toSource()).to.equal('6');
+            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('6');
 
             // 3.InvokeWith2Parameters:
             // PUSH ELEMENT `5`
@@ -359,7 +354,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(2);
-            expect(processor.taskContext.componentStack.getTop().toSource()).to.equal('11');
+            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('11');
 
             // 4.InvokeWith3Parameters:
             // PUSH ELEMENT `13`
@@ -367,7 +362,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
             expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.getTop().toSource()).to.equal('11');
+            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('11');
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -388,7 +383,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(cloud, taskContext);
+            var processor = VirtualMachine.fromTask(api, taskContext);
             expect(processor.procedureContext.nextAddress).to.equal(1);
             // TODO: add implementation
         });

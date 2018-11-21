@@ -32,7 +32,7 @@ var bytecode = require('./BytecodeUtilities');
 exports.analyzeProcedure = function(procedure) {
     var visitor = new AnalyzingVisitor();
     procedure.acceptVisitor(visitor);
-    return visitor.context;
+    return visitor.getContext();
 };
 
 
@@ -56,16 +56,26 @@ exports.assembleProcedure = function(procedure, context) {
 // PRIVATE CLASSES
 
 function AnalyzingVisitor() {
-    this.context = new bali.Catalog();
-    this.context.setValue('$symbols', new bali.Set());
-    this.context.setValue('$literals', new bali.Set());
-    this.context.setValue('$parameters', new bali.Set());
-    this.context.setValue('$variables', new bali.Set());
-    this.context.setValue('$addresses', new bali.Catalog());
+    this.symbols = new bali.Set();
+    this.literals = new bali.Set();
+    this.parameters = new bali.Set();
+    this.variables = new bali.Set();
+    this.addresses = new bali.Catalog();
     this.address = 1;  // bali VM unit based addressing
     return this;
 }
 AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
+
+
+AnalyzingVisitor.prototype.getContext = function() {
+    var context = new bali.Catalog();
+    context.setValue('$symbols', this.symbols);
+    context.setValue('$literals', this.literals);
+    context.setValue('$parameters', this.parameters);
+    context.setValue('$variables', this.variables);
+    context.setValue('$addresses', this.addresses);
+    return context;
+};
 
 
 // procedure: NEWLINE* step* NEWLINE* EOF
@@ -82,8 +92,7 @@ AnalyzingVisitor.prototype.visitList = function(procedure) {
 AnalyzingVisitor.prototype.visitCatalog = function(step) {
     var label = step.getValue('$label');
     if (label) {
-        var addresses = this.context.getValue('$addresses');
-        var existing = addresses.setValue(label, this.address);
+        var existing = this.addresses.setValue(label, this.address);
         if (existing) {
             throw new Error('ASSEMBLER: A duplicate label was found: ' + label);
         }
@@ -144,7 +153,7 @@ AnalyzingVisitor.prototype.visitPushInstruction = function(instruction) {
         case types.ELEMENT:
         case types.SOURCE:
             var literal = instruction.getValue('$operand');
-            this.context.getValue('$literals').addItem(literal);
+            this.literals.addItem(literal);
             break;
     }
     this.address++;
@@ -170,15 +179,15 @@ AnalyzingVisitor.prototype.visitLoadInstruction = function(instruction) {
     var type;
     switch(modifier) {
         case types.PARAMETER:
-            type = '$parameters';
+            type = 'parameters';
             break;
         case types.VARIABLE:
         case types.DOCUMENT:
         case types.MESSAGE:
-            type = '$variables';
+            type = 'variables';
             break;
     }
-    this.context.getValue(type).addItem(symbol);
+    this[type].addItem(symbol);
     this.address++;
 };
 
@@ -190,8 +199,7 @@ AnalyzingVisitor.prototype.visitLoadInstruction = function(instruction) {
 //     'STORE' 'MESSAGE' SYMBOL
 AnalyzingVisitor.prototype.visitStoreInstruction = function(instruction) {
     var symbol = instruction.getValue('$operand');
-    var variables = this.context.getValue('$variables');
-    variables.addItem(symbol);
+    this.variables.addItem(symbol);
     this.address++;
 };
 
@@ -202,8 +210,7 @@ AnalyzingVisitor.prototype.visitStoreInstruction = function(instruction) {
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 AnalyzingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     var symbol = instruction.getValue('$operand');
-    var symbols = this.context.getValue('$symbols');
-    symbols.addItem(symbol);
+    this.symbols.addItem(symbol);
     this.address++;
 };
 
@@ -215,8 +222,7 @@ AnalyzingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 AnalyzingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     var symbol = instruction.getValue('$operand');
-    var symbols = this.context.getValue('$symbols');
-    symbols.addItem(symbol);
+    this.symbols.addItem(symbol);
     this.address++;
 };
 

@@ -12,9 +12,8 @@
 /*
  * This class defines the Bali Virtual Machine™.
  */
-var bali = require('bali-document-notation');
-var component = require('bali-primitive-types');
-var compiler = require('bali-type-compiler');
+var bali = require('bali-component-framework');
+var utilities = require('./BytecodeUtilities');
 var intrinsics = require('./IntrinsicFunctions');
 
 var ACTIVE = '$active';
@@ -24,7 +23,7 @@ var DONE = '$done';
 
 exports.fromTask = function(cloud, task) {
     var taskContext = importTask(task);
-    var procedureContext = importProcedure(taskContext.procedureStack.popItem());
+    var procedureContext = importProcedure(taskContext.procedureStack.topItem());
 
     return {
 
@@ -37,7 +36,11 @@ exports.fromTask = function(cloud, task) {
          */
         step: function() {
             var wasFetched = fetchInstruction(this);
-            if (wasFetched) executeInstruction(this);
+            if (wasFetched) {
+                executeInstruction(this);
+            } else {
+                finalizeProcessing(this);
+            }
             return wasFetched;
         },
 
@@ -47,7 +50,9 @@ exports.fromTask = function(cloud, task) {
          * to receive a message from a queue.
          */
         run: function() {
-            while (fetchInstruction(this)) executeInstruction(this);
+            while (fetchInstruction(this)) {
+                executeInstruction(this);
+            }
             finalizeProcessing(this);
         },
 
@@ -95,12 +100,13 @@ function fetchInstruction(processor) {
 function executeInstruction(processor) {
     // decode the bytecode instruction
     var instruction = processor.procedureContext.currentInstruction;
-    var operation = compiler.bytecode.decodeOperation(instruction);
-    var modifier = compiler.bytecode.decodeModifier(instruction);
-    var operand = compiler.bytecode.decodeOperand(instruction);
+    var operation = utilities.decodeOperation(instruction);
+    var modifier = utilities.decodeModifier(instruction);
+    var operand = utilities.decodeOperand(instruction);
 
     // pass execution off to the correct operation handler
     var index = (operation << 2) | modifier;  // index: [0..31]
+    console.log('executing instruction ' + index.toString(16));
     instructionHandlers[index](processor, operand); // operand: [0..2047]
 
     // update the state of the task context
@@ -114,6 +120,7 @@ function executeInstruction(processor) {
  * This function finalizes the processing depending on the status of the task.
  */
 function finalizeProcessing(processor) {
+    console.log('finalizing processing...');
     switch (processor.taskContext.processorStatus) {
         case ACTIVE:
             // the task hit a break point or the account balance is zero so notify any interested parties
@@ -136,15 +143,18 @@ function finalizeProcessing(processor) {
  * This function publishes a task completion event to the global event queue.
  */
 function publishCompletionEvent(processor) {
-    var event = '[\n' +
+    var source = '[\n' +
         '    $eventType: $completion\n' +
         '    $taskTag: ' + processor.taskContext.taskTag + '\n' +
         '    $accountTag: ' + processor.taskContext.accountTag + '\n' +
         '    $accountBalance: ' + processor.taskContext.accountBalance + '\n' +
         '    $clockCycles: ' + processor.taskContext.clockCycles + '\n' +
-        '    $result: ' + processor.taskContext.result.toSource('    ') + '\n' +
+        '    $result: ' + processor.taskContext.result.toDocument('    ') + '\n' +
         ']';
-    processor.cloud.publishEvent(event);
+    var event = bali.parser.parseDocument(source);
+    var citation = processor.cloud.createDraft(event);
+    var draft = processor.cloud.retrieveDraft(citation);
+    processor.cloud.publishEvent(draft);
 }
 
 
@@ -153,12 +163,15 @@ function publishCompletionEvent(processor) {
  */
 function publishSuspensionEvent(processor) {
     var task = exportTask(processor.taskContext);
-    var event = '[\n' +
+    var source = '[\n' +
         '    $eventType: $suspension\n' +
         '    $taskTag: ' + task.taskTag + '\n' +
-        '    $taskContext: ' + task.toSource('    ') + '\n' +
+        '    $taskContext: ' + task.toDocument('    ') + '\n' +
         ']';
-    processor.cloud.publishEvent(event);
+    var event = bali.parser.parseDocument(source);
+    var citation = processor.cloud.createDraft(event);
+    var draft = processor.cloud.retrieveDraft(citation);
+    processor.cloud.publishEvent(draft);
 }
 
 
@@ -168,7 +181,7 @@ function publishSuspensionEvent(processor) {
 function queueTaskContext(processor) {
     // convert the task context into its corresponding Bali source document
     var task = exportTask(processor.taskContext);
-    var document = task.toSource();
+    var document = task.toString();
     // queue up the task for a new virtual machine
     var WAIT_QUEUE = '#3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K';
     processor.cloud.queueMessage(WAIT_QUEUE, document);
@@ -183,7 +196,7 @@ function importTask(task) {
     taskContext.taskTag = task.getValue('$taskTag');
     taskContext.accountTag = task.getValue('$accountTag');
     taskContext.accountBalance = task.getValue('$accountBalance').toNumber();
-    taskContext.processorStatus = task.getValue('$processorStatus').toSource();
+    taskContext.processorStatus = task.getValue('$processorStatus').toString();
     taskContext.clockCycles = task.getValue('$clockCycles').toNumber();
     taskContext.componentStack = task.getValue('$componentStack');
     taskContext.handlerStack = task.getValue('$handlerStack');
@@ -196,34 +209,37 @@ function importTask(task) {
  * This function exports a virtual machine task context to a Bali component.
  */
 function exportTask(taskContext) {
-    var task = component.Catalog.fromCollection(taskContext);
+    var task = bali.Catalog.fromCollection(taskContext);
     return task;
 }
 
 
-function extractProcedure(processor, targetComponent, typeReference, parameterValues, index) {
+function extractProcedure(processor, targetComponent, typeReference, parameters, index) {
     var type = processor.cloud.retrieveType(typeReference);
     var key = type.getValue('$names').getString[index];
     var procedures = type.getValue('$procedures');
     var association = procedures.getValue(key);
     var procedureName = association.key;
     var procedure = association.value;
-    var iterator = type.getValue('$literals').iterator();
-    var literals = [];
+
+    // extract the literals from the type
+    var iterator = type.getValue('$literals').getIterator();
+    var literals = new bali.Set();
     while (iterator.hasNext()) {
-        literals.push(iterator.getNext().toString());
+        var literal = iterator.getNext();
+        literals.addItem(literal);
     }
-    var literalValues = component.List.fromCollection(literals);
-    var variableValues = component.List.fromScratch();
-    var bytes = procedure.getValue('$bytecode').value;
-    var bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
+
+    var variables = new bali.Catalog();
+    var bytes = procedure.getValue('$bytecode').getBuffer();
+    var bytecodeInstructions = utilities.bytesToBytecode(bytes);
     var procedureContext = {
         targetComponent: targetComponent,
         typeReference: typeReference,
         procedureName: procedureName,
-        parameterValues: parameterValues,
-        literalValues: literalValues,
-        variableValues: variableValues,
+        parameters: parameters,
+        literals: literals,
+        variables: variables,
         bytecodeInstructions: bytecodeInstructions,
         currentInstruction: 0,
         nextAddress: 1
@@ -236,15 +252,16 @@ function extractProcedure(processor, targetComponent, typeReference, parameterVa
  * This function imports a virtual machine procedure context from a Bali component.
  */
 function importProcedure(procedure) {
+    var bytes = procedure.getValue('$bytecodeInstructions').getBuffer();
+    var bytecodeInstructions = utilities.bytesToBytecode(bytes);
     var procedureContext = {};
     procedureContext.targetComponent = procedure.getValue('$targetComponent');
     procedureContext.typeReference = procedure.getValue('$typeReference');
     procedureContext.procedureName = procedure.getValue('$procedureName');
-    procedureContext.parameterValues = procedure.getValue('$parameterValues');
-    procedureContext.literalValues = procedure.getValue('$literalValues');
-    procedureContext.variableValues = procedure.getValue('$variableValues');
-    var bytes = procedure.getValue('$bytecodeInstructions').value;
-    procedureContext.bytecodeInstructions = compiler.bytecode.bytesToBytecode(bytes);
+    procedureContext.parameters = procedure.getValue('$parameters');
+    procedureContext.literals = procedure.getValue('$literals');
+    procedureContext.variables = procedure.getValue('$variables');
+    procedureContext.bytecodeInstructions = bytecodeInstructions;
     procedureContext.currentInstruction = procedure.getValue('$currentInstruction').toNumber();
     procedureContext.nextAddress = procedure.getValue('$nextAddress').toNumber();
     return procedureContext;
@@ -255,15 +272,21 @@ function importProcedure(procedure) {
  * This function exports a virtual machine procedure context to a Bali component.
  */
 function exportProcedure(procedureContext) {
-    var bytes = compiler.bytecode.bytecodeToBytes(procedureContext.bytecodeInstructions);
+    var bytes = utilities.bytecodeToBytes(procedureContext.bytecodeInstructions);
     var base16 = bali.codex.base16Encode(bytes);
     var source = "'%bytecodeInstructions'($base: 16, $mediatype: \"application/bcod\")";
     source = source.replace(/%bytecodeInstructions/, base16);
-    var tree = bali.parser.parseComponent(source);
-    var bytecodeInstructions = procedureContext.bytecodeInstructions;  // must save and restore!!!
-    procedureContext.bytecodeInstructions = component.importer.fromTree(tree);
-    var procedure = component.Catalog.fromCollection(procedureContext);
-    procedureContext.bytecodeInstructions = bytecodeInstructions;
+    var bytecodeInstructions = bali.parser.parseDocument(source);
+    var procedure = new bali.Catalog();
+    procedure.setValue('$targetComponent', procedureContext.targetComponent);
+    procedure.setValue('$typeReference', procedureContext.typeReference);
+    procedure.setValue('$procedureName', procedureContext.procedureName);
+    procedure.setValue('$parameters', procedureContext.parameters);
+    procedure.setValue('$literals', procedureContext.literals);
+    procedure.setValue('$variables', procedureContext.variables);
+    procedure.setValue('$bytecodeInstructions', bytecodeInstructions);
+    procedure.setValue('$currentInstruction', procedureContext.currentInstruction);
+    procedure.setValue('$nextAddress', procedureContext.nextAddress);
     return procedure;
 }
 
@@ -287,9 +310,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var nextAddress = operand;
         // pop the condition component off the component stack
-        var condition = processor.taskContext.componentStack.popItem();
+        var condition = processor.taskContext.componentStack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (component.Template.NONE.equalTo(condition)) {
+        if (bali.Template.NONE.isEqualTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -299,9 +322,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var nextAddress = operand;
         // pop the condition component off the component stack
-        var condition = processor.taskContext.componentStack.popItem();
+        var condition = processor.taskContext.componentStack.removeItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
-        if (component.Probability.TRUE.equalTo(condition)) {
+        if (bali.Probability.TRUE.isEqualTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -311,9 +334,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var nextAddress = operand;
         // pop the condition component off the component stack
-        var condition = processor.taskContext.componentStack.popItem();
+        var condition = processor.taskContext.componentStack.removeItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
-        if (component.Probability.FALSE.equalTo(condition)) {
+        if (bali.Probability.FALSE.isEqualTo(condition)) {
             processor.procedureContext.nextAddress = nextAddress - 1;  // account for auto-increment
         }
     },
@@ -323,7 +346,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.taskContext.handlerStack.pushItem(new component.Complex(handlerAddress.toString()));
+        processor.taskContext.handlerStack.addItem(new bali.Complex(handlerAddress.toString()));
     },
 
     // PUSH ELEMENT literal
@@ -331,17 +354,17 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the literal associated with the index
-        var literal = processor.procedureContext.literalValues.getItem(index);
-        processor.taskContext.componentStack.pushItem(literal);
+        var literal = processor.procedureContext.literals.getItem(index);
+        processor.taskContext.componentStack.addItem(literal);
     },
 
-    // PUSH CODE literal
+    // PUSH SOURCE literal
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the literal associated with the index
-        var code = processor.procedureContext.literalValues.getItem(index);
-        processor.taskContext.componentStack.pushItem(code);
+        var source = processor.procedureContext.literals.getItem(index);
+        processor.taskContext.componentStack.addItem(source);
     },
 
     // UNIMPLEMENTED PUSH OPERATION
@@ -354,14 +377,14 @@ var instructionHandlers = [
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // remove the current exception handler address from the top of the handlers stack
         // since it is no longer in scope
-        processor.taskContext.handlerStack.popItem();
+        processor.taskContext.handlerStack.removeItem();
     },
 
     // POP COMPONENT
     function(processor, operand) {
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // remove the component that is on top of the component stack since it was not used
-        processor.taskContext.componentStack.popItem();
+        processor.taskContext.componentStack.removeItem();
     },
 
     // UNIMPLEMENTED POP OPERATION
@@ -379,8 +402,8 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the variable associated with the index
-        var variable = processor.procedureContext.variableValues.getItem(index);
-        processor.taskContext.componentStack.pushItem(variable);
+        var variable = processor.procedureContext.variables.getItem(index).value;
+        processor.taskContext.componentStack.addItem(variable);
     },
 
     // LOAD PARAMETER symbol
@@ -388,8 +411,8 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the parameter associated with the index
-        var parameter = processor.procedureContext.parameterValues.getItem(index);
-        processor.taskContext.componentStack.pushItem(parameter);
+        var parameter = processor.procedureContext.parameters.getValue(index);
+        processor.taskContext.componentStack.addItem(parameter);
     },
 
     // LOAD DOCUMENT symbol
@@ -397,7 +420,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the reference associated with the index
-        var reference = processor.procedureContext.variableValues.getItem(index).toString();
+        var reference = processor.procedureContext.variables.getItem(index).value.toString();
         // TODO: jump to exception handler if reference isn't a reference
         // retrieve the referenced document from the cloud repository
         var document;
@@ -407,7 +430,7 @@ var instructionHandlers = [
             document = processor.cloud.retrieveDraft(reference);
         }
         // push the document on top of the component stack
-        processor.taskContext.componentStack.pushItem(document);
+        processor.taskContext.componentStack.addItem(document);
     },
 
     // LOAD MESSAGE symbol
@@ -415,12 +438,12 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the queue tag associated with the index
-        var queue = processor.procedureContext.variableValues.getItem(index);
+        var queue = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if queue isn't a tag
         // attempt to receive a message from the queue in the cloud
         var message = processor.cloud.receiveMessage(queue);
         if (message) {
-            processor.taskContext.componentStack.pushItem(message);
+            processor.taskContext.componentStack.addItem(message);
         } else {
             // set the task status to 'waiting'
             processor.taskContext.processorStatus = WAITING;
@@ -434,9 +457,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the component that is on top of the component stack off the stack
-        var component = processor.taskContext.componentStack.popItem();
+        var component = processor.taskContext.componentStack.removeItem();
         // and store the component in the variable associated with the index
-        processor.procedureContext.variableValues.setItem(index, component);
+        processor.procedureContext.variables.getItem(index).setValue(component);
     },
 
     // STORE DRAFT symbol
@@ -444,9 +467,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the draft that is on top of the component stack off the stack
-        var draft = processor.taskContext.componentStack.popItem();
+        var draft = processor.taskContext.componentStack.removeItem();
         // lookup the reference associated with the index operand
-        var reference = processor.procedureContext.variableValues.getItem(index);
+        var reference = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if reference isn't a reference
         // write the referenced draft to the cloud repository
         processor.cloud.saveDraft(reference, draft);
@@ -457,13 +480,13 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the document that is on top of the component stack off the stack
-        var document = processor.taskContext.componentStack.popItem();
+        var document = processor.taskContext.componentStack.removeItem();
         // lookup the reference associated with the index operand
-        var reference = processor.procedureContext.variableValues.getItem(index);
+        var reference = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if reference isn't a reference
         // write the referenced document to the cloud repository
         var citation = processor.cloud.commitDocument(reference, document);
-        processor.procedureContext.variableValues.setItem(index, citation);
+        processor.procedureContext.variables.getItem(index).setValue(citation);
     },
 
     // STORE MESSAGE symbol
@@ -471,9 +494,9 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the message that is on top of the component stack off the stack
-        var message = processor.taskContext.componentStack.popItem();
+        var message = processor.taskContext.componentStack.removeItem();
         // lookup the queue tag associated with the index operand
-        var queue = processor.procedureContext.variableValues.getItem(index);
+        var queue = processor.procedureContext.variables.getItem(index);
         // TODO: jump to exception handler if queue isn't a tag
         // send the message to the queue in the cloud
         processor.cloud.queueMessage(queue, message);
@@ -486,7 +509,7 @@ var instructionHandlers = [
         // call the intrinsic function associated with the index operand
         var result = intrinsics.invokeByIndex(processor, index, []);
         // push the result of the function call onto the top of the component stack
-        processor.taskContext.componentStack.pushItem(result);
+        processor.taskContext.componentStack.addItem(result);
     },
 
     // INVOKE symbol WITH PARAMETER
@@ -494,11 +517,11 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         // pop the parameters to the intrinsic function call off of the component stack
-        var parameter = processor.taskContext.componentStack.popItem();
+        var parameter = processor.taskContext.componentStack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.invokeByIndex(processor, index, [parameter]);
         // push the result of the function call onto the top of the component stack
-        processor.taskContext.componentStack.pushItem(result);
+        processor.taskContext.componentStack.addItem(result);
     },
 
     // INVOKE symbol WITH 2 PARAMETERS
@@ -506,12 +529,12 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         // pop the parameters to the intrinsic function call off of the component stack
-        var parameter1 = processor.taskContext.componentStack.popItem();
-        var parameter2 = processor.taskContext.componentStack.popItem();
+        var parameter1 = processor.taskContext.componentStack.removeItem();
+        var parameter2 = processor.taskContext.componentStack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2]);
         // push the result of the function call onto the top of the component stack
-        processor.taskContext.componentStack.pushItem(result);
+        processor.taskContext.componentStack.addItem(result);
     },
 
     // INVOKE symbol WITH 3 PARAMETERS
@@ -519,61 +542,61 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
         // pop the parameters to the intrinsic function call off of the component stack
-        var parameter1 = processor.taskContext.componentStack.popItem();
-        var parameter2 = processor.taskContext.componentStack.popItem();
-        var parameter3 = processor.taskContext.componentStack.popItem();
+        var parameter1 = processor.taskContext.componentStack.removeItem();
+        var parameter2 = processor.taskContext.componentStack.removeItem();
+        var parameter3 = processor.taskContext.componentStack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2, parameter3]);
         // push the result of the function call onto the top of the component stack
-        processor.taskContext.componentStack.pushItem(result);
+        processor.taskContext.componentStack.addItem(result);
     },
 
     // EXECUTE symbol
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = component.Template.NONE;
-        var typeReference = processor.taskContext.componentStack.popItem();
-        var parameterValues = component.List.fromScratch();
-        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
+        var targetComponent = bali.Template.NONE;
+        var typeReference = processor.taskContext.componentStack.removeItem();
+        var parameters = new bali.Parameters();
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameters, index);
         processor.procedureContext = procedureContext;
-        processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
+        processor.taskContext.procedureStack.addItem(exportProcedure(procedureContext));
     },
 
     // EXECUTE symbol WITH PARAMETERS
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = component.Template.NONE;
-        var typeReference = processor.taskContext.componentStack.popItem();
-        var parameterValues = processor.taskContext.componentStack.popItem();
-        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
+        var targetComponent = bali.Template.NONE;
+        var typeReference = processor.taskContext.componentStack.removeItem();
+        var parameters = processor.taskContext.componentStack.removeItem();
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameters, index);
         processor.procedureContext = procedureContext;
-        processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
+        processor.taskContext.procedureStack.addItem(exportProcedure(procedureContext));
     },
 
     // EXECUTE symbol ON TARGET
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = processor.taskContext.componentStack.popItem();
+        var targetComponent = processor.taskContext.componentStack.removeItem();
         var typeReference = intrinsics.invokeByName(processor, '$getType', [targetComponent]);
-        var parameterValues = component.List.fromScratch();
-        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
+        var parameters = new bali.Parameters();
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameters, index);
         processor.procedureContext = procedureContext;
-        processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
+        processor.taskContext.procedureStack.addItem(exportProcedure(procedureContext));
     },
 
     // EXECUTE symbol ON TARGET WITH PARAMETERS
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand - 1;  // JS zero based indexing
-        var targetComponent = processor.taskContext.componentStack.popItem();
+        var targetComponent = processor.taskContext.componentStack.removeItem();
         var typeReference = intrinsics.invokeByName(processor, '$getType', [targetComponent]);
-        var parameterValues = processor.taskContext.componentStack.popItem();
-        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameterValues, index);
+        var parameters = processor.taskContext.componentStack.removeItem();
+        var procedureContext = extractProcedure(processor, targetComponent, typeReference, parameters, index);
         processor.procedureContext = procedureContext;
-        processor.taskContext.procedureStack.pushItem(exportProcedure(procedureContext));
+        processor.taskContext.procedureStack.addItem(exportProcedure(procedureContext));
     },
 
     // HANDLE EXCEPTION
@@ -583,22 +606,22 @@ var instructionHandlers = [
         while (!processor.taskContext.procedureStack.isEmpty()) {
             while (!processor.taskContext.handlerStack.isEmpty()) {
                 // retrieve the address of the current exception handlers
-                var handlerAddress = processor.taskContext.handlerStack.popItem();
+                var handlerAddress = processor.taskContext.handlerStack.removeItem();
                 // use that address as the next instruction to be executed
                 processor.procedureContext.nextAddress = handlerAddress;
             }
             // pop the current exception off of the component stack
-            var exception = processor.taskContext.componentStack.popItem();
+            var exception = processor.taskContext.componentStack.removeItem();
             // pop the current procedure context off of the context stack since it has no handlers
-            processor.taskContext.procedureStack.popItem();
+            processor.taskContext.procedureStack.removeItem();
             if (processor.taskContext.procedureStack.isEmpty()) {
                 // we're done
                 processor.taskContext.exception = exception;
                 processor.taskContext.processorStatus = DONE;
             } else {
-                processor.procedureContext = processor.taskContext.procedureStack.getTop();
+                processor.procedureContext = processor.taskContext.procedureStack.topItem();
                 // push the result of the procedure call onto the top of the component stack
-                processor.taskContext.componentStack.pushItem(exception);
+                processor.taskContext.componentStack.addItem(exception);
             }
         }
     },
@@ -607,17 +630,17 @@ var instructionHandlers = [
     function(processor, operand) {
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // pop the result of the procedure call off of the component stack
-        var result = processor.taskContext.componentStack.popItem();
+        var result = processor.taskContext.componentStack.removeItem();
         // pop the current context off of the context stack since it is now out of scope
-        processor.taskContext.procedureStack.popItem();
+        processor.taskContext.procedureStack.removeItem();
         if (processor.taskContext.procedureStack.isEmpty()) {
             // we're done
             processor.taskContext.result = result;
             processor.taskContext.processorStatus = DONE;
         } else {
-            processor.procedureContext = processor.taskContext.procedureStack.getTop();
+            processor.procedureContext = processor.taskContext.procedureStack.topItem();
             // push the result of the procedure call onto the top of the component stack
-            processor.taskContext.componentStack.pushItem(result);
+            processor.taskContext.componentStack.addItem(result);
         }
     },
 

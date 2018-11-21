@@ -43,7 +43,7 @@ describe('Bali Cloud Environment™', function() {
                 var basmFile = testFolder + prefix + '.basm';
                 var source = fs.readFileSync(baliFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var procedure = bali.parser.parseProcedure(source);
+                var procedure = bali.parser.parseDocument(source).procedure;
                 expect(procedure).to.exist;  // jshint ignore:line
                 var context = compiler.analyzeProcedure(procedure);
                 var instructions = compiler.compileProcedure(procedure, context);
@@ -67,17 +67,21 @@ describe('Bali Cloud Environment™', function() {
                 if (!file.endsWith('.bali')) continue;
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
-                var baliFile = testFolder + prefix + '.bali';
-                var source = fs.readFileSync(baliFile, 'utf8');
+                var typeFile = testFolder + prefix + '.bali';
+                var proceduresFile = testFolder + prefix + '.procedures';
+                var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var type = bali.parser.parseComponent(source);
+                var type = bali.parser.parseDocument(source);
                 var typeCitation = api.createDraft(type);
                 var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDraft(typeCitation, draft);
-                var expected = compiler.compileType(api, typeCitation);
-                expect(expected).to.exist;  // jshint ignore:line
-                var compiled = api.retrieveType(typeCitation);
-                expect(compiled.toString()).to.equal(expected.toString());
+                typeCitation = api.commitDocument(typeCitation, draft);
+                var compiledCitation = compiler.compileType(api, typeCitation);
+                expect(compiledCitation).to.exist;  // jshint ignore:line
+                var compiled = api.retrieveType(compiledCitation);
+                var procedures = compiled.documentContent.getValue('$procedures');
+                //fs.writeFileSync(proceduresFile, procedures.toString(), 'utf8');
+                var expected = fs.readFileSync(proceduresFile, 'utf8');
+                expect(procedures.toString()).to.equal(expected);
             }
         });
 
