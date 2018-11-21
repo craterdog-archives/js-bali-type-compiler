@@ -66,9 +66,9 @@ var TASK_TEMPLATE =
         '    $handlerStack: []($type: $Stack)\n' +
         '    $procedureStack: [\n' +
         '        [\n' +
-        '            $targetComponent: none\n' +
-        '            $typeReference: none\n' +
-        '            $procedureName: $dummy\n' +
+        '            $target: none\n' +
+        '            $type: none\n' +
+        '            $name: $dummy\n' +
         '            $parameters: [\n' +
         '                1: "This is a text string."\n' +
         '                2: 2\n' +
@@ -80,9 +80,9 @@ var TASK_TEMPLATE =
         '                $reference: <bali:[$protocol:v1,$tag:#LGLHW28KH99AXZZDTFXV14BX8CF2F68N,$version:v2.3,$digest:none]>\n' +
         '                $tag: #ZQMQ8BGN43Y146KCXX24ZASF0GDJ5YDZ\n' +
         '            ]\n' +
-        '            $bytecodeInstructions: %bytecodeInstructions\n' +
-        '            $currentInstruction: 0\n' +
-        '            $nextAddress: 1\n' +
+        '            $bytecode: %bytecode\n' +
+        '            $instruction: 0\n' +
+        '            $address: 1\n' +
         '        ]($type: $ProcedureContext)\n' +
         '    ]($type: $Stack)\n' +
         ']($type: $TaskContext)';
@@ -98,7 +98,7 @@ function generateTaskContext(filename) {
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
     source = source.replace(/%literals/, literals.toDocument('            '));
-    source = source.replace(/%bytecodeInstructions/, "'" + base16 + "'");
+    source = source.replace(/%bytecode/, "'" + base16 + "'");
     var taskContext = bali.parser.parseDocument(source);
     return taskContext;
 }
@@ -117,31 +117,31 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.nextAddress).to.equal(1);
+            expect(processor.procedureContext.address).to.equal(1);
 
             // 1.IfStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(2);
+            expect(processor.procedureContext.address).to.equal(2);
 
             // 1.1.ConditionClause:
             // PUSH ELEMENT `true`
             // JUMP TO 1.IfStatementDone ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(4);
+            expect(processor.procedureContext.address).to.equal(4);
 
             // 1.1.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(5);
+            expect(processor.procedureContext.address).to.equal(5);
 
             // 1.2.ConditionClause:
             // PUSH ELEMENT `false`
             // JUMP TO 1.3.ConditionClause ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(8);
+            expect(processor.procedureContext.address).to.equal(8);
 
             // 1.2.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -151,7 +151,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.4.ConditionClause ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(11);
+            expect(processor.procedureContext.address).to.equal(11);
 
             // 1.3.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -161,19 +161,19 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(13);
+            expect(processor.procedureContext.address).to.equal(13);
 
             // 1.4.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(14);
+            expect(processor.procedureContext.address).to.equal(14);
 
             // 1.5.ConditionClause:
             // PUSH ELEMENT `none`
             // JUMP TO 1.6.ConditionClause ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(17);
+            expect(processor.procedureContext.address).to.equal(17);
 
             // 1.5.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -183,17 +183,17 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(19);
+            expect(processor.procedureContext.address).to.equal(19);
 
             // 1.6.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(20);
+            expect(processor.procedureContext.address).to.equal(20);
 
             // 1.IfStatementDone:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.nextAddress).to.equal(21);
+            expect(processor.procedureContext.address).to.equal(21);
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -215,7 +215,7 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.nextAddress).to.equal(1);
+            expect(processor.procedureContext.address).to.equal(1);
 
             // 1.PushHandler:
             // PUSH HANDLER 3.PushSource
@@ -256,13 +256,12 @@ describe('Bali Virtual Machine™', function() {
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/LOAD-STORE.basm';
             taskContext = generateTaskContext(testFile);
-            console.log('taskContext: ' + taskContext);
             expect(taskContext).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
             var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.nextAddress).to.equal(1);
+            expect(processor.procedureContext.address).to.equal(1);
 
             // 1.LoadParameter:
             // LOAD PARAMETER $x
@@ -272,6 +271,7 @@ describe('Bali Virtual Machine™', function() {
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
+            console.log('processor: ' + processor);
             processor.step();
             console.log('processor: ' + processor);
             expect(processor.taskContext.componentStack.getSize()).to.equal(0);
@@ -333,7 +333,7 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.nextAddress).to.equal(1);
+            expect(processor.procedureContext.address).to.equal(1);
 
             // 1.Invoke:
             // INVOKE $random
@@ -384,7 +384,7 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.nextAddress).to.equal(1);
+            expect(processor.procedureContext.address).to.equal(1);
             // TODO: add implementation
         });
 
