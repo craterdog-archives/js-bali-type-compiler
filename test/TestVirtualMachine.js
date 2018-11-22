@@ -57,18 +57,20 @@ var TYPE_SOURCE =
 
 var TASK_TEMPLATE =
         '[\n' +
-        '    $taskTag: #Y29YH82BHG4SPTGWGFRYBL4RQ33GTX59\n' +
-        '    $accountTag: #GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P\n' +
-        '    $accountBalance: 1000\n' +
-        '    $processorStatus: $active\n' +
-        '    $clockCycles: 0\n' +
-        '    $componentStack: []($type: $Stack)\n' +
-        '    $handlerStack: []($type: $Stack)\n' +
-        '    $procedureStack: [\n' +
+        '    $tag: #Y29YH82BHG4SPTGWGFRYBL4RQ33GTX59\n' +
+        '    $account: #GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P\n' +
+        '    $balance: 1000\n' +
+        '    $status: $active\n' +
+        '    $clock: 0\n' +
+        '    $stack: []($type: $Stack)\n' +
+        '    $procedures: [\n' +
         '        [\n' +
         '            $target: none\n' +
         '            $type: none\n' +
         '            $name: $dummy\n' +
+        '            $bytecode: %bytecode\n' +
+        '            $instruction: 0\n' +
+        '            $address: 1\n' +
         '            $parameters: [\n' +
         '                1: "This is a text string."\n' +
         '                2: 2\n' +
@@ -80,9 +82,7 @@ var TASK_TEMPLATE =
         '                $reference: <bali:[$protocol:v1,$tag:#LGLHW28KH99AXZZDTFXV14BX8CF2F68N,$version:v2.3,$digest:none]>\n' +
         '                $tag: #ZQMQ8BGN43Y146KCXX24ZASF0GDJ5YDZ\n' +
         '            ]\n' +
-        '            $bytecode: %bytecode\n' +
-        '            $instruction: 0\n' +
-        '            $address: 1\n' +
+        '            $handlers: []($type: $Stack)\n' +
         '        ]($type: $ProcedureContext)\n' +
         '    ]($type: $Stack)\n' +
         ']($type: $TaskContext)';
@@ -197,10 +197,10 @@ describe('Bali Virtual Machine™', function() {
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clockCycles).to.equal(17);
-            expect(processor.taskContext.accountBalance).to.equal(983);
-            expect(processor.taskContext.processorStatus).to.equal('$active');
-            expect(processor.taskContext.componentStack.getSize()).to.equal(0);
+            expect(processor.taskContext.clock).to.equal(17);
+            expect(processor.taskContext.balance).to.equal(983);
+            expect(processor.taskContext.status).to.equal('$active');
+            expect(processor.taskContext.stack.getSize()).to.equal(0);
         });
 
     });
@@ -220,33 +220,33 @@ describe('Bali Virtual Machine™', function() {
             // 1.PushHandler:
             // PUSH HANDLER 3.PushSource
             processor.step();
-            expect(processor.taskContext.handlerStack.getSize()).to.equal(1);
+            expect(processor.procedureContext.handlers.getSize()).to.equal(1);
 
             // 2.PushElement:
             // PUSH ELEMENT "five"
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
 
             // 3.PushSource:
             // PUSH SOURCE `{return prefix + name + suffix}`
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(2);
+            expect(processor.taskContext.stack.getSize()).to.equal(2);
 
             // 4.PopHandler:
             // POP HANDLER
             processor.step();
-            expect(processor.taskContext.handlerStack.getSize()).to.equal(0);
+            expect(processor.procedureContext.handlers.getSize()).to.equal(0);
 
             // 5.PopComponent:
             // POP COMPONENT
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clockCycles).to.equal(5);
-            expect(processor.taskContext.accountBalance).to.equal(995);
-            expect(processor.taskContext.processorStatus).to.equal('$active');
+            expect(processor.taskContext.clock).to.equal(5);
+            expect(processor.taskContext.balance).to.equal(995);
+            expect(processor.taskContext.status).to.equal('$active');
         });
 
     });
@@ -266,59 +266,59 @@ describe('Bali Virtual Machine™', function() {
             // 1.LoadParameter:
             // LOAD PARAMETER $x
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().toString()).to.equal('"This is a text string."');
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
             console.log('processor: ' + processor);
             processor.step();
             console.log('processor: ' + processor);
-            expect(processor.taskContext.componentStack.getSize()).to.equal(0);
+            expect(processor.taskContext.stack.getSize()).to.equal(0);
             expect(processor.procedureContext.variables.getItem(1).value.toString()).to.equal('"This is a text string."');
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().toString()).to.equal('"This is a text string."');
 
             // 4.StoreDraft:
             // STORE DRAFT $document
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(0);
+            expect(processor.taskContext.stack.getSize()).to.equal(0);
             // LOAD DOCUMENT $document
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // 5.StoreDocument:
             // STORE DOCUMENT $document
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(0);
+            expect(processor.taskContext.stack.getSize()).to.equal(0);
 
             // 6.LoadDocument:
             // LOAD DOCUMENT $document
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // 7.StoreMessage:
             // STORE MESSAGE $queue
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(0);
+            expect(processor.taskContext.stack.getSize()).to.equal(0);
 
             // 8.LoadMessage:
             // LOAD MESSAGE $queue
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clockCycles).to.equal(9);
-            expect(processor.taskContext.accountBalance).to.equal(991);
-            expect(processor.taskContext.processorStatus).to.equal('$active');
+            expect(processor.taskContext.clock).to.equal(9);
+            expect(processor.taskContext.balance).to.equal(991);
+            expect(processor.taskContext.status).to.equal('$active');
         });
 
     });
@@ -338,37 +338,37 @@ describe('Bali Virtual Machine™', function() {
             // 1.Invoke:
             // INVOKE $random
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
 
             // 2.InvokeWithParameter:
             // PUSH ELEMENT `3`
             processor.step();
             // INVOKE $factorial WITH PARAMETER
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(2);
-            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('6');
+            expect(processor.taskContext.stack.getSize()).to.equal(2);
+            expect(processor.taskContext.stack.topItem().toString()).to.equal('6');
 
             // 3.InvokeWith2Parameters:
             // PUSH ELEMENT `5`
             processor.step();
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(2);
-            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('11');
+            expect(processor.taskContext.stack.getSize()).to.equal(2);
+            expect(processor.taskContext.stack.topItem().toString()).to.equal('11');
 
             // 4.InvokeWith3Parameters:
             // PUSH ELEMENT `13`
             processor.step();
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
-            expect(processor.taskContext.componentStack.getSize()).to.equal(1);
-            expect(processor.taskContext.componentStack.topItem().toString()).to.equal('11');
+            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.taskContext.stack.topItem().toString()).to.equal('11');
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clockCycles).to.equal(7);
-            expect(processor.taskContext.accountBalance).to.equal(993);
-            expect(processor.taskContext.processorStatus).to.equal('$active');
+            expect(processor.taskContext.clock).to.equal(7);
+            expect(processor.taskContext.balance).to.equal(993);
+            expect(processor.taskContext.status).to.equal('$active');
         });
 
     });
