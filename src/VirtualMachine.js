@@ -502,9 +502,9 @@ var instructionHandlers = [
     // INVOKE symbol
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.invokeByIndex(processor, index, []);
+        var result = intrinsics.functions[index]();
         // push the result of the function call onto the top of the component stack
         processor.taskContext.stack.addItem(result);
     },
@@ -512,11 +512,11 @@ var instructionHandlers = [
     // INVOKE symbol WITH PARAMETER
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         // pop the parameters to the intrinsic function call off of the component stack
         var parameter = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.invokeByIndex(processor, index, [parameter]);
+        var result = intrinsics.functions[index](parameter);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.stack.addItem(result);
     },
@@ -524,12 +524,12 @@ var instructionHandlers = [
     // INVOKE symbol WITH 2 PARAMETERS
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         // pop the parameters to the intrinsic function call off of the component stack
         var parameter1 = processor.taskContext.stack.removeItem();
         var parameter2 = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2]);
+        var result = intrinsics.functions[index](parameter1, parameter2);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.stack.addItem(result);
     },
@@ -537,13 +537,13 @@ var instructionHandlers = [
     // INVOKE symbol WITH 3 PARAMETERS
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         // pop the parameters to the intrinsic function call off of the component stack
         var parameter1 = processor.taskContext.stack.removeItem();
         var parameter2 = processor.taskContext.stack.removeItem();
         var parameter3 = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.invokeByIndex(processor, index, [parameter1, parameter2, parameter3]);
+        var result = intrinsics.functions[index](parameter1, parameter2, parameter3);
         // push the result of the function call onto the top of the component stack
         processor.taskContext.stack.addItem(result);
     },
@@ -554,7 +554,7 @@ var instructionHandlers = [
         // push the current procedure context onto the stack
         processor.taskContext.procedures.addItem(exportProcedure(processor.procedureContext));
         // setup the new procedure context
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         var target = bali.Template.NONE;
         var type = processor.taskContext.stack.removeItem();
         var parameters = new bali.Catalog();
@@ -568,7 +568,7 @@ var instructionHandlers = [
         // push the current procedure context onto the stack
         processor.taskContext.procedures.addItem(exportProcedure(processor.procedureContext));
         // setup the new procedure context
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         var target = bali.Template.NONE;
         var type = processor.taskContext.stack.removeItem();
         var parameters = processor.taskContext.stack.removeItem();
@@ -582,7 +582,7 @@ var instructionHandlers = [
         // push the current procedure context onto the stack
         processor.taskContext.procedures.addItem(exportProcedure(processor.procedureContext));
         // setup the new procedure context
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         var target = processor.taskContext.stack.removeItem();
         var type = intrinsics.invokeByName(processor, '$getType', [target]);
         var parameters = new bali.Catalog();
@@ -596,7 +596,7 @@ var instructionHandlers = [
         // push the current procedure context onto the stack
         processor.taskContext.procedures.addItem(exportProcedure(processor.procedureContext));
         // setup the new procedure context
-        var index = operand - 1;  // JS zero based indexing
+        var index = operand;
         var target = processor.taskContext.stack.removeItem();
         var type = intrinsics.invokeByName(processor, '$getType', [target]);
         var parameters = processor.taskContext.stack.removeItem();

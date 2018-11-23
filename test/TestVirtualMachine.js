@@ -354,9 +354,7 @@ describe('Bali Virtual Machine™', function() {
 
             // 1.Invoke:
             // INVOKE $random
-            console.log('processor before: ' + processor);
             processor.step();
-            console.log('processor after: ' + processor);
             expect(processor.taskContext.stack.getSize()).to.equal(1);
 
             // 2.InvokeWithParameter:

@@ -11,6 +11,7 @@
 var bali = require('bali-component-framework');
 var types = require('./Types');
 var bytecode = require('./BytecodeUtilities');
+var intrinsics = require('./IntrinsicFunctions');
 
 /**
  * This library provides functions that assemble and disassemble instructions
@@ -209,8 +210,6 @@ AnalyzingVisitor.prototype.visitStoreInstruction = function(instruction) {
 //     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 AnalyzingVisitor.prototype.visitInvokeInstruction = function(instruction) {
-    var symbol = instruction.getValue('$operand');
-    this.symbols.addItem(symbol);
     this.address++;
 };
 
@@ -389,8 +388,7 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     var count = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var symbols = this.context.getValue('$symbols');
-    var index = symbols.getIndex(symbol);
+    var index = intrinsics.names.indexOf(symbol.toString().slice(1, -1));  // remove the double quotes
     var word = bytecode.encodeInstruction(types.INVOKE, count, index);
     this.bytecode.push(word);
 };

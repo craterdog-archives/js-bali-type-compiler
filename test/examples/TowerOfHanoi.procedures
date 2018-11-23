@@ -1,21 +1,13 @@
 [
     $play: [
         $symbols: [
-            "$addParameter"
             "$asCatalog"
             "$asSequential"
-            "$catalog"
             "$getNext"
-            "$getValue"
             "$hasNext"
             "$iterator"
-            "$list"
             "$moveTower"
-            "$parameters"
             "$push"
-            "$range"
-            "$setParameters"
-            "$setValue"
         ]
         $literals: [
             1
@@ -190,14 +182,14 @@
             $mediatype: "application/basm"
         )
         $bytecode: '
-            A004280CA009A00B280B2809A00B28012806A00B280828012805B00DB801
-            B00EB801B00EB801B00EB80F280DA009A00B280B2809A00B28012806A00B
-            280828012805B00DB801B00EB801B00EB801B00EB80F280EA009A00B280B
-            2809A00B28012806A00B280828012805B00DB801B00EB801B00EB801B00E
-            B80FB80FA009B80F60042801B00DD003D00880016001D007185A6001D005
-            80036005D0032807B006280CB006A00B28016003B801D80C800200470000
-            6005A00B28016004B8012802280CB8012803280EB8012804280DB801D80A
-            80026005D003280AB006D002E8006002E800
+            A004280CA011A017280B2809A01728012806A017280828012805B01BB802
+            B01EB802B01EB802B01EB81F280DA011A017280B2809A01728012806A017
+            280828012805B01BB802B01EB802B01EB802B01EB81F280EA011A017280B
+            2809A01728012806A017280828012805B01BB802B01EB802B01EB802B01E
+            B81FB81FA011B81F60042801B01BD002D00580016001D004185A6001D003
+            80036005D0022807B00D280CB00DA01728016003B802D807800200470000
+            6005A01728016004B8022802280CB8022803280EB8022804280DB802D806
+            80026005D002280AB00DD001E8006002E800
         '(
             $base: 16
             $mediatype: "application/bcod"
@@ -205,13 +197,10 @@
     ]
     $moveTower: [
         $symbols: [
-            "$addParameter"
             "$asBoolean"
             "$asNumeric"
-            "$difference"
             "$moveDisk"
             "$moveTower"
-            "$parameters"
         ]
         $literals: [1, 2, 3, 4]
         $parameters: []
@@ -305,10 +294,10 @@
             $mediatype: "application/basm"
         )
         $bytecode: '
-            00006003D00218376004A00728016003D0032801D003B004B80128026002
-            B80128036006B80128046005B801D80680016004A00728016002B8012802
-            6005B801D80580016004A00728016003D0032801D003B004B80128026006
-            B80128036005B80128046002B801D80680016001E800
+            00006003D00118376004A01728016003D0022801D002B008B80228026002
+            B80228036006B80228046005B802D80480016004A01728016002B8022802
+            6005B802D80380016004A01728016003D0022801D002B008B80228026006
+            B80228036005B80228046002B802D80480016001E800
         '(
             $base: 16
             $mediatype: "application/bcod"
@@ -316,11 +305,8 @@
     ]
     $moveDisk: [
         $symbols: [
-            "$addParameter"
             "$append"
             "$asSequential"
-            "$getValue"
-            "$parameters"
             "$pop"
             "$push"
         ]
@@ -387,8 +373,8 @@
             $mediatype: "application/basm"
         )
         $bytecode: '
-            6004D0032802B0046003B004D00680026004D0032802B0046005B004A005
-            28016002B801D80780016004D0032803B004A00528012804B801D8028001
+            6004D0022802B00D6003B00DD00380026004D0022802B00D6005B00DA017
+            28016002B802D80480016004D0022803B00DA01728012804B802D8018001
             6001E800
         '(
             $base: 16
