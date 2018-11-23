@@ -71,8 +71,7 @@ exports.fromTask = function(cloud, task) {
  */
 function isRunnable(processor) {
     var hasInstructions = processor.procedureContext &&
-            processor.procedureContext.address <=
-            processor.procedureContext.bytecode.length;
+            processor.procedureContext.address <= processor.procedureContext.bytecode.length;
     var isActive = processor.taskContext.status === ACTIVE;
     var hasTokens = processor.taskContext.balance > 0;
     return hasInstructions && isActive && hasTokens;
@@ -232,9 +231,9 @@ function extractProcedure(processor, target, type, parameters, index) {
         target: target,
         type: type,
         name: name,
-        bytecode: bytecode,
         instruction: 0,
         address: 1,
+        bytecode: bytecode,
         parameters: parameters,
         literals: literals,
         variables: variables,
@@ -254,9 +253,9 @@ function importProcedure(procedure) {
     procedureContext.target = procedure.getValue('$target');
     procedureContext.type = procedure.getValue('$type');
     procedureContext.name = procedure.getValue('$name');
-    procedureContext.bytecode = bytecode;
     procedureContext.instruction = procedure.getValue('$instruction').toNumber();
     procedureContext.address = procedure.getValue('$address').toNumber();
+    procedureContext.bytecode = bytecode;
     procedureContext.parameters = procedure.getValue('$parameters');
     procedureContext.literals = procedure.getValue('$literals');
     procedureContext.variables = procedure.getValue('$variables');
@@ -278,9 +277,9 @@ function exportProcedure(procedureContext) {
     procedure.setValue('$target', procedureContext.target);
     procedure.setValue('$type', procedureContext.type);
     procedure.setValue('$name', procedureContext.name);
-    procedure.setValue('$bytecode', bytecode);
     procedure.setValue('$instruction', procedureContext.instruction);
     procedure.setValue('$address', procedureContext.address);
+    procedure.setValue('$bytecode', bytecode);
     procedure.setValue('$parameters', procedureContext.parameters);
     procedure.setValue('$literals', procedureContext.literals);
     procedure.setValue('$variables', procedureContext.variables);
@@ -409,7 +408,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the parameter associated with the index
-        var parameter = processor.procedureContext.parameters.getValue(index);
+        var parameter = processor.procedureContext.parameters.getItem(index).value;
         processor.taskContext.stack.addItem(parameter);
     },
 
@@ -417,15 +416,15 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
-        // lookup the reference associated with the index
-        var reference = processor.procedureContext.variables.getItem(index).value.toString();
-        // TODO: jump to exception handler if reference isn't a reference
-        // retrieve the referenced document from the cloud repository
+        // lookup the citation associated with the index
+        var citation = processor.procedureContext.variables.getItem(index).value;
+        // TODO: jump to exception handler if the citation isn't a citation
+        // retrieve the cited document from the cloud repository
         var document;
-        if (reference.includes('$digest:') && !reference.includes('$digest:none')) {
-            document = processor.cloud.retrieveDocument(reference);
+        if (citation.getValue('$digest').isEqualTo(bali.Template.NONE)) {
+            document = processor.cloud.retrieveDraft(citation);
         } else {
-            document = processor.cloud.retrieveDraft(reference);
+            document = processor.cloud.retrieveDocument(citation);
         }
         // push the document on top of the component stack
         processor.taskContext.stack.addItem(document);
@@ -466,11 +465,11 @@ var instructionHandlers = [
         var index = operand;
         // pop the draft that is on top of the component stack off the stack
         var draft = processor.taskContext.stack.removeItem();
-        // lookup the reference associated with the index operand
-        var reference = processor.procedureContext.variables.getItem(index).value;
-        // TODO: jump to exception handler if reference isn't a reference
-        // write the referenced draft to the cloud repository
-        processor.cloud.saveDraft(reference, draft);
+        // lookup the citation associated with the index operand
+        var citation = processor.procedureContext.variables.getItem(index).value;
+        // TODO: jump to exception handler if the citation isn't a citation
+        // write the cited draft to the cloud repository
+        processor.cloud.saveDraft(citation, draft);
     },
 
     // STORE DOCUMENT symbol
@@ -479,11 +478,11 @@ var instructionHandlers = [
         var index = operand;
         // pop the document that is on top of the component stack off the stack
         var document = processor.taskContext.stack.removeItem();
-        // lookup the reference associated with the index operand
-        var reference = processor.procedureContext.variables.getItem(index).value;
-        // TODO: jump to exception handler if reference isn't a reference
-        // write the referenced document to the cloud repository
-        var citation = processor.cloud.commitDocument(reference, document);
+        // lookup the citation associated with the index operand
+        var citation = processor.procedureContext.variables.getItem(index).value;
+        // TODO: jump to exception handler if the citation isn't a citation
+        // write the cited document to the cloud repository
+        citation = processor.cloud.commitDocument(citation, document);
         processor.procedureContext.variables.getItem(index).setValue(citation);
     },
 
@@ -494,7 +493,7 @@ var instructionHandlers = [
         // pop the message that is on top of the component stack off the stack
         var message = processor.taskContext.stack.removeItem();
         // lookup the queue tag associated with the index operand
-        var queue = processor.procedureContext.variables.getItem(index);
+        var queue = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if queue isn't a tag
         // send the message to the queue in the cloud
         processor.cloud.queueMessage(queue, message);
@@ -558,7 +557,7 @@ var instructionHandlers = [
         var index = operand - 1;  // JS zero based indexing
         var target = bali.Template.NONE;
         var type = processor.taskContext.stack.removeItem();
-        var parameters = new bali.Parameters();
+        var parameters = new bali.Catalog();
         var procedureContext = extractProcedure(processor, target, type, parameters, index);
         processor.procedureContext = procedureContext;
     },
@@ -586,7 +585,7 @@ var instructionHandlers = [
         var index = operand - 1;  // JS zero based indexing
         var target = processor.taskContext.stack.removeItem();
         var type = intrinsics.invokeByName(processor, '$getType', [target]);
-        var parameters = new bali.Parameters();
+        var parameters = new bali.Catalog();
         var procedureContext = extractProcedure(processor, target, type, parameters, index);
         processor.procedureContext = procedureContext;
     },

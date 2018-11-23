@@ -9,14 +9,14 @@ STORE VARIABLE $foo
 LOAD VARIABLE $foo
 
 4.StoreDraft:
-STORE DRAFT $document
-LOAD DOCUMENT $document
+STORE DRAFT $citation
+LOAD DOCUMENT $citation
 
 5.StoreDocument:
-STORE DOCUMENT $document
+STORE DOCUMENT $citation
 
 6.LoadDocument:
-LOAD DOCUMENT $document
+LOAD DOCUMENT $citation
 
 7.StoreMessage:
 STORE MESSAGE $queue

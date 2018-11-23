@@ -23,7 +23,8 @@ var api = cloud.api(notary, repository);
 /*  uncomment to generate a new notary key and certificate
 var certificate = notary.generateKeys();
 var citation = notary.getNotaryCitation();
-repository.storeCertificate(certificate);
+var certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
+repository.storeCertificate(certificateId, certificate);
 /*                                                          */
 
 
@@ -78,7 +79,7 @@ describe('Bali Cloud Environment™', function() {
                 var compiledCitation = compiler.compileType(api, typeCitation);
                 expect(compiledCitation).to.exist;  // jshint ignore:line
                 var compiled = api.retrieveType(compiledCitation);
-                var procedures = compiled.documentContent.getValue('$procedures');
+                var procedures = compiled.getValue('$procedures');
                 //fs.writeFileSync(proceduresFile, procedures.toString(), 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
                 expect(procedures.toString()).to.equal(expected);

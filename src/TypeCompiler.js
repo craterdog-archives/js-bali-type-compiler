@@ -31,11 +31,11 @@ var utilities = require('./BytecodeUtilities');
  */
 exports.compileType = function(cloud, citation) {
     // retrieve the type definition
-    var document = cloud.retrieveDocument(citation);
+    var type = cloud.retrieveDocument(citation);
 
     // traverse the ancestry for the type
     var ancestry = bali.List.fromCollection([citation]);
-    var parent = document.getValue('$parent');
+    var parent = type.getValue('$parent');
     while (parent) {
         ancestry.addItem(parent);
         var superType = cloud.retrieveDocument(parent);
@@ -43,7 +43,7 @@ exports.compileType = function(cloud, citation) {
     }
 
     // retrieve any dependencies
-    var dependencies = document.getValue('$dependencies');
+    var dependencies = type.getValue('$dependencies');
     if (dependencies) {
         dependencies = bali.List.fromCollection(dependencies);
     } else {
@@ -52,7 +52,7 @@ exports.compileType = function(cloud, citation) {
 
     // compile each procedure defined in the type definition
     var procedures = new bali.Catalog();
-    var iterator = document.getValue('$procedures').getIterator();
+    var iterator = type.getValue('$procedures').getIterator();
     while (iterator.hasNext()) {
 
         // retrieve the source code for the procedure

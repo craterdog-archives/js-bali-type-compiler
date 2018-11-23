@@ -68,36 +68,55 @@ var TASK_TEMPLATE =
         '            $target: none\n' +
         '            $type: none\n' +
         '            $name: $dummy\n' +
-        '            $bytecode: %bytecode\n' +
         '            $instruction: 0\n' +
         '            $address: 1\n' +
-        '            $parameters: [\n' +
-        '                1: "This is a text string."\n' +
-        '                2: 2\n' +
-        '                3: 5\n' +
-        '            ]($type: $Parameters)\n' +
+        '            $bytecode: %bytecode\n' +
+        '            $parameters: %parameters\n' +
         '            $literals: %literals($type: $Set)\n' +
-        '            $variables: [\n' +
-        '                $x: none\n' +
-        '                $reference: <bali:[$protocol:v1,$tag:#LGLHW28KH99AXZZDTFXV14BX8CF2F68N,$version:v2.3,$digest:none]>\n' +
-        '                $tag: #ZQMQ8BGN43Y146KCXX24ZASF0GDJ5YDZ\n' +
-        '            ]\n' +
+        '            $variables: %variables\n' +
         '            $handlers: []($type: $Stack)\n' +
         '        ]($type: $ProcedureContext)\n' +
         '    ]($type: $Stack)\n' +
         ']($type: $TaskContext)';
 
+var CITATION =
+        '[\n' +
+        '    $protocol: v1\n' +
+        '    $tag: #LPDJ6VGTZQQ0N4Q4MG0ZDA46KBLF2WM2\n' +
+        '    $version: v2.3\n' +
+        '    $digest: none\n' +
+        ']';
+
+var MESSAGE = '[$foo: "bar"]';
+
+var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function generateTaskContext(filename) {
     var source = fs.readFileSync(filename, 'utf8');
     var procedure = parser.parseProcedure(source, true);
     var assemblerContext = assembler.analyzeProcedure(procedure);
-    var literals = bali.List.fromCollection(assemblerContext.getValue('$literals'));
+    var parameters = new bali.Catalog();
+    var iterator = assemblerContext.getValue('$parameters').getIterator();
+    while (iterator.hasNext()) {
+        var parameter = iterator.getNext();
+        parameters.setValue(parameter, bali.parser.parseDocument(MESSAGE));
+    }
+    var literals = assemblerContext.getValue('$literals');
+    var variables = new bali.Catalog();
+    iterator = assemblerContext.getValue('$variables').getIterator();
+    while (iterator.hasNext()) {
+        var variable = iterator.getNext();
+        variables.setValue(variable, bali.Template.NONE);
+    }
+    variables.setValue('"$queue"', bali.parser.parseDocument(QUEUE));
+    variables.setValue('"$citation"', bali.parser.parseDocument(CITATION));
     var bytecode = assembler.assembleProcedure(procedure, assemblerContext);
     var bytes = utilities.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
+    source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%literals/, literals.toDocument('            '));
+    source = source.replace(/%variables/, variables.toDocument('            '));
     source = source.replace(/%bytecode/, "'" + base16 + "'");
     var taskContext = bali.parser.parseDocument(source);
     return taskContext;
@@ -267,41 +286,39 @@ describe('Bali Virtual Machine™', function() {
             // LOAD PARAMETER $x
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
-            console.log('processor: ' + processor);
             processor.step();
-            console.log('processor: ' + processor);
             expect(processor.taskContext.stack.getSize()).to.equal(0);
-            expect(processor.procedureContext.variables.getItem(1).value.toString()).to.equal('"This is a text string."');
+            expect(processor.procedureContext.variables.getItem(2).value.toString()).to.equal(MESSAGE);
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 4.StoreDraft:
-            // STORE DRAFT $document
+            // STORE DRAFT $citation
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(0);
-            // LOAD DOCUMENT $document
+            // LOAD DOCUMENT $citation
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 5.StoreDocument:
-            // STORE DOCUMENT $document
+            // STORE DOCUMENT $citation
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(0);
 
             // 6.LoadDocument:
-            // LOAD DOCUMENT $document
+            // LOAD DOCUMENT $citation
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 7.StoreMessage:
             // STORE MESSAGE $queue
@@ -312,7 +329,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD MESSAGE $queue
             processor.step();
             expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().getDocumentContent().toString()).to.equal('"This is a text string."');
+            expect(processor.taskContext.stack.topItem().getValue('$foo').toString()).to.equal('"bar"');
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -337,7 +354,9 @@ describe('Bali Virtual Machine™', function() {
 
             // 1.Invoke:
             // INVOKE $random
+            console.log('processor before: ' + processor);
             processor.step();
+            console.log('processor after: ' + processor);
             expect(processor.taskContext.stack.getSize()).to.equal(1);
 
             // 2.InvokeWithParameter:
