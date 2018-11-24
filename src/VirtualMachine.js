@@ -513,7 +513,7 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
-        // pop the parameters to the intrinsic function call off of the component stack
+        // pop the parameter off of the component stack
         var parameter = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.functions[index](parameter);
@@ -525,9 +525,9 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
-        // pop the parameters to the intrinsic function call off of the component stack
-        var parameter1 = processor.taskContext.stack.removeItem();
+        // pop the parameters off of the component stack (in reverse order)
         var parameter2 = processor.taskContext.stack.removeItem();
+        var parameter1 = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.functions[index](parameter1, parameter2);
         // push the result of the function call onto the top of the component stack
@@ -538,10 +538,10 @@ var instructionHandlers = [
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
-        // pop the parameters to the intrinsic function call off of the component stack
-        var parameter1 = processor.taskContext.stack.removeItem();
-        var parameter2 = processor.taskContext.stack.removeItem();
+        // pop the parameters call off of the component stack (in reverse order)
         var parameter3 = processor.taskContext.stack.removeItem();
+        var parameter2 = processor.taskContext.stack.removeItem();
+        var parameter1 = processor.taskContext.stack.removeItem();
         // call the intrinsic function associated with the index operand
         var result = intrinsics.functions[index](parameter1, parameter2, parameter3);
         // push the result of the function call onto the top of the component stack
