@@ -198,7 +198,7 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
             break;
     }
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', new bali.Text(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', new bali.Symbol(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 
@@ -218,7 +218,7 @@ ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
     string = string.slice(0, -1);  // strip off last space
     var modifier = types.executeModifierValue(string);
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', new bali.Text(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', new bali.Symbol(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 

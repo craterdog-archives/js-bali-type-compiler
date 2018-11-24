@@ -34,7 +34,7 @@ exports.compileType = function(cloud, citation) {
     var type = cloud.retrieveDocument(citation);
 
     // traverse the ancestry for the type
-    var ancestry = bali.List.fromCollection([citation]);
+    var ancestry = new bali.List();
     var parent = type.getValue('$parent');
     while (parent) {
         ancestry.addItem(parent);

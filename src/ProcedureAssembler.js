@@ -388,7 +388,7 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     var count = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var index = intrinsics.names.indexOf(symbol.toString().slice(1, -1));  // remove the double quotes
+    var index = intrinsics.names.indexOf(symbol.toString());
     var word = bytecode.encodeInstruction(types.INVOKE, count, index);
     this.bytecode.push(word);
 };

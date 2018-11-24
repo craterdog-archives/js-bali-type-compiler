@@ -181,8 +181,7 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     this.source += 'INVOKE ';
-    var operand = instruction.getValue('$operand').getRawString();
-    this.source += operand;
+    this.source += instruction.getValue('$operand');
     var modifier = instruction.getValue('$modifier').toNumber();
     if (modifier > 0) {
         this.source += ' WITH ';
@@ -204,8 +203,7 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     this.source += 'EXECUTE ';
-    var operand = instruction.getValue('$operand').getRawString();
-    this.source += operand;
+    this.source += instruction.getValue('$operand');
     var modifier = instruction.getValue('$modifier').toNumber();
     if (modifier !== types.SANS) {
         this.source += ' ';

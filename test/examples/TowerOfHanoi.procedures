@@ -1,13 +1,13 @@
 [
     $play: [
         $symbols: [
-            "$asCatalog"
-            "$asSequential"
-            "$getNext"
-            "$hasNext"
-            "$iterator"
-            "$moveTower"
-            "$push"
+            $asCatalog
+            $asSequential
+            $getNext
+            $hasNext
+            $iterator
+            $moveTower
+            $push
         ]
         $literals: [
             1
@@ -197,10 +197,10 @@
     ]
     $moveTower: [
         $symbols: [
-            "$asBoolean"
-            "$asNumeric"
-            "$moveDisk"
-            "$moveTower"
+            $asBoolean
+            $asNumeric
+            $moveDisk
+            $moveTower
         ]
         $literals: [1, 2, 3, 4]
         $parameters: []
@@ -305,10 +305,10 @@
     ]
     $moveDisk: [
         $symbols: [
-            "$append"
-            "$asSequential"
-            "$pop"
-            "$push"
+            $append
+            $asSequential
+            $pop
+            $push
         ]
         $literals: [
             1

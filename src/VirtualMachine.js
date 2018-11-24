@@ -211,21 +211,20 @@ function exportTask(taskContext) {
 
 
 function extractProcedure(processor, target, type, parameters, index) {
+    var name = processor.procedureContext.getValue('$symbols').getItem(index);
     var document = processor.cloud.retrieveType(type);
-    var key = document.getValue('$names').getString[index];
     var procedures = document.getValue('$procedures');
-    var association = procedures.getValue(key);
-    var procedure = association.value;
-    var name = association.key;
+    var procedure = procedures.getValue(name).value;
     var bytes = procedure.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
-    var iterator = document.getValue('$literals').getIterator();
-    var literals = new bali.Set();
-    while (iterator.hasNext()) {
-        var literal = iterator.getNext();
-        literals.addItem(literal);
-    }
+    var symbols = procedure.getValue('$symbols');
+    var literals = procedure.getValue('$literals');
     var variables = new bali.Catalog();
+    var iterator = procedure.getValue('$variables').getIterator();
+    while (iterator.hasNext()) {
+        var variable = iterator.getNext();
+        variables.setValue(variable, bali.Template.NONE);
+    }
     var handlers = new bali.Stack();
     var procedureContext = {
         target: target,
@@ -235,6 +234,7 @@ function extractProcedure(processor, target, type, parameters, index) {
         address: 1,
         bytecode: bytecode,
         parameters: parameters,
+        symbols: symbols,
         literals: literals,
         variables: variables,
         handlers: handlers
@@ -257,6 +257,7 @@ function importProcedure(procedure) {
     procedureContext.address = procedure.getValue('$address').toNumber();
     procedureContext.bytecode = bytecode;
     procedureContext.parameters = procedure.getValue('$parameters');
+    procedureContext.symbols = procedure.getValue('$symbols');
     procedureContext.literals = procedure.getValue('$literals');
     procedureContext.variables = procedure.getValue('$variables');
     procedureContext.handlers = procedure.getValue('$handlers');
