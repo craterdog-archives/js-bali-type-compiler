@@ -77,14 +77,8 @@ exports.compileType = function(nebula, citation) {
         procedures.setValue(procedureName, procedureContext);
     }
 
-    // construct the context for the compiled type
-    var typeContext = new bali.Catalog();
-    typeContext.setValue('$ancestry', ancestry);
-    typeContext.setValue('$dependencies', dependencies);
-    typeContext.setValue('$procedures', procedures);
-
-    // checkin the new compiled type
-    var typeCitation = nebula.commitType(citation, typeContext);
+    // checkin the new compiled procedures
+    var typeCitation = nebula.commitType(citation, procedures);
 
     return typeCitation;
 };

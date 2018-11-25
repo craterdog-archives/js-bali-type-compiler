@@ -78,11 +78,10 @@ describe('Bali Virtual Macine™', function() {
                 typeCitation = api.commitDocument(typeCitation, draft);
                 var compiledCitation = compiler.compileType(api, typeCitation);
                 expect(compiledCitation).to.exist;  // jshint ignore:line
-                var compiled = api.retrieveType(compiledCitation);
-                var procedures = compiled.getValue('$procedures');
-                //fs.writeFileSync(proceduresFile, procedures.toString(), 'utf8');
+                var procedures = api.retrieveType(compiledCitation);
+                //fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
-                expect(procedures.toString()).to.equal(expected);
+                expect(procedures.toString() + '\n').to.equal(expected);
             }
         });
 

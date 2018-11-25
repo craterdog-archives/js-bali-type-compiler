@@ -212,8 +212,7 @@ function exportTask(taskContext) {
 
 function extractProcedure(processor, target, type, parameters, index) {
     var name = processor.procedureContext.getValue('$symbols').getItem(index);
-    var document = processor.nebula.retrieveType(type);
-    var procedures = document.getValue('$procedures');
+    var procedures = processor.nebula.retrieveType(type);
     var procedure = procedures.getValue(name).value;
     var bytes = procedure.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
