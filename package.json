@@ -20,19 +20,19 @@
   },
   "homepage": "https://github.com/craterdog-bali/js-bali-virtual-machine#readme",
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "grunt": "^1.0.3",
-    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-uglify": "^4.0.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.2.0",
-    "bali-digital-notary": "file:../js-bali-digital-notary"
+    "bali-digital-notary": "^1.2.0"
   },
   "dependencies": {
     "antlr4": "^4.7.1",
-    "bali-component-framework": "file:../js-bali-component-framework",
-    "bali-cloud-api": "file:../js-bali-cloud-api"
+    "bali-component-framework": "^1.4.1",
+    "bali-nebula-api": "file:../js-bali-nebula-api"
   }
 }

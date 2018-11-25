@@ -25,20 +25,20 @@ var utilities = require('./BytecodeUtilities');
  * This function compiles the Bali type document referenced by the specified
  * document citation.
  * 
- * @param {Object} cloud A singleton object that implements the Bali Cloud API™ interface.
+ * @param {Object} nebula A singleton object that implements the Bali Nebula API™ interface.
  * @param {Catalog} citation The citation referencing the type definition to be compiled.
  * @returns {Catalog} A document citation for the resulting compiled type.
  */
-exports.compileType = function(cloud, citation) {
+exports.compileType = function(nebula, citation) {
     // retrieve the type definition
-    var type = cloud.retrieveDocument(citation);
+    var type = nebula.retrieveDocument(citation);
 
     // traverse the ancestry for the type
     var ancestry = new bali.List();
     var parent = type.getValue('$parent');
     while (parent) {
         ancestry.addItem(parent);
-        var superType = cloud.retrieveDocument(parent);
+        var superType = nebula.retrieveDocument(parent);
         parent = superType.getValue('$parent');
     }
 
@@ -84,7 +84,7 @@ exports.compileType = function(cloud, citation) {
     typeContext.setValue('$procedures', procedures);
 
     // checkin the new compiled type
-    var typeCitation = cloud.commitType(citation, typeContext);
+    var typeCitation = nebula.commitType(citation, typeContext);
 
     return typeCitation;
 };
@@ -292,9 +292,9 @@ CompilingVisitor.prototype.visitCatalog = function(catalog) {
 
 
 /*
- * This method compiles the instructions needed to checkout from the Bali Cloud
- * Environment™ a persistent document and assign it to a recipient. The recipient
- * may be either a variable or an indexed child of a collection component.
+ * This method compiles the instructions needed to checkout from the Bali Nebula™
+ * a persistent document and assign it to a recipient. The recipient may be either
+ * a variable or an indexed child of a collection component.
  */
 // checkoutClause: 'checkout' recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
@@ -322,8 +322,8 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
 
 /*
- * This method inserts the instructions needed to commit to the Bali Cloud
- * Environment™ a document that is on top of the component stack. A reference to
+ * This method inserts the instructions needed to commit to the Bali Nebula™
+ * a document that is on top of the component stack. A reference to
  * the location of the persistent document is evaluated by the VM.
  */
 // commitClause: 'commit' expression 'to' expression
@@ -494,9 +494,9 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
 
 
 /*
- * This method inserts the instructions needed to discard from the Bali Cloud
- * Environment™ a persistent draft of a document. A reference to
- * the location of the persistent draft is evaluated by the VM.
+ * This method inserts the instructions needed to discard from the Bali Nebula™
+ * a persistent draft of a document. A reference to the location of the persistent
+ * draft is evaluated by the VM.
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
@@ -1024,7 +1024,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 /*
  * This method inserts the instructions that cause the VM to evaluate an
  * expression and then publish the resulting value that is on top of the
- * component stack to the global event queue in the Bali Cloud Environment™.
+ * component stack to the global event queue in the Bali Nebula™.
  */
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
@@ -1041,7 +1041,7 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 /*
  * This method inserts the instructions that cause the VM to evaluate a
  * message expression and then place the resulting message on a message
- * queue in the Bali Cloud Environment™. The reference to the message
+ * queue in the Bali Nebula™. The reference to the message
  * queue is another expression that the VM evaluates as well.
  */
 // queueClause: 'queue' expression 'on' expression
@@ -1118,7 +1118,7 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 /*
  * This method inserts the instructions that cause the VM to evaluate an
  * expression and then store the resulting component that is on top of
- * the component stack persistently in the Bali Cloud Environment™. The
+ * the component stack persistently in the Bali Nebula™. The
  * reference to the document location is another expression that the VM
  * evaluates as well.
  */
@@ -1429,7 +1429,7 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
 
 /*
  * This method compiles the instructions needed to wait for a message from a
- * queue in the Bali Cloud Environemnt™. The resulting message is assigned
+ * queue in the Bali Nebula™. The resulting message is assigned
  * to a recipient. The recipient may be either a variable or an indexed child
  * of a collection component.
  */

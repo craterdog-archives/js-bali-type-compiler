@@ -14,7 +14,7 @@ var expect = require('chai').expect;
 var bali = require('bali-component-framework');
 var utilities = require('../src/BytecodeUtilities');
 
-describe('Bali Cloud Environment™', function() {
+describe('Bali Virtual Machine™', function() {
 
     describe('Test bytecode utilities on words', function() {
 

@@ -16,7 +16,7 @@ var assembler = require('../src/ProcedureAssembler');
 var utilities = require('../src/BytecodeUtilities');
 
 
-describe('Bali Cloud Environment™', function() {
+describe('Bali Virtual Machine™', function() {
 
     describe('Test the assember.', function() {
 

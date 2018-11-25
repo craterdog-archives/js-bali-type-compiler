@@ -12,12 +12,12 @@ var mocha = require('mocha');
 var expect = require('chai').expect;
 var bali = require('bali-component-framework');
 var notary = require('bali-digital-notary');
-var cloud = require('bali-cloud-api');
+var nebula = require('bali-nebula-api');
 
 var testDirectory = 'test/config/';
 var notaryKey = notary.api(testDirectory);
-var repository = cloud.local(testDirectory);
-var api = cloud.api(notaryKey, repository);
+var repository = nebula.local(testDirectory);
+var api = nebula.api(notaryKey, repository);
 
 var parser = require('../src/ProcedureParser');
 var compiler = require('../src/TypeCompiler');

@@ -16,9 +16,9 @@ var compiler = require('../src/TypeCompiler');
 
 var testDirectory = 'test/config/';
 var notary = require('bali-digital-notary').api(testDirectory);
-var cloud = require('bali-cloud-api');
-var repository = cloud.local(testDirectory);
-var api = cloud.api(notary, repository);
+var nebula = require('bali-nebula-api');
+var repository = nebula.local(testDirectory);
+var api = nebula.api(notary, repository);
 
 /*  uncomment to generate a new notary key and certificate
 var certificate = notary.generateKeys();
@@ -28,7 +28,7 @@ repository.storeCertificate(certificateId, certificate);
 /*                                                          */
 
 
-describe('Bali Cloud Environment™', function() {
+describe('Bali Virtual Macine™', function() {
 
     describe('Test the compiler.', function() {
 

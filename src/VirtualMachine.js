@@ -21,13 +21,13 @@ var WAITING = '$waiting';
 var DONE = '$done';
 
 
-exports.fromTask = function(cloud, task) {
+exports.fromTask = function(nebula, task) {
     var taskContext = importTask(task);
     var procedureContext = importProcedure(taskContext.procedures.removeItem());
 
     return {
 
-        cloud: cloud,
+        nebula: nebula,
         taskContext: taskContext,
         procedureContext: procedureContext,
 
@@ -149,9 +149,9 @@ function publishCompletionEvent(processor) {
         '    $result: ' + processor.taskContext.result.toDocument('    ') + '\n' +
         ']';
     var event = bali.parser.parseDocument(source);
-    var citation = processor.cloud.createDraft(event);
-    var draft = processor.cloud.retrieveDraft(citation);
-    processor.cloud.publishEvent(draft);
+    var citation = processor.nebula.createDraft(event);
+    var draft = processor.nebula.retrieveDraft(citation);
+    processor.nebula.publishEvent(draft);
 }
 
 
@@ -166,9 +166,9 @@ function publishSuspensionEvent(processor) {
         '    $taskContext: ' + task.toDocument('    ') + '\n' +
         ']';
     var event = bali.parser.parseDocument(source);
-    var citation = processor.cloud.createDraft(event);
-    var draft = processor.cloud.retrieveDraft(citation);
-    processor.cloud.publishEvent(draft);
+    var citation = processor.nebula.createDraft(event);
+    var draft = processor.nebula.retrieveDraft(citation);
+    processor.nebula.publishEvent(draft);
 }
 
 
@@ -181,7 +181,7 @@ function queueTaskContext(processor) {
     var document = task.toString();
     // queue up the task for a new virtual machine
     var WAIT_QUEUE = '#3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K';
-    processor.cloud.queueMessage(WAIT_QUEUE, document);
+    processor.nebula.queueMessage(WAIT_QUEUE, document);
 }
 
 
@@ -212,7 +212,7 @@ function exportTask(taskContext) {
 
 function extractProcedure(processor, target, type, parameters, index) {
     var name = processor.procedureContext.getValue('$symbols').getItem(index);
-    var document = processor.cloud.retrieveType(type);
+    var document = processor.nebula.retrieveType(type);
     var procedures = document.getValue('$procedures');
     var procedure = procedures.getValue(name).value;
     var bytes = procedure.getValue('$bytecode').getBuffer();
@@ -420,12 +420,12 @@ var instructionHandlers = [
         // lookup the citation associated with the index
         var citation = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if the citation isn't a citation
-        // retrieve the cited document from the cloud repository
+        // retrieve the cited document from the nebula repository
         var document;
         if (citation.getValue('$digest').isEqualTo(bali.Template.NONE)) {
-            document = processor.cloud.retrieveDraft(citation);
+            document = processor.nebula.retrieveDraft(citation);
         } else {
-            document = processor.cloud.retrieveDocument(citation);
+            document = processor.nebula.retrieveDocument(citation);
         }
         // push the document on top of the component stack
         processor.taskContext.stack.addItem(document);
@@ -438,8 +438,8 @@ var instructionHandlers = [
         // lookup the queue tag associated with the index
         var queue = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if queue isn't a tag
-        // attempt to receive a message from the queue in the cloud
-        var message = processor.cloud.receiveMessage(queue);
+        // attempt to receive a message from the queue in the nebula
+        var message = processor.nebula.receiveMessage(queue);
         if (message) {
             processor.taskContext.stack.addItem(message);
         } else {
@@ -469,8 +469,8 @@ var instructionHandlers = [
         // lookup the citation associated with the index operand
         var citation = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if the citation isn't a citation
-        // write the cited draft to the cloud repository
-        processor.cloud.saveDraft(citation, draft);
+        // write the cited draft to the nebula repository
+        processor.nebula.saveDraft(citation, draft);
     },
 
     // STORE DOCUMENT symbol
@@ -482,8 +482,8 @@ var instructionHandlers = [
         // lookup the citation associated with the index operand
         var citation = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if the citation isn't a citation
-        // write the cited document to the cloud repository
-        citation = processor.cloud.commitDocument(citation, document);
+        // write the cited document to the nebula repository
+        citation = processor.nebula.commitDocument(citation, document);
         processor.procedureContext.variables.getItem(index).setValue(citation);
     },
 
@@ -496,8 +496,8 @@ var instructionHandlers = [
         // lookup the queue tag associated with the index operand
         var queue = processor.procedureContext.variables.getItem(index).value;
         // TODO: jump to exception handler if queue isn't a tag
-        // send the message to the queue in the cloud
-        processor.cloud.queueMessage(queue, message);
+        // send the message to the queue in the nebula
+        processor.nebula.queueMessage(queue, message);
     },
 
     // INVOKE symbol
