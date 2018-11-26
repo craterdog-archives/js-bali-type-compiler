@@ -45,7 +45,6 @@
             "5.ReturnStatement": 107
         ]
         $intructions: "
-            
             1.EvaluateStatement:
             INVOKE $catalog
             PUSH ELEMENT `"peg A"`
@@ -177,7 +176,6 @@
             HANDLE RESULT
             LOAD VARIABLE $_result_
             HANDLE RESULT
-            
         "(
             $mediatype: "application/basm"
         )
@@ -221,7 +219,6 @@
             "1.IfStatementDone": 55
         ]
         $intructions: "
-            
             1.IfStatement:
             SKIP INSTRUCTION
             
@@ -289,7 +286,6 @@
             1.IfStatementDone:
             LOAD VARIABLE $_result_
             HANDLE RESULT
-            
         "(
             $mediatype: "application/basm"
         )
@@ -330,7 +326,6 @@
             "3.EvaluateStatement": 21
         ]
         $intructions: "
-            
             1.EvaluateStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
@@ -368,7 +363,6 @@
             STORE VARIABLE $_result_
             LOAD VARIABLE $_result_
             HANDLE RESULT
-            
         "(
             $mediatype: "application/basm"
         )

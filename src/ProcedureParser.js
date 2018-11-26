@@ -61,7 +61,7 @@ ParsingVisitor.prototype = Object.create(grammar.BaliInstructionSetVisitor.proto
 ParsingVisitor.prototype.constructor = ParsingVisitor;
 
 
-// procedure: step* EOF
+// procedure: EOL* step (EOL step)* EOL* EOF
 ParsingVisitor.prototype.visitProcedure = function(ctx) {
     var procedure = new bali.List();
     var steps = ctx.step();
@@ -73,7 +73,7 @@ ParsingVisitor.prototype.visitProcedure = function(ctx) {
 };
 
 
-// step: label? instruction NEWLINE
+// step: label? instruction
 ParsingVisitor.prototype.visitStep = function(ctx) {
     ctx.instruction().accept(this);
     var instruction = this.result;
@@ -86,7 +86,7 @@ ParsingVisitor.prototype.visitStep = function(ctx) {
 };
 
 
-// label: NEWLINE LABEL ':' NEWLINE
+// label: EOL? LABEL ':' EOL;
 ParsingVisitor.prototype.visitLabel = function(ctx) {
     this.result = new bali.Text(ctx.LABEL().getText());
 };

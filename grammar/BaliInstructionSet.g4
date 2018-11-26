@@ -1,10 +1,10 @@
 grammar BaliInstructionSet;
 
-procedure: NEWLINE* step* NEWLINE* EOF;
+procedure: EOL* step (EOL step)* EOL* EOF;
 
-step: label? instruction NEWLINE;
+step: label? instruction;
 
-label: NEWLINE LABEL ':' NEWLINE;
+label: EOL? LABEL ':' EOL;
 
 instruction:
     skipInstruction |
@@ -107,7 +107,7 @@ LITERAL: '`' (ESCAPE | CHARACTER)*? '`' ;
 
 SYMBOL: '$' IDENTIFIER;
 
-NEWLINE: '\r'? '\n' ;
+EOL: '\r'? '\n' ;
 
 SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN) ;
 
@@ -116,7 +116,7 @@ fragment
 IDENTIFIER: ('_'|'a'..'z'|'A'..'Z') ('_'|'a'..'z'|'A'..'Z'|'0'..'9')* ;
 
 fragment
-LINE: CHARACTER*? NEWLINE ;
+LINE: CHARACTER*? EOL ;
 
 fragment
 CHARACTER: . ;

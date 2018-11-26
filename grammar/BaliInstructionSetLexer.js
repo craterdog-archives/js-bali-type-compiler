@@ -275,7 +275,7 @@ BaliInstructionSetLexer.LABEL = 30;
 BaliInstructionSetLexer.NUMBER = 31;
 BaliInstructionSetLexer.LITERAL = 32;
 BaliInstructionSetLexer.SYMBOL = 33;
-BaliInstructionSetLexer.NEWLINE = 34;
+BaliInstructionSetLexer.EOL = 34;
 BaliInstructionSetLexer.SPACE = 35;
 
 BaliInstructionSetLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
@@ -306,8 +306,7 @@ BaliInstructionSetLexer.prototype.symbolicNames = [ null, null, null, null,
                                                     null, null, null, null, 
                                                     null, null, "LABEL", 
                                                     "NUMBER", "LITERAL", 
-                                                    "SYMBOL", "NEWLINE", 
-                                                    "SPACE" ];
+                                                    "SYMBOL", "EOL", "SPACE" ];
 
 BaliInstructionSetLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", 
                                                 "T__3", "T__4", "T__5", 
@@ -320,7 +319,7 @@ BaliInstructionSetLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2",
                                                 "T__24", "T__25", "T__26", 
                                                 "T__27", "T__28", "LABEL", 
                                                 "NUMBER", "LITERAL", "SYMBOL", 
-                                                "NEWLINE", "SPACE", "IDENTIFIER", 
+                                                "EOL", "SPACE", "IDENTIFIER", 
                                                 "LINE", "CHARACTER", "ESCAPE", 
                                                 "BASE16" ];
 

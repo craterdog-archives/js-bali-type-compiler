@@ -64,11 +64,11 @@ exports.compileType = function(nebula, citation) {
         var context = exports.analyzeProcedure(procedure);
         var instructions = exports.compileProcedure(procedure, context);
         procedure = parser.parseProcedure(instructions);
-        instructions = bali.parser.parseDocument('"\n' + instructions.replace(/^/gm, '    ') + '\n"($mediatype: "application/basm")');
+        instructions = bali.parser.parseDocument('"' + EOL + instructions.replace(/^/gm, '    ').replace(/    $/g, '') + '"($mediatype: "application/basm")');
         context = assembler.analyzeProcedure(procedure);
         var bytecode = assembler.assembleProcedure(procedure, context);
         var base16 = bali.codex.base16Encode(utilities.bytecodeToBytes(bytecode), '            ');
-        bytecode = bali.parser.parseDocument("'" + base16 + "\n            '" + '($base: 16, $mediatype: "application/bcod")');
+        bytecode = bali.parser.parseDocument("'" + base16 + EOL + "            '" + '($base: 16, $mediatype: "application/bcod")');
 
         var procedureContext = new bali.Catalog();
         procedureContext.addItems(context);
@@ -116,6 +116,9 @@ exports.compileProcedure = compileProcedure;
 
 
 // PRIVATE FUNCTIONS
+
+var EOL = '\n';  // POSIX end of line character
+
 
 /*
  * This function defines a missing conversion function for the standard String class.
@@ -255,7 +258,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
  */
 // catalog:
 //     association (',' association)* |
-//     NEWLINE (association NEWLINE)* |
+//     EOL (association EOL)* |
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
     // the VM places an empty catalog on the component stack
@@ -842,7 +845,7 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
  */
 // list:
 //     expression (',' expression)* |
-//     NEWLINE (expression NEWLINE)* |
+//     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
     // the VM replaces the size value on the component stack with a new list of that size
@@ -994,7 +997,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
  */
 // procedure:
 //     statement (';' statement)*   |
-//     NEWLINE (statement NEWLINE)* |
+//     EOL (statement EOL)* |
 //     /*empty statements*/
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     // create a new compiler procedure context in the instruction builder
@@ -1223,7 +1226,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
  */
 // set:
 //     expression (',' expression)* |
-//     NEWLINE (expression NEWLINE)* |
+//     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitSet = function(set) {
     // the VM places the size of the set on the component stack
@@ -1282,7 +1285,7 @@ CompilingVisitor.prototype.visitSource = function(source) {
  */
 // stack:
 //     expression (',' expression)* |
-//     NEWLINE (expression NEWLINE)* |
+//     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitStack = function(stack) {
     // the VM places the size of the stack on the component stack
@@ -1797,10 +1800,11 @@ InstructionBuilder.prototype.insertLabel = function(label) {
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
-        this.asmcode += '\n' + this.nextLabel + ':\n';
+        if (this.asmcode !== '') this.asmcode += EOL;  // not the first instruction
+        this.asmcode += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
     }
-    this.asmcode += instruction + '\n';
+    this.asmcode += instruction + EOL;
 };
 
 

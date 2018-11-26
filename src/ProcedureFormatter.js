@@ -33,27 +33,36 @@ exports.formatProcedure = function(procedure) {
 
 // PRIVATE CLASSES
 
+var EOL = '\n';  // POSIX end of line character
+
+
 function FormattingVisitor() {
     this.source = '';
     return this;
 }
 FormattingVisitor.prototype.constructor = FormattingVisitor;
 
-// procedure: NEWLINE* step* NEWLINE* EOF
+// procedure: EOL* step (EOL step)* EOL* EOF
 FormattingVisitor.prototype.visitList = function(procedure) {
     var iterator = procedure.getIterator();
+    var step = iterator.getNext();
+    step.acceptVisitor(this);
     while (iterator.hasNext()) {
-        var step = iterator.getNext();
+        this.source += EOL;
+        step = iterator.getNext();
         step.acceptVisitor(this);
     }
 };
 
 
-// step: label? instruction NEWLINE;
+// step: label? instruction
+// label: EOL? LABEL ':' EOL
 FormattingVisitor.prototype.visitCatalog = function(step) {
     var label = step.getValue('$label');
     if (label) {
-        this.source += '\n' + label.getRawString() + ':\n';
+        // labels are preceded by a blank line unless they are part of the first step
+        if (this.source !== '') this.source += EOL;
+        this.source += label.getRawString() + ':' + EOL;
     }
     var operation = step.getValue('$operation').toNumber();
     switch (operation) {
@@ -106,7 +115,6 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
             this.source += types.jumpModifierString(modifier);
         }
     }
-    this.source += '\n';
 };
 
 
@@ -128,7 +136,6 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
         operand = operand.getRawString();
     }
     this.source += operand;
-    this.source += '\n';
 };
 
 
@@ -139,7 +146,6 @@ FormattingVisitor.prototype.visitPopInstruction = function(instruction) {
     this.source += 'POP ';
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.popModifierString(modifier);
-    this.source += '\n';
 };
 
 
@@ -155,7 +161,6 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     this.source += ' ';
     var operand = instruction.getValue('$operand').getRawString();
     this.source += operand;
-    this.source += '\n';
 };
 
 
@@ -171,7 +176,6 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
     this.source += ' ';
     var operand = instruction.getValue('$operand').getRawString();
     this.source += operand;
-    this.source += '\n';
 };
 
 
@@ -192,7 +196,6 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
             this.source += 'PARAMETER';
         }
     }
-    this.source += '\n';
 };
 
 
@@ -209,7 +212,6 @@ FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
         this.source += ' ';
         this.source += types.executeModifierString(modifier);
     }
-    this.source += '\n';
 };
 
 
@@ -220,5 +222,4 @@ FormattingVisitor.prototype.visitHandleInstruction = function(instruction) {
     this.source += 'HANDLE ';
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.handleModifierString(modifier);
-    this.source += '\n';
 };

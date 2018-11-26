@@ -25,7 +25,7 @@ describe('Bali Instruction Set', function() {
             var procedure = parser.parseProcedure(source);
             expect(procedure).to.exist;  // jshint ignore:line
             var formatted = formatter.formatProcedure(procedure);
-            expect(formatted).to.equal(source);
+            expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
 
     });

@@ -79,7 +79,7 @@ AnalyzingVisitor.prototype.getContext = function() {
 };
 
 
-// procedure: NEWLINE* step* NEWLINE* EOF
+// procedure: EOL* step (EOL step)* EOL* EOF
 AnalyzingVisitor.prototype.visitList = function(procedure) {
     var iterator = procedure.getIterator();
     while (iterator.hasNext()) {
@@ -89,7 +89,8 @@ AnalyzingVisitor.prototype.visitList = function(procedure) {
 };
 
 
-// step: label? instruction NEWLINE;
+// step: label? instruction
+// label: EOL? LABEL ':' EOL;
 AnalyzingVisitor.prototype.visitCatalog = function(step) {
     var label = step.getValue('$label');
     if (label) {
@@ -242,7 +243,7 @@ function AssemblingVisitor(context) {
 AssemblingVisitor.prototype.constructor = AssemblingVisitor;
 
 
-// procedure: NEWLINE* step* NEWLINE* EOF
+// procedure: EOL* step (EOL step)* EOL* EOF
 AssemblingVisitor.prototype.visitList = function(procedure) {
     var iterator = procedure.getIterator();
     while (iterator.hasNext()) {
@@ -252,7 +253,8 @@ AssemblingVisitor.prototype.visitList = function(procedure) {
 };
 
 
-// step: label? instruction NEWLINE;
+// step: label? instruction
+// label: EOL? LABEL ':' EOL
 AssemblingVisitor.prototype.visitCatalog = function(step) {
     // can ignore the label at this stage since they don't show up in the bytecode
     var operation = step.getValue('$operation').toNumber();
