@@ -10,7 +10,7 @@
 'use strict';
 
 exports.types = require('./Types');
-exports.bytecode = require('./BytecodeUtilities');
-exports.parser = require('./ProcedureParser');
-exports.formatter = require('./ProcedureFormatter');
-exports.intrinsics = require('./IntrinsicFunctions');
+exports.bytecode = require('./Bytecode');
+exports.parser = require('./Parser');
+exports.formatter = require('./Formatter');
+exports.intrinsics = require('./Intrinsics');

@@ -10,8 +10,8 @@
 'use strict';
 var bali = require('bali-component-framework');
 var types = require('../utilities/Types');
-var bytecode = require('../utilities/BytecodeUtilities');
-var intrinsics = require('../utilities/IntrinsicFunctions');
+var bytecode = require('../utilities/Bytecode');
+var intrinsics = require('../utilities/Intrinsics');
 
 /**
  * This library provides functions that assemble and disassemble instructions

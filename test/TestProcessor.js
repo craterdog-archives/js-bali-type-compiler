@@ -20,8 +20,8 @@ var repository = nebula.local(testDirectory);
 var api = nebula.api(notaryKey, repository);
 
 var utilities = require('../src/utilities');
-var assembler = require('../src/compiler/ProcedureAssembler');
-var VirtualMachine = require('../src/processor/VirtualMachine');
+var assembler = require('../src/compiler/Assembler');
+var Processor = require('../src/processor/Processor').Processor;
 
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -89,7 +89,7 @@ var MESSAGE = '[$foo: "bar"]';
 
 var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
-function generateTaskContext(filename) {
+function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
     var procedure = utilities.parser.parseProcedure(source, true);
     var assemblerContext = assembler.analyzeProcedure(procedure);
@@ -116,49 +116,49 @@ function generateTaskContext(filename) {
     source = source.replace(/%literals/, literals.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
     source = source.replace(/%bytecode/, "'" + base16 + "'");
-    var taskContext = bali.parser.parseDocument(source);
-    return taskContext;
+    var task = bali.parser.parseDocument(source);
+    return task;
 }
 
 
 describe('Bali Virtual Machine™', function() {
-    var taskContext;
+    var task;
 
     describe('Test the JUMP instruction.', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/JUMP.basm';
-            taskContext = generateTaskContext(testFile);
-            expect(taskContext).to.exist;  // jshint ignore:line
+            task = loadTask(testFile);
+            expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.address).to.equal(1);
+            var processor = new Processor(api, task);
+            expect(processor.procedure.address).to.equal(1);
 
             // 1.IfStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.address).to.equal(2);
+            expect(processor.procedure.address).to.equal(2);
 
             // 1.1.ConditionClause:
             // PUSH ELEMENT `true`
             // JUMP TO 1.IfStatementDone ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(4);
+            expect(processor.procedure.address).to.equal(4);
 
             // 1.1.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.address).to.equal(5);
+            expect(processor.procedure.address).to.equal(5);
 
             // 1.2.ConditionClause:
             // PUSH ELEMENT `false`
             // JUMP TO 1.3.ConditionClause ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(8);
+            expect(processor.procedure.address).to.equal(8);
 
             // 1.2.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -168,7 +168,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.4.ConditionClause ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(11);
+            expect(processor.procedure.address).to.equal(11);
 
             // 1.3.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -178,19 +178,19 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(13);
+            expect(processor.procedure.address).to.equal(13);
 
             // 1.4.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.address).to.equal(14);
+            expect(processor.procedure.address).to.equal(14);
 
             // 1.5.ConditionClause:
             // PUSH ELEMENT `none`
             // JUMP TO 1.6.ConditionClause ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(17);
+            expect(processor.procedure.address).to.equal(17);
 
             // 1.5.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -200,24 +200,24 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedureContext.address).to.equal(19);
+            expect(processor.procedure.address).to.equal(19);
 
             // 1.6.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
             processor.step();
-            expect(processor.procedureContext.address).to.equal(20);
+            expect(processor.procedure.address).to.equal(20);
 
             // 1.IfStatementDone:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedureContext.address).to.equal(21);
+            expect(processor.procedure.address).to.equal(21);
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clock).to.equal(17);
-            expect(processor.taskContext.balance).to.equal(983);
-            expect(processor.taskContext.status).to.equal('$active');
-            expect(processor.taskContext.stack.getSize()).to.equal(0);
+            expect(processor.task.clock).to.equal(17);
+            expect(processor.task.balance).to.equal(983);
+            expect(processor.task.status).to.equal('$active');
+            expect(processor.task.stack.getSize()).to.equal(0);
         });
 
     });
@@ -226,44 +226,44 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/PUSH-POP.basm';
-            taskContext = generateTaskContext(testFile);
-            expect(taskContext).to.exist;  // jshint ignore:line
+            task = loadTask(testFile);
+            expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.address).to.equal(1);
+            var processor = new Processor(api, task);
+            expect(processor.procedure.address).to.equal(1);
 
             // 1.PushHandler:
             // PUSH HANDLER 3.PushSource
             processor.step();
-            expect(processor.procedureContext.handlers.getSize()).to.equal(1);
+            expect(processor.procedure.handlers.getSize()).to.equal(1);
 
             // 2.PushElement:
             // PUSH ELEMENT "five"
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(1);
 
             // 3.PushSource:
             // PUSH SOURCE `{return prefix + name + suffix}`
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.getSize()).to.equal(2);
 
             // 4.PopHandler:
             // POP HANDLER
             processor.step();
-            expect(processor.procedureContext.handlers.getSize()).to.equal(0);
+            expect(processor.procedure.handlers.getSize()).to.equal(0);
 
             // 5.PopComponent:
             // POP COMPONENT
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(1);
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clock).to.equal(5);
-            expect(processor.taskContext.balance).to.equal(995);
-            expect(processor.taskContext.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(5);
+            expect(processor.task.balance).to.equal(995);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -272,68 +272,68 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/LOAD-STORE.basm';
-            taskContext = generateTaskContext(testFile);
-            expect(taskContext).to.exist;  // jshint ignore:line
+            task = loadTask(testFile);
+            expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.address).to.equal(1);
+            var processor = new Processor(api, task);
+            expect(processor.procedure.address).to.equal(1);
 
             // 1.LoadParameter:
             // LOAD PARAMETER $x
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(0);
-            expect(processor.procedureContext.variables.getItem(2).value.toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.procedure.variables.getItem(2).value.toString()).to.equal(MESSAGE);
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 4.StoreDraft:
             // STORE DRAFT $citation
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(0);
+            expect(processor.task.stack.getSize()).to.equal(0);
             // LOAD DOCUMENT $citation
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 5.StoreDocument:
             // STORE DOCUMENT $citation
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(0);
+            expect(processor.task.stack.getSize()).to.equal(0);
 
             // 6.LoadDocument:
             // LOAD DOCUMENT $citation
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
 
             // 7.StoreMessage:
             // STORE MESSAGE $queue
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(0);
+            expect(processor.task.stack.getSize()).to.equal(0);
 
             // 8.LoadMessage:
             // LOAD MESSAGE $queue
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().getValue('$foo').toString()).to.equal('"bar"');
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().getValue('$foo').toString()).to.equal('"bar"');
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clock).to.equal(9);
-            expect(processor.taskContext.balance).to.equal(991);
-            expect(processor.taskContext.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(9);
+            expect(processor.task.balance).to.equal(991);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -342,48 +342,48 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/INVOKE.basm';
-            taskContext = generateTaskContext(testFile);
-            expect(taskContext).to.exist;  // jshint ignore:line
+            task = loadTask(testFile);
+            expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.address).to.equal(1);
+            var processor = new Processor(api, task);
+            expect(processor.procedure.address).to.equal(1);
 
             // 1.Invoke:
             // INVOKE $random
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(1);
 
             // 2.InvokeWithParameter:
             // PUSH ELEMENT `3`
             processor.step();
             // INVOKE $factorial WITH PARAMETER
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(2);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal('6');
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.topItem().toString()).to.equal('6');
 
             // 3.InvokeWith2Parameters:
             // PUSH ELEMENT `5`
             processor.step();
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(2);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal('11');
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.topItem().toString()).to.equal('11');
 
             // 4.InvokeWith3Parameters:
             // PUSH ELEMENT `13`
             processor.step();
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
-            expect(processor.taskContext.stack.getSize()).to.equal(1);
-            expect(processor.taskContext.stack.topItem().toString()).to.equal('11');
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().toString()).to.equal('11');
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.taskContext.clock).to.equal(7);
-            expect(processor.taskContext.balance).to.equal(993);
-            expect(processor.taskContext.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(7);
+            expect(processor.task.balance).to.equal(993);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -393,13 +393,13 @@ describe('Bali Virtual Machine™', function() {
 
         it('should create the initial task context', function() {
             var testFile = 'test/instructions/EXECUTE-HANDLE.basm';
-            taskContext = generateTaskContext(testFile);
-            expect(taskContext).to.exist;  // jshint ignore:line
+            task = loadTask(testFile);
+            expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var processor = VirtualMachine.fromTask(api, taskContext);
-            expect(processor.procedureContext.address).to.equal(1);
+            var processor = new Processor(api, task);
+            expect(processor.procedure.address).to.equal(1);
             // TODO: add implementation
         });
 

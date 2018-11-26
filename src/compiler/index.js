@@ -9,5 +9,5 @@
  ************************************************************************/
 'use strict';
 
-exports.assembler = require('./ProcedureAssembler');
-exports.compiler = require('./TypeCompiler');
+exports.assembler = require('./Assembler');
+exports.compiler = require('./Compiler');

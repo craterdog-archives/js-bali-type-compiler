@@ -9,4 +9,4 @@
  ************************************************************************/
 'use strict';
 
-exports.processor = require('./VirtualMachine');
+exports.processor = require('./Processor');

@@ -12,7 +12,7 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var utilities = require('../src/utilities');
-var assembler = require('../src/compiler/ProcedureAssembler');
+var assembler = require('../src/compiler/Assembler');
 
 
 describe('Bali Virtual Machine™', function() {

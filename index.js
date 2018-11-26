@@ -12,13 +12,13 @@
 var utilities = require('./src/utilities/');
 exports.types = utilities.types;
 exports.bytecode = utilities.bytecode;
+exports.intrinsics = utilities.intrinsics;
 exports.parser = utilities.parser;
 exports.formatter = utilities.formatter;
-exports.intrinsics = utilities.intrinsics;
 
 var compiler = require('./src/compiler/');
 exports.assembler = compiler.assembler;
 exports.compiler = compiler.compiler;
 
 var processor = require('./src/processor/');
-exports.processor = processor.VirtualMachine;
+exports.processor = processor.processor;

@@ -12,7 +12,7 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var bali = require('bali-component-framework');
-var utilities = require('../src/utilities/BytecodeUtilities');
+var utilities = require('../src/utilities/Bytecode');
 
 describe('Bali Virtual Machine™', function() {
 

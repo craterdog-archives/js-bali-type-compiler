@@ -14,9 +14,9 @@
  * corresponding assembly instructions for the Bali Virtual Machine™.
  */
 var bali = require('bali-component-framework');
-var parser = require('../utilities/ProcedureParser');
-var utilities = require('../utilities/BytecodeUtilities');
-var assembler = require('./ProcedureAssembler');
+var parser = require('../utilities/Parser');
+var utilities = require('../utilities/Bytecode');
+var assembler = require('./Assembler');
 
 
 // PUBLIC FUNCTIONS

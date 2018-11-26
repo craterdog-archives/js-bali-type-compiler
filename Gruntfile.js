@@ -71,12 +71,12 @@ module.exports = function(grunt) {
           timeout: 10000 
         },
         src: [
-          'test/TestBytecodeUtilities.js',
-          'test/TestProcedureAssembler.js',
-          'test/TestTypeCompiler.js',
+          'test/TestBytecode.js',
+          'test/TestAssembler.js',
+          'test/TestCompiler.js',
           'test/TestTransformers.js',
-          'test/TestVirtualMachine.js',
-          'test/TestIndexFiles.js',
+          'test/TestProcessor.js',
+          'test/TestIndex.js',
         ]
       }
     },
