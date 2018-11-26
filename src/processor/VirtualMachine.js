@@ -13,8 +13,8 @@
  * This class defines the Bali Virtual Machine™.
  */
 var bali = require('bali-component-framework');
-var utilities = require('./BytecodeUtilities');
-var intrinsics = require('./IntrinsicFunctions');
+var utilities = require('../utilities/BytecodeUtilities');
+var intrinsics = require('../utilities/IntrinsicFunctions');
 
 var ACTIVE = '$active';
 var WAITING = '$waiting';

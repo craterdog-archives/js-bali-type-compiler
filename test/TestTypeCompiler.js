@@ -12,7 +12,7 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var bali = require('bali-component-framework');
-var compiler = require('../src/TypeCompiler');
+var compiler = require('../src/compiler/TypeCompiler');
 
 var testDirectory = 'test/config/';
 var notary = require('bali-digital-notary').api(testDirectory);

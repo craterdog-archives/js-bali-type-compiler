@@ -11,9 +11,8 @@
 var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
-var parser = require('../src/ProcedureParser');
-var assembler = require('../src/ProcedureAssembler');
-var utilities = require('../src/BytecodeUtilities');
+var utilities = require('../src/utilities');
+var assembler = require('../src/compiler/ProcedureAssembler');
 
 
 describe('Bali Virtual Machine™', function() {
@@ -32,12 +31,12 @@ describe('Bali Virtual Machine™', function() {
                 var codeFile = testFolder + prefix + '.code';
                 var source = fs.readFileSync(basmFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var procedure = parser.parseProcedure(source);
+                var procedure = utilities.parser.parseProcedure(source);
                 expect(procedure).to.exist;  // jshint ignore:line
                 var context = assembler.analyzeProcedure(procedure);
                 var bytecode = assembler.assembleProcedure(procedure, context);
                 expect(bytecode).to.exist;  // jshint ignore:line
-                var formatted = utilities.bytecodeToString(bytecode);
+                var formatted = utilities.bytecode.bytecodeToString(bytecode);
                 expect(formatted).to.exist;  // jshint ignore:line
                 //fs.writeFileSync(codeFile, formatted, 'utf8');
                 var expected = fs.readFileSync(codeFile, 'utf8');

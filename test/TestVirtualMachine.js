@@ -19,11 +19,9 @@ var notaryKey = notary.api(testDirectory);
 var repository = nebula.local(testDirectory);
 var api = nebula.api(notaryKey, repository);
 
-var parser = require('../src/ProcedureParser');
-var compiler = require('../src/TypeCompiler');
-var assembler = require('../src/ProcedureAssembler');
-var utilities = require('../src/BytecodeUtilities');
-var VirtualMachine = require('../src/VirtualMachine');
+var utilities = require('../src/utilities');
+var assembler = require('../src/compiler/ProcedureAssembler');
+var VirtualMachine = require('../src/processor/VirtualMachine');
 
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -93,7 +91,7 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function generateTaskContext(filename) {
     var source = fs.readFileSync(filename, 'utf8');
-    var procedure = parser.parseProcedure(source, true);
+    var procedure = utilities.parser.parseProcedure(source, true);
     var assemblerContext = assembler.analyzeProcedure(procedure);
     var parameters = new bali.Catalog();
     var iterator = assemblerContext.getValue('$parameters').getIterator();
@@ -111,7 +109,7 @@ function generateTaskContext(filename) {
     variables.setValue('"$queue"', bali.parser.parseDocument(QUEUE));
     variables.setValue('"$citation"', bali.parser.parseDocument(CITATION));
     var bytecode = assembler.assembleProcedure(procedure, assemblerContext);
-    var bytes = utilities.bytecodeToBytes(bytecode);
+    var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
     source = source.replace(/%parameters/, parameters.toDocument('            '));

@@ -1,4 +1,4 @@
-// Generated from grammar/BaliInstructionSet.g4 by ANTLR 4.7.1
+// Generated from src/grammar/BaliInstructionSet.g4 by ANTLR 4.7.1
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 

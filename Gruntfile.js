@@ -14,8 +14,8 @@ module.exports = function(grunt) {
     jshint: {
       files: [
         'Gruntfile.js',
-        'src/*.js',
-        'test/*.js'
+        'src/**/*.js',
+        'test/**/*.js'
       ],
       options: {
         node: true
@@ -26,12 +26,12 @@ module.exports = function(grunt) {
     clean: {
       generate: [
         '*.log',
-        'grammar/BaliInstructionSetLexer.js',
-        'grammar/BaliInstructionSetParser.js',
-        'grammar/BaliInstructionSetListener.js',
-        'grammar/BaliInstructionSetVisitor.js',
-        'grammar/*.interp',
-        'grammar/*.tokens'
+        'src/grammar/BaliInstructionSetLexer.js',
+        'src/grammar/BaliInstructionSetParser.js',
+        'src/grammar/BaliInstructionSetListener.js',
+        'src/grammar/BaliInstructionSetVisitor.js',
+        'src/grammar/*.interp',
+        'src/grammar/*.tokens'
       ],
       build: [
         'dist/*',
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
     // grunt-antlr4 plugin configuration (generate parser)
     antlr4: {
       generate: {
-        grammar: 'grammar/BaliInstructionSet.g4',
+        grammar: 'src/grammar/BaliInstructionSet.g4',
         options: {
           grammarLevel: {
             language: 'JavaScript'
@@ -75,7 +75,8 @@ module.exports = function(grunt) {
           'test/TestProcedureAssembler.js',
           'test/TestTypeCompiler.js',
           'test/TestTransformers.js',
-          'test/TestVirtualMachine.js'
+          'test/TestVirtualMachine.js',
+          'test/TestIndexFiles.js',
         ]
       }
     },
@@ -88,8 +89,7 @@ module.exports = function(grunt) {
       dist: {
         // concatenate the source files and place the result in destination
         src: [
-          'grammar/*.js',
-          'src/*.js'
+          'src/**/*.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       }

@@ -8,23 +8,16 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
-var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
-var utilities = require('../src/utilities');
 
-describe('Bali Instruction Set', function() {
+describe('Test Index Files', function() {
 
-    describe('Test Parser and Formatter', function() {
+    describe('Test the require of the top level index.', function() {
 
-        it('should parse and format the same instructions', function() {
-            var file = 'test/source/instructions.basm';
-            var source = fs.readFileSync(file, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
-            var procedure = utilities.parser.parseProcedure(source);
-            expect(procedure).to.exist;  // jshint ignore:line
-            var formatted = utilities.formatter.formatProcedure(procedure);
-            expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
+        it('should create the initial task context', function() {
+            var vm = require('../index.js');
+            expect(vm).to.exist;  // jshint ignore:line
         });
 
     });
