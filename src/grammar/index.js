@@ -9,7 +9,7 @@
  ************************************************************************/
 'use strict';
 
-exports.BaliInstructionSetLexer = require('./BaliInstructionSetLexer').BaliInstructionSetLexer;
-exports.BaliInstructionSetParser = require('./BaliInstructionSetParser').BaliInstructionSetParser;
-exports.BaliInstructionSetVisitor = require('./BaliInstructionSetVisitor').BaliInstructionSetVisitor;
-exports.BaliInstructionSetListener = require('./BaliInstructionSetListener').BaliInstructionSetListener;
+exports.InstructionSetLexer = require('./InstructionSetLexer').InstructionSetLexer;
+exports.InstructionSetParser = require('./InstructionSetParser').InstructionSetParser;
+exports.InstructionSetVisitor = require('./InstructionSetVisitor').InstructionSetVisitor;
+exports.InstructionSetListener = require('./InstructionSetListener').InstructionSetListener;

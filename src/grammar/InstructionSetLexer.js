@@ -1,4 +1,4 @@
-// Generated from src/grammar/BaliInstructionSet.g4 by ANTLR 4.7.1
+// Generated from src/grammar/InstructionSet.g4 by ANTLR 4.7.1
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 
@@ -226,106 +226,101 @@ var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
 var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new antlr4.dfa.DFA(ds, index); });
 
-function BaliInstructionSetLexer(input) {
+function InstructionSetLexer(input) {
 	antlr4.Lexer.call(this, input);
     this._interp = new antlr4.atn.LexerATNSimulator(this, atn, decisionsToDFA, new antlr4.PredictionContextCache());
     return this;
 }
 
-BaliInstructionSetLexer.prototype = Object.create(antlr4.Lexer.prototype);
-BaliInstructionSetLexer.prototype.constructor = BaliInstructionSetLexer;
+InstructionSetLexer.prototype = Object.create(antlr4.Lexer.prototype);
+InstructionSetLexer.prototype.constructor = InstructionSetLexer;
 
-Object.defineProperty(BaliInstructionSetLexer.prototype, "atn", {
+Object.defineProperty(InstructionSetLexer.prototype, "atn", {
         get : function() {
                 return atn;
         }
 });
 
-BaliInstructionSetLexer.EOF = antlr4.Token.EOF;
-BaliInstructionSetLexer.T__0 = 1;
-BaliInstructionSetLexer.T__1 = 2;
-BaliInstructionSetLexer.T__2 = 3;
-BaliInstructionSetLexer.T__3 = 4;
-BaliInstructionSetLexer.T__4 = 5;
-BaliInstructionSetLexer.T__5 = 6;
-BaliInstructionSetLexer.T__6 = 7;
-BaliInstructionSetLexer.T__7 = 8;
-BaliInstructionSetLexer.T__8 = 9;
-BaliInstructionSetLexer.T__9 = 10;
-BaliInstructionSetLexer.T__10 = 11;
-BaliInstructionSetLexer.T__11 = 12;
-BaliInstructionSetLexer.T__12 = 13;
-BaliInstructionSetLexer.T__13 = 14;
-BaliInstructionSetLexer.T__14 = 15;
-BaliInstructionSetLexer.T__15 = 16;
-BaliInstructionSetLexer.T__16 = 17;
-BaliInstructionSetLexer.T__17 = 18;
-BaliInstructionSetLexer.T__18 = 19;
-BaliInstructionSetLexer.T__19 = 20;
-BaliInstructionSetLexer.T__20 = 21;
-BaliInstructionSetLexer.T__21 = 22;
-BaliInstructionSetLexer.T__22 = 23;
-BaliInstructionSetLexer.T__23 = 24;
-BaliInstructionSetLexer.T__24 = 25;
-BaliInstructionSetLexer.T__25 = 26;
-BaliInstructionSetLexer.T__26 = 27;
-BaliInstructionSetLexer.T__27 = 28;
-BaliInstructionSetLexer.T__28 = 29;
-BaliInstructionSetLexer.LABEL = 30;
-BaliInstructionSetLexer.NUMBER = 31;
-BaliInstructionSetLexer.LITERAL = 32;
-BaliInstructionSetLexer.SYMBOL = 33;
-BaliInstructionSetLexer.EOL = 34;
-BaliInstructionSetLexer.SPACE = 35;
+InstructionSetLexer.EOF = antlr4.Token.EOF;
+InstructionSetLexer.T__0 = 1;
+InstructionSetLexer.T__1 = 2;
+InstructionSetLexer.T__2 = 3;
+InstructionSetLexer.T__3 = 4;
+InstructionSetLexer.T__4 = 5;
+InstructionSetLexer.T__5 = 6;
+InstructionSetLexer.T__6 = 7;
+InstructionSetLexer.T__7 = 8;
+InstructionSetLexer.T__8 = 9;
+InstructionSetLexer.T__9 = 10;
+InstructionSetLexer.T__10 = 11;
+InstructionSetLexer.T__11 = 12;
+InstructionSetLexer.T__12 = 13;
+InstructionSetLexer.T__13 = 14;
+InstructionSetLexer.T__14 = 15;
+InstructionSetLexer.T__15 = 16;
+InstructionSetLexer.T__16 = 17;
+InstructionSetLexer.T__17 = 18;
+InstructionSetLexer.T__18 = 19;
+InstructionSetLexer.T__19 = 20;
+InstructionSetLexer.T__20 = 21;
+InstructionSetLexer.T__21 = 22;
+InstructionSetLexer.T__22 = 23;
+InstructionSetLexer.T__23 = 24;
+InstructionSetLexer.T__24 = 25;
+InstructionSetLexer.T__25 = 26;
+InstructionSetLexer.T__26 = 27;
+InstructionSetLexer.T__27 = 28;
+InstructionSetLexer.T__28 = 29;
+InstructionSetLexer.LABEL = 30;
+InstructionSetLexer.NUMBER = 31;
+InstructionSetLexer.LITERAL = 32;
+InstructionSetLexer.SYMBOL = 33;
+InstructionSetLexer.EOL = 34;
+InstructionSetLexer.SPACE = 35;
 
-BaliInstructionSetLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
+InstructionSetLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
 
-BaliInstructionSetLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
+InstructionSetLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
 
-BaliInstructionSetLexer.prototype.literalNames = [ null, "':'", "'SKIP INSTRUCTION'", 
-                                                   "'JUMP'", "'TO'", "'ON'", 
-                                                   "'NONE'", "'TRUE'", "'FALSE'", 
-                                                   "'PUSH'", "'HANDLER'", 
-                                                   "'ELEMENT'", "'SOURCE'", 
-                                                   "'POP'", "'COMPONENT'", 
-                                                   "'LOAD'", "'VARIABLE'", 
-                                                   "'PARAMETER'", "'DOCUMENT'", 
-                                                   "'MESSAGE'", "'STORE'", 
-                                                   "'DRAFT'", "'INVOKE'", 
-                                                   "'WITH'", "'PARAMETERS'", 
-                                                   "'EXECUTE'", "'TARGET'", 
-                                                   "'HANDLE'", "'EXCEPTION'", 
-                                                   "'RESULT'" ];
+InstructionSetLexer.prototype.literalNames = [ null, "':'", "'SKIP INSTRUCTION'", 
+                                               "'JUMP'", "'TO'", "'ON'", 
+                                               "'NONE'", "'TRUE'", "'FALSE'", 
+                                               "'PUSH'", "'HANDLER'", "'ELEMENT'", 
+                                               "'SOURCE'", "'POP'", "'COMPONENT'", 
+                                               "'LOAD'", "'VARIABLE'", "'PARAMETER'", 
+                                               "'DOCUMENT'", "'MESSAGE'", 
+                                               "'STORE'", "'DRAFT'", "'INVOKE'", 
+                                               "'WITH'", "'PARAMETERS'", 
+                                               "'EXECUTE'", "'TARGET'", 
+                                               "'HANDLE'", "'EXCEPTION'", 
+                                               "'RESULT'" ];
 
-BaliInstructionSetLexer.prototype.symbolicNames = [ null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, null, null, 
-                                                    null, null, "LABEL", 
-                                                    "NUMBER", "LITERAL", 
-                                                    "SYMBOL", "EOL", "SPACE" ];
+InstructionSetLexer.prototype.symbolicNames = [ null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, null, null, 
+                                                null, null, "LABEL", "NUMBER", 
+                                                "LITERAL", "SYMBOL", "EOL", 
+                                                "SPACE" ];
 
-BaliInstructionSetLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", 
-                                                "T__3", "T__4", "T__5", 
-                                                "T__6", "T__7", "T__8", 
-                                                "T__9", "T__10", "T__11", 
-                                                "T__12", "T__13", "T__14", 
-                                                "T__15", "T__16", "T__17", 
-                                                "T__18", "T__19", "T__20", 
-                                                "T__21", "T__22", "T__23", 
-                                                "T__24", "T__25", "T__26", 
-                                                "T__27", "T__28", "LABEL", 
-                                                "NUMBER", "LITERAL", "SYMBOL", 
-                                                "EOL", "SPACE", "IDENTIFIER", 
-                                                "LINE", "CHARACTER", "ESCAPE", 
-                                                "BASE16" ];
+InstructionSetLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", "T__3", 
+                                            "T__4", "T__5", "T__6", "T__7", 
+                                            "T__8", "T__9", "T__10", "T__11", 
+                                            "T__12", "T__13", "T__14", "T__15", 
+                                            "T__16", "T__17", "T__18", "T__19", 
+                                            "T__20", "T__21", "T__22", "T__23", 
+                                            "T__24", "T__25", "T__26", "T__27", 
+                                            "T__28", "LABEL", "NUMBER", 
+                                            "LITERAL", "SYMBOL", "EOL", 
+                                            "SPACE", "IDENTIFIER", "LINE", 
+                                            "CHARACTER", "ESCAPE", "BASE16" ];
 
-BaliInstructionSetLexer.prototype.grammarFileName = "BaliInstructionSet.g4";
+InstructionSetLexer.prototype.grammarFileName = "InstructionSet.g4";
 
 
 
-exports.BaliInstructionSetLexer = BaliInstructionSetLexer;
+exports.InstructionSetLexer = InstructionSetLexer;
 

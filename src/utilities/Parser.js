@@ -10,8 +10,8 @@
 'use strict';
 
 /**
- * This library provides functions that parse a Bali procedure and
- * produce the corresponding parse tree structure.
+ * This module provides a class that parses a document containing instructions
+ * for the Bali Virtual Machine™ and produce the corresponding list of instructions.
  */
 var antlr = require('antlr4');
 var ErrorStrategy = require('antlr4/error/ErrorStrategy');
@@ -20,56 +20,95 @@ var grammar = require('../grammar');
 var types = require('./Types');
 
 
+// PUBLIC FUNCTIONS
+
 /**
- * This function takes a source code string containing a BaliVM procedure
- * and parses it into a parse tree structure containing the same
- * procedure.
+ * This class implements a parser that parses strings containing instructions for the
+ * Bali Virtual Machine™ and generates the corresponding parse tree structures.
  * 
- * @param {String} source The virtual machine instructions source code.
+ * @constructor
  * @param {Boolean} debug Whether of not the parser should be run in debug mode, the
  * default is false. Debug mode is only useful for debugging the language grammar and
  * need not be used otherwise.
- * @returns {Procedure} The resulting parse tree.
+ * @returns {Parser} The new string parser.
  */
-exports.parseProcedure = function(source, debug) {
-    var chars = new antlr.InputStream(source);
-    var lexer = new grammar.BaliInstructionSetLexer(chars);
-    var listener = new BaliErrorListener(debug);
+function Parser(debug) {
+    this.debug = debug || false;
+    return this;
+}
+Parser.prototype.constructor = Parser;
+exports.Parser = Parser;
+
+
+/**
+ * This function takes a string containing instructions for the Bali Virtual Machine™
+ * and parses it into a list of instructions.
+ * 
+ * @param {String} document The document defining the instructions.
+ * @returns {List} The resulting list of instructions.
+ */
+Parser.prototype.parseDocument = function(document) {
+    var parser = initializeParser(document, this.debug);
+    var antlrTree = parser.document();
+    var list = convertParseTree(antlrTree);
+    return list;
+};
+
+
+// PRIVATE FUNCTIONS
+
+function initializeParser(document, debug) {
+    var chars = new antlr.InputStream(document);
+    var lexer = new grammar.InstructionSetLexer(chars);
+    var listener = new CustomErrorListener(debug);
     lexer.removeErrorListeners();
     lexer.addErrorListener(listener);
     var tokens = new antlr.CommonTokenStream(lexer);
-    var parser = new grammar.BaliInstructionSetParser(tokens);
+    var parser = new grammar.InstructionSetParser(tokens);
     parser.buildParseTrees = true;
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
-    parser._errHandler = new BaliErrorStrategy();
-    var antlrTree = parser.procedure();
+    parser._errHandler = new CustomErrorStrategy();
+    return parser;
+}
+
+
+function convertParseTree(antlrTree) {
     var visitor = new ParsingVisitor();
     antlrTree.accept(visitor);
-    var procedure = visitor.result;
-    return procedure;
-};
+    var instructions = visitor.result;
+    return instructions;
+}
 
 
 // PRIVATE CLASSES
 
+var EOL = '\n';  // POSIX end of line character
+
+
 function ParsingVisitor() {
-    grammar.BaliInstructionSetVisitor.call(this);
+    grammar.InstructionSetVisitor.call(this);
     return this;
 }
-ParsingVisitor.prototype = Object.create(grammar.BaliInstructionSetVisitor.prototype);
+ParsingVisitor.prototype = Object.create(grammar.InstructionSetVisitor.prototype);
 ParsingVisitor.prototype.constructor = ParsingVisitor;
 
 
-// procedure: EOL* step (EOL step)* EOL* EOF
-ParsingVisitor.prototype.visitProcedure = function(ctx) {
-    var procedure = new bali.List();
+// document: EOL* instructions EOL* EOF
+ParsingVisitor.prototype.visitDocument = function(ctx) {
+    ctx.instructions().accept(this);
+};
+
+
+// instructions: step (EOL step)*
+ParsingVisitor.prototype.visitInstructions = function(ctx) {
+    var instructions = new bali.List();
     var steps = ctx.step();
     steps.forEach(function(step) {
         step.accept(this);
-        procedure.addItem(this.result);
+        instructions.addItem(this.result);
     }, this);
-    this.result = procedure;
+    this.result = instructions;
 };
 
 
@@ -237,25 +276,25 @@ ParsingVisitor.prototype.visitHandleInstruction = function(ctx) {
 // CUSTOM ERROR HANDLING
 
 // override the recover method in the lexer to fail fast
-grammar.BaliInstructionSetLexer.prototype.recover = function(e) {
+grammar.InstructionSetLexer.prototype.recover = function(e) {
     throw e;
 };
 
 
-function BaliErrorStrategy() {
+function CustomErrorStrategy() {
     ErrorStrategy.DefaultErrorStrategy.call(this);
     return this;
 }
-BaliErrorStrategy.prototype = Object.create(ErrorStrategy.DefaultErrorStrategy.prototype);
-BaliErrorStrategy.prototype.constructor = BaliErrorStrategy;
+CustomErrorStrategy.prototype = Object.create(ErrorStrategy.DefaultErrorStrategy.prototype);
+CustomErrorStrategy.prototype.constructor = CustomErrorStrategy;
 
 
-BaliErrorStrategy.prototype.reportError = function(recognizer, e) {
+CustomErrorStrategy.prototype.reportError = function(recognizer, e) {
     recognizer.notifyErrorListeners(e.message, recognizer.getCurrentToken(), e);
 };
 
 
-BaliErrorStrategy.prototype.recover = function(recognizer, e) {
+CustomErrorStrategy.prototype.recover = function(recognizer, e) {
     var context = recognizer._ctx;
     while (context !== null) {
         context.exception = e;
@@ -265,33 +304,33 @@ BaliErrorStrategy.prototype.recover = function(recognizer, e) {
 };
 
 
-BaliErrorStrategy.prototype.recoverInline = function(recognizer) {
+CustomErrorStrategy.prototype.recoverInline = function(recognizer) {
     var exception = new antlr.error.InputMismatchException(recognizer);
     this.reportError(recognizer, exception);
     this.recover(recognizer, exception);
 };
 
 
-BaliErrorStrategy.prototype.sync = function(recognizer) {
+CustomErrorStrategy.prototype.sync = function(recognizer) {
     // ignore for efficiency
 };
 
 
-function BaliErrorListener(debug) {
+function CustomErrorListener(debug) {
     antlr.error.ErrorListener.call(this);
     this.exactOnly = false;  // 'true' results in uninteresting ambiguities so leave 'false'
     this.debug = debug;
     return this;
 }
-BaliErrorListener.prototype = Object.create(antlr.error.ErrorListener.prototype);
-BaliErrorListener.prototype.constructor = BaliErrorListener;
+CustomErrorListener.prototype = Object.create(antlr.error.ErrorListener.prototype);
+CustomErrorListener.prototype.constructor = CustomErrorListener;
 
 
-BaliErrorListener.prototype.syntaxError = function(recognizer, offendingToken, lineNumber, columnNumber, message, e) {
+CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken, lineNumber, columnNumber, message, e) {
     // log a message
     var token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
     var input = token ? offendingToken.getInputStream() : recognizer._input;
-    var lines = input.toString().split('\n');
+    var lines = input.toString().split(EOL);
     var character = lines[lineNumber - 1][columnNumber];
     if (!token) {
         message = "LEXER: An unexpected character was encountered: '" + character + "'";
@@ -306,7 +345,7 @@ BaliErrorListener.prototype.syntaxError = function(recognizer, offendingToken, l
 };
 
 
-BaliErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startIndex, stopIndex, exact, alternatives, configs) {
+CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startIndex, stopIndex, exact, alternatives, configs) {
     if (this.debug) {
         var rule = getRule(recognizer, dfa);
         alternatives = [];
@@ -320,7 +359,7 @@ BaliErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startInd
 };
 
 
-BaliErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa, startIndex, stopIndex, prediction, configs) {
+CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa, startIndex, stopIndex, prediction, configs) {
     if (this.debug) {
         var rule = getRule(recognizer, dfa);
         var message = 'PARSER Encountered a context sensitive rule: ' + rule;
@@ -328,6 +367,8 @@ BaliErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa,
     }
 };
 
+
+// PRIVATE FUNCTIONS
 
 function getRule(recognizer, dfa) {
     var description = dfa.decision.toString();
@@ -350,7 +391,7 @@ function logMessage(recognizer, message) {
     var offendingToken = recognizer._precedenceStack ? recognizer.getCurrentToken() : undefined;
     var token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
     var input = token ? offendingToken.getInputStream() : recognizer._input;
-    var lines = input.toString().split('\n');
+    var lines = input.toString().split(EOL);
     var lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;
     var columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;
     if (lineNumber > 1) {

@@ -1,6 +1,8 @@
-grammar BaliInstructionSet;
+grammar InstructionSet;
 
-procedure: EOL* step (EOL step)* EOL* EOF;
+document: EOL* instructions EOL* EOF;
+
+instructions: step (EOL step)*;
 
 step: label? instruction;
 

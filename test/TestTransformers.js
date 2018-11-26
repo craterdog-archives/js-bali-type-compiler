@@ -13,7 +13,7 @@ var mocha = require('mocha');
 var expect = require('chai').expect;
 var utilities = require('../src/utilities');
 
-describe('Bali Instruction Set', function() {
+describe('Bali Virtual Machine™', function() {
 
     describe('Test Parser and Formatter', function() {
 
@@ -21,9 +21,9 @@ describe('Bali Instruction Set', function() {
             var file = 'test/source/instructions.basm';
             var source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = utilities.parser.parseProcedure(source);
+            var procedure = utilities.parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            var formatted = utilities.formatter.formatProcedure(procedure);
+            var formatted = utilities.formatter.formatInstructions(procedure);
             expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
 

@@ -26,10 +26,10 @@ module.exports = function(grunt) {
     clean: {
       generate: [
         '*.log',
-        'src/grammar/BaliInstructionSetLexer.js',
-        'src/grammar/BaliInstructionSetParser.js',
-        'src/grammar/BaliInstructionSetListener.js',
-        'src/grammar/BaliInstructionSetVisitor.js',
+        'src/grammar/InstructionSetLexer.js',
+        'src/grammar/InstructionSetParser.js',
+        'src/grammar/InstructionSetListener.js',
+        'src/grammar/InstructionSetVisitor.js',
         'src/grammar/*.interp',
         'src/grammar/*.tokens'
       ],
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
     // grunt-antlr4 plugin configuration (generate parser)
     antlr4: {
       generate: {
-        grammar: 'src/grammar/BaliInstructionSet.g4',
+        grammar: 'src/grammar/InstructionSet.g4',
         options: {
           grammarLevel: {
             language: 'JavaScript'

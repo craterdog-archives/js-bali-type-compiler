@@ -11,7 +11,7 @@
 var mocha = require('mocha');
 var expect = require('chai').expect;
 
-describe('Test Index Files', function() {
+describe('Bali Virtual Machine™', function() {
 
     describe('Test the require of the top level index.', function() {
 

@@ -14,8 +14,7 @@
  * corresponding assembly instructions for the Bali Virtual Machine™.
  */
 var bali = require('bali-component-framework');
-var parser = require('../utilities/Parser');
-var utilities = require('../utilities/Bytecode');
+var utilities = require('../utilities');
 var assembler = require('./Assembler');
 
 
@@ -63,11 +62,11 @@ exports.compileType = function(nebula, citation) {
         // compile and assemble the source code
         var context = exports.analyzeProcedure(procedure);
         var instructions = exports.compileProcedure(procedure, context);
-        procedure = parser.parseProcedure(instructions);
+        procedure = utilities.parser.parseDocument(instructions);
         instructions = bali.parser.parseDocument('"' + EOL + instructions.replace(/^/gm, '    ').replace(/    $/g, '') + '"($mediatype: "application/basm")');
         context = assembler.analyzeProcedure(procedure);
         var bytecode = assembler.assembleProcedure(procedure, context);
-        var base16 = bali.codex.base16Encode(utilities.bytecodeToBytes(bytecode), '            ');
+        var base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
         bytecode = bali.parser.parseDocument("'" + base16 + EOL + "            '" + '($base: 16, $mediatype: "application/bcod")');
 
         var procedureContext = new bali.Catalog();

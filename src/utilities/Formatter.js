@@ -10,23 +10,43 @@
 'use strict';
 
 /**
- * This library provides functions that format a parse tree produced
- * by the ProcedureParser and generates a canonical version of
- * the corresponding Bali procedure instructions.
+ * This library provides functions that format a list of instructions into a
+ * into a canonical source code string representing the instructions.
  */
 var types = require('./Types');
 
 
+// PUBLIC FUNCTIONS
+
 /**
- * This function takes a parse tree procedureand formats it into a
- * source code string.
+ * This class implements a formatter that formats an instruction list into its
+ * corresponding source code in a canonical way. If an optional indentation
+ * string is specified, then each line of the generated source code will be indented
+ * using that string.
  * 
- * @param {List} procedure The procedure to be formatted.
- * @returns {string} The resulting source code string.
+ * @constructor
+ * @param {String} indentation A blank string that will be prepended to each indented line in
+ * the source code. The default is the empty string.
+ * @returns {Formatter} The new component formatter.
  */
-exports.formatProcedure = function(procedure) {
-    var visitor = new FormattingVisitor();
-    procedure.acceptVisitor(visitor);
+function Formatter(indentation) {
+    this.indentation = indentation;
+    return this;
+}
+Formatter.prototype.constructor = Formatter;
+exports.Formatter = Formatter;
+
+
+/**
+ * This method generates the canonical source code for the specified parse tree
+ * component.
+ * 
+ * @param {List} instructions The list of instructions to be formatted.
+ * @returns {String} The source code for the instructions.
+ */
+Formatter.prototype.formatInstructions = function(instructions) {
+    var visitor = new FormattingVisitor(this.indentation);
+    instructions.acceptVisitor(visitor);
     return visitor.source;
 };
 
@@ -36,8 +56,9 @@ exports.formatProcedure = function(procedure) {
 var EOL = '\n';  // POSIX end of line character
 
 
-function FormattingVisitor() {
-    this.source = '';
+function FormattingVisitor(indentation) {
+    this.indentation = indentation ? indentation : '';
+    this.source = this.indentation;
     return this;
 }
 FormattingVisitor.prototype.constructor = FormattingVisitor;
@@ -48,7 +69,7 @@ FormattingVisitor.prototype.visitList = function(procedure) {
     var step = iterator.getNext();
     step.acceptVisitor(this);
     while (iterator.hasNext()) {
-        this.source += EOL;
+        this.source += EOL + this.indentation;
         step = iterator.getNext();
         step.acceptVisitor(this);
     }

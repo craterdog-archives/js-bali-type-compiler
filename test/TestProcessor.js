@@ -91,7 +91,7 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
-    var procedure = utilities.parser.parseProcedure(source, true);
+    var procedure = utilities.parser.parseDocument(source, true);
     var assemblerContext = assembler.analyzeProcedure(procedure);
     var parameters = new bali.Catalog();
     var iterator = assemblerContext.getValue('$parameters').getIterator();

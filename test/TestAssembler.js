@@ -31,7 +31,7 @@ describe('Bali Virtual Machine™', function() {
                 var codeFile = testFolder + prefix + '.code';
                 var source = fs.readFileSync(basmFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var procedure = utilities.parser.parseProcedure(source);
+                var procedure = utilities.parser.parseDocument(source);
                 expect(procedure).to.exist;  // jshint ignore:line
                 var context = assembler.analyzeProcedure(procedure);
                 var bytecode = assembler.assembleProcedure(procedure, context);
