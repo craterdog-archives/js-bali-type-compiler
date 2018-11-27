@@ -46,8 +46,7 @@ describe('Bali Virtual Macine™', function() {
                 expect(source).to.exist;  // jshint ignore:line
                 var procedure = bali.parser.parseDocument(source).procedure;
                 expect(procedure).to.exist;  // jshint ignore:line
-                var context = compiler.analyzeProcedure(procedure);
-                var instructions = compiler.compileProcedure(procedure, context);
+                var instructions = compiler.compileProcedure(procedure);
                 expect(instructions).to.exist;  // jshint ignore:line
                 //fs.writeFileSync(basmFile, instructions, 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');

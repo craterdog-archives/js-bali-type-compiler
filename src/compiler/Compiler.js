@@ -74,12 +74,11 @@ Compiler.prototype.compileDocument = function(nebula, citation) {
         var procedure = association.value.getValue('$source').procedure;
 
         // compile the source code
-        var context = this.analyzeProcedure(procedure);
-        var instructions = this.compileProcedure(procedure, context);
+        var instructions = this.compileProcedure(procedure);
         instructions = utilities.parser.parseDocument(instructions);
 
         // assemble the instructions
-        context = assembler.analyzeInstructions(instructions);
+        var context = assembler.analyzeInstructions(instructions);
         var bytecode = assembler.assembleInstructions(instructions, context);
 
         // format the instructions and add to the context
@@ -104,31 +103,17 @@ Compiler.prototype.compileDocument = function(nebula, citation) {
         
 
 /**
- * This function traverses a procedure parse tree structure for a Bali procedure analyzing it
- * for correctness.
- * 
- * @param {Procedure} procedure A procedure structure containing the definition of a Bali procedure.
- */
-Compiler.prototype.analyzeProcedure = function(procedure) {
-    var visitor = new AnalyzingVisitor();
-    procedure.acceptVisitor(visitor);
-    return visitor.context;
-};
-
-
-/**
  * This function traverses a parse tree structure containing a Bali procedure
  * generating the corresponding assembly instructions for the Bali Virtual
  * Machine™.
  * 
  * @param {List} procedure The parse tree structure for the procedure.
- * @param {Catalog} context The type context.
  * @returns {String} The assembly code instructions.
  */
-Compiler.prototype.compileProcedure = function(procedure, context) {
-    var visitor = new CompilingVisitor(context);
+Compiler.prototype.compileProcedure = function(procedure) {
+    var visitor = new CompilingVisitor();
     procedure.acceptVisitor(visitor);
-    var instructions = visitor.getResult();
+    var instructions = visitor.getInstructions();
     return instructions;
 };
 
@@ -174,14 +159,6 @@ function getSubClauses(statement) {
 
 // PRIVATE CLASSES
 
-function AnalyzingVisitor() {
-    bali.Visitor.call(this);
-    return this;
-}
-AnalyzingVisitor.prototype = Object.create(bali.Visitor.prototype);
-AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
-
-
 /*
  * This private class uses the Visitor Pattern to traverse the syntax tree generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
@@ -196,6 +173,17 @@ function CompilingVisitor() {
 }
 CompilingVisitor.prototype = Object.create(bali.Visitor.prototype);
 CompilingVisitor.prototype.constructor = CompilingVisitor;
+
+
+/**
+ * This method returns the resulting assembly instructions for the compiled procedure.
+ * 
+ * @returns {nm$_Compiler.CompilingVisitor.builder.asmcode}
+ */
+CompilingVisitor.prototype.getInstructions = function() {
+    this.builder.finalize();
+    return this.builder.asmcode;
+};
 
 
 /*
@@ -1588,12 +1576,6 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         // to the value that is on top of the component stack
         this.builder.insertInvokeInstruction('$setValue', 3);
     }
-};
-
-
-CompilingVisitor.prototype.getResult = function() {
-    this.builder.finalize();
-    return this.builder.asmcode;
 };
 
 
