@@ -609,7 +609,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var target = processor.task.stack.removeItem();
-        var type = intrinsics.invokeByName(processor, '$getType', [target]);
+        var type = intrinsics.invokeByName('$getType', [target]);
         var parameters = new bali.Catalog();
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;
@@ -623,7 +623,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var target = processor.task.stack.removeItem();
-        var type = intrinsics.invokeByName(processor, '$getType', [target]);
+        var type = intrinsics.invokeByName('$getType', [target]);
         var parameters = processor.task.stack.removeItem();
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;

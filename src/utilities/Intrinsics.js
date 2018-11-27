@@ -286,8 +286,8 @@ exports.names = [
     '$xor'
 ];
 
-exports.invokeByName = function(processor, name, parameters) {
+exports.invokeByName = function(name, parameters) {
     var index = exports.names.indexOf(name);
-    var result = exports.functions[index].apply(processor, parameters);
+    var result = exports.functions[index].apply(parameters);
     return result;
 };
