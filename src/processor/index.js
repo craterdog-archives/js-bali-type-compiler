@@ -9,4 +9,4 @@
  ************************************************************************/
 'use strict';
 
-exports.processor = require('./Processor');
+exports.Processor = require('./Processor').Processor;

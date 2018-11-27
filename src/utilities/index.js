@@ -12,9 +12,7 @@
 exports.types = require('./Types');
 exports.bytecode = require('./Bytecode');
 exports.intrinsics = require('./Intrinsics');
-
 exports.Formatter = require('./Formatter').Formatter;
 exports.formatter = new exports.Formatter();
-
 exports.Parser = require('./Parser').Parser;
-exports.parser = new exports.Parser(false);
+exports.parser = new exports.Parser();

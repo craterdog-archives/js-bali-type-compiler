@@ -12,14 +12,14 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var utilities = require('../src/utilities');
-var assembler = require('../src/compiler/Assembler');
+var assembler = require('../src/compiler/Assembler').assembler;
 
 
 describe('Bali Virtual Machine™', function() {
 
     describe('Test the assember.', function() {
 
-        it('should assemble procedures', function() {
+        it('should assemble instructions', function() {
             var testFolder = 'test/compiler/';
             var files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
@@ -31,10 +31,10 @@ describe('Bali Virtual Machine™', function() {
                 var codeFile = testFolder + prefix + '.code';
                 var source = fs.readFileSync(basmFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var procedure = utilities.parser.parseDocument(source);
-                expect(procedure).to.exist;  // jshint ignore:line
-                var context = assembler.analyzeProcedure(procedure);
-                var bytecode = assembler.assembleProcedure(procedure, context);
+                var instruction = utilities.parser.parseDocument(source);
+                expect(instruction).to.exist;  // jshint ignore:line
+                var context = assembler.analyzeInstructions(instruction);
+                var bytecode = assembler.assembleInstructions(instruction, context);
                 expect(bytecode).to.exist;  // jshint ignore:line
                 var formatted = utilities.bytecode.bytecodeToString(bytecode);
                 expect(formatted).to.exist;  // jshint ignore:line

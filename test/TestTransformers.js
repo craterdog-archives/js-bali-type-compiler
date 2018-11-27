@@ -27,6 +27,18 @@ describe('Bali Virtual Machine™', function() {
             expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
 
+        it('should parse and format the same instructions with indentation', function() {
+            var file = 'test/source/instructions.basm';
+            var source = fs.readFileSync(file, 'utf8');
+            expect(source).to.exist;  // jshint ignore:line
+            var procedure = utilities.parser.parseDocument(source);
+            expect(procedure).to.exist;  // jshint ignore:line
+            var formatter = new utilities.Formatter('    ');
+            var formatted = formatter.formatInstructions(procedure);
+            var expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
+            expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>
+        });
+
     });
 
 });

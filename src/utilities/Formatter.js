@@ -10,8 +10,8 @@
 'use strict';
 
 /**
- * This library provides functions that format a list of instructions into a
- * into a canonical source code string representing the instructions.
+ * This module defines a class that formats a list of instructions into a
+ * into the canonical source code string representing the instructions.
  */
 var types = require('./Types');
 
@@ -35,6 +35,7 @@ function Formatter(indentation) {
 }
 Formatter.prototype.constructor = Formatter;
 exports.Formatter = Formatter;
+exports.formatter = new Formatter();
 
 
 /**
@@ -63,13 +64,20 @@ function FormattingVisitor(indentation) {
 }
 FormattingVisitor.prototype.constructor = FormattingVisitor;
 
-// procedure: EOL* step (EOL step)* EOL* EOF
+
+FormattingVisitor.prototype.appendNewline = function() {
+    this.source += EOL + this.indentation;
+};
+
+
+// document: EOL* instructions EOL* EOF
+// instructions: step (EOL step)*
 FormattingVisitor.prototype.visitList = function(procedure) {
     var iterator = procedure.getIterator();
     var step = iterator.getNext();
     step.acceptVisitor(this);
     while (iterator.hasNext()) {
-        this.source += EOL + this.indentation;
+        this.appendNewline();
         step = iterator.getNext();
         step.acceptVisitor(this);
     }
@@ -82,8 +90,9 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
     var label = step.getValue('$label');
     if (label) {
         // labels are preceded by a blank line unless they are part of the first step
-        if (this.source !== '') this.source += EOL;
-        this.source += label.getRawString() + ':' + EOL;
+        if (this.source !== this.indentation) this.appendNewline();
+        this.source += label.getRawString() + ':';
+        this.appendNewline();
     }
     var operation = step.getValue('$operation').toNumber();
     switch (operation) {
@@ -151,7 +160,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     var operand = instruction.getValue('$operand');
     if (modifier !== types.HANDLER) {
         // format the operand as a literal
-        operand = '`' + operand + '`';
+        operand = '`' + operand.toDocument(this.indentation) + '`';
     } else {
         // format the operand as a label (which is stored as a Bali Text element)
         operand = operand.getRawString();

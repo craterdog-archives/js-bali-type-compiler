@@ -20,7 +20,7 @@ var repository = nebula.local(testDirectory);
 var api = nebula.api(notaryKey, repository);
 
 var utilities = require('../src/utilities');
-var assembler = require('../src/compiler/Assembler');
+var assembler = require('../src/compiler/Assembler').assembler;
 var Processor = require('../src/processor/Processor').Processor;
 
 
@@ -91,8 +91,8 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
-    var procedure = utilities.parser.parseDocument(source, true);
-    var assemblerContext = assembler.analyzeProcedure(procedure);
+    var instructions = utilities.parser.parseDocument(source, true);
+    var assemblerContext = assembler.analyzeInstructions(instructions);
     var parameters = new bali.Catalog();
     var iterator = assemblerContext.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
@@ -108,7 +108,7 @@ function loadTask(filename) {
     }
     variables.setValue('"$queue"', bali.parser.parseDocument(QUEUE));
     variables.setValue('"$citation"', bali.parser.parseDocument(CITATION));
-    var bytecode = assembler.assembleProcedure(procedure, assemblerContext);
+    var bytecode = assembler.assembleInstructions(instructions, assemblerContext);
     var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;

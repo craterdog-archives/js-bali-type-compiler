@@ -12,7 +12,7 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var bali = require('bali-component-framework');
-var compiler = require('../src/compiler/Compiler');
+var compiler = require('../src/compiler/Compiler').compiler;
 
 var testDirectory = 'test/config/';
 var notary = require('bali-digital-notary').api(testDirectory);
@@ -73,12 +73,12 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parser.parseDocument(source);
-                var typeCitation = api.createDraft(type);
-                var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDocument(typeCitation, draft);
-                var compiledCitation = compiler.compileType(api, typeCitation);
-                expect(compiledCitation).to.exist;  // jshint ignore:line
-                var procedures = api.retrieveType(compiledCitation);
+                var documentCitation = api.createDraft(type);
+                var draft = api.retrieveDraft(documentCitation);
+                documentCitation = api.commitDocument(documentCitation, draft);
+                var typeCitation = compiler.compileDocument(api, documentCitation);
+                expect(typeCitation).to.exist;  // jshint ignore:line
+                var procedures = api.retrieveType(typeCitation);
                 //fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
                 expect(procedures.toString() + '\n').to.equal(expected);

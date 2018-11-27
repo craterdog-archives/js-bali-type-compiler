@@ -10,48 +10,62 @@
 'use strict';
 
 /**
- * This library provides functions that compile a Bali Procedure into the
- * corresponding assembly instructions for the Bali Virtual Machine™.
+ * This module defines a class that analyzes and compiles a document written using
+ * Bali Document Notation™ into a type document that contains the bytecode for each
+ * procedure defined in the document. The bytecode can then be executed on the
+ * Bali Virtual Machine™.
  */
 var bali = require('bali-component-framework');
 var utilities = require('../utilities');
-var assembler = require('./Assembler');
+var assembler = require('./Assembler').assembler;
 
 
 // PUBLIC FUNCTIONS
 
 /**
- * This function compiles the Bali type document referenced by the specified
- * document citation.
+ * This class implements a compiler that analyzes and compiles a document into a
+ * type document containing the bytecode for each of its procedures.
  * 
- * @param {Object} nebula A singleton object that implements the Bali Nebula API™ interface.
- * @param {Catalog} citation The citation referencing the type definition to be compiled.
- * @returns {Catalog} A document citation for the resulting compiled type.
+ * @constructor
+ * @returns {Compiler} The new document compiler.
  */
-exports.compileType = function(nebula, citation) {
-    // retrieve the type definition
-    var type = nebula.retrieveDocument(citation);
+function Compiler() {
+    return this;
+}
+Compiler.prototype.constructor = Compiler;
+exports.Compiler = Compiler;
+exports.compiler = new Compiler();
 
-    // traverse the ancestry for the type
-    var ancestry = new bali.List();
-    var parent = type.getValue('$parent');
+
+/**
+ * This method compiles the document that is cited by the specified citation.
+ * 
+ * @param {Object} nebula A singleton object that implements the Bali Nebula API™.
+ * @param {Catalog} citation A citation referencing the document to be compiled.
+ * @returns {Catalog} A document citation for the resulting compiled type document.
+ */
+Compiler.prototype.compileDocument = function(nebula, citation) {
+    // retrieve the document
+    var document = nebula.retrieveDocument(citation);
+
+    // traverse the ancestry for the document (child -> parent)
+    var ancestry = new bali.Stack();
+    var parent = document.getValue('$parent');
     while (parent) {
         ancestry.addItem(parent);
-        var superType = nebula.retrieveDocument(parent);
-        parent = superType.getValue('$parent');
+        parent = nebula.retrieveDocument(parent).getValue('$parent');
     }
 
-    // retrieve any dependencies
-    var dependencies = type.getValue('$dependencies');
-    if (dependencies) {
-        dependencies = bali.List.fromCollection(dependencies);
-    } else {
-        dependencies = new bali.List();
+    // extract the procedures for the ancestors (parent -> child)
+    var type = new bali.Catalog();
+    var iterator = ancestry.getIterator();
+    while (iterator.hasNext()) {
+        var ancestor = iterator.getNext();
+        type.addItems(nebula.retrieveType(ancestor).getValue('$procedures'));
     }
 
-    // compile each procedure defined in the type definition
-    var procedures = new bali.Catalog();
-    var iterator = type.getValue('$procedures').getIterator();
+    // compile each procedure defined in the document
+    iterator = document.getValue('$procedures').getIterator();
     while (iterator.hasNext()) {
 
         // retrieve the source code for the procedure
@@ -59,25 +73,31 @@ exports.compileType = function(nebula, citation) {
         var procedureName = association.key.toString();
         var procedure = association.value.getValue('$source').procedure;
 
-        // compile and assemble the source code
-        var context = exports.analyzeProcedure(procedure);
-        var instructions = exports.compileProcedure(procedure, context);
-        procedure = utilities.parser.parseDocument(instructions);
-        instructions = bali.parser.parseDocument('"' + EOL + instructions.replace(/^/gm, '    ').replace(/    $/g, '') + '"($mediatype: "application/basm")');
-        context = assembler.analyzeProcedure(procedure);
-        var bytecode = assembler.assembleProcedure(procedure, context);
+        // compile the source code
+        var context = this.analyzeProcedure(procedure);
+        var instructions = this.compileProcedure(procedure, context);
+        instructions = utilities.parser.parseDocument(instructions);
+
+        // assemble the instructions
+        context = assembler.analyzeInstructions(instructions);
+        var bytecode = assembler.assembleInstructions(instructions, context);
+
+        // format the instructions and add to the context
+        var formatter = new utilities.Formatter('    ');
+        instructions = bali.parser.parseDocument('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
+        context.setValue('$intructions', instructions);
+
+        // format the bytecode and add to the context
         var base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
         bytecode = bali.parser.parseDocument("'" + base16 + EOL + "            '" + '($base: 16, $mediatype: "application/bcod")');
+        context.setValue('$bytecode', bytecode);
 
-        var procedureContext = new bali.Catalog();
-        procedureContext.addItems(context);
-        procedureContext.setValue('$intructions', instructions);
-        procedureContext.setValue('$bytecode', bytecode);
-        procedures.setValue(procedureName, procedureContext);
+        // record the context for the procedure in the type
+        type.setValue(procedureName, context);
     }
 
-    // checkin the new compiled procedures
-    var typeCitation = nebula.commitType(citation, procedures);
+    // checkin the newly compiled type
+    var typeCitation = nebula.commitType(citation, type);
 
     return typeCitation;
 };
@@ -89,7 +109,7 @@ exports.compileType = function(nebula, citation) {
  * 
  * @param {Procedure} procedure A procedure structure containing the definition of a Bali procedure.
  */
-exports.analyzeProcedure = function(procedure) {
+Compiler.prototype.analyzeProcedure = function(procedure) {
     var visitor = new AnalyzingVisitor();
     procedure.acceptVisitor(visitor);
     return visitor.context;
@@ -105,13 +125,12 @@ exports.analyzeProcedure = function(procedure) {
  * @param {Catalog} context The type context.
  * @returns {String} The assembly code instructions.
  */
-function compileProcedure(procedure, context) {
+Compiler.prototype.compileProcedure = function(procedure, context) {
     var visitor = new CompilingVisitor(context);
     procedure.acceptVisitor(visitor);
     var instructions = visitor.getResult();
     return instructions;
-}
-exports.compileProcedure = compileProcedure;
+};
 
 
 // PRIVATE FUNCTIONS

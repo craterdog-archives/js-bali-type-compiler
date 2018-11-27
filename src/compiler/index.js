@@ -9,5 +9,7 @@
  ************************************************************************/
 'use strict';
 
-exports.assembler = require('./Assembler');
-exports.compiler = require('./Compiler');
+exports.Assembler = require('./Assembler').Assembler;
+exports.assembler = new exports.Assembler();
+exports.Compiler = require('./Compiler').Compiler;
+exports.compiler = new exports.Compiler();

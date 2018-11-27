@@ -17,8 +17,10 @@ exports.parser = utilities.parser;
 exports.formatter = utilities.formatter;
 
 var compiler = require('./src/compiler/');
+exports.Assembler = compiler.Assembler;
+exports.Compiler = compiler.Compiler;
 exports.assembler = compiler.assembler;
 exports.compiler = compiler.compiler;
 
 var processor = require('./src/processor/');
-exports.processor = processor.processor;
+exports.Processor = processor.Processor;

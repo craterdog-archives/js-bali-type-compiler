@@ -8,49 +8,61 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 'use strict';
+
+/**
+ * This module defines a class that analyzes and assembles a list of instructions
+ * that implement a procedure for the Bali Virtual Machine™.
+ */
 var bali = require('bali-component-framework');
 var types = require('../utilities/Types');
 var bytecode = require('../utilities/Bytecode');
 var intrinsics = require('../utilities/Intrinsics');
 
-/**
- * This library provides functions that assemble and disassemble instructions
- * for the Bali Virtual Machine™.
- */
-
 
 // PUBLIC FUNCTIONS
 
 /**
- * This function traverses a list of Bali assembly instructions and extracts
- * from it a procedure scoped context containing the symbols and literals used
- * in the procedure.
+ * This class implements an assembler that analyzes and assembles a list of
+ * instructions.
  * 
- * @param {List} procedure The list of instructions that make up the procedure
- * to be analyzed.
- * @returns {Object} context The resulting procedure scoped context.
+ * @constructor
+ * @returns {Assembler} The new instruction assembler.
  */
-exports.analyzeProcedure = function(procedure) {
+function Assembler() {
+    return this;
+}
+Assembler.prototype.constructor = Assembler;
+exports.Assembler = Assembler;
+exports.assembler = new Assembler();
+
+
+/**
+ * This method traverses a list of assembly instructions that implement a procedure
+ * and extracts from it the context of the procedure needed to assemble the instructions.
+ * 
+ * @param {List} instructions The list of instructions that implement the procedure
+ * to be analyzed.
+ * @returns {Object} context The resulting context.
+ */
+Assembler.prototype.analyzeInstructions = function(instructions) {
     var visitor = new AnalyzingVisitor();
-    procedure.acceptVisitor(visitor);
+    instructions.acceptVisitor(visitor);
     return visitor.getContext();
 };
 
 
 /**
- * This function traverses a list of Bali assembly instructions and assembles
- * them into their corresponding bytecode instructions.
+ * This method traverses a list of Bali assembly instructions and assembles them into
+ * their corresponding bytecode instructions.
  * 
- * @param {List} procedure The list of instructions to be assembled into bytecode.
- * @param {Catalog} context The procedure scoped context for the procedure
- * being assembled.
- * @returns {Component} A binary component containing the resulting bytecode
- * instructions.
+ * @param {List} instructions The list of instructions to be assembled into bytecode.
+ * @param {Catalog} context The context required by the assembler to generate the bytecode.
+ * @returns {Array} An array containing the bytecode instructions.
  */
-exports.assembleProcedure = function(procedure, context) {
+Assembler.prototype.assembleInstructions = function(instructions, context) {
     var visitor = new AssemblingVisitor(context);
-    procedure.acceptVisitor(visitor);
-    return visitor.bytecode;
+    instructions.acceptVisitor(visitor);
+    return visitor.getBytecode();
 };
 
 
@@ -79,9 +91,10 @@ AnalyzingVisitor.prototype.getContext = function() {
 };
 
 
-// procedure: EOL* step (EOL step)* EOL* EOF
-AnalyzingVisitor.prototype.visitList = function(procedure) {
-    var iterator = procedure.getIterator();
+// document: EOL* instructions EOL* EOF
+// instructions: step (EOL step)*
+AnalyzingVisitor.prototype.visitList = function(instructions) {
+    var iterator = instructions.getIterator();
     while (iterator.hasNext()) {
         var step = iterator.getNext();
         step.acceptVisitor(this);
@@ -243,9 +256,15 @@ function AssemblingVisitor(context) {
 AssemblingVisitor.prototype.constructor = AssemblingVisitor;
 
 
-// procedure: EOL* step (EOL step)* EOL* EOF
-AssemblingVisitor.prototype.visitList = function(procedure) {
-    var iterator = procedure.getIterator();
+AssemblingVisitor.prototype.getBytecode = function() {
+    return this.bytecode;
+};
+
+
+// document: EOL* instructions EOL* EOF
+// instructions: step (EOL step)*
+AssemblingVisitor.prototype.visitList = function(instructions) {
+    var iterator = instructions.getIterator();
     while (iterator.hasNext()) {
         var step = iterator.getNext();
         step.acceptVisitor(this);

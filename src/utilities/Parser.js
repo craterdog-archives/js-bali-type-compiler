@@ -38,6 +38,7 @@ function Parser(debug) {
 }
 Parser.prototype.constructor = Parser;
 exports.Parser = Parser;
+exports.parser = new Parser();
 
 
 /**
