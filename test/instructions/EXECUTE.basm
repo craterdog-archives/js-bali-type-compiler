@@ -1,0 +1,23 @@
+1.Execute:
+PUSH ELEMENT <bali:[$protocol:v1,$tag:#GJS2SV64363MPAC2G2T83JHTFANYH6PR,$version:v1,$digest:none]>
+EXECUTE $function1
+
+2.ExecuteWithParameters:
+PUSH ELEMENT <bali:[$protocol:v1,$tag:#GJS2SV64363MPAC2G2T83JHTFANYH6PR,$version:v1,$digest:none]>
+INVOKE $list
+PUSH ELEMENT `"parameter"`
+INVOKE $addItem WITH 2 PARAMETERS
+EXECUTE $function2 WITH PARAMETERS
+
+3.ExecuteWithTarget:
+PUSH ELEMENT `"target"`
+EXECUTE $message1 ON TARGET
+
+4.ExecuteWithTargetAndParameters:
+PUSH ELEMENT `"target"`
+INVOKE $list
+PUSH ELEMENT `"parameter1"`
+INVOKE $addItem WITH 2 PARAMETERS
+PUSH ELEMENT `"parameter2"`
+INVOKE $addItem WITH 2 PARAMETERS
+EXECUTE $message2 ON TARGET WITH PARAMETERS

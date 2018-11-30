@@ -183,7 +183,7 @@ CompilingVisitor.prototype.constructor = CompilingVisitor;
  * @returns {String}
  */
 CompilingVisitor.prototype.getInstructions = function() {
-    this.builder.finalize();
+    if (this.builder.requiresFinalization) this.builder.finalize();
     return this.builder.asmcode;
 };
 
@@ -722,8 +722,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
  */
 // ifClause: 'if' expression 'then' block ('else' 'if' expression 'then' block)* ('else' block)?
 CompilingVisitor.prototype.visitIfClause = function(tree) {
-    var statement = this.builder.getStatementContext();
-    var doneLabel = statement.doneLabel;
+    var doneLabel = this.builder.getStatementContext().doneLabel;
     var elseBlock;
     var clausePrefix;
 
@@ -1013,6 +1012,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
     this.depth++;
     var iterator = procedure.getIterator();
     while (iterator.hasNext()) {
+        this.builder.requiresFinalization = true;
         var statement = iterator.getNext();
         statement.acceptVisitor(this);
         this.builder.incrementStatementCount();
@@ -1115,6 +1115,7 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 
     // the VM returns the result to the calling procedure
     this.builder.insertHandleInstruction('RESULT');
+    this.builder.requiresFinalization = false;
 };
 
 

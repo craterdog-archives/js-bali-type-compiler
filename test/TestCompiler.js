@@ -32,7 +32,7 @@ describe('Bali Virtual Macine™', function() {
 
     describe('Test the compiler.', function() {
 
-        it('should compile source documents into assembly instructions.', function() {
+        it('should compile source documents into assembly instructions', function() {
             var testFolder = 'test/compiler/';
             var files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
@@ -57,7 +57,7 @@ describe('Bali Virtual Macine™', function() {
 
     });
 
-    describe('Test the analysis and compilation of example types.', function() {
+    describe('Test the analysis and compilation of example types', function() {
 
         it('should compile example type documents into compiled type documents.', function() {
             var testFolder = 'test/examples/';
