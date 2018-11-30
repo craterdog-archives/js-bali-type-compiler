@@ -92,28 +92,32 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
     var instructions = utilities.parser.parseDocument(source, true);
-    var assemblerContext = assembler.analyzeInstructions(instructions);
-    var parameters = new bali.Catalog();
-    var iterator = assemblerContext.getValue('$parameters').getIterator();
-    while (iterator.hasNext()) {
-        var parameter = iterator.getNext();
-        parameters.setValue(parameter, bali.parser.parseDocument(MESSAGE));
-    }
+    var parameters = bali.Parameters.fromCollection(['$x', '$y']);
+    var assemblerContext = assembler.analyzeInstructions(instructions, parameters);
     var literals = assemblerContext.getValue('$literals');
     var variables = new bali.Catalog();
-    iterator = assemblerContext.getValue('$variables').getIterator();
+    var iterator = assemblerContext.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, bali.Template.NONE);
+        variables.setValue(variable, bali.Filter.NONE);
     }
-    variables.setValue('"$queue"', bali.parser.parseDocument(QUEUE));
-    variables.setValue('"$citation"', bali.parser.parseDocument(CITATION));
+    parameters = new bali.List();
+    iterator = assemblerContext.getValue('$parameters').getIterator();
+    while (iterator.hasNext()) {
+        var parameter = iterator.getNext();
+        parameters.addItem(parameter.key);
+        variables.setValue(parameter.key, parameter.value);
+    }
+    variables.setValue('$queue', bali.parser.parseDocument(QUEUE));
+    variables.setValue('$citation', bali.parser.parseDocument(CITATION));
+    variables.setValue('$x', bali.parser.parseDocument(MESSAGE));
+    variables.sortItems();
     var bytecode = assembler.assembleInstructions(instructions, assemblerContext);
     var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
-    source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%literals/, literals.toDocument('            '));
+    source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
     source = source.replace(/%bytecode/, "'" + base16 + "'");
     var task = bali.parser.parseDocument(source);
@@ -281,7 +285,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.procedure.address).to.equal(1);
 
             // 1.LoadParameter:
-            // LOAD PARAMETER $x
+            // LOAD VARIABLE $x
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
@@ -302,7 +306,7 @@ describe('Bali Virtual Machine™', function() {
             // STORE DRAFT $citation
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(0);
-            // LOAD DOCUMENT $citation
+            // LOAD DRAFT $citation
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);

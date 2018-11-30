@@ -7,116 +7,118 @@ var InstructionSetVisitor = require('./InstructionSetVisitor').InstructionSetVis
 var grammarFileName = "InstructionSet.g4";
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003%\u00b5\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+    "\u0003&\u00b9\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
-    "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0003\u0002\u0007\u0002",
-    " \n\u0002\f\u0002\u000e\u0002#\u000b\u0002\u0003\u0002\u0003\u0002\u0007",
-    "\u0002\'\n\u0002\f\u0002\u000e\u0002*\u000b\u0002\u0003\u0002\u0003",
-    "\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0007\u00031\n\u0003\f\u0003",
-    "\u000e\u00034\u000b\u0003\u0003\u0004\u0005\u00047\n\u0004\u0003\u0004",
-    "\u0003\u0004\u0003\u0005\u0005\u0005<\n\u0005\u0003\u0005\u0003\u0005",
-    "\u0003\u0005\u0003\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006",
-    "\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006",
-    "K\n\u0006\u0003\u0007\u0003\u0007\u0003\b\u0003\b\u0003\b\u0003\b\u0003",
-    "\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003",
-    "\b\u0003\b\u0003\b\u0003\b\u0003\b\u0005\ba\n\b\u0003\t\u0003\t\u0003",
-    "\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0005\tl\n\t\u0003",
-    "\n\u0003\n\u0003\n\u0003\n\u0005\nr\n\n\u0003\u000b\u0003\u000b\u0003",
-    "\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0003",
-    "\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0005\u000b\u0080\n\u000b",
-    "\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003",
-    "\f\u0003\f\u0003\f\u0003\f\u0005\f\u008e\n\f\u0003\r\u0003\r\u0003\r",
-    "\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0005",
-    "\r\u009b\n\r\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e",
-    "\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e",
-    "\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0005\u000e",
-    "\u00ad\n\u000e\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0005",
-    "\u000f\u00b3\n\u000f\u0003\u000f\u0002\u0002\u0010\u0002\u0004\u0006",
-    "\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u0002\u0002\u0002",
-    "\u00c5\u0002!\u0003\u0002\u0002\u0002\u0004-\u0003\u0002\u0002\u0002",
-    "\u00066\u0003\u0002\u0002\u0002\b;\u0003\u0002\u0002\u0002\nJ\u0003",
-    "\u0002\u0002\u0002\fL\u0003\u0002\u0002\u0002\u000e`\u0003\u0002\u0002",
-    "\u0002\u0010k\u0003\u0002\u0002\u0002\u0012q\u0003\u0002\u0002\u0002",
-    "\u0014\u007f\u0003\u0002\u0002\u0002\u0016\u008d\u0003\u0002\u0002\u0002",
-    "\u0018\u009a\u0003\u0002\u0002\u0002\u001a\u00ac\u0003\u0002\u0002\u0002",
-    "\u001c\u00b2\u0003\u0002\u0002\u0002\u001e \u0007$\u0002\u0002\u001f",
-    "\u001e\u0003\u0002\u0002\u0002 #\u0003\u0002\u0002\u0002!\u001f\u0003",
-    "\u0002\u0002\u0002!\"\u0003\u0002\u0002\u0002\"$\u0003\u0002\u0002\u0002",
-    "#!\u0003\u0002\u0002\u0002$(\u0005\u0004\u0003\u0002%\'\u0007$\u0002",
-    "\u0002&%\u0003\u0002\u0002\u0002\'*\u0003\u0002\u0002\u0002(&\u0003",
-    "\u0002\u0002\u0002()\u0003\u0002\u0002\u0002)+\u0003\u0002\u0002\u0002",
-    "*(\u0003\u0002\u0002\u0002+,\u0007\u0002\u0002\u0003,\u0003\u0003\u0002",
-    "\u0002\u0002-2\u0005\u0006\u0004\u0002./\u0007$\u0002\u0002/1\u0005",
-    "\u0006\u0004\u00020.\u0003\u0002\u0002\u000214\u0003\u0002\u0002\u0002",
-    "20\u0003\u0002\u0002\u000223\u0003\u0002\u0002\u00023\u0005\u0003\u0002",
-    "\u0002\u000242\u0003\u0002\u0002\u000257\u0005\b\u0005\u000265\u0003",
-    "\u0002\u0002\u000267\u0003\u0002\u0002\u000278\u0003\u0002\u0002\u0002",
-    "89\u0005\n\u0006\u00029\u0007\u0003\u0002\u0002\u0002:<\u0007$\u0002",
-    "\u0002;:\u0003\u0002\u0002\u0002;<\u0003\u0002\u0002\u0002<=\u0003\u0002",
-    "\u0002\u0002=>\u0007 \u0002\u0002>?\u0007\u0003\u0002\u0002?@\u0007",
-    "$\u0002\u0002@\t\u0003\u0002\u0002\u0002AK\u0005\f\u0007\u0002BK\u0005",
-    "\u000e\b\u0002CK\u0005\u0010\t\u0002DK\u0005\u0012\n\u0002EK\u0005\u0014",
-    "\u000b\u0002FK\u0005\u0016\f\u0002GK\u0005\u0018\r\u0002HK\u0005\u001a",
-    "\u000e\u0002IK\u0005\u001c\u000f\u0002JA\u0003\u0002\u0002\u0002JB\u0003",
-    "\u0002\u0002\u0002JC\u0003\u0002\u0002\u0002JD\u0003\u0002\u0002\u0002",
-    "JE\u0003\u0002\u0002\u0002JF\u0003\u0002\u0002\u0002JG\u0003\u0002\u0002",
-    "\u0002JH\u0003\u0002\u0002\u0002JI\u0003\u0002\u0002\u0002K\u000b\u0003",
-    "\u0002\u0002\u0002LM\u0007\u0004\u0002\u0002M\r\u0003\u0002\u0002\u0002",
-    "NO\u0007\u0005\u0002\u0002OP\u0007\u0006\u0002\u0002Pa\u0007 \u0002",
-    "\u0002QR\u0007\u0005\u0002\u0002RS\u0007\u0006\u0002\u0002ST\u0007 ",
-    "\u0002\u0002TU\u0007\u0007\u0002\u0002Ua\u0007\b\u0002\u0002VW\u0007",
-    "\u0005\u0002\u0002WX\u0007\u0006\u0002\u0002XY\u0007 \u0002\u0002YZ",
-    "\u0007\u0007\u0002\u0002Za\u0007\t\u0002\u0002[\\\u0007\u0005\u0002",
-    "\u0002\\]\u0007\u0006\u0002\u0002]^\u0007 \u0002\u0002^_\u0007\u0007",
-    "\u0002\u0002_a\u0007\n\u0002\u0002`N\u0003\u0002\u0002\u0002`Q\u0003",
-    "\u0002\u0002\u0002`V\u0003\u0002\u0002\u0002`[\u0003\u0002\u0002\u0002",
-    "a\u000f\u0003\u0002\u0002\u0002bc\u0007\u000b\u0002\u0002cd\u0007\f",
-    "\u0002\u0002dl\u0007 \u0002\u0002ef\u0007\u000b\u0002\u0002fg\u0007",
-    "\r\u0002\u0002gl\u0007\"\u0002\u0002hi\u0007\u000b\u0002\u0002ij\u0007",
-    "\u000e\u0002\u0002jl\u0007\"\u0002\u0002kb\u0003\u0002\u0002\u0002k",
-    "e\u0003\u0002\u0002\u0002kh\u0003\u0002\u0002\u0002l\u0011\u0003\u0002",
-    "\u0002\u0002mn\u0007\u000f\u0002\u0002nr\u0007\f\u0002\u0002op\u0007",
-    "\u000f\u0002\u0002pr\u0007\u0010\u0002\u0002qm\u0003\u0002\u0002\u0002",
-    "qo\u0003\u0002\u0002\u0002r\u0013\u0003\u0002\u0002\u0002st\u0007\u0011",
-    "\u0002\u0002tu\u0007\u0012\u0002\u0002u\u0080\u0007#\u0002\u0002vw\u0007",
-    "\u0011\u0002\u0002wx\u0007\u0013\u0002\u0002x\u0080\u0007#\u0002\u0002",
-    "yz\u0007\u0011\u0002\u0002z{\u0007\u0014\u0002\u0002{\u0080\u0007#\u0002",
-    "\u0002|}\u0007\u0011\u0002\u0002}~\u0007\u0015\u0002\u0002~\u0080\u0007",
-    "#\u0002\u0002\u007fs\u0003\u0002\u0002\u0002\u007fv\u0003\u0002\u0002",
-    "\u0002\u007fy\u0003\u0002\u0002\u0002\u007f|\u0003\u0002\u0002\u0002",
-    "\u0080\u0015\u0003\u0002\u0002\u0002\u0081\u0082\u0007\u0016\u0002\u0002",
-    "\u0082\u0083\u0007\u0012\u0002\u0002\u0083\u008e\u0007#\u0002\u0002",
-    "\u0084\u0085\u0007\u0016\u0002\u0002\u0085\u0086\u0007\u0017\u0002\u0002",
-    "\u0086\u008e\u0007#\u0002\u0002\u0087\u0088\u0007\u0016\u0002\u0002",
-    "\u0088\u0089\u0007\u0014\u0002\u0002\u0089\u008e\u0007#\u0002\u0002",
-    "\u008a\u008b\u0007\u0016\u0002\u0002\u008b\u008c\u0007\u0015\u0002\u0002",
-    "\u008c\u008e\u0007#\u0002\u0002\u008d\u0081\u0003\u0002\u0002\u0002",
-    "\u008d\u0084\u0003\u0002\u0002\u0002\u008d\u0087\u0003\u0002\u0002\u0002",
-    "\u008d\u008a\u0003\u0002\u0002\u0002\u008e\u0017\u0003\u0002\u0002\u0002",
-    "\u008f\u0090\u0007\u0018\u0002\u0002\u0090\u009b\u0007#\u0002\u0002",
-    "\u0091\u0092\u0007\u0018\u0002\u0002\u0092\u0093\u0007#\u0002\u0002",
-    "\u0093\u0094\u0007\u0019\u0002\u0002\u0094\u009b\u0007\u0013\u0002\u0002",
-    "\u0095\u0096\u0007\u0018\u0002\u0002\u0096\u0097\u0007#\u0002\u0002",
-    "\u0097\u0098\u0007\u0019\u0002\u0002\u0098\u0099\u0007!\u0002\u0002",
-    "\u0099\u009b\u0007\u001a\u0002\u0002\u009a\u008f\u0003\u0002\u0002\u0002",
-    "\u009a\u0091\u0003\u0002\u0002\u0002\u009a\u0095\u0003\u0002\u0002\u0002",
-    "\u009b\u0019\u0003\u0002\u0002\u0002\u009c\u009d\u0007\u001b\u0002\u0002",
-    "\u009d\u00ad\u0007#\u0002\u0002\u009e\u009f\u0007\u001b\u0002\u0002",
-    "\u009f\u00a0\u0007#\u0002\u0002\u00a0\u00a1\u0007\u0019\u0002\u0002",
-    "\u00a1\u00ad\u0007\u001a\u0002\u0002\u00a2\u00a3\u0007\u001b\u0002\u0002",
-    "\u00a3\u00a4\u0007#\u0002\u0002\u00a4\u00a5\u0007\u0007\u0002\u0002",
-    "\u00a5\u00ad\u0007\u001c\u0002\u0002\u00a6\u00a7\u0007\u001b\u0002\u0002",
-    "\u00a7\u00a8\u0007#\u0002\u0002\u00a8\u00a9\u0007\u0007\u0002\u0002",
-    "\u00a9\u00aa\u0007\u001c\u0002\u0002\u00aa\u00ab\u0007\u0019\u0002\u0002",
-    "\u00ab\u00ad\u0007\u001a\u0002\u0002\u00ac\u009c\u0003\u0002\u0002\u0002",
-    "\u00ac\u009e\u0003\u0002\u0002\u0002\u00ac\u00a2\u0003\u0002\u0002\u0002",
-    "\u00ac\u00a6\u0003\u0002\u0002\u0002\u00ad\u001b\u0003\u0002\u0002\u0002",
-    "\u00ae\u00af\u0007\u001d\u0002\u0002\u00af\u00b3\u0007\u001e\u0002\u0002",
-    "\u00b0\u00b1\u0007\u001d\u0002\u0002\u00b1\u00b3\u0007\u001f\u0002\u0002",
-    "\u00b2\u00ae\u0003\u0002\u0002\u0002\u00b2\u00b0\u0003\u0002\u0002\u0002",
-    "\u00b3\u001d\u0003\u0002\u0002\u0002\u0010!(26;J`kq\u007f\u008d\u009a",
-    "\u00ac\u00b2"].join("");
+    "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0003",
+    "\u0002\u0007\u0002\"\n\u0002\f\u0002\u000e\u0002%\u000b\u0002\u0003",
+    "\u0002\u0003\u0002\u0007\u0002)\n\u0002\f\u0002\u000e\u0002,\u000b\u0002",
+    "\u0003\u0002\u0003\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0007\u0003",
+    "3\n\u0003\f\u0003\u000e\u00036\u000b\u0003\u0003\u0004\u0005\u00049",
+    "\n\u0004\u0003\u0004\u0003\u0004\u0003\u0005\u0005\u0005>\n\u0005\u0003",
+    "\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0006\u0003\u0006\u0003",
+    "\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003",
+    "\u0007\u0003\u0007\u0003\u0007\u0005\u0007O\n\u0007\u0003\b\u0003\b",
+    "\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003",
+    "\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003",
+    "\t\u0005\te\n\t\u0003\n\u0003\n\u0003\n\u0003\n\u0003\n\u0003\n\u0003",
+    "\n\u0003\n\u0003\n\u0005\np\n\n\u0003\u000b\u0003\u000b\u0003\u000b",
+    "\u0003\u000b\u0005\u000bv\n\u000b\u0003\f\u0003\f\u0003\f\u0003\f\u0003",
+    "\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0005\f\u0084",
+    "\n\f\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r\u0003\r",
+    "\u0003\r\u0003\r\u0003\r\u0003\r\u0005\r\u0092\n\r\u0003\u000e\u0003",
+    "\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003",
+    "\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0005\u000e\u009f\n\u000e",
+    "\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f",
+    "\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f",
+    "\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0005\u000f\u00b1\n",
+    "\u000f\u0003\u0010\u0003\u0010\u0003\u0010\u0003\u0010\u0005\u0010\u00b7",
+    "\n\u0010\u0003\u0010\u0002\u0002\u0011\u0002\u0004\u0006\b\n\f\u000e",
+    "\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e\u0002\u0003\u0003\u0002",
+    "#$\u0002\u00c8\u0002#\u0003\u0002\u0002\u0002\u0004/\u0003\u0002\u0002",
+    "\u0002\u00068\u0003\u0002\u0002\u0002\b=\u0003\u0002\u0002\u0002\nC",
+    "\u0003\u0002\u0002\u0002\fN\u0003\u0002\u0002\u0002\u000eP\u0003\u0002",
+    "\u0002\u0002\u0010d\u0003\u0002\u0002\u0002\u0012o\u0003\u0002\u0002",
+    "\u0002\u0014u\u0003\u0002\u0002\u0002\u0016\u0083\u0003\u0002\u0002",
+    "\u0002\u0018\u0091\u0003\u0002\u0002\u0002\u001a\u009e\u0003\u0002\u0002",
+    "\u0002\u001c\u00b0\u0003\u0002\u0002\u0002\u001e\u00b6\u0003\u0002\u0002",
+    "\u0002 \"\u0007%\u0002\u0002! \u0003\u0002\u0002\u0002\"%\u0003\u0002",
+    "\u0002\u0002#!\u0003\u0002\u0002\u0002#$\u0003\u0002\u0002\u0002$&\u0003",
+    "\u0002\u0002\u0002%#\u0003\u0002\u0002\u0002&*\u0005\u0004\u0003\u0002",
+    "\')\u0007%\u0002\u0002(\'\u0003\u0002\u0002\u0002),\u0003\u0002\u0002",
+    "\u0002*(\u0003\u0002\u0002\u0002*+\u0003\u0002\u0002\u0002+-\u0003\u0002",
+    "\u0002\u0002,*\u0003\u0002\u0002\u0002-.\u0007\u0002\u0002\u0003.\u0003",
+    "\u0003\u0002\u0002\u0002/4\u0005\u0006\u0004\u000201\u0007%\u0002\u0002",
+    "13\u0005\u0006\u0004\u000220\u0003\u0002\u0002\u000236\u0003\u0002\u0002",
+    "\u000242\u0003\u0002\u0002\u000245\u0003\u0002\u0002\u00025\u0005\u0003",
+    "\u0002\u0002\u000264\u0003\u0002\u0002\u000279\u0005\b\u0005\u00028",
+    "7\u0003\u0002\u0002\u000289\u0003\u0002\u0002\u00029:\u0003\u0002\u0002",
+    "\u0002:;\u0005\f\u0007\u0002;\u0007\u0003\u0002\u0002\u0002<>\u0007",
+    "%\u0002\u0002=<\u0003\u0002\u0002\u0002=>\u0003\u0002\u0002\u0002>?",
+    "\u0003\u0002\u0002\u0002?@\u0007 \u0002\u0002@A\u0007\u0003\u0002\u0002",
+    "AB\u0007%\u0002\u0002B\t\u0003\u0002\u0002\u0002CD\t\u0002\u0002\u0002",
+    "D\u000b\u0003\u0002\u0002\u0002EO\u0005\u000e\b\u0002FO\u0005\u0010",
+    "\t\u0002GO\u0005\u0012\n\u0002HO\u0005\u0014\u000b\u0002IO\u0005\u0016",
+    "\f\u0002JO\u0005\u0018\r\u0002KO\u0005\u001a\u000e\u0002LO\u0005\u001c",
+    "\u000f\u0002MO\u0005\u001e\u0010\u0002NE\u0003\u0002\u0002\u0002NF\u0003",
+    "\u0002\u0002\u0002NG\u0003\u0002\u0002\u0002NH\u0003\u0002\u0002\u0002",
+    "NI\u0003\u0002\u0002\u0002NJ\u0003\u0002\u0002\u0002NK\u0003\u0002\u0002",
+    "\u0002NL\u0003\u0002\u0002\u0002NM\u0003\u0002\u0002\u0002O\r\u0003",
+    "\u0002\u0002\u0002PQ\u0007\u0004\u0002\u0002Q\u000f\u0003\u0002\u0002",
+    "\u0002RS\u0007\u0005\u0002\u0002ST\u0007\u0006\u0002\u0002Te\u0007 ",
+    "\u0002\u0002UV\u0007\u0005\u0002\u0002VW\u0007\u0006\u0002\u0002WX\u0007",
+    " \u0002\u0002XY\u0007\u0007\u0002\u0002Ye\u0007\b\u0002\u0002Z[\u0007",
+    "\u0005\u0002\u0002[\\\u0007\u0006\u0002\u0002\\]\u0007 \u0002\u0002",
+    "]^\u0007\u0007\u0002\u0002^e\u0007\t\u0002\u0002_`\u0007\u0005\u0002",
+    "\u0002`a\u0007\u0006\u0002\u0002ab\u0007 \u0002\u0002bc\u0007\u0007",
+    "\u0002\u0002ce\u0007\n\u0002\u0002dR\u0003\u0002\u0002\u0002dU\u0003",
+    "\u0002\u0002\u0002dZ\u0003\u0002\u0002\u0002d_\u0003\u0002\u0002\u0002",
+    "e\u0011\u0003\u0002\u0002\u0002fg\u0007\u000b\u0002\u0002gh\u0007\f",
+    "\u0002\u0002hp\u0007 \u0002\u0002ij\u0007\u000b\u0002\u0002jk\u0007",
+    "\r\u0002\u0002kp\u0007\"\u0002\u0002lm\u0007\u000b\u0002\u0002mn\u0007",
+    "\u000e\u0002\u0002np\u0007\"\u0002\u0002of\u0003\u0002\u0002\u0002o",
+    "i\u0003\u0002\u0002\u0002ol\u0003\u0002\u0002\u0002p\u0013\u0003\u0002",
+    "\u0002\u0002qr\u0007\u000f\u0002\u0002rv\u0007\f\u0002\u0002st\u0007",
+    "\u000f\u0002\u0002tv\u0007\u0010\u0002\u0002uq\u0003\u0002\u0002\u0002",
+    "us\u0003\u0002\u0002\u0002v\u0015\u0003\u0002\u0002\u0002wx\u0007\u0011",
+    "\u0002\u0002xy\u0007\u0012\u0002\u0002y\u0084\u0005\n\u0006\u0002z{",
+    "\u0007\u0011\u0002\u0002{|\u0007\u0013\u0002\u0002|\u0084\u0005\n\u0006",
+    "\u0002}~\u0007\u0011\u0002\u0002~\u007f\u0007\u0014\u0002\u0002\u007f",
+    "\u0084\u0005\n\u0006\u0002\u0080\u0081\u0007\u0011\u0002\u0002\u0081",
+    "\u0082\u0007\u0015\u0002\u0002\u0082\u0084\u0005\n\u0006\u0002\u0083",
+    "w\u0003\u0002\u0002\u0002\u0083z\u0003\u0002\u0002\u0002\u0083}\u0003",
+    "\u0002\u0002\u0002\u0083\u0080\u0003\u0002\u0002\u0002\u0084\u0017\u0003",
+    "\u0002\u0002\u0002\u0085\u0086\u0007\u0016\u0002\u0002\u0086\u0087\u0007",
+    "\u0012\u0002\u0002\u0087\u0092\u0005\n\u0006\u0002\u0088\u0089\u0007",
+    "\u0016\u0002\u0002\u0089\u008a\u0007\u0013\u0002\u0002\u008a\u0092\u0005",
+    "\n\u0006\u0002\u008b\u008c\u0007\u0016\u0002\u0002\u008c\u008d\u0007",
+    "\u0014\u0002\u0002\u008d\u0092\u0005\n\u0006\u0002\u008e\u008f\u0007",
+    "\u0016\u0002\u0002\u008f\u0090\u0007\u0015\u0002\u0002\u0090\u0092\u0005",
+    "\n\u0006\u0002\u0091\u0085\u0003\u0002\u0002\u0002\u0091\u0088\u0003",
+    "\u0002\u0002\u0002\u0091\u008b\u0003\u0002\u0002\u0002\u0091\u008e\u0003",
+    "\u0002\u0002\u0002\u0092\u0019\u0003\u0002\u0002\u0002\u0093\u0094\u0007",
+    "\u0017\u0002\u0002\u0094\u009f\u0007#\u0002\u0002\u0095\u0096\u0007",
+    "\u0017\u0002\u0002\u0096\u0097\u0007#\u0002\u0002\u0097\u0098\u0007",
+    "\u0018\u0002\u0002\u0098\u009f\u0007\u0019\u0002\u0002\u0099\u009a\u0007",
+    "\u0017\u0002\u0002\u009a\u009b\u0007#\u0002\u0002\u009b\u009c\u0007",
+    "\u0018\u0002\u0002\u009c\u009d\u0007!\u0002\u0002\u009d\u009f\u0007",
+    "\u001a\u0002\u0002\u009e\u0093\u0003\u0002\u0002\u0002\u009e\u0095\u0003",
+    "\u0002\u0002\u0002\u009e\u0099\u0003\u0002\u0002\u0002\u009f\u001b\u0003",
+    "\u0002\u0002\u0002\u00a0\u00a1\u0007\u001b\u0002\u0002\u00a1\u00b1\u0007",
+    "#\u0002\u0002\u00a2\u00a3\u0007\u001b\u0002\u0002\u00a3\u00a4\u0007",
+    "#\u0002\u0002\u00a4\u00a5\u0007\u0018\u0002\u0002\u00a5\u00b1\u0007",
+    "\u001a\u0002\u0002\u00a6\u00a7\u0007\u001b\u0002\u0002\u00a7\u00a8\u0007",
+    "#\u0002\u0002\u00a8\u00a9\u0007\u0007\u0002\u0002\u00a9\u00b1\u0007",
+    "\u001c\u0002\u0002\u00aa\u00ab\u0007\u001b\u0002\u0002\u00ab\u00ac\u0007",
+    "#\u0002\u0002\u00ac\u00ad\u0007\u0007\u0002\u0002\u00ad\u00ae\u0007",
+    "\u001c\u0002\u0002\u00ae\u00af\u0007\u0018\u0002\u0002\u00af\u00b1\u0007",
+    "\u001a\u0002\u0002\u00b0\u00a0\u0003\u0002\u0002\u0002\u00b0\u00a2\u0003",
+    "\u0002\u0002\u0002\u00b0\u00a6\u0003\u0002\u0002\u0002\u00b0\u00aa\u0003",
+    "\u0002\u0002\u0002\u00b1\u001d\u0003\u0002\u0002\u0002\u00b2\u00b3\u0007",
+    "\u001d\u0002\u0002\u00b3\u00b7\u0007\u001e\u0002\u0002\u00b4\u00b5\u0007",
+    "\u001d\u0002\u0002\u00b5\u00b7\u0007\u001f\u0002\u0002\u00b6\u00b2\u0003",
+    "\u0002\u0002\u0002\u00b6\u00b4\u0003\u0002\u0002\u0002\u00b7\u001f\u0003",
+    "\u0002\u0002\u0002\u0010#*48=Ndou\u0083\u0091\u009e\u00b0\u00b6"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -128,8 +130,8 @@ var sharedContextCache = new antlr4.PredictionContextCache();
 var literalNames = [ null, "':'", "'SKIP INSTRUCTION'", "'JUMP'", "'TO'", 
                      "'ON'", "'NONE'", "'TRUE'", "'FALSE'", "'PUSH'", "'HANDLER'", 
                      "'ELEMENT'", "'SOURCE'", "'POP'", "'COMPONENT'", "'LOAD'", 
-                     "'VARIABLE'", "'PARAMETER'", "'DOCUMENT'", "'MESSAGE'", 
-                     "'STORE'", "'DRAFT'", "'INVOKE'", "'WITH'", "'PARAMETERS'", 
+                     "'VARIABLE'", "'MESSAGE'", "'DRAFT'", "'DOCUMENT'", 
+                     "'STORE'", "'INVOKE'", "'WITH'", "'PARAMETER'", "'PARAMETERS'", 
                      "'EXECUTE'", "'TARGET'", "'HANDLE'", "'EXCEPTION'", 
                      "'RESULT'" ];
 
@@ -137,12 +139,13 @@ var symbolicNames = [ null, null, null, null, null, null, null, null, null,
                       null, null, null, null, null, null, null, null, null, 
                       null, null, null, null, null, null, null, null, null, 
                       null, null, null, "LABEL", "NUMBER", "LITERAL", "SYMBOL", 
-                      "EOL", "SPACE" ];
+                      "RESERVED", "EOL", "SPACE" ];
 
-var ruleNames =  [ "document", "instructions", "step", "label", "instruction", 
-                   "skipInstruction", "jumpInstruction", "pushInstruction", 
-                   "popInstruction", "loadInstruction", "storeInstruction", 
-                   "invokeInstruction", "executeInstruction", "handleInstruction" ];
+var ruleNames =  [ "document", "instructions", "step", "label", "variable", 
+                   "instruction", "skipInstruction", "jumpInstruction", 
+                   "pushInstruction", "popInstruction", "loadInstruction", 
+                   "storeInstruction", "invokeInstruction", "executeInstruction", 
+                   "handleInstruction" ];
 
 function InstructionSetParser (input) {
 	antlr4.Parser.call(this, input);
@@ -196,23 +199,25 @@ InstructionSetParser.LABEL = 30;
 InstructionSetParser.NUMBER = 31;
 InstructionSetParser.LITERAL = 32;
 InstructionSetParser.SYMBOL = 33;
-InstructionSetParser.EOL = 34;
-InstructionSetParser.SPACE = 35;
+InstructionSetParser.RESERVED = 34;
+InstructionSetParser.EOL = 35;
+InstructionSetParser.SPACE = 36;
 
 InstructionSetParser.RULE_document = 0;
 InstructionSetParser.RULE_instructions = 1;
 InstructionSetParser.RULE_step = 2;
 InstructionSetParser.RULE_label = 3;
-InstructionSetParser.RULE_instruction = 4;
-InstructionSetParser.RULE_skipInstruction = 5;
-InstructionSetParser.RULE_jumpInstruction = 6;
-InstructionSetParser.RULE_pushInstruction = 7;
-InstructionSetParser.RULE_popInstruction = 8;
-InstructionSetParser.RULE_loadInstruction = 9;
-InstructionSetParser.RULE_storeInstruction = 10;
-InstructionSetParser.RULE_invokeInstruction = 11;
-InstructionSetParser.RULE_executeInstruction = 12;
-InstructionSetParser.RULE_handleInstruction = 13;
+InstructionSetParser.RULE_variable = 4;
+InstructionSetParser.RULE_instruction = 5;
+InstructionSetParser.RULE_skipInstruction = 6;
+InstructionSetParser.RULE_jumpInstruction = 7;
+InstructionSetParser.RULE_pushInstruction = 8;
+InstructionSetParser.RULE_popInstruction = 9;
+InstructionSetParser.RULE_loadInstruction = 10;
+InstructionSetParser.RULE_storeInstruction = 11;
+InstructionSetParser.RULE_invokeInstruction = 12;
+InstructionSetParser.RULE_executeInstruction = 13;
+InstructionSetParser.RULE_handleInstruction = 14;
 
 function DocumentContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -282,32 +287,32 @@ InstructionSetParser.prototype.document = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 31;
+        this.state = 33;
         this._errHandler.sync(this);
         var _alt = this._interp.adaptivePredict(this._input,0,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
-                this.state = 28;
+                this.state = 30;
                 this.match(InstructionSetParser.EOL); 
             }
-            this.state = 33;
+            this.state = 35;
             this._errHandler.sync(this);
             _alt = this._interp.adaptivePredict(this._input,0,this._ctx);
         }
 
-        this.state = 34;
+        this.state = 36;
         this.instructions();
-        this.state = 38;
+        this.state = 40;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         while(_la===InstructionSetParser.EOL) {
-            this.state = 35;
+            this.state = 37;
             this.match(InstructionSetParser.EOL);
-            this.state = 40;
+            this.state = 42;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
-        this.state = 41;
+        this.state = 43;
         this.match(InstructionSetParser.EOF);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -393,19 +398,19 @@ InstructionSetParser.prototype.instructions = function() {
     this.enterRule(localctx, 2, InstructionSetParser.RULE_instructions);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 43;
+        this.state = 45;
         this.step();
-        this.state = 48;
+        this.state = 50;
         this._errHandler.sync(this);
         var _alt = this._interp.adaptivePredict(this._input,2,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
-                this.state = 44;
+                this.state = 46;
                 this.match(InstructionSetParser.EOL);
-                this.state = 45;
+                this.state = 47;
                 this.step(); 
             }
-            this.state = 50;
+            this.state = 52;
             this._errHandler.sync(this);
             _alt = this._interp.adaptivePredict(this._input,2,this._ctx);
         }
@@ -480,15 +485,15 @@ InstructionSetParser.prototype.step = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 52;
+        this.state = 54;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===InstructionSetParser.LABEL || _la===InstructionSetParser.EOL) {
-            this.state = 51;
+            this.state = 53;
             this.label();
         }
 
-        this.state = 54;
+        this.state = 56;
         this.instruction();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -568,20 +573,99 @@ InstructionSetParser.prototype.label = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 57;
+        this.state = 59;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===InstructionSetParser.EOL) {
-            this.state = 56;
+            this.state = 58;
             this.match(InstructionSetParser.EOL);
         }
 
-        this.state = 59;
-        this.match(InstructionSetParser.LABEL);
-        this.state = 60;
-        this.match(InstructionSetParser.T__0);
         this.state = 61;
+        this.match(InstructionSetParser.LABEL);
+        this.state = 62;
+        this.match(InstructionSetParser.T__0);
+        this.state = 63;
         this.match(InstructionSetParser.EOL);
+    } catch (re) {
+    	if(re instanceof antlr4.error.RecognitionException) {
+	        localctx.exception = re;
+	        this._errHandler.reportError(this, re);
+	        this._errHandler.recover(this, re);
+	    } else {
+	    	throw re;
+	    }
+    } finally {
+        this.exitRule();
+    }
+    return localctx;
+};
+
+function VariableContext(parser, parent, invokingState) {
+	if(parent===undefined) {
+	    parent = null;
+	}
+	if(invokingState===undefined || invokingState===null) {
+		invokingState = -1;
+	}
+	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    this.parser = parser;
+    this.ruleIndex = InstructionSetParser.RULE_variable;
+    return this;
+}
+
+VariableContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+VariableContext.prototype.constructor = VariableContext;
+
+VariableContext.prototype.SYMBOL = function() {
+    return this.getToken(InstructionSetParser.SYMBOL, 0);
+};
+
+VariableContext.prototype.RESERVED = function() {
+    return this.getToken(InstructionSetParser.RESERVED, 0);
+};
+
+VariableContext.prototype.enterRule = function(listener) {
+    if(listener instanceof InstructionSetListener ) {
+        listener.enterVariable(this);
+	}
+};
+
+VariableContext.prototype.exitRule = function(listener) {
+    if(listener instanceof InstructionSetListener ) {
+        listener.exitVariable(this);
+	}
+};
+
+VariableContext.prototype.accept = function(visitor) {
+    if ( visitor instanceof InstructionSetVisitor ) {
+        return visitor.visitVariable(this);
+    } else {
+        return visitor.visitChildren(this);
+    }
+};
+
+
+
+
+InstructionSetParser.VariableContext = VariableContext;
+
+InstructionSetParser.prototype.variable = function() {
+
+    var localctx = new VariableContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 8, InstructionSetParser.RULE_variable);
+    var _la = 0; // Token type
+    try {
+        this.enterOuterAlt(localctx, 1);
+        this.state = 65;
+        _la = this._input.LA(1);
+        if(!(_la===InstructionSetParser.SYMBOL || _la===InstructionSetParser.RESERVED)) {
+        this._errHandler.recoverInline(this);
+        }
+        else {
+        	this._errHandler.reportMatch(this);
+            this.consume();
+        }
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -676,54 +760,54 @@ InstructionSetParser.InstructionContext = InstructionContext;
 InstructionSetParser.prototype.instruction = function() {
 
     var localctx = new InstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 8, InstructionSetParser.RULE_instruction);
+    this.enterRule(localctx, 10, InstructionSetParser.RULE_instruction);
     try {
-        this.state = 72;
+        this.state = 76;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
         case InstructionSetParser.T__1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 63;
+            this.state = 67;
             this.skipInstruction();
             break;
         case InstructionSetParser.T__2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 64;
+            this.state = 68;
             this.jumpInstruction();
             break;
         case InstructionSetParser.T__8:
             this.enterOuterAlt(localctx, 3);
-            this.state = 65;
+            this.state = 69;
             this.pushInstruction();
             break;
         case InstructionSetParser.T__12:
             this.enterOuterAlt(localctx, 4);
-            this.state = 66;
+            this.state = 70;
             this.popInstruction();
             break;
         case InstructionSetParser.T__14:
             this.enterOuterAlt(localctx, 5);
-            this.state = 67;
+            this.state = 71;
             this.loadInstruction();
             break;
         case InstructionSetParser.T__19:
             this.enterOuterAlt(localctx, 6);
-            this.state = 68;
+            this.state = 72;
             this.storeInstruction();
             break;
-        case InstructionSetParser.T__21:
+        case InstructionSetParser.T__20:
             this.enterOuterAlt(localctx, 7);
-            this.state = 69;
+            this.state = 73;
             this.invokeInstruction();
             break;
         case InstructionSetParser.T__24:
             this.enterOuterAlt(localctx, 8);
-            this.state = 70;
+            this.state = 74;
             this.executeInstruction();
             break;
         case InstructionSetParser.T__26:
             this.enterOuterAlt(localctx, 9);
-            this.state = 71;
+            this.state = 75;
             this.handleInstruction();
             break;
         default:
@@ -788,10 +872,10 @@ InstructionSetParser.SkipInstructionContext = SkipInstructionContext;
 InstructionSetParser.prototype.skipInstruction = function() {
 
     var localctx = new SkipInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 10, InstructionSetParser.RULE_skipInstruction);
+    this.enterRule(localctx, 12, InstructionSetParser.RULE_skipInstruction);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 74;
+        this.state = 78;
         this.match(InstructionSetParser.T__1);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -855,61 +939,61 @@ InstructionSetParser.JumpInstructionContext = JumpInstructionContext;
 InstructionSetParser.prototype.jumpInstruction = function() {
 
     var localctx = new JumpInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 12, InstructionSetParser.RULE_jumpInstruction);
+    this.enterRule(localctx, 14, InstructionSetParser.RULE_jumpInstruction);
     try {
-        this.state = 94;
+        this.state = 98;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,6,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 76;
+            this.state = 80;
             this.match(InstructionSetParser.T__2);
-            this.state = 77;
+            this.state = 81;
             this.match(InstructionSetParser.T__3);
-            this.state = 78;
+            this.state = 82;
             this.match(InstructionSetParser.LABEL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 79;
-            this.match(InstructionSetParser.T__2);
-            this.state = 80;
-            this.match(InstructionSetParser.T__3);
-            this.state = 81;
-            this.match(InstructionSetParser.LABEL);
-            this.state = 82;
-            this.match(InstructionSetParser.T__4);
             this.state = 83;
+            this.match(InstructionSetParser.T__2);
+            this.state = 84;
+            this.match(InstructionSetParser.T__3);
+            this.state = 85;
+            this.match(InstructionSetParser.LABEL);
+            this.state = 86;
+            this.match(InstructionSetParser.T__4);
+            this.state = 87;
             this.match(InstructionSetParser.T__5);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
-            this.state = 84;
-            this.match(InstructionSetParser.T__2);
-            this.state = 85;
-            this.match(InstructionSetParser.T__3);
-            this.state = 86;
-            this.match(InstructionSetParser.LABEL);
-            this.state = 87;
-            this.match(InstructionSetParser.T__4);
             this.state = 88;
+            this.match(InstructionSetParser.T__2);
+            this.state = 89;
+            this.match(InstructionSetParser.T__3);
+            this.state = 90;
+            this.match(InstructionSetParser.LABEL);
+            this.state = 91;
+            this.match(InstructionSetParser.T__4);
+            this.state = 92;
             this.match(InstructionSetParser.T__6);
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
-            this.state = 89;
-            this.match(InstructionSetParser.T__2);
-            this.state = 90;
-            this.match(InstructionSetParser.T__3);
-            this.state = 91;
-            this.match(InstructionSetParser.LABEL);
-            this.state = 92;
-            this.match(InstructionSetParser.T__4);
             this.state = 93;
+            this.match(InstructionSetParser.T__2);
+            this.state = 94;
+            this.match(InstructionSetParser.T__3);
+            this.state = 95;
+            this.match(InstructionSetParser.LABEL);
+            this.state = 96;
+            this.match(InstructionSetParser.T__4);
+            this.state = 97;
             this.match(InstructionSetParser.T__7);
             break;
 
@@ -980,39 +1064,39 @@ InstructionSetParser.PushInstructionContext = PushInstructionContext;
 InstructionSetParser.prototype.pushInstruction = function() {
 
     var localctx = new PushInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 14, InstructionSetParser.RULE_pushInstruction);
+    this.enterRule(localctx, 16, InstructionSetParser.RULE_pushInstruction);
     try {
-        this.state = 105;
+        this.state = 109;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,7,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 96;
+            this.state = 100;
             this.match(InstructionSetParser.T__8);
-            this.state = 97;
+            this.state = 101;
             this.match(InstructionSetParser.T__9);
-            this.state = 98;
+            this.state = 102;
             this.match(InstructionSetParser.LABEL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 99;
+            this.state = 103;
             this.match(InstructionSetParser.T__8);
-            this.state = 100;
+            this.state = 104;
             this.match(InstructionSetParser.T__10);
-            this.state = 101;
+            this.state = 105;
             this.match(InstructionSetParser.LITERAL);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
-            this.state = 102;
+            this.state = 106;
             this.match(InstructionSetParser.T__8);
-            this.state = 103;
+            this.state = 107;
             this.match(InstructionSetParser.T__11);
-            this.state = 104;
+            this.state = 108;
             this.match(InstructionSetParser.LITERAL);
             break;
 
@@ -1076,25 +1160,25 @@ InstructionSetParser.PopInstructionContext = PopInstructionContext;
 InstructionSetParser.prototype.popInstruction = function() {
 
     var localctx = new PopInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 16, InstructionSetParser.RULE_popInstruction);
+    this.enterRule(localctx, 18, InstructionSetParser.RULE_popInstruction);
     try {
-        this.state = 111;
+        this.state = 115;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,8,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 107;
+            this.state = 111;
             this.match(InstructionSetParser.T__12);
-            this.state = 108;
+            this.state = 112;
             this.match(InstructionSetParser.T__9);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 109;
+            this.state = 113;
             this.match(InstructionSetParser.T__12);
-            this.state = 110;
+            this.state = 114;
             this.match(InstructionSetParser.T__13);
             break;
 
@@ -1129,8 +1213,8 @@ function LoadInstructionContext(parser, parent, invokingState) {
 LoadInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 LoadInstructionContext.prototype.constructor = LoadInstructionContext;
 
-LoadInstructionContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+LoadInstructionContext.prototype.variable = function() {
+    return this.getTypedRuleContext(VariableContext,0);
 };
 
 LoadInstructionContext.prototype.enterRule = function(listener) {
@@ -1161,50 +1245,50 @@ InstructionSetParser.LoadInstructionContext = LoadInstructionContext;
 InstructionSetParser.prototype.loadInstruction = function() {
 
     var localctx = new LoadInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 18, InstructionSetParser.RULE_loadInstruction);
+    this.enterRule(localctx, 20, InstructionSetParser.RULE_loadInstruction);
     try {
-        this.state = 125;
+        this.state = 129;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,9,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 113;
+            this.state = 117;
             this.match(InstructionSetParser.T__14);
-            this.state = 114;
+            this.state = 118;
             this.match(InstructionSetParser.T__15);
-            this.state = 115;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 119;
+            this.variable();
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 116;
+            this.state = 120;
             this.match(InstructionSetParser.T__14);
-            this.state = 117;
+            this.state = 121;
             this.match(InstructionSetParser.T__16);
-            this.state = 118;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 122;
+            this.variable();
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
-            this.state = 119;
+            this.state = 123;
             this.match(InstructionSetParser.T__14);
-            this.state = 120;
+            this.state = 124;
             this.match(InstructionSetParser.T__17);
-            this.state = 121;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 125;
+            this.variable();
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
-            this.state = 122;
+            this.state = 126;
             this.match(InstructionSetParser.T__14);
-            this.state = 123;
+            this.state = 127;
             this.match(InstructionSetParser.T__18);
-            this.state = 124;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 128;
+            this.variable();
             break;
 
         }
@@ -1238,8 +1322,8 @@ function StoreInstructionContext(parser, parent, invokingState) {
 StoreInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 StoreInstructionContext.prototype.constructor = StoreInstructionContext;
 
-StoreInstructionContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+StoreInstructionContext.prototype.variable = function() {
+    return this.getTypedRuleContext(VariableContext,0);
 };
 
 StoreInstructionContext.prototype.enterRule = function(listener) {
@@ -1270,50 +1354,50 @@ InstructionSetParser.StoreInstructionContext = StoreInstructionContext;
 InstructionSetParser.prototype.storeInstruction = function() {
 
     var localctx = new StoreInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 20, InstructionSetParser.RULE_storeInstruction);
+    this.enterRule(localctx, 22, InstructionSetParser.RULE_storeInstruction);
     try {
-        this.state = 139;
+        this.state = 143;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,10,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 127;
+            this.state = 131;
             this.match(InstructionSetParser.T__19);
-            this.state = 128;
+            this.state = 132;
             this.match(InstructionSetParser.T__15);
-            this.state = 129;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 133;
+            this.variable();
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 130;
+            this.state = 134;
             this.match(InstructionSetParser.T__19);
-            this.state = 131;
-            this.match(InstructionSetParser.T__20);
-            this.state = 132;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 135;
+            this.match(InstructionSetParser.T__16);
+            this.state = 136;
+            this.variable();
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
-            this.state = 133;
+            this.state = 137;
             this.match(InstructionSetParser.T__19);
-            this.state = 134;
+            this.state = 138;
             this.match(InstructionSetParser.T__17);
-            this.state = 135;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 139;
+            this.variable();
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
-            this.state = 136;
+            this.state = 140;
             this.match(InstructionSetParser.T__19);
-            this.state = 137;
+            this.state = 141;
             this.match(InstructionSetParser.T__18);
-            this.state = 138;
-            this.match(InstructionSetParser.SYMBOL);
+            this.state = 142;
+            this.variable();
             break;
 
         }
@@ -1383,43 +1467,43 @@ InstructionSetParser.InvokeInstructionContext = InvokeInstructionContext;
 InstructionSetParser.prototype.invokeInstruction = function() {
 
     var localctx = new InvokeInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 22, InstructionSetParser.RULE_invokeInstruction);
+    this.enterRule(localctx, 24, InstructionSetParser.RULE_invokeInstruction);
     try {
-        this.state = 152;
+        this.state = 156;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,11,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 141;
-            this.match(InstructionSetParser.T__21);
-            this.state = 142;
+            this.state = 145;
+            this.match(InstructionSetParser.T__20);
+            this.state = 146;
             this.match(InstructionSetParser.SYMBOL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 143;
-            this.match(InstructionSetParser.T__21);
-            this.state = 144;
+            this.state = 147;
+            this.match(InstructionSetParser.T__20);
+            this.state = 148;
             this.match(InstructionSetParser.SYMBOL);
-            this.state = 145;
+            this.state = 149;
+            this.match(InstructionSetParser.T__21);
+            this.state = 150;
             this.match(InstructionSetParser.T__22);
-            this.state = 146;
-            this.match(InstructionSetParser.T__16);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
-            this.state = 147;
-            this.match(InstructionSetParser.T__21);
-            this.state = 148;
-            this.match(InstructionSetParser.SYMBOL);
-            this.state = 149;
-            this.match(InstructionSetParser.T__22);
-            this.state = 150;
-            this.match(InstructionSetParser.NUMBER);
             this.state = 151;
+            this.match(InstructionSetParser.T__20);
+            this.state = 152;
+            this.match(InstructionSetParser.SYMBOL);
+            this.state = 153;
+            this.match(InstructionSetParser.T__21);
+            this.state = 154;
+            this.match(InstructionSetParser.NUMBER);
+            this.state = 155;
             this.match(InstructionSetParser.T__23);
             break;
 
@@ -1486,46 +1570,34 @@ InstructionSetParser.ExecuteInstructionContext = ExecuteInstructionContext;
 InstructionSetParser.prototype.executeInstruction = function() {
 
     var localctx = new ExecuteInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 24, InstructionSetParser.RULE_executeInstruction);
+    this.enterRule(localctx, 26, InstructionSetParser.RULE_executeInstruction);
     try {
-        this.state = 170;
+        this.state = 174;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,12,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 154;
+            this.state = 158;
             this.match(InstructionSetParser.T__24);
-            this.state = 155;
+            this.state = 159;
             this.match(InstructionSetParser.SYMBOL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 156;
-            this.match(InstructionSetParser.T__24);
-            this.state = 157;
-            this.match(InstructionSetParser.SYMBOL);
-            this.state = 158;
-            this.match(InstructionSetParser.T__22);
-            this.state = 159;
-            this.match(InstructionSetParser.T__23);
-            break;
-
-        case 3:
-            this.enterOuterAlt(localctx, 3);
             this.state = 160;
             this.match(InstructionSetParser.T__24);
             this.state = 161;
             this.match(InstructionSetParser.SYMBOL);
             this.state = 162;
-            this.match(InstructionSetParser.T__4);
+            this.match(InstructionSetParser.T__21);
             this.state = 163;
-            this.match(InstructionSetParser.T__25);
+            this.match(InstructionSetParser.T__23);
             break;
 
-        case 4:
-            this.enterOuterAlt(localctx, 4);
+        case 3:
+            this.enterOuterAlt(localctx, 3);
             this.state = 164;
             this.match(InstructionSetParser.T__24);
             this.state = 165;
@@ -1534,9 +1606,21 @@ InstructionSetParser.prototype.executeInstruction = function() {
             this.match(InstructionSetParser.T__4);
             this.state = 167;
             this.match(InstructionSetParser.T__25);
+            break;
+
+        case 4:
+            this.enterOuterAlt(localctx, 4);
             this.state = 168;
-            this.match(InstructionSetParser.T__22);
+            this.match(InstructionSetParser.T__24);
             this.state = 169;
+            this.match(InstructionSetParser.SYMBOL);
+            this.state = 170;
+            this.match(InstructionSetParser.T__4);
+            this.state = 171;
+            this.match(InstructionSetParser.T__25);
+            this.state = 172;
+            this.match(InstructionSetParser.T__21);
+            this.state = 173;
             this.match(InstructionSetParser.T__23);
             break;
 
@@ -1600,25 +1684,25 @@ InstructionSetParser.HandleInstructionContext = HandleInstructionContext;
 InstructionSetParser.prototype.handleInstruction = function() {
 
     var localctx = new HandleInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 26, InstructionSetParser.RULE_handleInstruction);
+    this.enterRule(localctx, 28, InstructionSetParser.RULE_handleInstruction);
     try {
-        this.state = 176;
+        this.state = 180;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,13,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 172;
+            this.state = 176;
             this.match(InstructionSetParser.T__26);
-            this.state = 173;
+            this.state = 177;
             this.match(InstructionSetParser.T__27);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 174;
+            this.state = 178;
             this.match(InstructionSetParser.T__26);
-            this.state = 175;
+            this.state = 179;
             this.match(InstructionSetParser.T__28);
             break;
 

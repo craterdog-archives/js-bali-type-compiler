@@ -1,5 +1,5 @@
 1.LoadParameter:
-LOAD PARAMETER $x
+LOAD VARIABLE $x
 
 2.StoreVariable:
 STORE VARIABLE $foo
@@ -9,7 +9,7 @@ LOAD VARIABLE $foo
 
 4.StoreDraft:
 STORE DRAFT $citation
-LOAD DOCUMENT $citation
+LOAD DRAFT $citation
 
 5.StoreDocument:
 STORE DOCUMENT $citation

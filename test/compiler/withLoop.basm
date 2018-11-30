@@ -2,15 +2,15 @@
 PUSH ELEMENT `$sequence`
 EXECUTE $asSequential ON TARGET
 EXECUTE $iterator ON TARGET
-STORE VARIABLE $_iterator_2_
+STORE VARIABLE $$iterator-2
 
 1.1.ConditionClause:
-LOAD VARIABLE $_iterator_2_
+LOAD VARIABLE $$iterator-2
 EXECUTE $hasNext ON TARGET
 JUMP TO 1.WithStatementDone ON FALSE
-LOAD VARIABLE $_iterator_2_
+LOAD VARIABLE $$iterator-2
 EXECUTE $getNext ON TARGET
-STORE VARIABLE $_item_1_
+STORE VARIABLE $$item-1
 
 1.1.1.EvaluateStatement:
 PUSH ELEMENT `true`
@@ -42,5 +42,5 @@ STORE VARIABLE $z
 JUMP TO 1.1.ConditionClause
 
 1.WithStatementDone:
-LOAD VARIABLE $_result_
+LOAD VARIABLE $$result
 HANDLE RESULT

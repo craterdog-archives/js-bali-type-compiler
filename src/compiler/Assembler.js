@@ -42,10 +42,12 @@ exports.assembler = new Assembler();
  * 
  * @param {List} instructions The list of instructions that implement the procedure
  * to be analyzed.
+ * @param {Parameters} parameters An optional list of parameters (and default values) that
+ * are associated with the procedure. 
  * @returns {Object} context The resulting context.
  */
-Assembler.prototype.analyzeInstructions = function(instructions) {
-    var visitor = new AnalyzingVisitor();
+Assembler.prototype.analyzeInstructions = function(instructions, parameters) {
+    var visitor = new AnalyzingVisitor(parameters);
     instructions.acceptVisitor(visitor);
     return visitor.getContext();
 };
@@ -68,13 +70,27 @@ Assembler.prototype.assembleInstructions = function(instructions, context) {
 
 // PRIVATE CLASSES
 
-function AnalyzingVisitor() {
+function AnalyzingVisitor(parameters) {
+    this.parameters = new bali.Catalog();
     this.symbols = new bali.Set();
     this.literals = new bali.Set();
-    this.parameters = new bali.Set();
     this.variables = new bali.Set();
     this.addresses = new bali.Catalog();
     this.address = 1;  // bali VM unit based addressing
+    if (parameters) {
+        var collection = parameters.collection;
+        if (collection.constructor.name === 'Catalog') {
+            this.parameters.addItems(collection);
+            this.variables.addItems(collection.getKeys());
+        } else {
+            var iterator = collection.getIterator();
+            while (iterator.hasNext()) {
+                var parameter = iterator.getNext();
+                this.parameters.setValue(parameter, bali.Filter.NONE);
+                this.variables.addItem(parameter);
+            }
+        }
+    }
     return this;
 }
 AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
@@ -82,9 +98,9 @@ AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
 
 AnalyzingVisitor.prototype.getContext = function() {
     var context = new bali.Catalog();
+    context.setValue('$parameters', this.parameters);
     context.setValue('$symbols', this.symbols);
     context.setValue('$literals', this.literals);
-    context.setValue('$parameters', this.parameters);
     context.setValue('$variables', this.variables);
     context.setValue('$addresses', this.addresses);
     return context;
@@ -184,34 +200,22 @@ AnalyzingVisitor.prototype.visitPopInstruction = function(instruction) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'PARAMETER' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL
+//     'LOAD' 'VARIABLE' variable |
+//     'LOAD' 'MESSAGE' variable |
+//     'LOAD' 'DRAFT' variable |
+//     'LOAD' 'DOCUMENT' variable
 AnalyzingVisitor.prototype.visitLoadInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var type;
-    switch(modifier) {
-        case types.PARAMETER:
-            type = 'parameters';
-            break;
-        case types.VARIABLE:
-        case types.DOCUMENT:
-        case types.MESSAGE:
-            type = 'variables';
-            break;
-    }
-    this[type].addItem(symbol);
+    this.variables.addItem(symbol);
     this.address++;
 };
 
 
 // storeInstruction:
-//     'STORE' 'VARIABLE' SYMBOL |
-//     'STORE' 'DRAFT' SYMBOL |
-//     'STORE' 'DOCUMENT' SYMBOL |
-//     'STORE' 'MESSAGE' SYMBOL
+//     'STORE' 'VARIABLE' variable |
+//     'STORE' 'MESSAGE' variable |
+//     'STORE' 'DRAFT' variable |
+//     'STORE' 'DOCUMENT' variable
 AnalyzingVisitor.prototype.visitStoreInstruction = function(instruction) {
     var symbol = instruction.getValue('$operand');
     this.variables.addItem(symbol);
@@ -363,40 +367,28 @@ AssemblingVisitor.prototype.visitPopInstruction = function(instruction) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'PARAMETER' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL
+//     'LOAD' 'VARIABLE' variable |
+//     'LOAD' 'MESSAGE' variable |
+//     'LOAD' 'DRAFT' variable |
+//     'LOAD' 'DOCUMENT' variable
 AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var type;
-    switch(modifier) {
-        case types.PARAMETER:
-            type = '$parameters';
-            break;
-        case types.VARIABLE:
-        case types.DOCUMENT:
-        case types.MESSAGE:
-            type = '$variables';
-            break;
-    }
-    var index = this.context.getValue(type).getIndex(symbol);
+    var index = this.context.getValue('$variables').getIndex(symbol);
     var word = bytecode.encodeInstruction(types.LOAD, modifier, index);
     this.bytecode.push(word);
 };
 
 
 // storeInstruction:
-//     'STORE' 'VARIABLE' SYMBOL |
-//     'STORE' 'DOCUMENT' SYMBOL |
-//     'STORE' 'DRAFT' SYMBOL |
-//     'STORE' 'MESSAGE' SYMBOL
+//     'STORE' 'VARIABLE' variable |
+//     'STORE' 'MESSAGE' variable |
+//     'STORE' 'DRAFT' variable |
+//     'STORE' 'DOCUMENT' variable
 AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var variables = this.context.getValue('$variables');
-    var index = variables.getIndex(symbol);
+    var index = this.context.getValue('$variables').getIndex(symbol);
     var word = bytecode.encodeInstruction(types.STORE, modifier, index);
     this.bytecode.push(word);
 };

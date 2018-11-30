@@ -238,7 +238,7 @@ function exportTask(task) {
 function extractProcedure(processor, target, type, parameters, index) {
     var name = processor.procedure.getValue('$symbols').getItem(index);
     var procedures = processor.nebula.retrieveType(type);
-    var procedure = procedures.getValue(name).value;
+    var procedure = procedures.getValue(name);
     var bytes = procedure.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
     var symbols = procedure.getValue('$symbols');
@@ -247,7 +247,7 @@ function extractProcedure(processor, target, type, parameters, index) {
     var iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, bali.Template.NONE);
+        variables.setValue(variable, bali.Filter.NONE);
     }
     var handlers = new bali.Stack();
     procedure = {
@@ -334,7 +334,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (bali.Template.NONE.isEqualTo(condition)) {
+        if (bali.Filter.NONE.isEqualTo(condition)) {
             processor.procedure.address = address - 1;  // account for auto-increment
         }
     },
@@ -428,33 +428,6 @@ var instructionHandlers = [
         processor.task.stack.addItem(variable);
     },
 
-    // LOAD PARAMETER symbol
-    function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand;
-        // lookup the parameter associated with the index
-        var parameter = processor.procedure.parameters.getItem(index).value;
-        processor.task.stack.addItem(parameter);
-    },
-
-    // LOAD DOCUMENT symbol
-    function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand;
-        // lookup the citation associated with the index
-        var citation = processor.procedure.variables.getItem(index).value;
-        // TODO: jump to exception handler if the citation isn't a citation
-        // retrieve the cited document from the nebula repository
-        var document;
-        if (citation.getValue('$digest').isEqualTo(bali.Template.NONE)) {
-            document = processor.nebula.retrieveDraft(citation);
-        } else {
-            document = processor.nebula.retrieveDocument(citation);
-        }
-        // push the document on top of the component stack
-        processor.task.stack.addItem(document);
-    },
-
     // LOAD MESSAGE symbol
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
@@ -474,6 +447,32 @@ var instructionHandlers = [
         }
     },
 
+    // LOAD DRAFT symbol
+    function(processor, operand) {
+        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
+        var index = operand;
+        // lookup the citation associated with the index
+        var citation = processor.procedure.variables.getItem(index).value;
+        // TODO: jump to exception handler if the citation isn't a citation
+        // retrieve the cited draft from the nebula repository
+        var draft = processor.nebula.retrieveDraft(citation);
+        // push the draft on top of the component stack
+        processor.task.stack.addItem(draft);
+    },
+
+    // LOAD DOCUMENT symbol
+    function(processor, operand) {
+        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
+        var index = operand;
+        // lookup the citation associated with the index
+        var citation = processor.procedure.variables.getItem(index).value;
+        // TODO: jump to exception handler if the citation isn't a citation
+        // retrieve the cited document from the nebula repository
+        var document = processor.nebula.retrieveDocument(citation);
+        // push the document on top of the component stack
+        processor.task.stack.addItem(document);
+    },
+
     // STORE VARIABLE symbol
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
@@ -482,6 +481,19 @@ var instructionHandlers = [
         var component = processor.task.stack.removeItem();
         // and store the component in the variable associated with the index
         processor.procedure.variables.getItem(index).setValue(component);
+    },
+
+    // STORE MESSAGE symbol
+    function(processor, operand) {
+        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
+        var index = operand;
+        // pop the message that is on top of the component stack off the stack
+        var message = processor.task.stack.removeItem();
+        // lookup the queue tag associated with the index operand
+        var queue = processor.procedure.variables.getItem(index).value;
+        // TODO: jump to exception handler if queue isn't a tag
+        // send the message to the queue in the nebula
+        processor.nebula.queueMessage(queue, message);
     },
 
     // STORE DRAFT symbol
@@ -509,19 +521,6 @@ var instructionHandlers = [
         // write the cited document to the nebula repository
         citation = processor.nebula.commitDocument(citation, document);
         processor.procedure.variables.getItem(index).setValue(citation);
-    },
-
-    // STORE MESSAGE symbol
-    function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
-        var index = operand;
-        // pop the message that is on top of the component stack off the stack
-        var message = processor.task.stack.removeItem();
-        // lookup the queue tag associated with the index operand
-        var queue = processor.procedure.variables.getItem(index).value;
-        // TODO: jump to exception handler if queue isn't a tag
-        // send the message to the queue in the nebula
-        processor.nebula.queueMessage(queue, message);
     },
 
     // INVOKE symbol
@@ -580,7 +579,7 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
-        var target = bali.Template.NONE;
+        var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         var parameters = new bali.Catalog();
         var procedure = extractProcedure(processor, target, type, parameters, index);
@@ -594,7 +593,7 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
-        var target = bali.Template.NONE;
+        var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         var parameters = processor.task.stack.removeItem();
         var procedure = extractProcedure(processor, target, type, parameters, index);

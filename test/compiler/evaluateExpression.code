@@ -1,16 +1,16 @@
  Addr     Bytes   Bytecode                  Instruction
 ----------------------------------------------------------------------
 [001]:    A004    50     4    INVOKE 4
-[002]:    280A    11    10    PUSH ELEMENT 10
+[002]:    2809    11     9    PUSH ELEMENT 9
 [003]:    6006    30     6    LOAD VARIABLE 6
 [004]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
-[005]:    2809    11     9    PUSH ELEMENT 9
-[006]:    2806    11     6    PUSH ELEMENT 6
+[005]:    2808    11     8    PUSH ELEMENT 8
+[006]:    2805    11     5    PUSH ELEMENT 5
 [007]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
 [008]:    8002    40     2    STORE VARIABLE 2
 [009]:    6015    30    21    LOAD VARIABLE 21
 [00A]:    8002    40     2    STORE VARIABLE 2
-[00B]:    2803    11     3    PUSH ELEMENT 3
+[00B]:    2802    11     2    PUSH ELEMENT 2
 [00C]:    00-1    73  2047    HANDLE undefined
 [00D]:    8002    40     2    STORE VARIABLE 2
 [00E]:    6004    30     4    LOAD VARIABLE 4
@@ -26,39 +26,39 @@
 [018]:    6014    30    20    LOAD VARIABLE 20
 [019]:    D005    62     5    EXECUTE 5 ON TARGET
 [01A]:    8001    40     1    STORE VARIABLE 1
-[01B]:    7001    32     1    LOAD DOCUMENT 1
+[01B]:    7801    33     1    LOAD DOCUMENT 1
 [01C]:    8002    40     2    STORE VARIABLE 2
 [01D]:    6008    30     8    LOAD VARIABLE 8
 [01E]:    D006    62     6    EXECUTE 6 ON TARGET
-[01F]:    280C    11    12    PUSH ELEMENT 12
+[01F]:    280B    11    11    PUSH ELEMENT 11
 [020]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
-[021]:    280B    11    11    PUSH ELEMENT 11
+[021]:    280A    11    10    PUSH ELEMENT 10
 [022]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
-[023]:    2806    11     6    PUSH ELEMENT 6
+[023]:    2805    11     5    PUSH ELEMENT 5
 [024]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
 [025]:    8002    40     2    STORE VARIABLE 2
 [026]:    6011    30    17    LOAD VARIABLE 17
-[027]:    A017    50    23    INVOKE 23
-[028]:    2802    11     2    PUSH ELEMENT 2
-[029]:    600E    30    14    LOAD VARIABLE 14
-[02A]:    B802    53     2    INVOKE 2 WITH 3 PARAMETERS
+[027]:    A011    50    17    INVOKE 17
+[028]:    600E    30    14    LOAD VARIABLE 14
+[029]:    B001    52     1    INVOKE 1 WITH 2 PARAMETERS
+[02A]:    A817    51    23    INVOKE 23 WITH PARAMETER
 [02B]:    D801    63     1    EXECUTE 1 ON TARGET WITH PARAMETERS
 [02C]:    8002    40     2    STORE VARIABLE 2
-[02D]:    2805    11     5    PUSH ELEMENT 5
+[02D]:    2804    11     4    PUSH ELEMENT 4
 [02E]:    D004    62     4    EXECUTE 4 ON TARGET
 [02F]:    A80B    51    11    INVOKE 11 WITH PARAMETER
 [030]:    8002    40     2    STORE VARIABLE 2
-[031]:    2804    11     4    PUSH ELEMENT 4
+[031]:    2803    11     3    PUSH ELEMENT 3
 [032]:    D004    62     4    EXECUTE 4 ON TARGET
-[033]:    2807    11     7    PUSH ELEMENT 7
+[033]:    2806    11     6    PUSH ELEMENT 6
 [034]:    D004    62     4    EXECUTE 4 ON TARGET
 [035]:    B00A    52    10    INVOKE 10 WITH 2 PARAMETERS
 [036]:    8002    40     2    STORE VARIABLE 2
-[037]:    2808    11     8    PUSH ELEMENT 8
+[037]:    2807    11     7    PUSH ELEMENT 7
 [038]:    D004    62     4    EXECUTE 4 ON TARGET
 [039]:    A815    51    21    INVOKE 21 WITH PARAMETER
 [03A]:    8002    40     2    STORE VARIABLE 2
-[03B]:    2806    11     6    PUSH ELEMENT 6
+[03B]:    2805    11     5    PUSH ELEMENT 5
 [03C]:    D004    62     4    EXECUTE 4 ON TARGET
 [03D]:    A80E    51    14    INVOKE 14 WITH PARAMETER
 [03E]:    8002    40     2    STORE VARIABLE 2
@@ -163,7 +163,7 @@
 [0A1]:    6003    30     3    LOAD VARIABLE 3
 [0A2]:    D002    62     2    EXECUTE 2 ON TARGET
 [0A3]:    6003    30     3    LOAD VARIABLE 3
-[0A4]:    2806    11     6    PUSH ELEMENT 6
+[0A4]:    2805    11     5    PUSH ELEMENT 5
 [0A5]:    B807    53     7    INVOKE 7 WITH 3 PARAMETERS
 [0A6]:    8002    40     2    STORE VARIABLE 2
 [0A7]:    6002    30     2    LOAD VARIABLE 2

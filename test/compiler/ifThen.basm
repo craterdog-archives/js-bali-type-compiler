@@ -8,8 +8,8 @@ JUMP TO 1.IfStatementDone ON FALSE
 
 1.1.1.EvaluateStatement:
 LOAD VARIABLE $yes
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.IfStatementDone:
-LOAD VARIABLE $_result_
+LOAD VARIABLE $$result
 HANDLE RESULT

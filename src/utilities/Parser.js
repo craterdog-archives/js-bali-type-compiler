@@ -126,7 +126,7 @@ ParsingVisitor.prototype.visitStep = function(ctx) {
 };
 
 
-// label: EOL? LABEL ':' EOL;
+// label: EOL? LABEL ':' EOL
 ParsingVisitor.prototype.visitLabel = function(ctx) {
     this.result = new bali.Text(ctx.LABEL().getText());
 };
@@ -191,29 +191,39 @@ ParsingVisitor.prototype.visitPopInstruction = function(ctx) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'PARAMETER' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL
+//     'LOAD' 'VARIABLE' variable |
+//     'LOAD' 'MESSAGE' variable |
+//     'LOAD' 'DRAFT' variable |
+//     'LOAD' 'DOCUMENT' variable
 ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     var instruction = new bali.Catalog();
     instruction.setValue('$operation', types.LOAD);
     instruction.setValue('$modifier', types.loadModifierValue(ctx.children[1].getText()));
-    instruction.setValue('$operand', new bali.Text(ctx.SYMBOL().getText()));
+    var variable = ctx.children[2].getText();
+    if (variable.includes('$$')) {
+        instruction.setValue('$operand', new bali.Reserved(variable));
+    } else {
+        instruction.setValue('$operand', new bali.Symbol(variable));
+    }
     this.result = instruction;
 };
 
 
 // storeInstruction:
-//     'STORE' 'VARIABLE' SYMBOL |
-//     'STORE' 'DRAFT' SYMBOL |
-//     'STORE' 'DOCUMENT' SYMBOL |
-//     'STORE' 'MESSAGE' SYMBOL
+//     'STORE' 'VARIABLE' variable |
+//     'STORE' 'MESSAGE' variable |
+//     'STORE' 'DRAFT' variable |
+//     'STORE' 'DOCUMENT' variable
 ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
     var instruction = new bali.Catalog();
     instruction.setValue('$operation', types.STORE);
     instruction.setValue('$modifier', types.storeModifierValue(ctx.children[1].getText()));
-    instruction.setValue('$operand', new bali.Text(ctx.SYMBOL().getText()));
+    var variable = ctx.children[2].getText();
+    if (variable.includes('$$')) {
+        instruction.setValue('$operand', new bali.Reserved(variable));
+    } else {
+        instruction.setValue('$operand', new bali.Symbol(variable));
+    }
     this.result = instruction;
 };
 

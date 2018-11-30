@@ -8,6 +8,8 @@ step: label? instruction;
 
 label: EOL? LABEL ':' EOL;
 
+variable: SYMBOL | RESERVED;
+
 instruction:
     skipInstruction |
     jumpInstruction |
@@ -48,24 +50,22 @@ popInstruction:
     'POP' 'COMPONENT'
 ;
 
-// Load the value of a variable, message, or document onto the top of
-// the component stack.
+// Load the value from a variable, message queue, draft or document onto
+// the top of the component stack.
 loadInstruction:
-    'LOAD' 'VARIABLE' SYMBOL |
-    'LOAD' 'PARAMETER' SYMBOL |
-    'LOAD' 'DOCUMENT' SYMBOL |
-    'LOAD' 'MESSAGE' SYMBOL
+    'LOAD' 'VARIABLE' variable |
+    'LOAD' 'MESSAGE' variable |
+    'LOAD' 'DRAFT' variable |
+    'LOAD' 'DOCUMENT' variable
 ;
 
 // Store the value that is on the top of the component stack into the
-// document store, message queue, or local variable.
-// Store the value that is on the top of the component stack into a
-// variable, message, or document.
+// local variable, message queue, draft or document.
 storeInstruction:
-    'STORE' 'VARIABLE' SYMBOL |
-    'STORE' 'DRAFT' SYMBOL |
-    'STORE' 'DOCUMENT' SYMBOL |
-    'STORE' 'MESSAGE' SYMBOL
+    'STORE' 'VARIABLE' variable |
+    'STORE' 'MESSAGE' variable |
+    'STORE' 'DRAFT' variable |
+    'STORE' 'DOCUMENT' variable
 ;
 
 // Invoke the specified intrinsic function using the [0..3] parameters that
@@ -103,29 +103,27 @@ handleInstruction:
 
 LABEL: (NUMBER '.')+ IDENTIFIER;
 
-NUMBER: '1'..'9' ('0'..'9')* ;
+NUMBER: '1'..'9' ('0'..'9')*;
 
-LITERAL: '`' (ESCAPE | CHARACTER)*? '`' ;
+LITERAL: '`' (ESCAPE | CHARACTER)*? '`';
 
 SYMBOL: '$' IDENTIFIER;
 
-EOL: '\r'? '\n' ;
+RESERVED: '$$' IDENTIFIER ('-' NUMBER)?;
 
-SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN) ;
+EOL: '\r'? '\n';
 
-// the '_' character is allowed for the support of temporary variables
-fragment
-IDENTIFIER: ('_'|'a'..'z'|'A'..'Z') ('_'|'a'..'z'|'A'..'Z'|'0'..'9')* ;
+SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN);
 
 fragment
-LINE: CHARACTER*? EOL ;
+IDENTIFIER: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*;
 
 fragment
-CHARACTER: . ;
+CHARACTER: .;
+
+fragment
+BASE16: '0'..'9' | 'A'..'F';
 
 // replace with actual characters when read
 fragment
-ESCAPE: '\\' ('u' BASE16+ | 'b' | 'f' | 'r' | 'n' | 't' | '`' | '\\') ;
-
-fragment
-BASE16: '0'..'9' | 'A'..'F' ;
+ESCAPE: '\\' ('u' BASE16+ | 'b' | 'f' | 'r' | 'n' | 't' | '`' | '\\');

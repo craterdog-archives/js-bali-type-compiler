@@ -1,42 +1,42 @@
 1.SelectStatement:
 PUSH ELEMENT `$selection`
-STORE VARIABLE $_selector_1_
+STORE VARIABLE $$selector-1
 
 1.1.OptionClause:
-LOAD VARIABLE $_selector_1_
+LOAD VARIABLE $$selector-1
 PUSH ELEMENT `"alpha"`
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 1.2.OptionClause ON FALSE
 
 1.1.1.EvaluateStatement:
 PUSH ELEMENT `none`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.1.OptionClauseDone:
 JUMP TO 1.SelectStatementDone
 
 1.2.OptionClause:
-LOAD VARIABLE $_selector_1_
+LOAD VARIABLE $$selector-1
 PUSH ELEMENT `"beta"`
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 1.3.OptionClause ON FALSE
 
 1.2.1.EvaluateStatement:
 PUSH ELEMENT `none`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.2.OptionClauseDone:
 JUMP TO 1.SelectStatementDone
 
 1.3.OptionClause:
-LOAD VARIABLE $_selector_1_
+LOAD VARIABLE $$selector-1
 PUSH ELEMENT `"gamma"`
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 1.4.ElseClause ON FALSE
 
 1.3.1.EvaluateStatement:
 PUSH ELEMENT `none`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.3.OptionClauseDone:
 JUMP TO 1.SelectStatementDone
@@ -46,11 +46,11 @@ SKIP INSTRUCTION
 
 1.4.1.EvaluateStatement:
 PUSH ELEMENT `none`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.4.ElseClauseDone:
 JUMP TO 1.SelectStatementDone
 
 1.SelectStatementDone:
-LOAD VARIABLE $_result_
+LOAD VARIABLE $$result
 HANDLE RESULT

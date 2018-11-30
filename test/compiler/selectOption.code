@@ -1,26 +1,26 @@
  Addr     Bytes   Bytecode                  Instruction
 ----------------------------------------------------------------------
-[001]:    2801    11     1    PUSH ELEMENT 1
+[001]:    2802    11     2    PUSH ELEMENT 2
 [002]:    8002    40     2    STORE VARIABLE 2
 [003]:    6002    30     2    LOAD VARIABLE 2
 [004]:    2803    11     3    PUSH ELEMENT 3
 [005]:    B013    52    19    INVOKE 19 WITH 2 PARAMETERS
 [006]:    180A    03 [00A]    JUMP TO [00A] ON FALSE
-[007]:    2802    11     2    PUSH ELEMENT 2
+[007]:    2801    11     1    PUSH ELEMENT 1
 [008]:    8001    40     1    STORE VARIABLE 1
 [009]:    0017    00 [017]    JUMP TO [017]
 [00A]:    6002    30     2    LOAD VARIABLE 2
 [00B]:    2804    11     4    PUSH ELEMENT 4
 [00C]:    B013    52    19    INVOKE 19 WITH 2 PARAMETERS
 [00D]:    1811    03 [011]    JUMP TO [011] ON FALSE
-[00E]:    2802    11     2    PUSH ELEMENT 2
+[00E]:    2801    11     1    PUSH ELEMENT 1
 [00F]:    8001    40     1    STORE VARIABLE 1
 [010]:    0017    00 [017]    JUMP TO [017]
 [011]:    6002    30     2    LOAD VARIABLE 2
 [012]:    2805    11     5    PUSH ELEMENT 5
 [013]:    B013    52    19    INVOKE 19 WITH 2 PARAMETERS
 [014]:    1817    03 [017]    JUMP TO [017] ON FALSE
-[015]:    2802    11     2    PUSH ELEMENT 2
+[015]:    2801    11     1    PUSH ELEMENT 1
 [016]:    8001    40     1    STORE VARIABLE 1
 [017]:    6001    30     1    LOAD VARIABLE 1
 [018]:    E800    71     0    HANDLE RESULT

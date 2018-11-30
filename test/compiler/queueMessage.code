@@ -7,6 +7,6 @@
 [005]:    2802    11     2    PUSH ELEMENT 2
 [006]:    6003    30     3    LOAD VARIABLE 3
 [007]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
-[008]:    9801    43     1    STORE MESSAGE 1
+[008]:    8801    41     1    STORE MESSAGE 1
 [009]:    6002    30     2    LOAD VARIABLE 2
 [00A]:    E800    71     0    HANDLE RESULT

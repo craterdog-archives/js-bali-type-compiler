@@ -61,7 +61,7 @@ exports.functions = [
     // default
     function(useProposed, proposedValue, defaultValue) {
         console.log('default(' + useProposed + ', ' + proposedValue + ', ' + defaultValue + ')');
-        return bali.Template.NONE.isEqualTo(useProposed) ? defaultValue : proposedValue;
+        return bali.Filter.NONE.isEqualTo(useProposed) ? defaultValue : proposedValue;
     },
 
     // difference

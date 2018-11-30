@@ -4,7 +4,7 @@
 [002]:    2801    11     1    PUSH ELEMENT 1
 [003]:    D001    62     1    EXECUTE 1 ON TARGET
 [004]:    1808    03 [008]    JUMP TO [008] ON FALSE
-[005]:    6003    30     3    LOAD VARIABLE 3
+[005]:    6005    30     5    LOAD VARIABLE 5
 [006]:    8001    40     1    STORE VARIABLE 1
 [007]:    000C    00 [00C]    JUMP TO [00C]
 [008]:    0000    00     0    SKIP INSTRUCTION

@@ -180,31 +180,31 @@ FormattingVisitor.prototype.visitPopInstruction = function(instruction) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'PARAMETER' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL
+//     'LOAD' 'VARIABLE' variable |
+//     'LOAD' 'MESSAGE' variable |
+//     'LOAD' 'DRAFT' variable |
+//     'LOAD' 'DOCUMENT' variable
 FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     this.source += 'LOAD ';
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.loadModifierString(modifier);
     this.source += ' ';
-    var operand = instruction.getValue('$operand').getRawString();
+    var operand = instruction.getValue('$operand').toString();
     this.source += operand;
 };
 
 
 // storeInstruction:
-//     'STORE' 'VARIABLE' SYMBOL |
-//     'STORE' 'DRAFT' SYMBOL |
-//     'STORE' 'DOCUMENT' SYMBOL |
-//     'STORE' 'MESSAGE' SYMBOL
+//     'STORE' 'VARIABLE' variable |
+//     'STORE' 'MESSAGE' variable |
+//     'STORE' 'DRAFT' variable |
+//     'STORE' 'DOCUMENT' variable
 FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
     this.source += 'STORE ';
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.storeModifierString(modifier);
     this.source += ' ';
-    var operand = instruction.getValue('$operand').getRawString();
+    var operand = instruction.getValue('$operand').toString();
     this.source += operand;
 };
 
@@ -238,7 +238,7 @@ FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     this.source += 'EXECUTE ';
     this.source += instruction.getValue('$operand');
     var modifier = instruction.getValue('$modifier').toNumber();
-    if (modifier !== types.SANS) {
+    if (modifier !== types.WITH_NOTHING) {
         this.source += ' ';
         this.source += types.executeModifierString(modifier);
     }

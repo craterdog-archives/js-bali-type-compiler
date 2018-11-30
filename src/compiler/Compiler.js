@@ -71,14 +71,16 @@ Compiler.prototype.compileDocument = function(nebula, citation) {
         // retrieve the source code for the procedure
         var association = iterator.getNext();
         var procedureName = association.key.toString();
-        var procedure = association.value.getValue('$source').procedure;
+        var source = association.value.getValue('$source');
+        var parameters = source.parameters;
+        var procedure = source.procedure;
 
         // compile the source code
         var instructions = this.compileProcedure(procedure);
         instructions = utilities.parser.parseDocument(instructions);
 
         // assemble the instructions
-        var context = assembler.analyzeInstructions(instructions);
+        var context = assembler.analyzeInstructions(instructions, parameters);
         var bytecode = assembler.assembleInstructions(instructions, context);
 
         // format the instructions and add to the context
@@ -178,7 +180,7 @@ CompilingVisitor.prototype.constructor = CompilingVisitor;
 /**
  * This method returns the resulting assembly instructions for the compiled procedure.
  * 
- * @returns {nm$_Compiler.CompilingVisitor.builder.asmcode}
+ * @returns {String}
  */
 CompilingVisitor.prototype.getInstructions = function() {
     this.builder.finalize();
@@ -581,7 +583,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         expression.acceptVisitor(this);
         
         // the VM stores the value of the expression in the temporary result variable
-        this.builder.insertStoreInstruction('VARIABLE', '$_result_');
+        this.builder.insertStoreInstruction('VARIABLE', '$$result');
     }
 };
 
@@ -649,7 +651,10 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     var iterator = parameters.getIterator();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
-        parameter.value.acceptVisitor(this);  // don't place the 'key' on the component stack
+        if (parameter.constructor.name === 'Association') {
+            parameter = parameter.value;  // don't place the 'key' on the component stack
+        }
+        parameter.acceptVisitor(this);
     }
     this.depth--;
 
@@ -975,18 +980,13 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 
 // parameters: '(' collection ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
-    // the VM places a new empty parameters component on the top of the component stack
-    this.builder.insertInvokeInstruction('$parameters', 0);
+    // the VM places the collection on the top of the component stack
     this.depth++;
-    var iterator = parameters.getIterator();
-    while (iterator.hasNext()) {
-        var parameter = iterator.getNext();
-        parameter.acceptVisitor(this);
-
-        // the VM adds the parameter key-value to the parameter list on the component stack
-        this.builder.insertInvokeInstruction('$addParameter', 3);
-    }
+    parameters.collection.acceptVisitor(this);
     this.depth--;
+
+    // the VM places a new parameters component containing the collection on the top of the component stack
+    this.builder.insertInvokeInstruction('$parameters', 1);
 
     // the parameter list remains on the component stack
 };
@@ -1037,7 +1037,7 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
     event.acceptVisitor(this);
 
     // the VM stores the event on the event queue
-    this.builder.insertStoreInstruction('MESSAGE', '$_eventQueue_');
+    this.builder.insertStoreInstruction('MESSAGE', '$$eventQueue');
 };
 
 
@@ -1555,7 +1555,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
  * used to append a unique number to the end of each temporary variable.
  */
 CompilingVisitor.prototype.createTemporaryVariable = function(name) {
-    return '$_' + name + '_' + this.temporaryVariableCount++ + '_';
+    return '$$' + name + '-' + this.temporaryVariableCount++;
 };
 
 
@@ -1915,6 +1915,6 @@ InstructionBuilder.prototype.insertHandleInstruction = function(context) {
  * result if not handled earlier.
  */
 InstructionBuilder.prototype.finalize = function() {
-    this.insertLoadInstruction('VARIABLE', '$_result_');
+    this.insertLoadInstruction('VARIABLE', '$$result');
     this.insertHandleInstruction('RESULT');
 };

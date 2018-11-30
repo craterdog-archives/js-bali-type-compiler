@@ -38,12 +38,11 @@ exports.COMPONENT = 1;
 exports.SOURCE = 2;
 
 exports.VARIABLE = 0;
-exports.PARAMETER = 1;
-exports.DRAFT = 1;
-exports.DOCUMENT = 2;
-exports.MESSAGE = 3;
+exports.MESSAGE = 1;
+exports.DRAFT = 2;
+exports.DOCUMENT = 3;
 
-exports.SANS = 0;
+exports.WITH_NOTHING = 0;
 exports.WITH_PARAMETERS = 1;
 exports.ON_TARGET = 2;
 exports.ON_TARGET_WITH_PARAMETERS = 3;
@@ -159,16 +158,16 @@ var POP_MODIFIERS = [
 
 var LOAD_MODIFIERS = [
     'VARIABLE',
-    'PARAMETER',
-    'DOCUMENT',
-    'MESSAGE'
+    'MESSAGE',
+    'DRAFT',
+    'DOCUMENT'
 ];
 
 var STORE_MODIFIERS = [
     'VARIABLE',
+    'MESSAGE',
     'DRAFT',
-    'DOCUMENT',
-    'MESSAGE'
+    'DOCUMENT'
 ];
 
 var EXECUTE_MODIFIERS = [

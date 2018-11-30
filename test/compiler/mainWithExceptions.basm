@@ -2,9 +2,9 @@
 PUSH HANDLER 1.QueueStatementHandlers
 PUSH ELEMENT `<bali:/queues/myqueue>`
 EXECUTE $asReference ON TARGET
-STORE VARIABLE $_queue_1_
+STORE VARIABLE $$queue-1
 LOAD VARIABLE $message
-STORE MESSAGE $_queue_1_
+STORE MESSAGE $$queue-1
 
 1.QueueStatementDone:
 POP HANDLER
@@ -27,7 +27,7 @@ POP COMPONENT
 
 1.1.1.EvaluateStatement:
 PUSH ELEMENT `any`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.1.HandleClauseDone:
 JUMP TO 1.QueueStatementSucceeded
@@ -46,7 +46,7 @@ POP COMPONENT
 
 1.2.1.EvaluateStatement:
 PUSH ELEMENT `none`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.2.HandleClauseDone:
 JUMP TO 1.QueueStatementSucceeded
@@ -55,5 +55,5 @@ JUMP TO 1.QueueStatementSucceeded
 HANDLE EXCEPTION
 
 1.QueueStatementSucceeded:
-LOAD VARIABLE $_result_
+LOAD VARIABLE $$result
 HANDLE RESULT

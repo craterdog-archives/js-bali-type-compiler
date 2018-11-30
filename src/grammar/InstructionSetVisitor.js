@@ -36,6 +36,12 @@ InstructionSetVisitor.prototype.visitLabel = function(ctx) {
 };
 
 
+// Visit a parse tree produced by InstructionSetParser#variable.
+InstructionSetVisitor.prototype.visitVariable = function(ctx) {
+  return this.visitChildren(ctx);
+};
+
+
 // Visit a parse tree produced by InstructionSetParser#instruction.
 InstructionSetVisitor.prototype.visitInstruction = function(ctx) {
   return this.visitChildren(ctx);

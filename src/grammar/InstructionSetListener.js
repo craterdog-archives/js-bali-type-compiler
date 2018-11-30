@@ -47,6 +47,15 @@ InstructionSetListener.prototype.exitLabel = function(ctx) {
 };
 
 
+// Enter a parse tree produced by InstructionSetParser#variable.
+InstructionSetListener.prototype.enterVariable = function(ctx) {
+};
+
+// Exit a parse tree produced by InstructionSetParser#variable.
+InstructionSetListener.prototype.exitVariable = function(ctx) {
+};
+
+
 // Enter a parse tree produced by InstructionSetParser#instruction.
 InstructionSetListener.prototype.enterInstruction = function(ctx) {
 };

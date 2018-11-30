@@ -8,7 +8,7 @@
         $c := factorial(b)
         return c
     } else {
-        $d := b.find($tag)
+        $d := b.find($tag: tag)
         (3, 4i)
         return
     } handle $exception matching [$type: $warning] with {
@@ -40,4 +40,4 @@
             }
         }
     }
-}
+}($foo: "bar")

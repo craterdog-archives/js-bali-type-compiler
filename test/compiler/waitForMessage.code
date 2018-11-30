@@ -4,7 +4,7 @@
 [002]:    2802    11     2    PUSH ELEMENT 2
 [003]:    D001    62     1    EXECUTE 1 ON TARGET
 [004]:    8001    40     1    STORE VARIABLE 1
-[005]:    7801    33     1    LOAD MESSAGE 1
+[005]:    6801    31     1    LOAD MESSAGE 1
 [006]:    8004    40     4    STORE VARIABLE 4
 [007]:    6005    30     5    LOAD VARIABLE 5
 [008]:    2803    11     3    PUSH ELEMENT 3
@@ -13,7 +13,7 @@
 [00B]:    2802    11     2    PUSH ELEMENT 2
 [00C]:    D001    62     1    EXECUTE 1 ON TARGET
 [00D]:    8002    40     2    STORE VARIABLE 2
-[00E]:    7802    33     2    LOAD MESSAGE 2
+[00E]:    6802    31     2    LOAD MESSAGE 2
 [00F]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
 [010]:    6003    30     3    LOAD VARIABLE 3
 [011]:    E800    71     0    HANDLE RESULT

@@ -11,6 +11,7 @@
 var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
+var bali = require('bali-component-framework');
 var utilities = require('../src/utilities');
 var assembler = require('../src/compiler/Assembler').assembler;
 
@@ -33,7 +34,8 @@ describe('Bali Virtual Machine™', function() {
                 expect(source).to.exist;  // jshint ignore:line
                 var instruction = utilities.parser.parseDocument(source);
                 expect(instruction).to.exist;  // jshint ignore:line
-                var context = assembler.analyzeInstructions(instruction);
+                var parameters = bali.Parameters.fromCollection(['$x', '$y']);
+                var context = assembler.analyzeInstructions(instruction, parameters);
                 var bytecode = assembler.assembleInstructions(instruction, context);
                 expect(bytecode).to.exist;  // jshint ignore:line
                 var formatted = utilities.bytecode.bytecodeToString(bytecode);

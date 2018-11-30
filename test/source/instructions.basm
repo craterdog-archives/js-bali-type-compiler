@@ -14,7 +14,7 @@ PUSH SOURCE `{
     $foo := bar
     $bar := baz
     $baz := foo
-}`
+}($bar: 5)`
 
 3.pop:
 POP HANDLER
@@ -22,15 +22,15 @@ POP COMPONENT
 
 4.load:
 LOAD VARIABLE $variable
-LOAD PARAMETER $parameter
-LOAD DOCUMENT $reference
 LOAD MESSAGE $queue
+LOAD DRAFT $reference
+LOAD DOCUMENT $reference
 
 5.store:
 STORE VARIABLE $variable
+STORE MESSAGE $queue
 STORE DRAFT $reference
 STORE DOCUMENT $reference
-STORE MESSAGE $queue
 
 6.invoke:
 INVOKE $random

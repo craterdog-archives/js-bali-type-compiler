@@ -36,7 +36,7 @@ JUMP TO 1.3.ElseClause ON FALSE
 
 1.2.1.EvaluateStatement:
 PUSH ELEMENT `false`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.2.2.EvaluateStatement:
 LOAD VARIABLE $b
@@ -55,16 +55,17 @@ SKIP INSTRUCTION
 
 1.3.1.EvaluateStatement:
 LOAD VARIABLE $b
-INVOKE $parameters
-PUSH ELEMENT `1`
+INVOKE $catalog
 PUSH ELEMENT `$tag`
-INVOKE $addParameter WITH 3 PARAMETERS
+LOAD VARIABLE $tag
+INVOKE $setValue WITH 3 PARAMETERS
+INVOKE $parameters WITH PARAMETER
 EXECUTE $find ON TARGET WITH PARAMETERS
 STORE VARIABLE $d
 
 1.3.2.EvaluateStatement:
 PUSH ELEMENT `(3, 4i)`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.3.3.ReturnStatement:
 PUSH ELEMENT `none`
@@ -108,7 +109,7 @@ INVOKE $setValue WITH 3 PARAMETERS
 PUSH ELEMENT `$exception`
 LOAD VARIABLE $exception
 INVOKE $setValue WITH 3 PARAMETERS
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 1.4.HandleClauseDone:
 JUMP TO 1.IfStatementSucceeded
@@ -181,42 +182,42 @@ SKIP INSTRUCTION
 LOAD VARIABLE $sequence
 EXECUTE $asSequential ON TARGET
 EXECUTE $iterator ON TARGET
-STORE VARIABLE $_iterator_1_
+STORE VARIABLE $$iterator-1
 
 2.1.2.2.1.1.ConditionClause:
-LOAD VARIABLE $_iterator_1_
+LOAD VARIABLE $$iterator-1
 EXECUTE $hasNext ON TARGET
 JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
-LOAD VARIABLE $_iterator_1_
+LOAD VARIABLE $$iterator-1
 EXECUTE $getNext ON TARGET
 STORE VARIABLE $item
 
 2.1.2.2.1.1.1.SelectStatement:
 LOAD VARIABLE $selection
-STORE VARIABLE $_selector_2_
+STORE VARIABLE $$selector-2
 
 2.1.2.2.1.1.1.1.OptionClause:
-LOAD VARIABLE $_selector_2_
+LOAD VARIABLE $$selector-2
 PUSH ELEMENT `$first`
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
 
 2.1.2.2.1.1.1.1.1.EvaluateStatement:
 PUSH ELEMENT `true`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 2.1.2.2.1.1.1.1.OptionClauseDone:
 JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
 
 2.1.2.2.1.1.1.2.OptionClause:
-LOAD VARIABLE $_selector_2_
+LOAD VARIABLE $$selector-2
 PUSH ELEMENT `$second`
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
 
 2.1.2.2.1.1.1.2.1.EvaluateStatement:
 PUSH ELEMENT `false`
-STORE VARIABLE $_result_
+STORE VARIABLE $$result
 
 2.1.2.2.1.1.1.2.OptionClauseDone:
 JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
@@ -249,5 +250,5 @@ SKIP INSTRUCTION
 JUMP TO 2.1.ConditionClause
 
 2.WhileStatementDone:
-LOAD VARIABLE $_result_
+LOAD VARIABLE $$result
 HANDLE RESULT
