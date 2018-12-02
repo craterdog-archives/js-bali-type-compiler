@@ -72,7 +72,7 @@ Assembler.prototype.assembleInstructions = function(instructions, context) {
 
 function AnalyzingVisitor(parameters) {
     this.parameters = new bali.Catalog();
-    this.symbols = new bali.Set();
+    this.procedures = new bali.Set();
     this.literals = new bali.Set();
     this.variables = new bali.Set();
     this.addresses = new bali.Catalog();
@@ -99,7 +99,7 @@ AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
 AnalyzingVisitor.prototype.getContext = function() {
     var context = new bali.Catalog();
     context.setValue('$parameters', this.parameters);
-    context.setValue('$symbols', this.symbols);
+    context.setValue('$procedures', this.procedures);
     context.setValue('$literals', this.literals);
     context.setValue('$variables', this.variables);
     context.setValue('$addresses', this.addresses);
@@ -239,7 +239,7 @@ AnalyzingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 AnalyzingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     var symbol = instruction.getValue('$operand');
-    this.symbols.addItem(symbol);
+    this.procedures.addItem(symbol);
     this.address++;
 };
 
@@ -415,8 +415,8 @@ AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     var symbol = instruction.getValue('$operand');
-    var symbols = this.context.getValue('$symbols');
-    var index = symbols.getIndex(symbol);
+    var procedures = this.context.getValue('$procedures');
+    var index = procedures.getIndex(symbol);
     var word = bytecode.encodeInstruction(types.EXECUTE, modifier, index);
     this.bytecode.push(word);
 };

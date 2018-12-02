@@ -98,9 +98,7 @@ exports.functions = [
     // getType
     function(component) {
         console.log('getType(' + component + ')');
-        var type = bali.parser.parseDocument("[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']");
-        return type;
-        //return component.getType();
+        return component.getType();
     },
 
     // getValue

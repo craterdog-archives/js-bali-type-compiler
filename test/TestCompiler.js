@@ -77,6 +77,7 @@ describe('Bali Virtual Macine™', function() {
                 documentCitation = api.commitDocument(documentCitation, draft);
                 var typeCitation = compiler.compileDocument(api, documentCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
+                //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);
                 //fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');

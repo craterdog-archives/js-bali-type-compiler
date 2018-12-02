@@ -25,15 +25,7 @@ var Processor = require('../src/processor/Processor').Processor;
 
 
 /*
-[
-    $protocol: v1
-    $tag: #DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z
-    $version: v1
-    $digest: '
-        KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28X
-        CZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8
-    '
-]
+<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>
  */
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -73,7 +65,7 @@ var TASK_TEMPLATE =
         '    $status: $active\n' +
         '    $clock: 0\n' +
         '    $stack: []($type: $Stack)\n' +
-        '    $procedures: [\n' +
+        '    $contexts: [\n' +
         '        [\n' +
         '            $type: none\n' +
         '            $name: $dummy\n' +
@@ -81,13 +73,13 @@ var TASK_TEMPLATE =
         '            $address: 1\n' +
         '            $bytecode: %bytecode\n' +
         '            $parameters: %parameters\n' +
-        '            $symbols: %symbols($type: $Set)\n' +
+        '            $procedures: %procedures($type: $Set)\n' +
         '            $literals: %literals($type: $Set)\n' +
         '            $variables: %variables\n' +
         '            $handlers: []($type: $Stack)\n' +
-        '        ]($type: $ProcedureContext)\n' +
+        '        ]\n' +
         '    ]($type: $Stack)\n' +
-        ']($type: $TaskContext)';
+        ']';
 
 var CITATION =
         '[\n' +
@@ -106,7 +98,7 @@ function loadTask(filename) {
     var instructions = utilities.parser.parseDocument(source, true);
     var parameters = bali.Parameters.fromCollection(['$x', '$y']);
     var assemblerContext = assembler.analyzeInstructions(instructions, parameters);
-    var symbols = assemblerContext.getValue('$symbols');
+    var procedures = assemblerContext.getValue('$procedures');
     var literals = assemblerContext.getValue('$literals');
     var variables = new bali.Catalog();
     var iterator = assemblerContext.getValue('$variables').getIterator();
@@ -130,7 +122,7 @@ function loadTask(filename) {
     var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
-    source = source.replace(/%symbols/, symbols.toDocument('            '));
+    source = source.replace(/%procedures/, procedures.toDocument('            '));
     source = source.replace(/%literals/, literals.toDocument('            '));
     source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
@@ -153,31 +145,31 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
-            expect(processor.procedure.address).to.equal(1);
+            expect(processor.context.address).to.equal(1);
 
             // 1.IfStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedure.address).to.equal(2);
+            expect(processor.context.address).to.equal(2);
 
             // 1.1.ConditionClause:
             // PUSH ELEMENT `true`
             // JUMP TO 1.IfStatementDone ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(4);
+            expect(processor.context.address).to.equal(4);
 
             // 1.1.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedure.address).to.equal(5);
+            expect(processor.context.address).to.equal(5);
 
             // 1.2.ConditionClause:
             // PUSH ELEMENT `false`
             // JUMP TO 1.3.ConditionClause ON FALSE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(8);
+            expect(processor.context.address).to.equal(8);
 
             // 1.2.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -187,7 +179,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.4.ConditionClause ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(11);
+            expect(processor.context.address).to.equal(11);
 
             // 1.3.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -197,19 +189,19 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON TRUE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(13);
+            expect(processor.context.address).to.equal(13);
 
             // 1.4.1.EvaluateStatement:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedure.address).to.equal(14);
+            expect(processor.context.address).to.equal(14);
 
             // 1.5.ConditionClause:
             // PUSH ELEMENT `none`
             // JUMP TO 1.6.ConditionClause ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(17);
+            expect(processor.context.address).to.equal(17);
 
             // 1.5.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
@@ -219,17 +211,17 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone ON NONE
             processor.step();
             processor.step();
-            expect(processor.procedure.address).to.equal(19);
+            expect(processor.context.address).to.equal(19);
 
             // 1.6.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
             processor.step();
-            expect(processor.procedure.address).to.equal(20);
+            expect(processor.context.address).to.equal(20);
 
             // 1.IfStatementDone:
             // SKIP INSTRUCTION
             processor.step();
-            expect(processor.procedure.address).to.equal(21);
+            expect(processor.context.address).to.equal(21);
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -251,12 +243,12 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
-            expect(processor.procedure.address).to.equal(1);
+            expect(processor.context.address).to.equal(1);
 
             // 1.PushHandler:
             // PUSH HANDLER 3.PushSource
             processor.step();
-            expect(processor.procedure.handlers.getSize()).to.equal(1);
+            expect(processor.context.handlers.getSize()).to.equal(1);
 
             // 2.PushElement:
             // PUSH ELEMENT "five"
@@ -271,7 +263,7 @@ describe('Bali Virtual Machine™', function() {
             // 4.PopHandler:
             // POP HANDLER
             processor.step();
-            expect(processor.procedure.handlers.getSize()).to.equal(0);
+            expect(processor.context.handlers.getSize()).to.equal(0);
 
             // 5.PopComponent:
             // POP COMPONENT
@@ -297,7 +289,7 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
-            expect(processor.procedure.address).to.equal(1);
+            expect(processor.context.address).to.equal(1);
 
             // 1.LoadParameter:
             // LOAD VARIABLE $x
@@ -309,7 +301,7 @@ describe('Bali Virtual Machine™', function() {
             // STORE VARIABLE $foo
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(0);
-            expect(processor.procedure.variables.getItem(2).value.toString()).to.equal(MESSAGE);
+            expect(processor.context.variables.getItem(2).value.toString()).to.equal(MESSAGE);
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
@@ -367,7 +359,7 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
-            expect(processor.procedure.address).to.equal(1);
+            expect(processor.context.address).to.equal(1);
 
             // 1.Invoke:
             // INVOKE $random
@@ -417,35 +409,64 @@ describe('Bali Virtual Machine™', function() {
 
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
-            expect(processor.procedure.address).to.equal(1);
+            expect(processor.context.address).to.equal(1);
 
             // 1.Execute:
-            // PUSH ELEMENT <bali:[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']>
+            // PUSH ELEMENT `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             // EXECUTE $function1
             processor.step();
-            expect(processor.task.procedures.getSize()).to.equal(1);
+            expect(processor.task.contexts.getSize()).to.equal(1);
+                // 1.ReturnStatement:
+                // PUSH ELEMENT `true`
+                processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                // HANDLE RESULT
+                processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.topItem().isEqualTo(bali.Probability.TRUE)).to.equal(true);
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
 
             // 2.ExecuteWithParameters:
-            // PUSH ELEMENT <bali:[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']>
+            // PUSH ELEMENT `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
             // INVOKE $list
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
             // PUSH ELEMENT `"parameter"`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
             // INVOKE $addItem WITH 2 PARAMETERS
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
             // EXECUTE $function2 WITH PARAMETERS
             processor.step();
+            expect(processor.task.contexts.getSize()).to.equal(1);
+                // 1.ReturnStatement:
+                // LOAD VARIABLE $first
+                processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                console.log('processor before: ' + processor);
+                // HANDLE RESULT
+                processor.step();
+                console.log('processor after: ' + processor);
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"parameter"'))).to.equal(true);
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
 
-            // 3.ExecuteWithTarget:
+            // 3.ExecuteOnTarget:
             // PUSH ELEMENT `"target"`
             processor.step();
             // EXECUTE $message1 ON TARGET
             processor.step();
 
-            // 4.ExecuteWithTargetAndParameters:
+            // 4.ExecuteOnTargetWithParameters:
             // PUSH ELEMENT `"target"`
             processor.step();
             // INVOKE $list

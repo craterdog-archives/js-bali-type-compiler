@@ -1,7 +1,7 @@
 [
     $play: [
         $parameters: [:]
-        $symbols: [
+        $procedures: [
             $asCatalog
             $asSequential
             $getNext
@@ -206,7 +206,7 @@
             $toPeg: none
             $withPeg: none
         ]
-        $symbols: [
+        $procedures: [
             $asBoolean
             $asNumeric
             $moveDisk
@@ -308,7 +308,7 @@
             $fromPeg: none
             $toPeg: none
         ]
-        $symbols: [
+        $procedures: [
             $append
             $asSequential
             $pop

@@ -1,7 +1,7 @@
 [
     $function1: [
         $parameters: [:]
-        $symbols: []
+        $procedures: []
         $literals: [true]
         $variables: []
         $addresses: [
@@ -21,7 +21,7 @@
     ]
     $function2: [
         $parameters: [$first: none]
-        $symbols: []
+        $procedures: []
         $literals: []
         $variables: [$first]
         $addresses: [
@@ -41,7 +41,7 @@
     ]
     $message1: [
         $parameters: [:]
-        $symbols: []
+        $procedures: []
         $literals: []
         $variables: [$target]
         $addresses: [
@@ -64,7 +64,7 @@
             $first: none
             $second: none
         ]
-        $symbols: []
+        $procedures: []
         $literals: []
         $variables: [$first, $second]
         $addresses: [
