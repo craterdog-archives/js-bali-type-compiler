@@ -28,11 +28,11 @@
     "grunt-contrib-uglify": "^4.0.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.2.0",
-    "bali-digital-notary": "^1.2.5"
+    "bali-digital-notary": "^1.2.6"
   },
   "dependencies": {
     "antlr4": "^4.7.1",
-    "bali-component-framework": "^1.4.7",
+    "bali-component-framework": "^1.4.8",
     "bali-nebula-api": "file:../js-bali-nebula-api"
   }
 }

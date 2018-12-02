@@ -236,7 +236,7 @@ function exportTask(task) {
 
 
 function extractProcedure(processor, target, type, parameters, index) {
-    var name = processor.procedure.getValue('$symbols').getItem(index);
+    var name = processor.procedure.symbols.getItem(index);
     var procedures = processor.nebula.retrieveType(type);
     var procedure = procedures.getValue(name);
     var bytes = procedure.getValue('$bytecode').getBuffer();
@@ -249,9 +249,9 @@ function extractProcedure(processor, target, type, parameters, index) {
         var variable = iterator.getNext();
         variables.setValue(variable, bali.Filter.NONE);
     }
+    variables.setValue('$target', target);
     var handlers = new bali.Stack();
     procedure = {
-        target: target,
         type: type,
         name: name,
         instruction: 0,
@@ -274,7 +274,6 @@ function importProcedure(catalog) {
     var bytes = catalog.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
     var procedure = {};
-    procedure.target = catalog.getValue('$target');
     procedure.type = catalog.getValue('$type');
     procedure.name = catalog.getValue('$name');
     procedure.instruction = catalog.getValue('$instruction').toNumber();
@@ -299,13 +298,13 @@ function exportProcedure(procedure) {
     source = source.replace(/%bytecode/, base16);
     var bytecode = bali.parser.parseDocument(source);
     var catalog = new bali.Catalog();
-    catalog.setValue('$target', procedure.target);
     catalog.setValue('$type', procedure.type);
     catalog.setValue('$name', procedure.name);
     catalog.setValue('$instruction', procedure.instruction);
     catalog.setValue('$address', procedure.address);
     catalog.setValue('$bytecode', bytecode);
     catalog.setValue('$parameters', procedure.parameters);
+    catalog.setValue('$symbols', procedure.symbols);
     catalog.setValue('$literals', procedure.literals);
     catalog.setValue('$variables', procedure.variables);
     catalog.setValue('$handlers', procedure.handlers);
@@ -579,9 +578,9 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
+        var parameters = new bali.Catalog();
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
-        var parameters = new bali.Catalog();
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;
     },
@@ -593,9 +592,9 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
+        var parameters = processor.task.stack.removeItem();
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
-        var parameters = processor.task.stack.removeItem();
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;
     },
@@ -607,9 +606,9 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
-        var target = processor.task.stack.removeItem();
-        var type = intrinsics.invokeByName('$getType', [target]);
         var parameters = new bali.Catalog();
+        var target = processor.task.stack.removeItem();
+        var type = new bali.Reference(target.getType());
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;
     },
@@ -621,9 +620,9 @@ var instructionHandlers = [
         processor.task.procedures.addItem(exportProcedure(processor.procedure));
         // setup the new procedure context
         var index = operand;
-        var target = processor.task.stack.removeItem();
-        var type = intrinsics.invokeByName('$getType', [target]);
         var parameters = processor.task.stack.removeItem();
+        var target = processor.task.stack.removeItem();
+        var type = new bali.Reference(target.getType());
         var procedure = extractProcedure(processor, target, type, parameters, index);
         processor.procedure = procedure;
     },

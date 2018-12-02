@@ -1,0 +1,85 @@
+[
+    $function1: [
+        $parameters: [:]
+        $symbols: []
+        $literals: [true]
+        $variables: []
+        $addresses: [
+            "1.ReturnStatement": 1
+        ]
+        $intructions: "
+            1.ReturnStatement:
+            PUSH ELEMENT `true`
+            HANDLE RESULT
+        "(
+            $mediatype: "application/basm"
+        )
+        $bytecode: '2801E800'(
+            $base: 16
+            $mediatype: "application/bcod"
+        )
+    ]
+    $function2: [
+        $parameters: [$first: none]
+        $symbols: []
+        $literals: []
+        $variables: [$first]
+        $addresses: [
+            "1.ReturnStatement": 1
+        ]
+        $intructions: "
+            1.ReturnStatement:
+            LOAD VARIABLE $first
+            HANDLE RESULT
+        "(
+            $mediatype: "application/basm"
+        )
+        $bytecode: '6001E800'(
+            $base: 16
+            $mediatype: "application/bcod"
+        )
+    ]
+    $message1: [
+        $parameters: [:]
+        $symbols: []
+        $literals: []
+        $variables: [$target]
+        $addresses: [
+            "1.ReturnStatement": 1
+        ]
+        $intructions: "
+            1.ReturnStatement:
+            LOAD VARIABLE $target
+            HANDLE RESULT
+        "(
+            $mediatype: "application/basm"
+        )
+        $bytecode: '6001E800'(
+            $base: 16
+            $mediatype: "application/bcod"
+        )
+    ]
+    $message2: [
+        $parameters: [
+            $first: none
+            $second: none
+        ]
+        $symbols: []
+        $literals: []
+        $variables: [$first, $second]
+        $addresses: [
+            "1.ReturnStatement": 1
+        ]
+        $intructions: "
+            1.ReturnStatement:
+            LOAD VARIABLE $second
+            HANDLE RESULT
+        "(
+            $mediatype: "application/basm"
+        )
+        $bytecode: '6002E800'(
+            $base: 16
+            $mediatype: "application/bcod"
+        )
+    ]
+]

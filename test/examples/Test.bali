@@ -1,0 +1,27 @@
+[
+    $description: "
+        This class contains test procedures used for testing the virtual machine EXECUTE and HANDLE instructions.
+    "
+    $procedures: [
+        $function1: [
+            $source: {
+                return true
+            }
+        ]
+        $function2: [
+            $source: {
+                return first
+            }($first)
+        ]
+        $message1: [
+            $source: {
+                return target
+            }
+        ]
+        $message2: [
+            $source: {
+                return second
+            }($first, $second)
+        ]
+    ]
+]($type: $Class)

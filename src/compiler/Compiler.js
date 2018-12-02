@@ -543,7 +543,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    var literal = element.source;
+    var literal = element.toString();
     this.builder.insertPushInstruction('ELEMENT', literal);
 
     if (element.isParameterized()) {
@@ -637,7 +637,7 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
  */
 // functionExpression: function parameters
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
-    var functionName = '$' + tree.getChild(1).source;
+    var functionName = '$' + tree.getChild(1).toString();
     var parameters = tree.getChild(2);
 
     // make sure the number of parameters is less than 4
@@ -684,7 +684,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     this.builder.insertLabel(handleLabel);
 
     // the VM stores the exception that is on top of the component stack in the variable
-    var exception = symbol.source;
+    var exception = symbol.toString();
     this.builder.insertStoreInstruction('VARIABLE', exception);
 
     // the VM loads the exception back on top of the component stack for the next handler
@@ -959,7 +959,7 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     target.acceptVisitor(this);
 
     // extract the procedure name
-    var procedureName = '$' + message.source;
+    var procedureName = '$' + message.toString();
 
     // if there are parameters then compile accordingly
     if (numberOfParameters > 0) {
@@ -1426,7 +1426,7 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 // variable: IDENTIFIER
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
-    var variable = '$' + identifier.source;
+    var variable = '$' + identifier.toString();
     this.builder.insertLoadInstruction('VARIABLE', variable);
 };
 
@@ -1570,7 +1570,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
 
     if (recipient.type === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
-        var symbol = recipient.source;
+        var symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
         // the VM sets the value of the subcomponent at the given index of the parent component

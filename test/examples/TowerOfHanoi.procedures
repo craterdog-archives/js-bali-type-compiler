@@ -13,10 +13,12 @@
         $literals: [
             1
             infinity
-            $Number
+            $Number($range: [1..infinity])
             $pegs
             $range
-            $Stack
+            $Stack(
+                $Number($range: [1..infinity])
+            )
             $steps
             $type
             "peg A"
@@ -48,9 +50,11 @@
             INVOKE $list
             INVOKE $catalog
             PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack`
+            PUSH ELEMENT `$Stack(
+                $Number($range: [1..infinity])
+            )`
             INVOKE $list
-            PUSH ELEMENT `$Number`
+            PUSH ELEMENT `$Number($range: [1..infinity])`
             INVOKE $catalog
             PUSH ELEMENT `$range`
             PUSH ELEMENT `1`
@@ -70,9 +74,11 @@
             INVOKE $list
             INVOKE $catalog
             PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack`
+            PUSH ELEMENT `$Stack(
+                $Number($range: [1..infinity])
+            )`
             INVOKE $list
-            PUSH ELEMENT `$Number`
+            PUSH ELEMENT `$Number($range: [1..infinity])`
             INVOKE $catalog
             PUSH ELEMENT `$range`
             PUSH ELEMENT `1`
@@ -92,9 +98,11 @@
             INVOKE $list
             INVOKE $catalog
             PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack`
+            PUSH ELEMENT `$Stack(
+                $Number($range: [1..infinity])
+            )`
             INVOKE $list
-            PUSH ELEMENT `$Number`
+            PUSH ELEMENT `$Number($range: [1..infinity])`
             INVOKE $catalog
             PUSH ELEMENT `$range`
             PUSH ELEMENT `1`

@@ -24,6 +24,18 @@ var assembler = require('../src/compiler/Assembler').assembler;
 var Processor = require('../src/processor/Processor').Processor;
 
 
+/*
+[
+    $protocol: v1
+    $tag: #DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z
+    $version: v1
+    $digest: '
+        KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28X
+        CZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8
+    '
+]
+ */
+
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
 
 var TYPE_SOURCE = 
@@ -63,13 +75,13 @@ var TASK_TEMPLATE =
         '    $stack: []($type: $Stack)\n' +
         '    $procedures: [\n' +
         '        [\n' +
-        '            $target: none\n' +
         '            $type: none\n' +
         '            $name: $dummy\n' +
         '            $instruction: 0\n' +
         '            $address: 1\n' +
         '            $bytecode: %bytecode\n' +
         '            $parameters: %parameters\n' +
+        '            $symbols: %symbols($type: $Set)\n' +
         '            $literals: %literals($type: $Set)\n' +
         '            $variables: %variables\n' +
         '            $handlers: []($type: $Stack)\n' +
@@ -94,6 +106,7 @@ function loadTask(filename) {
     var instructions = utilities.parser.parseDocument(source, true);
     var parameters = bali.Parameters.fromCollection(['$x', '$y']);
     var assemblerContext = assembler.analyzeInstructions(instructions, parameters);
+    var symbols = assemblerContext.getValue('$symbols');
     var literals = assemblerContext.getValue('$literals');
     var variables = new bali.Catalog();
     var iterator = assemblerContext.getValue('$variables').getIterator();
@@ -101,6 +114,7 @@ function loadTask(filename) {
         var variable = iterator.getNext();
         variables.setValue(variable, bali.Filter.NONE);
     }
+    variables.setValue('$target', bali.Filter.NONE);
     parameters = new bali.List();
     iterator = assemblerContext.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
@@ -116,6 +130,7 @@ function loadTask(filename) {
     var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
+    source = source.replace(/%symbols/, symbols.toDocument('            '));
     source = source.replace(/%literals/, literals.toDocument('            '));
     source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
@@ -392,11 +407,10 @@ describe('Bali Virtual Machine™', function() {
 
     });
 
-/*
-    describe('Test the EXECUTE and HANDLE instructions.', function() {
+    describe('Test the EXECUTE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/EXECUTE-HANDLE.basm';
+            var testFile = 'test/instructions/EXECUTE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
@@ -404,10 +418,51 @@ describe('Bali Virtual Machine™', function() {
         it('should execute the test instructions', function() {
             var processor = new Processor(api, task);
             expect(processor.procedure.address).to.equal(1);
-            // TODO: add implementation
+
+            // 1.Execute:
+            // PUSH ELEMENT <bali:[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']>
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            // EXECUTE $function1
+            processor.step();
+            expect(processor.task.procedures.getSize()).to.equal(1);
+
+            // 2.ExecuteWithParameters:
+            // PUSH ELEMENT <bali:[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']>
+            processor.step();
+            // INVOKE $list
+            processor.step();
+            // PUSH ELEMENT `"parameter"`
+            processor.step();
+            // INVOKE $addItem WITH 2 PARAMETERS
+            processor.step();
+            // EXECUTE $function2 WITH PARAMETERS
+            processor.step();
+
+            // 3.ExecuteWithTarget:
+            // PUSH ELEMENT `"target"`
+            processor.step();
+            // EXECUTE $message1 ON TARGET
+            processor.step();
+
+            // 4.ExecuteWithTargetAndParameters:
+            // PUSH ELEMENT `"target"`
+            processor.step();
+            // INVOKE $list
+            processor.step();
+            // PUSH ELEMENT `"parameter1"`
+            processor.step();
+            // INVOKE $addItem WITH 2 PARAMETERS
+            processor.step();
+            // PUSH ELEMENT `"parameter2"`
+            processor.step();
+            // INVOKE $addItem WITH 2 PARAMETERS
+            processor.step();
+            // EXECUTE $message2 ON TARGET WITH PARAMETERS
+            processor.step();
+
         });
 
     });
-*/
 
 });

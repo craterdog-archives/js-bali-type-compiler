@@ -25,13 +25,15 @@ exports.functions = [
     // addItem
     function(list, item) {
         console.log('addItem(' + list + ', ' + item + ')');
-        return list.addItem(item);
+        list.addItem(item);
+        return list;
     },
 
     // addParameter
     function(parameters, parameter) {
         console.log('addParameter(' + parameters + ', ' + parameter + ')');
-        return parameters.addParameter(parameter);
+        parameters.addParameter(parameter);
+        return parameters;
     },
 
     // and
@@ -96,13 +98,15 @@ exports.functions = [
     // getType
     function(component) {
         console.log('getType(' + component + ')');
-        return component.getType();
+        var type = bali.parser.parseDocument("[$protocol:v1,$tag:#DB8M3B8N81H22ZBY6GZGLBN58SWAGQ6Z,$version:v1,$digest:'KWCJNLZZ3RA265YGRYB8KXPZX5HS0J2JBHQC8Q39T56T8Q5XQRH3QFHBL28XCZ8FNF9VSDW7L2X0HCRABFHV59BSHVRLNSLRBTMSYF8']");
+        return type;
+        //return component.getType();
     },
 
     // getValue
     function(catalog, key) {
         console.log('getValue(' + catalog + ', ' + key + ')');
-        return catalog.getValue(key);
+        return catalog.getValue(key) || bali.Filter.NONE;
     },
 
     // inverse
@@ -114,7 +118,7 @@ exports.functions = [
     // is
     function(firstComponent, secondComponent) {
         console.log('is(' + firstComponent + ', ' + secondComponent + ')');
-        return bali.Component.equal(firstComponent, secondComponent);
+        return bali.Component.is(firstComponent, secondComponent);
     },
 
     // less
@@ -144,7 +148,7 @@ exports.functions = [
     // more
     function(firstComponent, secondComponent) {
         console.log('more(' + firstComponent + ', ' + secondComponent + ')');
-        return bali.Component.less(firstComponent, secondComponent);
+        return bali.Component.more(firstComponent, secondComponent);
     },
 
     // negative
@@ -160,9 +164,9 @@ exports.functions = [
     },
 
     // parameters
-    function() {
-        console.log('parameters()');
-        return new bali.Parameters();
+    function(collection) {
+        console.log('parameters(' + collection + ')');
+        return new bali.Parameters(collection);
     },
 
     // product
@@ -216,13 +220,14 @@ exports.functions = [
     // setParameters
     function(component, parameters) {
         console.log('setParameters(' + component + ', ' + parameters + ')');
-        return component.setParameters(parameters);
+        component.setParameters(parameters);
+        return bali.Filter.NONE;
     },
 
     // setValue
     function(catalog, key, value) {
         console.log('setValue(' + catalog + ', ' + key + ', ' + value + ')');
-        return catalog.setValue(key, value);
+        return catalog.setValue(key, value) || bali.Filter.NONE;
     },
 
     // stack
