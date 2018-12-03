@@ -9,7 +9,7 @@
         ]
         $intructions: "
             1.ReturnStatement:
-            PUSH ELEMENT `true`
+            PUSH LITERAL `true`
             HANDLE RESULT
         "(
             $mediatype: "application/basm"

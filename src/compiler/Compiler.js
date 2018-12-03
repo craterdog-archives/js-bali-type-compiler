@@ -516,7 +516,7 @@ CompilingVisitor.prototype.visitDiscardClause = function(tree) {
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM stores no document into the remote location
-    this.builder.insertPushInstruction('ELEMENT', 'none');
+    this.builder.insertPushInstruction('LITERAL', 'none');
     this.builder.insertStoreInstruction('DRAFT', location);
 };
 
@@ -544,7 +544,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
 
     // the VM loads the element value onto the top of the component stack
     var literal = element.toString();
-    this.builder.insertPushInstruction('ELEMENT', literal);
+    this.builder.insertPushInstruction('LITERAL', literal);
 
     if (element.isParameterized()) {
         // the VM loads the parameters associated with the element onto the top of the component stack
@@ -1110,7 +1110,7 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
         result.acceptVisitor(this);
     } else {
         // the VM places a 'none' value on top of the component stack
-        this.builder.insertPushInstruction('ELEMENT', 'none');
+        this.builder.insertPushInstruction('LITERAL', 'none');
     }
 
     // the VM returns the result to the calling procedure
@@ -1238,7 +1238,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 CompilingVisitor.prototype.visitSet = function(set) {
     // the VM places the size of the set on the component stack
     var size = set.getSize();
-    this.builder.insertPushInstruction('ELEMENT', size);
+    this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new set of that size
     this.builder.insertInvokeInstruction('$set', 1);
@@ -1273,7 +1273,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
 // source: '{' procedure '}'
 CompilingVisitor.prototype.visitSource = function(source) {
     // the VM places the source code for the procedure on top of the component stack
-    this.builder.insertPushInstruction('SOURCE', source.toString());
+    this.builder.insertPushInstruction('LITERAL', source.toString());
 
     if (source.isParameterized()) {
         // the VM loads the parameters associated with the source code onto the top of the component stack
@@ -1297,7 +1297,7 @@ CompilingVisitor.prototype.visitSource = function(source) {
 CompilingVisitor.prototype.visitStack = function(stack) {
     // the VM places the size of the stack on the component stack
     var size = stack.getSize();
-    this.builder.insertPushInstruction('ELEMENT', size);
+    this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new stack of that size
     this.builder.insertInvokeInstruction('$stack', 1);
@@ -1837,9 +1837,11 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
         case 'HANDLER':
             instruction += ' ' + value;  // value as a label
             break;
-        case 'ELEMENT':
-        case 'SOURCE':
+        case 'LITERAL':
             instruction += ' `' + value + '`';  // value as a literal
+            break;
+        case 'CONSTANT':
+            instruction += ' ' + value;  // value as a symbol
             break;
     }
     this.insertInstruction(instruction);

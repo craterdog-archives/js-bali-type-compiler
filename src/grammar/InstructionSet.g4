@@ -35,12 +35,14 @@ jumpInstruction:
     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 ;
 
-// Push a literal component onto the component stack, or push the handler
-// address for the current exception handlers onto the handler stack.
+// Push a literal component, contant or parameter onto the component stack,
+// or push the handler address for the current exception handlers onto the
+// handler stack.
 pushInstruction:
     'PUSH' 'HANDLER' LABEL |
-    'PUSH' 'ELEMENT' LITERAL |
-    'PUSH' 'SOURCE' LITERAL
+    'PUSH' 'LITERAL' LITERAL |
+    'PUSH' 'CONSTANT' SYMBOL |
+    'PUSH' 'PARAMETER' SYMBOL
 ;
 
 // Pop the component or handler address that is currently on top of it

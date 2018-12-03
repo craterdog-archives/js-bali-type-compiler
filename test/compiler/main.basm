@@ -1,5 +1,5 @@
 1.EvaluateStatement:
-PUSH ELEMENT `none`
+PUSH LITERAL `none`
 STORE VARIABLE $$result
 LOAD VARIABLE $$result
 HANDLE RESULT

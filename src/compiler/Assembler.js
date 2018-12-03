@@ -173,18 +173,26 @@ AnalyzingVisitor.prototype.visitJumpInstruction = function(instruction) {
 
 // pushInstruction:
 //     'PUSH' 'HANDLER' LABEL |
-//     'PUSH' 'ELEMENT' LITERAL |
-//     'PUSH' 'SOURCE' LITERAL
+//     'PUSH' 'LITERAL' LITERAL |
+//     'PUSH' 'CONSTANT' SYMBOL |
+//     'PUSH' 'PARAMETER' SYMBOL
 AnalyzingVisitor.prototype.visitPushInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     switch (modifier) {
         case types.HANDLER:
             // we only care about statements with labels, not statements that use labels
             break;
-        case types.ELEMENT:
-        case types.SOURCE:
+        case types.LITERAL:
             var literal = instruction.getValue('$operand');
             this.literals.addItem(literal);
+            break;
+        case types.CONSTANT:
+            var constant = instruction.getValue('$operand');
+            this.constants.addItem(constant);
+            break;
+        case types.PARAMETER:
+            var parameter = instruction.getValue('$operand');
+            this.parameters.addItem(parameter);
             break;
     }
     this.address++;
@@ -335,8 +343,9 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
 
 // pushInstruction:
 //     'PUSH' 'HANDLER' LABEL |
-//     'PUSH' 'ELEMENT' LITERAL |
-//     'PUSH' 'SOURCE' LITERAL
+//     'PUSH' 'LITERAL' LITERAL |
+//     'PUSH' 'CONSTANT' SYMBOL |
+//     'PUSH' 'PARAMETER' SYMBOL
 AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
     var modifier = instruction.getValue('$modifier').toNumber();
     var value = instruction.getValue('$operand');
@@ -345,10 +354,17 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
             var addresses = this.context.getValue('$addresses');
             value = addresses.getValue(value);
             break;
-        case types.ELEMENT:
-        case types.SOURCE:
+        case types.LITERAL:
             var literals = this.context.getValue('$literals');
             value = literals.getIndex(value);
+            break;
+        case types.CONSTANT:
+            var constants = this.context.getValue('$constants');
+            value = constants.getIndex(value);
+            break;
+        case types.PARAMETER:
+            var parameters = this.context.getValue('$parameters');
+            value = parameters.getIndex(value);
             break;
     }
     var word = bytecode.encodeInstruction(types.PUSH, modifier, value);

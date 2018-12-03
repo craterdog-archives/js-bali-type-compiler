@@ -1,7 +1,7 @@
  Addr     Bytes   Bytecode                  Instruction
 ----------------------------------------------------------------------
 [001]:    0000    00     0    SKIP INSTRUCTION
-[002]:    2801    11     1    PUSH ELEMENT 1
+[002]:    2801    11     1    PUSH LITERAL 1
 [003]:    D001    62     1    EXECUTE 1 ON TARGET
 [004]:    1807    03 [007]    JUMP TO [007] ON FALSE
 [005]:    6004    30     4    LOAD VARIABLE 4

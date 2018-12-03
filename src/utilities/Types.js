@@ -33,9 +33,10 @@ exports.ON_TRUE = 2;
 exports.ON_FALSE = 3;
 
 exports.HANDLER = 0;
-exports.ELEMENT = 1;
 exports.COMPONENT = 1;
-exports.SOURCE = 2;
+exports.LITERAL = 1;
+exports.CONSTANT = 2;
+exports.PARAMETER = 3;
 
 exports.VARIABLE = 0;
 exports.MESSAGE = 1;
@@ -147,8 +148,9 @@ var JUMP_MODIFIERS = [
 
 var PUSH_MODIFIERS = [
     'HANDLER',
-    'ELEMENT',
-    'SOURCE'
+    'LITERAL',
+    'CONSTANT',
+    'PARAMETER'
 ];
 
 var POP_MODIFIERS = [

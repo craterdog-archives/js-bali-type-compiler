@@ -148,8 +148,9 @@ exports.instructionIsValid = function(instruction) {
         case types.PUSH:
             switch (modifier) {
                 case types.HANDLER:
-                case types.ELEMENT:
-                case types.SOURCE:
+                case types.LITERAL:
+                case types.CONSTANT:
+                case types.PARAMETER:
                     return operand > 0;
                 default:
                     return false;

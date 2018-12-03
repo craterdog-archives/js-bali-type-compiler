@@ -375,7 +375,7 @@ var instructionHandlers = [
         processor.context.handlers.addItem(new bali.Complex(handlerAddress.toString()));
     },
 
-    // PUSH ELEMENT literal
+    // PUSH LITERAL literal
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
@@ -384,13 +384,13 @@ var instructionHandlers = [
         processor.task.stack.addItem(literal);
     },
 
-    // PUSH SOURCE literal
+    // PUSH CONSTANT constant
     function(processor, operand) {
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
-        // lookup the literal associated with the index
-        var source = processor.context.literals.getItem(index);
-        processor.task.stack.addItem(source);
+        // lookup the constant associated with the index
+        var constant = processor.context.constants.getItem(index).value;
+        processor.task.stack.addItem(constant);
     },
 
     // UNIMPLEMENTED PUSH OPERATION

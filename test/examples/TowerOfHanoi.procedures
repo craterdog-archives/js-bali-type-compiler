@@ -46,19 +46,19 @@
         $intructions: "
             1.EvaluateStatement:
             INVOKE $catalog
-            PUSH ELEMENT `"peg A"`
+            PUSH LITERAL `"peg A"`
             INVOKE $list
             INVOKE $catalog
-            PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack(
+            PUSH LITERAL `$type`
+            PUSH LITERAL `$Stack(
                 $Number($range: [1..infinity])
             )`
             INVOKE $list
-            PUSH ELEMENT `$Number($range: [1..infinity])`
+            PUSH LITERAL `$Number($range: [1..infinity])`
             INVOKE $catalog
-            PUSH ELEMENT `$range`
-            PUSH ELEMENT `1`
-            PUSH ELEMENT `infinity`
+            PUSH LITERAL `$range`
+            PUSH LITERAL `1`
+            PUSH LITERAL `infinity`
             INVOKE $range WITH 2 PARAMETERS
             INVOKE $setValue WITH 3 PARAMETERS
             INVOKE $parameters WITH PARAMETER
@@ -70,19 +70,19 @@
             INVOKE $parameters WITH PARAMETER
             INVOKE $setParameters WITH 2 PARAMETERS
             INVOKE $setValue WITH 3 PARAMETERS
-            PUSH ELEMENT `"peg B"`
+            PUSH LITERAL `"peg B"`
             INVOKE $list
             INVOKE $catalog
-            PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack(
+            PUSH LITERAL `$type`
+            PUSH LITERAL `$Stack(
                 $Number($range: [1..infinity])
             )`
             INVOKE $list
-            PUSH ELEMENT `$Number($range: [1..infinity])`
+            PUSH LITERAL `$Number($range: [1..infinity])`
             INVOKE $catalog
-            PUSH ELEMENT `$range`
-            PUSH ELEMENT `1`
-            PUSH ELEMENT `infinity`
+            PUSH LITERAL `$range`
+            PUSH LITERAL `1`
+            PUSH LITERAL `infinity`
             INVOKE $range WITH 2 PARAMETERS
             INVOKE $setValue WITH 3 PARAMETERS
             INVOKE $parameters WITH PARAMETER
@@ -94,19 +94,19 @@
             INVOKE $parameters WITH PARAMETER
             INVOKE $setParameters WITH 2 PARAMETERS
             INVOKE $setValue WITH 3 PARAMETERS
-            PUSH ELEMENT `"peg C"`
+            PUSH LITERAL `"peg C"`
             INVOKE $list
             INVOKE $catalog
-            PUSH ELEMENT `$type`
-            PUSH ELEMENT `$Stack(
+            PUSH LITERAL `$type`
+            PUSH LITERAL `$Stack(
                 $Number($range: [1..infinity])
             )`
             INVOKE $list
-            PUSH ELEMENT `$Number($range: [1..infinity])`
+            PUSH LITERAL `$Number($range: [1..infinity])`
             INVOKE $catalog
-            PUSH ELEMENT `$range`
-            PUSH ELEMENT `1`
-            PUSH ELEMENT `infinity`
+            PUSH LITERAL `$range`
+            PUSH LITERAL `1`
+            PUSH LITERAL `infinity`
             INVOKE $range WITH 2 PARAMETERS
             INVOKE $setValue WITH 3 PARAMETERS
             INVOKE $parameters WITH PARAMETER
@@ -126,7 +126,7 @@
             
             3.WithStatement:
             LOAD VARIABLE $numberOfDisks
-            PUSH ELEMENT `1`
+            PUSH LITERAL `1`
             INVOKE $range WITH 2 PARAMETERS
             EXECUTE $asSequential ON TARGET
             EXECUTE $iterator ON TARGET
@@ -143,9 +143,9 @@
             3.1.1.EvaluateStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
-            PUSH ELEMENT `$pegs`
+            PUSH LITERAL `$pegs`
             INVOKE $getValue WITH 2 PARAMETERS
-            PUSH ELEMENT `"peg A"`
+            PUSH LITERAL `"peg A"`
             INVOKE $getValue WITH 2 PARAMETERS
             INVOKE $list
             LOAD VARIABLE $n
@@ -165,11 +165,11 @@
             INVOKE $list
             LOAD VARIABLE $numberOfDisks
             INVOKE $addItem WITH 2 PARAMETERS
-            PUSH ELEMENT `"peg A"`
+            PUSH LITERAL `"peg A"`
             INVOKE $addItem WITH 2 PARAMETERS
-            PUSH ELEMENT `"peg C"`
+            PUSH LITERAL `"peg C"`
             INVOKE $addItem WITH 2 PARAMETERS
-            PUSH ELEMENT `"peg B"`
+            PUSH LITERAL `"peg B"`
             INVOKE $addItem WITH 2 PARAMETERS
             INVOKE $parameters WITH PARAMETER
             EXECUTE $moveTower ON TARGET WITH PARAMETERS
@@ -178,7 +178,7 @@
             5.ReturnStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
-            PUSH ELEMENT `$steps`
+            PUSH LITERAL `$steps`
             INVOKE $getValue WITH 2 PARAMETERS
             EXECUTE $asCatalog ON TARGET
             HANDLE RESULT
@@ -243,7 +243,7 @@
             INVOKE $list
             LOAD VARIABLE $height
             EXECUTE $asNumeric ON TARGET
-            PUSH ELEMENT `1`
+            PUSH LITERAL `1`
             EXECUTE $asNumeric ON TARGET
             INVOKE $difference WITH 2 PARAMETERS
             INVOKE $addItem WITH 2 PARAMETERS
@@ -273,7 +273,7 @@
             INVOKE $list
             LOAD VARIABLE $height
             EXECUTE $asNumeric ON TARGET
-            PUSH ELEMENT `1`
+            PUSH LITERAL `1`
             EXECUTE $asNumeric ON TARGET
             INVOKE $difference WITH 2 PARAMETERS
             INVOKE $addItem WITH 2 PARAMETERS
@@ -335,7 +335,7 @@
             1.EvaluateStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
-            PUSH ELEMENT `$pegs`
+            PUSH LITERAL `$pegs`
             INVOKE $getValue WITH 2 PARAMETERS
             LOAD VARIABLE $fromPeg
             INVOKE $getValue WITH 2 PARAMETERS
@@ -345,7 +345,7 @@
             2.EvaluateStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
-            PUSH ELEMENT `$pegs`
+            PUSH LITERAL `$pegs`
             INVOKE $getValue WITH 2 PARAMETERS
             LOAD VARIABLE $toPeg
             INVOKE $getValue WITH 2 PARAMETERS
@@ -359,10 +359,10 @@
             3.EvaluateStatement:
             LOAD VARIABLE $target
             EXECUTE $asSequential ON TARGET
-            PUSH ELEMENT `$steps`
+            PUSH LITERAL `$steps`
             INVOKE $getValue WITH 2 PARAMETERS
             INVOKE $list
-            PUSH ELEMENT `"Move disk {disk} from {fromPeg} to {toPeg}."`
+            PUSH LITERAL `"Move disk {disk} from {fromPeg} to {toPeg}."`
             INVOKE $addItem WITH 2 PARAMETERS
             INVOKE $parameters WITH PARAMETER
             EXECUTE $append ON TARGET WITH PARAMETERS

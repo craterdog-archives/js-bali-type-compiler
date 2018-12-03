@@ -1,5 +1,5 @@
 1.WithStatement:
-PUSH ELEMENT `$sequence`
+PUSH LITERAL `$sequence`
 EXECUTE $asSequential ON TARGET
 EXECUTE $iterator ON TARGET
 STORE VARIABLE $$iterator-2
@@ -13,7 +13,7 @@ EXECUTE $getNext ON TARGET
 STORE VARIABLE $$item-1
 
 1.1.1.EvaluateStatement:
-PUSH ELEMENT `true`
+PUSH LITERAL `true`
 STORE VARIABLE $x
 
 1.1.2.IfStatement:
@@ -25,7 +25,7 @@ EXECUTE $asBoolean ON TARGET
 JUMP TO 1.1.2.IfStatementDone ON FALSE
 
 1.1.2.1.1.EvaluateStatement:
-PUSH ELEMENT `none`
+PUSH LITERAL `none`
 STORE VARIABLE $y
 
 1.1.2.1.2.BreakStatement:
@@ -35,7 +35,7 @@ JUMP TO 1.WithStatementDone
 SKIP INSTRUCTION
 
 1.1.3.EvaluateStatement:
-PUSH ELEMENT `any`
+PUSH LITERAL `any`
 STORE VARIABLE $z
 
 1.ConditionRepeat:

@@ -150,20 +150,26 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
 
 // pushInstruction:
 //     'PUSH' 'HANDLER' LABEL |
-//     'PUSH' 'ELEMENT' LITERAL |
-//     'PUSH' 'SOURCE' LITERAL
+//     'PUSH' 'LITERAL' LITERAL |
+//     'PUSH' 'CONSTANT' SYMBOL |
+//     'PUSH' 'PARAMETER' SYMBOL |
 FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     this.source += 'PUSH ';
     var modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.pushModifierString(modifier);
     this.source += ' ';
     var operand = instruction.getValue('$operand');
-    if (modifier !== types.HANDLER) {
-        // format the operand as a literal
-        operand = '`' + operand.toDocument(this.indentation) + '`';
-    } else {
-        // format the operand as a label (which is stored as a Bali Text element)
-        operand = operand.getRawString();
+    switch (modifier) {
+        case types.HANDLER:
+            operand = operand.getRawString();
+            break;
+        case types.LITERAL:
+            operand = '`' + operand.toDocument(this.indentation) + '`';
+            break;
+        case types.CONSTANT:
+        case types.PARAMETER:
+            // leave it as a symbol
+            break;
     }
     this.source += operand;
 };

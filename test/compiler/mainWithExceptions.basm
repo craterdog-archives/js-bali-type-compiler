@@ -1,6 +1,6 @@
 1.QueueStatement:
 PUSH HANDLER 1.QueueStatementHandlers
-PUSH ELEMENT `<bali:/queues/myqueue>`
+PUSH LITERAL `<bali:/queues/myqueue>`
 EXECUTE $asReference ON TARGET
 STORE VARIABLE $$queue-1
 LOAD VARIABLE $message
@@ -18,15 +18,15 @@ STORE VARIABLE $error
 LOAD VARIABLE $error
 LOAD VARIABLE $error
 INVOKE $catalog
-PUSH ELEMENT `$type`
-PUSH ELEMENT `"bad"`
+PUSH LITERAL `$type`
+PUSH LITERAL `"bad"`
 INVOKE $setValue WITH 3 PARAMETERS
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 1.2.HandleClause ON FALSE
 POP COMPONENT
 
 1.1.1.EvaluateStatement:
-PUSH ELEMENT `any`
+PUSH LITERAL `any`
 STORE VARIABLE $$result
 
 1.1.HandleClauseDone:
@@ -37,15 +37,15 @@ STORE VARIABLE $error
 LOAD VARIABLE $error
 LOAD VARIABLE $error
 INVOKE $catalog
-PUSH ELEMENT `$type`
-PUSH ELEMENT `"horrid"`
+PUSH LITERAL `$type`
+PUSH LITERAL `"horrid"`
 INVOKE $setValue WITH 3 PARAMETERS
 INVOKE $matches WITH 2 PARAMETERS
 JUMP TO 1.QueueStatementFailed ON FALSE
 POP COMPONENT
 
 1.2.1.EvaluateStatement:
-PUSH ELEMENT `none`
+PUSH LITERAL `none`
 STORE VARIABLE $$result
 
 1.2.HandleClauseDone:

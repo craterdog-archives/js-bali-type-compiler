@@ -153,7 +153,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(2);
 
             // 1.1.ConditionClause:
-            // PUSH ELEMENT `true`
+            // PUSH LITERAL `true`
             // JUMP TO 1.IfStatementDone ON FALSE
             processor.step();
             processor.step();
@@ -165,7 +165,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(5);
 
             // 1.2.ConditionClause:
-            // PUSH ELEMENT `false`
+            // PUSH LITERAL `false`
             // JUMP TO 1.3.ConditionClause ON FALSE
             processor.step();
             processor.step();
@@ -175,7 +175,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone
 
             // 1.3.ConditionClause:
-            // PUSH ELEMENT `true`
+            // PUSH LITERAL `true`
             // JUMP TO 1.4.ConditionClause ON TRUE
             processor.step();
             processor.step();
@@ -185,7 +185,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone
 
             // 1.4.ConditionClause:
-            // PUSH ELEMENT `false`
+            // PUSH LITERAL `false`
             // JUMP TO 1.IfStatementDone ON TRUE
             processor.step();
             processor.step();
@@ -197,7 +197,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(14);
 
             // 1.5.ConditionClause:
-            // PUSH ELEMENT `none`
+            // PUSH LITERAL `none`
             // JUMP TO 1.6.ConditionClause ON NONE
             processor.step();
             processor.step();
@@ -207,7 +207,7 @@ describe('Bali Virtual Machine™', function() {
             // JUMP TO 1.IfStatementDone
 
             // 1.6.ConditionClause:
-            // PUSH ELEMENT `true`
+            // PUSH LITERAL `true`
             // JUMP TO 1.IfStatementDone ON NONE
             processor.step();
             processor.step();
@@ -251,12 +251,12 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.handlers.getSize()).to.equal(1);
 
             // 2.PushElement:
-            // PUSH ELEMENT "five"
+            // PUSH LITERAL "five"
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
 
             // 3.PushSource:
-            // PUSH SOURCE `{return prefix + name + suffix}`
+            // PUSH LITERAL `{return prefix + name + suffix}`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
 
@@ -367,7 +367,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.getSize()).to.equal(1);
 
             // 2.InvokeWithParameter:
-            // PUSH ELEMENT `3`
+            // PUSH LITERAL `3`
             processor.step();
             // INVOKE $factorial WITH PARAMETER
             processor.step();
@@ -375,7 +375,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.topItem().toString()).to.equal('6');
 
             // 3.InvokeWith2Parameters:
-            // PUSH ELEMENT `5`
+            // PUSH LITERAL `5`
             processor.step();
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
@@ -383,7 +383,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.topItem().toString()).to.equal('11');
 
             // 4.InvokeWith3Parameters:
-            // PUSH ELEMENT `13`
+            // PUSH LITERAL `13`
             processor.step();
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
@@ -412,14 +412,14 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(1);
 
             // 1.Execute:
-            // PUSH ELEMENT `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
+            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             // EXECUTE $function1
             processor.step();
             expect(processor.task.contexts.getSize()).to.equal(1);
                 // 1.ReturnStatement:
-                // PUSH ELEMENT `true`
+                // PUSH LITERAL `true`
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
                 // HANDLE RESULT
@@ -431,13 +431,13 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.getSize()).to.equal(0);
 
             // 2.ExecuteWithParameters:
-            // PUSH ELEMENT `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
+            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             // INVOKE $list
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            // PUSH ELEMENT `"parameter"`
+            // PUSH LITERAL `"parameter"`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(3);
             // INVOKE $addItem WITH 2 PARAMETERS
@@ -461,21 +461,21 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.getSize()).to.equal(0);
 
             // 3.ExecuteOnTarget:
-            // PUSH ELEMENT `"target"`
+            // PUSH LITERAL `"target"`
             processor.step();
             // EXECUTE $message1 ON TARGET
             processor.step();
 
             // 4.ExecuteOnTargetWithParameters:
-            // PUSH ELEMENT `"target"`
+            // PUSH LITERAL `"target"`
             processor.step();
             // INVOKE $list
             processor.step();
-            // PUSH ELEMENT `"parameter1"`
+            // PUSH LITERAL `"parameter1"`
             processor.step();
             // INVOKE $addItem WITH 2 PARAMETERS
             processor.step();
-            // PUSH ELEMENT `"parameter2"`
+            // PUSH LITERAL `"parameter2"`
             processor.step();
             // INVOKE $addItem WITH 2 PARAMETERS
             processor.step();

@@ -8,13 +8,15 @@ JUMP TO 5.store ON FALSE
 
 2.push:
 PUSH HANDLER 8.handle
-PUSH ELEMENT `"This is a literal text string
+PUSH LITERAL `"This is a literal text string
 containing an \` and spanning multiple lines."`
-PUSH SOURCE `{
+PUSH LITERAL `{
     $foo := bar
     $bar := baz
     $baz := foo
 }($bar: 5)`
+PUSH CONSTANT $constant
+PUSH PARAMETER $parameter
 
 3.pop:
 POP HANDLER

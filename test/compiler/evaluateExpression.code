@@ -1,16 +1,16 @@
  Addr     Bytes   Bytecode                  Instruction
 ----------------------------------------------------------------------
 [001]:    A004    50     4    INVOKE 4
-[002]:    2809    11     9    PUSH ELEMENT 9
+[002]:    2809    11     9    PUSH LITERAL 9
 [003]:    6006    30     6    LOAD VARIABLE 6
 [004]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
-[005]:    2808    11     8    PUSH ELEMENT 8
-[006]:    2805    11     5    PUSH ELEMENT 5
+[005]:    2808    11     8    PUSH LITERAL 8
+[006]:    2805    11     5    PUSH LITERAL 5
 [007]:    B821    53    33    INVOKE 33 WITH 3 PARAMETERS
 [008]:    8002    40     2    STORE VARIABLE 2
 [009]:    6015    30    21    LOAD VARIABLE 21
 [00A]:    8002    40     2    STORE VARIABLE 2
-[00B]:    2802    11     2    PUSH ELEMENT 2
+[00B]:    2802    11     2    PUSH LITERAL 2
 [00C]:    00-1    73  2047    HANDLE undefined
 [00D]:    8002    40     2    STORE VARIABLE 2
 [00E]:    6004    30     4    LOAD VARIABLE 4
@@ -30,11 +30,11 @@
 [01C]:    8002    40     2    STORE VARIABLE 2
 [01D]:    6008    30     8    LOAD VARIABLE 8
 [01E]:    D006    62     6    EXECUTE 6 ON TARGET
-[01F]:    280B    11    11    PUSH ELEMENT 11
+[01F]:    280B    11    11    PUSH LITERAL 11
 [020]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
-[021]:    280A    11    10    PUSH ELEMENT 10
+[021]:    280A    11    10    PUSH LITERAL 10
 [022]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
-[023]:    2805    11     5    PUSH ELEMENT 5
+[023]:    2805    11     5    PUSH LITERAL 5
 [024]:    B00D    52    13    INVOKE 13 WITH 2 PARAMETERS
 [025]:    8002    40     2    STORE VARIABLE 2
 [026]:    6011    30    17    LOAD VARIABLE 17
@@ -44,25 +44,25 @@
 [02A]:    A817    51    23    INVOKE 23 WITH PARAMETER
 [02B]:    D801    63     1    EXECUTE 1 ON TARGET WITH PARAMETERS
 [02C]:    8002    40     2    STORE VARIABLE 2
-[02D]:    2804    11     4    PUSH ELEMENT 4
+[02D]:    2804    11     4    PUSH LITERAL 4
 [02E]:    D004    62     4    EXECUTE 4 ON TARGET
 [02F]:    A80B    51    11    INVOKE 11 WITH PARAMETER
 [030]:    8002    40     2    STORE VARIABLE 2
-[031]:    2803    11     3    PUSH ELEMENT 3
+[031]:    2803    11     3    PUSH LITERAL 3
 [032]:    D004    62     4    EXECUTE 4 ON TARGET
-[033]:    2806    11     6    PUSH ELEMENT 6
+[033]:    2806    11     6    PUSH LITERAL 6
 [034]:    D004    62     4    EXECUTE 4 ON TARGET
 [035]:    B00A    52    10    INVOKE 10 WITH 2 PARAMETERS
 [036]:    8002    40     2    STORE VARIABLE 2
-[037]:    2807    11     7    PUSH ELEMENT 7
+[037]:    2807    11     7    PUSH LITERAL 7
 [038]:    D004    62     4    EXECUTE 4 ON TARGET
 [039]:    A815    51    21    INVOKE 21 WITH PARAMETER
 [03A]:    8002    40     2    STORE VARIABLE 2
-[03B]:    2805    11     5    PUSH ELEMENT 5
+[03B]:    2805    11     5    PUSH LITERAL 5
 [03C]:    D004    62     4    EXECUTE 4 ON TARGET
 [03D]:    A80E    51    14    INVOKE 14 WITH PARAMETER
 [03E]:    8002    40     2    STORE VARIABLE 2
-[03F]:    2801    11     1    PUSH ELEMENT 1
+[03F]:    2801    11     1    PUSH LITERAL 1
 [040]:    D004    62     4    EXECUTE 4 ON TARGET
 [041]:    A806    51     6    INVOKE 6 WITH PARAMETER
 [042]:    8002    40     2    STORE VARIABLE 2
@@ -96,7 +96,7 @@
 [05E]:    D004    62     4    EXECUTE 4 ON TARGET
 [05F]:    B008    52     8    INVOKE 8 WITH 2 PARAMETERS
 [060]:    8002    40     2    STORE VARIABLE 2
-[061]:    2801    11     1    PUSH ELEMENT 1
+[061]:    2801    11     1    PUSH LITERAL 1
 [062]:    D004    62     4    EXECUTE 4 ON TARGET
 [063]:    A812    51    18    INVOKE 18 WITH PARAMETER
 [064]:    8002    40     2    STORE VARIABLE 2
@@ -163,7 +163,7 @@
 [0A1]:    6003    30     3    LOAD VARIABLE 3
 [0A2]:    D002    62     2    EXECUTE 2 ON TARGET
 [0A3]:    6003    30     3    LOAD VARIABLE 3
-[0A4]:    2805    11     5    PUSH ELEMENT 5
+[0A4]:    2805    11     5    PUSH LITERAL 5
 [0A5]:    B807    53     7    INVOKE 7 WITH 3 PARAMETERS
 [0A6]:    8002    40     2    STORE VARIABLE 2
 [0A7]:    6002    30     2    LOAD VARIABLE 2

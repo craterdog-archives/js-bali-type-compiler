@@ -2,10 +2,10 @@
 PUSH HANDLER 3.PushSource
 
 2.PushElement:
-PUSH ELEMENT `"five"`
+PUSH LITERAL `"five"`
 
 3.PushSource:
-PUSH SOURCE `{return prefix + name + suffix}`
+PUSH LITERAL `{return prefix + name + suffix}`
 
 4.PopHandler:
 POP HANDLER

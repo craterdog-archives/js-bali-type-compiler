@@ -1,13 +1,13 @@
 1.PublishStatement:
 INVOKE $catalog
-PUSH ELEMENT `$type`
-PUSH ELEMENT `$changeEvent`
+PUSH LITERAL `$type`
+PUSH LITERAL `$changeEvent`
 INVOKE $setValue WITH 3 PARAMETERS
-PUSH ELEMENT `$key`
-PUSH ELEMENT `$foo`
+PUSH LITERAL `$key`
+PUSH LITERAL `$foo`
 INVOKE $setValue WITH 3 PARAMETERS
-PUSH ELEMENT `$value`
-PUSH ELEMENT `5`
+PUSH LITERAL `$value`
+PUSH LITERAL `5`
 INVOKE $setValue WITH 3 PARAMETERS
 STORE MESSAGE $$eventQueue
 LOAD VARIABLE $$result

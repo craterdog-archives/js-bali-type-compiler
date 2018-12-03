@@ -2,7 +2,7 @@
 SKIP INSTRUCTION
 
 1.1.ConditionClause:
-PUSH ELEMENT `true`
+PUSH LITERAL `true`
 EXECUTE $asBoolean ON TARGET
 JUMP TO 1.2.ElseClause ON FALSE
 

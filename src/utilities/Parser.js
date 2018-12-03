@@ -160,21 +160,29 @@ ParsingVisitor.prototype.visitJumpInstruction = function(ctx) {
 
 // pushInstruction:
 //     'PUSH' 'HANDLER' LABEL |
-//     'PUSH' 'ELEMENT' LITERAL |
-//     'PUSH' 'SOURCE' LITERAL
+//     'PUSH' 'LITERAL' LITERAL |
+//     'PUSH' 'CONSTANT' SYMBOL |
+//     'PUSH' 'PARAMETER' SYMBOL
 ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
     var instruction = new bali.Catalog();
     instruction.setValue('$operation', types.PUSH);
     var modifier = types.pushModifierValue(ctx.children[1].getText());
     instruction.setValue('$modifier', modifier);
     var operand = ctx.children[2].getText();
-    if (modifier === types.HANDLER) {
-        // store the label operand as a Bali Text element
-        instruction.setValue('$operand', new bali.Text(operand));
-    } else {
-        // parse the operand as a literal component (after removing the back ticks)
-        instruction.setValue('$operand', bali.parser.parseDocument(operand.slice(1, -1)));
+    var value;
+    switch (modifier) {
+        case types.HANDLER:
+            value = new bali.Text(operand);  // treat the label as text
+            break;
+        case types.LITERAL:
+            value = bali.parser.parseDocument(operand.slice(1, -1));  // remove the back tick delimeters
+            break;
+        case types.CONSTANT:
+        case types.PARAMETER:
+            value = new bali.Symbol(operand);
+            break;
     }
+    instruction.setValue('$operand', value);
     this.result = instruction;
 };
 
