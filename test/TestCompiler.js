@@ -12,7 +12,7 @@ var fs = require('fs');
 var mocha = require('mocha');
 var expect = require('chai').expect;
 var bali = require('bali-component-framework');
-var compiler = require('../src/compiler/Compiler').compiler;
+var compiler = require('../src/compiler');
 
 var testDirectory = 'test/config/';
 var notary = require('bali-digital-notary').api(testDirectory);
@@ -38,20 +38,36 @@ describe('Bali Virtual Macine™', function() {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;
+
+                // read in the procedure source code
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
                 var basmFile = testFolder + prefix + '.basm';
                 var source = fs.readFileSync(baliFile, 'utf8');
+                source = bali.parser.parseDocument(source);
                 expect(source).to.exist;  // jshint ignore:line
-                var procedure = bali.parser.parseDocument(source).procedure;
+
+                // create the compilation type context
+                var literals = new bali.Set();
+                var constants = new bali.Set();
+                var procedures = new bali.Catalog();
+                var type = new bali.Catalog();
+                type.setValue('$literals', literals);
+                type.setValue('$constants', constants);
+                type.setValue('$procedures', procedures);
+
+                // compile the procedure
+                var procedure = compiler.compiler.compileProcedure(type, source);
                 expect(procedure).to.exist;  // jshint ignore:line
-                var instructions = compiler.compileProcedure(procedure);
-                expect(instructions).to.exist;  // jshint ignore:line
-                //fs.writeFileSync(basmFile, instructions, 'utf8');
+
+                // assemble the procedure into bytecode
+                compiler.assembler.assembleProcedure(type, procedure);
+
+                //fs.writeFileSync(basmFile, procedure.toString(), 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');
                 expect(expected).to.exist;  // jshint ignore:line
-                expect(instructions).to.equal(expected);
+                expect(source).to.equal(expected);
             }
         });
 
@@ -75,7 +91,7 @@ describe('Bali Virtual Macine™', function() {
                 var documentCitation = api.createDraft(type);
                 var draft = api.retrieveDraft(documentCitation);
                 documentCitation = api.commitDocument(documentCitation, draft);
-                var typeCitation = compiler.compileDocument(api, documentCitation);
+                var typeCitation = compiler.compileType(api, documentCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
                 //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);

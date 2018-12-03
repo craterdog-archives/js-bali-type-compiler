@@ -1,254 +1,359 @@
-1.IfStatement:
-PUSH HANDLER 1.IfStatementHandlers
-
-1.1.ConditionClause:
-LOAD VARIABLE $a
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $b
-EXECUTE $asNumeric ON TARGET
-INVOKE $less WITH 2 PARAMETERS
-EXECUTE $asBoolean ON TARGET
-JUMP TO 1.2.ConditionClause ON FALSE
-
-1.1.1.EvaluateStatement:
-LOAD VARIABLE $b
-STORE VARIABLE $a
-
-1.1.2.EvaluateStatement:
-PUSH LITERAL `{$foo := bar; $bar := baz}`
-STORE VARIABLE $b
-
-1.1.3.ThrowStatement:
-LOAD VARIABLE $exception
-HANDLE EXCEPTION
-
-1.1.ConditionClauseDone:
-JUMP TO 1.IfStatementDone
-
-1.2.ConditionClause:
-LOAD VARIABLE $a
-EXECUTE $asNumeric ON TARGET
-PUSH LITERAL `0`
-EXECUTE $asNumeric ON TARGET
-INVOKE $more WITH 2 PARAMETERS
-EXECUTE $asBoolean ON TARGET
-JUMP TO 1.3.ElseClause ON FALSE
-
-1.2.1.EvaluateStatement:
-PUSH LITERAL `false`
-STORE VARIABLE $$result
-
-1.2.2.EvaluateStatement:
-LOAD VARIABLE $b
-INVOKE $factorial WITH PARAMETER
-STORE VARIABLE $c
-
-1.2.3.ReturnStatement:
-LOAD VARIABLE $c
-HANDLE RESULT
-
-1.2.ConditionClauseDone:
-JUMP TO 1.IfStatementDone
-
-1.3.ElseClause:
-SKIP INSTRUCTION
-
-1.3.1.EvaluateStatement:
-LOAD VARIABLE $b
-INVOKE $catalog
-PUSH LITERAL `$tag`
-LOAD VARIABLE $tag
-INVOKE $setValue WITH 3 PARAMETERS
-INVOKE $parameters WITH PARAMETER
-EXECUTE $find ON TARGET WITH PARAMETERS
-STORE VARIABLE $d
-
-1.3.2.EvaluateStatement:
-PUSH LITERAL `(3, 4i)`
-STORE VARIABLE $$result
-
-1.3.3.ReturnStatement:
-PUSH LITERAL `none`
-HANDLE RESULT
-
-1.3.ElseClauseDone:
-SKIP INSTRUCTION
-
-1.IfStatementDone:
-POP HANDLER
-JUMP TO 1.IfStatementSucceeded
-
-1.IfStatementHandlers:
-SKIP INSTRUCTION
-
-1.4.HandleClause:
-STORE VARIABLE $exception
-LOAD VARIABLE $exception
-LOAD VARIABLE $exception
-INVOKE $catalog
-PUSH LITERAL `$type`
-PUSH LITERAL `$warning`
-INVOKE $setValue WITH 3 PARAMETERS
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 1.5.HandleClause ON FALSE
-POP COMPONENT
-
-1.4.1.EvaluateStatement:
-LOAD VARIABLE $count
-EXECUTE $asNumeric ON TARGET
-PUSH LITERAL `1`
-EXECUTE $asNumeric ON TARGET
-INVOKE $sum WITH 2 PARAMETERS
-STORE VARIABLE $count
-
-1.4.2.EvaluateStatement:
-INVOKE $catalog
-PUSH LITERAL `$message`
-PUSH LITERAL `"Something not too serious happened."`
-INVOKE $setValue WITH 3 PARAMETERS
-PUSH LITERAL `$exception`
-LOAD VARIABLE $exception
-INVOKE $setValue WITH 3 PARAMETERS
-STORE VARIABLE $$result
-
-1.4.HandleClauseDone:
-JUMP TO 1.IfStatementSucceeded
-
-1.5.HandleClause:
-STORE VARIABLE $exception
-LOAD VARIABLE $exception
-LOAD VARIABLE $exception
-INVOKE $catalog
-PUSH LITERAL `$type`
-PUSH LITERAL `$moderate`
-INVOKE $setValue WITH 3 PARAMETERS
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 1.IfStatementFailed ON FALSE
-POP COMPONENT
-
-1.5.1.EvaluateStatement:
-INVOKE $catalog
-PUSH LITERAL `$message`
-PUSH LITERAL `"Something serious happened."`
-INVOKE $setValue WITH 3 PARAMETERS
-PUSH LITERAL `$exception`
-LOAD VARIABLE $exception
-INVOKE $setValue WITH 3 PARAMETERS
-STORE VARIABLE $exception
-
-1.5.2.ThrowStatement:
-LOAD VARIABLE $exception
-HANDLE EXCEPTION
-
-1.5.HandleClauseDone:
-JUMP TO 1.IfStatementSucceeded
-
-1.IfStatementFailed:
-HANDLE EXCEPTION
-
-1.IfStatementSucceeded:
-SKIP INSTRUCTION
-
-2.WhileStatement:
-SKIP INSTRUCTION
-
-2.1.ConditionClause:
-PUSH LITERAL `true`
-EXECUTE $asBoolean ON TARGET
-JUMP TO 2.WhileStatementDone ON FALSE
-
-2.1.1.EvaluateStatement:
-LOAD VARIABLE $bar
-STORE VARIABLE $foo
-
-2.1.2.IfStatement:
-SKIP INSTRUCTION
-
-2.1.2.1.ConditionClause:
-LOAD VARIABLE $foo
-EXECUTE $asBoolean ON TARGET
-JUMP TO 2.1.2.2.ElseClause ON FALSE
-
-2.1.2.1.1.BreakStatement:
-JUMP TO 2.WhileStatementDone
-
-2.1.2.1.ConditionClauseDone:
-JUMP TO 2.1.2.IfStatementDone
-
-2.1.2.2.ElseClause:
-SKIP INSTRUCTION
-
-2.1.2.2.1.WithStatement:
-LOAD VARIABLE $sequence
-EXECUTE $asSequential ON TARGET
-EXECUTE $iterator ON TARGET
-STORE VARIABLE $$iterator-1
-
-2.1.2.2.1.1.ConditionClause:
-LOAD VARIABLE $$iterator-1
-EXECUTE $hasNext ON TARGET
-JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
-LOAD VARIABLE $$iterator-1
-EXECUTE $getNext ON TARGET
-STORE VARIABLE $item
-
-2.1.2.2.1.1.1.SelectStatement:
-LOAD VARIABLE $selection
-STORE VARIABLE $$selector-2
-
-2.1.2.2.1.1.1.1.OptionClause:
-LOAD VARIABLE $$selector-2
-PUSH LITERAL `$first`
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
-
-2.1.2.2.1.1.1.1.1.EvaluateStatement:
-PUSH LITERAL `true`
-STORE VARIABLE $$result
-
-2.1.2.2.1.1.1.1.OptionClauseDone:
-JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-
-2.1.2.2.1.1.1.2.OptionClause:
-LOAD VARIABLE $$selector-2
-PUSH LITERAL `$second`
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
-
-2.1.2.2.1.1.1.2.1.EvaluateStatement:
-PUSH LITERAL `false`
-STORE VARIABLE $$result
-
-2.1.2.2.1.1.1.2.OptionClauseDone:
-JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-
-2.1.2.2.1.1.1.3.ElseClause:
-SKIP INSTRUCTION
-
-2.1.2.2.1.1.1.3.1.ContinueStatement:
-JUMP TO 2.1.2.2.1.1.ConditionClause
-
-2.1.2.2.1.1.1.3.ElseClauseDone:
-JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-
-2.1.2.2.1.1.1.SelectStatementDone:
-SKIP INSTRUCTION
-
-2.1.2.2.1.ConditionRepeat:
-JUMP TO 2.1.2.2.1.1.ConditionClause
-
-2.1.2.2.1.WithStatementDone:
-SKIP INSTRUCTION
-
-2.1.2.2.ElseClauseDone:
-SKIP INSTRUCTION
-
-2.1.2.IfStatementDone:
-SKIP INSTRUCTION
-
-2.ConditionRepeat:
-JUMP TO 2.1.ConditionClause
-
-2.WhileStatementDone:
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: [$foo]
+    $variables: [
+        $$iterator-1
+        $$result
+        $$selector-2
+        $a
+        $b
+        $bar
+        $c
+        $count
+        $d
+        $exception
+        $foo
+        $item
+        $selection
+        $sequence
+        $tag
+    ]
+    $procedures: [
+        $asBoolean
+        $asNumeric
+        $asSequential
+        $find
+        $getNext
+        $hasNext
+        $iterator
+    ]
+    $addresses: [
+        "1.IfStatement": 1
+        "1.1.ConditionClause": 2
+        "1.1.1.EvaluateStatement": 9
+        "1.1.2.EvaluateStatement": 11
+        "1.1.3.ThrowStatement": 13
+        "1.1.ConditionClauseDone": 15
+        "1.2.ConditionClause": 16
+        "1.2.1.EvaluateStatement": 23
+        "1.2.2.EvaluateStatement": 25
+        "1.2.3.ReturnStatement": 28
+        "1.2.ConditionClauseDone": 30
+        "1.3.ElseClause": 31
+        "1.3.1.EvaluateStatement": 32
+        "1.3.2.EvaluateStatement": 40
+        "1.3.3.ReturnStatement": 42
+        "1.3.ElseClauseDone": 44
+        "1.IfStatementDone": 45
+        "1.IfStatementHandlers": 47
+        "1.4.HandleClause": 48
+        "1.4.1.EvaluateStatement": 58
+        "1.4.2.EvaluateStatement": 64
+        "1.4.HandleClauseDone": 72
+        "1.5.HandleClause": 73
+        "1.5.1.EvaluateStatement": 83
+        "1.5.2.ThrowStatement": 91
+        "1.5.HandleClauseDone": 93
+        "1.IfStatementFailed": 94
+        "1.IfStatementSucceeded": 95
+        "2.WhileStatement": 96
+        "2.1.ConditionClause": 97
+        "2.1.1.EvaluateStatement": 100
+        "2.1.2.IfStatement": 102
+        "2.1.2.1.ConditionClause": 103
+        "2.1.2.1.1.BreakStatement": 106
+        "2.1.2.1.ConditionClauseDone": 107
+        "2.1.2.2.ElseClause": 108
+        "2.1.2.2.1.WithStatement": 109
+        "2.1.2.2.1.1.ConditionClause": 113
+        "2.1.2.2.1.1.1.SelectStatement": 119
+        "2.1.2.2.1.1.1.1.OptionClause": 121
+        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 125
+        "2.1.2.2.1.1.1.1.OptionClauseDone": 127
+        "2.1.2.2.1.1.1.2.OptionClause": 128
+        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 132
+        "2.1.2.2.1.1.1.2.OptionClauseDone": 134
+        "2.1.2.2.1.1.1.3.ElseClause": 135
+        "2.1.2.2.1.1.1.3.1.ContinueStatement": 136
+        "2.1.2.2.1.1.1.3.ElseClauseDone": 137
+        "2.1.2.2.1.1.1.SelectStatementDone": 138
+        "2.1.2.2.1.ConditionRepeat": 139
+        "2.1.2.2.1.WithStatementDone": 140
+        "2.1.2.2.ElseClauseDone": 141
+        "2.1.2.IfStatementDone": 142
+        "2.ConditionRepeat": 143
+        "2.WhileStatementDone": 144
+    ]
+    $instructions: "
+        1.IfStatement:
+        PUSH HANDLER 1.IfStatementHandlers
+        
+        1.1.ConditionClause:
+        LOAD VARIABLE $a
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $b
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $less WITH 2 PARAMETERS
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 1.2.ConditionClause ON FALSE
+        
+        1.1.1.EvaluateStatement:
+        LOAD VARIABLE $b
+        STORE VARIABLE $a
+        
+        1.1.2.EvaluateStatement:
+        PUSH LITERAL `{$foo := bar; $bar := baz}`
+        STORE VARIABLE $b
+        
+        1.1.3.ThrowStatement:
+        LOAD VARIABLE $exception
+        HANDLE EXCEPTION
+        
+        1.1.ConditionClauseDone:
+        JUMP TO 1.IfStatementDone
+        
+        1.2.ConditionClause:
+        LOAD VARIABLE $a
+        EXECUTE $asNumeric ON TARGET
+        PUSH LITERAL `0`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $more WITH 2 PARAMETERS
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 1.3.ElseClause ON FALSE
+        
+        1.2.1.EvaluateStatement:
+        PUSH LITERAL `false`
+        STORE VARIABLE $$result
+        
+        1.2.2.EvaluateStatement:
+        LOAD VARIABLE $b
+        INVOKE $factorial WITH PARAMETER
+        STORE VARIABLE $c
+        
+        1.2.3.ReturnStatement:
+        LOAD VARIABLE $c
+        HANDLE RESULT
+        
+        1.2.ConditionClauseDone:
+        JUMP TO 1.IfStatementDone
+        
+        1.3.ElseClause:
+        SKIP INSTRUCTION
+        
+        1.3.1.EvaluateStatement:
+        LOAD VARIABLE $b
+        INVOKE $catalog
+        PUSH LITERAL `$tag`
+        LOAD VARIABLE $tag
+        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $find ON TARGET WITH PARAMETERS
+        STORE VARIABLE $d
+        
+        1.3.2.EvaluateStatement:
+        PUSH LITERAL `(3, 4i)`
+        STORE VARIABLE $$result
+        
+        1.3.3.ReturnStatement:
+        PUSH LITERAL `none`
+        HANDLE RESULT
+        
+        1.3.ElseClauseDone:
+        SKIP INSTRUCTION
+        
+        1.IfStatementDone:
+        POP HANDLER
+        JUMP TO 1.IfStatementSucceeded
+        
+        1.IfStatementHandlers:
+        SKIP INSTRUCTION
+        
+        1.4.HandleClause:
+        STORE VARIABLE $exception
+        LOAD VARIABLE $exception
+        LOAD VARIABLE $exception
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `$warning`
+        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 1.5.HandleClause ON FALSE
+        POP COMPONENT
+        
+        1.4.1.EvaluateStatement:
+        LOAD VARIABLE $count
+        EXECUTE $asNumeric ON TARGET
+        PUSH LITERAL `1`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $sum WITH 2 PARAMETERS
+        STORE VARIABLE $count
+        
+        1.4.2.EvaluateStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$message`
+        PUSH LITERAL `"Something not too serious happened."`
+        INVOKE $setValue WITH 3 PARAMETERS
+        PUSH LITERAL `$exception`
+        LOAD VARIABLE $exception
+        INVOKE $setValue WITH 3 PARAMETERS
+        STORE VARIABLE $$result
+        
+        1.4.HandleClauseDone:
+        JUMP TO 1.IfStatementSucceeded
+        
+        1.5.HandleClause:
+        STORE VARIABLE $exception
+        LOAD VARIABLE $exception
+        LOAD VARIABLE $exception
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `$moderate`
+        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 1.IfStatementFailed ON FALSE
+        POP COMPONENT
+        
+        1.5.1.EvaluateStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$message`
+        PUSH LITERAL `"Something serious happened."`
+        INVOKE $setValue WITH 3 PARAMETERS
+        PUSH LITERAL `$exception`
+        LOAD VARIABLE $exception
+        INVOKE $setValue WITH 3 PARAMETERS
+        STORE VARIABLE $exception
+        
+        1.5.2.ThrowStatement:
+        LOAD VARIABLE $exception
+        HANDLE EXCEPTION
+        
+        1.5.HandleClauseDone:
+        JUMP TO 1.IfStatementSucceeded
+        
+        1.IfStatementFailed:
+        HANDLE EXCEPTION
+        
+        1.IfStatementSucceeded:
+        SKIP INSTRUCTION
+        
+        2.WhileStatement:
+        SKIP INSTRUCTION
+        
+        2.1.ConditionClause:
+        PUSH LITERAL `true`
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 2.WhileStatementDone ON FALSE
+        
+        2.1.1.EvaluateStatement:
+        LOAD VARIABLE $bar
+        STORE VARIABLE $foo
+        
+        2.1.2.IfStatement:
+        SKIP INSTRUCTION
+        
+        2.1.2.1.ConditionClause:
+        LOAD VARIABLE $foo
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 2.1.2.2.ElseClause ON FALSE
+        
+        2.1.2.1.1.BreakStatement:
+        JUMP TO 2.WhileStatementDone
+        
+        2.1.2.1.ConditionClauseDone:
+        JUMP TO 2.1.2.IfStatementDone
+        
+        2.1.2.2.ElseClause:
+        SKIP INSTRUCTION
+        
+        2.1.2.2.1.WithStatement:
+        LOAD VARIABLE $sequence
+        EXECUTE $asSequential ON TARGET
+        EXECUTE $iterator ON TARGET
+        STORE VARIABLE $$iterator-1
+        
+        2.1.2.2.1.1.ConditionClause:
+        LOAD VARIABLE $$iterator-1
+        EXECUTE $hasNext ON TARGET
+        JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
+        LOAD VARIABLE $$iterator-1
+        EXECUTE $getNext ON TARGET
+        STORE VARIABLE $item
+        
+        2.1.2.2.1.1.1.SelectStatement:
+        LOAD VARIABLE $selection
+        STORE VARIABLE $$selector-2
+        
+        2.1.2.2.1.1.1.1.OptionClause:
+        LOAD VARIABLE $$selector-2
+        PUSH LITERAL `$first`
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
+        
+        2.1.2.2.1.1.1.1.1.EvaluateStatement:
+        PUSH LITERAL `true`
+        STORE VARIABLE $$result
+        
+        2.1.2.2.1.1.1.1.OptionClauseDone:
+        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+        
+        2.1.2.2.1.1.1.2.OptionClause:
+        LOAD VARIABLE $$selector-2
+        PUSH LITERAL `$second`
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
+        
+        2.1.2.2.1.1.1.2.1.EvaluateStatement:
+        PUSH LITERAL `false`
+        STORE VARIABLE $$result
+        
+        2.1.2.2.1.1.1.2.OptionClauseDone:
+        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+        
+        2.1.2.2.1.1.1.3.ElseClause:
+        SKIP INSTRUCTION
+        
+        2.1.2.2.1.1.1.3.1.ContinueStatement:
+        JUMP TO 2.1.2.2.1.1.ConditionClause
+        
+        2.1.2.2.1.1.1.3.ElseClauseDone:
+        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+        
+        2.1.2.2.1.1.1.SelectStatementDone:
+        SKIP INSTRUCTION
+        
+        2.1.2.2.1.ConditionRepeat:
+        JUMP TO 2.1.2.2.1.1.ConditionClause
+        
+        2.1.2.2.1.WithStatementDone:
+        SKIP INSTRUCTION
+        
+        2.1.2.2.ElseClauseDone:
+        SKIP INSTRUCTION
+        
+        2.1.2.IfStatementDone:
+        SKIP INSTRUCTION
+        
+        2.ConditionRepeat:
+        JUMP TO 2.1.ConditionClause
+        
+        2.WhileStatementDone:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        202F6004D0026005D002B010D00118106005800428078005600AE000002D
+        6004D0022802D002B014D001181F280580026005A80B80076007E800002D
+        00006005A004280D600FB821A817D8048009280180022804E80000004000
+        005F0000800A600A600AA004280E280FB821B013184948006008D0022803
+        D002B0238008A004280A2810B8212808600AB8218002005F800A600A600A
+        A004280E280BB821B013185E4800A004280A2811B8212808600AB821800A
+        600AE000005FE000000000002806D00118906006800B0000600BD001186C
+        0090008E0000600ED003D00780016001D006188C6001D005800C600D8003
+        60032809B013188028068002008A6003280CB013188728058002008A0000
+        0071008A0000007100000000000000616002E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

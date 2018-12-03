@@ -1,9 +1,26 @@
-1.EvaluateStatement:
-LOAD VARIABLE $bar
-STORE VARIABLE $foo
-
-2.EvaluateStatement:
-PUSH LITERAL `5`
-INVOKE $setValue WITH 3 PARAMETERS
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [$$result, $bar, $foo]
+    $procedures: []
+    $addresses: [
+        "1.EvaluateStatement": 1
+        "2.EvaluateStatement": 3
+    ]
+    $instructions: "
+        1.EvaluateStatement:
+        LOAD VARIABLE $bar
+        STORE VARIABLE $foo
+        
+        2.EvaluateStatement:
+        PUSH LITERAL `5`
+        INVOKE $setValue WITH 3 PARAMETERS
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '600280032801B8216001E800'(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

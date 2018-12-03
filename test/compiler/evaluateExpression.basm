@@ -1,225 +1,315 @@
-1.EvaluateStatement:
-INVOKE $catalog
-PUSH LITERAL `$foo`
-LOAD VARIABLE $bar
-INVOKE $setValue WITH 3 PARAMETERS
-PUSH LITERAL `$baz`
-PUSH LITERAL `5`
-INVOKE $setValue WITH 3 PARAMETERS
-STORE VARIABLE $$result
-
-2.EvaluateStatement:
-LOAD VARIABLE $variable
-STORE VARIABLE $$result
-
-3.EvaluateStatement:
-PUSH LITERAL `13`
-INVOKE $isPrime WITH PARAMETER
-STORE VARIABLE $$result
-
-4.EvaluateStatement:
-LOAD VARIABLE $a
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $b
-EXECUTE $asNumeric ON TARGET
-INVOKE $sum WITH 2 PARAMETERS
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $c
-EXECUTE $asNumeric ON TARGET
-INVOKE $product WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-5.EvaluateStatement:
-LOAD VARIABLE $reference
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-1
-LOAD DOCUMENT $$location-1
-STORE VARIABLE $$result
-
-6.EvaluateStatement:
-LOAD VARIABLE $customer
-EXECUTE $asSequential ON TARGET
-PUSH LITERAL `$order`
-INVOKE $getValue WITH 2 PARAMETERS
-PUSH LITERAL `$item`
-INVOKE $getValue WITH 2 PARAMETERS
-PUSH LITERAL `5`
-INVOKE $getValue WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-7.EvaluateStatement:
-LOAD VARIABLE $list
-INVOKE $list
-LOAD VARIABLE $item
-INVOKE $addItem WITH 2 PARAMETERS
-INVOKE $parameters WITH PARAMETER
-EXECUTE $addItem ON TARGET WITH PARAMETERS
-STORE VARIABLE $$result
-
-8.EvaluateStatement:
-PUSH LITERAL `23`
-EXECUTE $asNumeric ON TARGET
-INVOKE $factorial WITH PARAMETER
-STORE VARIABLE $$result
-
-9.EvaluateStatement:
-PUSH LITERAL `2`
-EXECUTE $asNumeric ON TARGET
-PUSH LITERAL `8`
-EXECUTE $asNumeric ON TARGET
-INVOKE $exponential WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-10.EvaluateStatement:
-PUSH LITERAL `pi`
-EXECUTE $asNumeric ON TARGET
-INVOKE $negative WITH PARAMETER
-STORE VARIABLE $$result
-
-11.EvaluateStatement:
-PUSH LITERAL `5`
-EXECUTE $asNumeric ON TARGET
-INVOKE $inverse WITH PARAMETER
-STORE VARIABLE $$result
-
-12.EvaluateStatement:
-PUSH LITERAL `(3, 4i)`
-EXECUTE $asNumeric ON TARGET
-INVOKE $conjugate WITH PARAMETER
-STORE VARIABLE $$result
-
-13.EvaluateStatement:
-LOAD VARIABLE $x
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $y
-EXECUTE $asNumeric ON TARGET
-INVOKE $product WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-14.EvaluateStatement:
-LOAD VARIABLE $a
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $b
-EXECUTE $asNumeric ON TARGET
-INVOKE $quotient WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-15.EvaluateStatement:
-LOAD VARIABLE $c
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $d
-EXECUTE $asNumeric ON TARGET
-INVOKE $remainder WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-16.EvaluateStatement:
-LOAD VARIABLE $x
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $y
-EXECUTE $asNumeric ON TARGET
-INVOKE $sum WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-17.EvaluateStatement:
-LOAD VARIABLE $w
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $z
-EXECUTE $asNumeric ON TARGET
-INVOKE $difference WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-18.EvaluateStatement:
-PUSH LITERAL `(3, 4i)`
-EXECUTE $asNumeric ON TARGET
-INVOKE $magnitude WITH PARAMETER
-STORE VARIABLE $$result
-
-19.EvaluateStatement:
-LOAD VARIABLE $a
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $b
-EXECUTE $asNumeric ON TARGET
-INVOKE $less WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-20.EvaluateStatement:
-LOAD VARIABLE $c
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $d
-EXECUTE $asNumeric ON TARGET
-INVOKE $equal WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-21.EvaluateStatement:
-LOAD VARIABLE $f
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $g
-EXECUTE $asNumeric ON TARGET
-INVOKE $more WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-22.EvaluateStatement:
-LOAD VARIABLE $h
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $j
-EXECUTE $asNumeric ON TARGET
-INVOKE $is WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-23.EvaluateStatement:
-LOAD VARIABLE $k
-EXECUTE $asNumeric ON TARGET
-LOAD VARIABLE $m
-EXECUTE $asNumeric ON TARGET
-INVOKE $matches WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-24.EvaluateStatement:
-LOAD VARIABLE $p
-EXECUTE $asLogical ON TARGET
-INVOKE $complement WITH PARAMETER
-STORE VARIABLE $$result
-
-25.EvaluateStatement:
-LOAD VARIABLE $a
-EXECUTE $asLogical ON TARGET
-LOAD VARIABLE $b
-EXECUTE $asLogical ON TARGET
-INVOKE $and WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-26.EvaluateStatement:
-LOAD VARIABLE $c
-EXECUTE $asLogical ON TARGET
-LOAD VARIABLE $d
-EXECUTE $asLogical ON TARGET
-INVOKE $sans WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-27.EvaluateStatement:
-LOAD VARIABLE $f
-EXECUTE $asLogical ON TARGET
-LOAD VARIABLE $g
-EXECUTE $asLogical ON TARGET
-INVOKE $xor WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-28.EvaluateStatement:
-LOAD VARIABLE $h
-EXECUTE $asLogical ON TARGET
-LOAD VARIABLE $j
-EXECUTE $asLogical ON TARGET
-INVOKE $or WITH 2 PARAMETERS
-STORE VARIABLE $$result
-
-29.EvaluateStatement:
-LOAD VARIABLE $foo
-STORE VARIABLE $$value-2
-LOAD VARIABLE $$value-2
-EXECUTE $asBoolean ON TARGET
-LOAD VARIABLE $$value-2
-PUSH LITERAL `5`
-INVOKE $default WITH 3 PARAMETERS
-STORE VARIABLE $$result
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [
+        $$location-1
+        $$result
+        $$value-2
+        $a
+        $b
+        $bar
+        $c
+        $customer
+        $d
+        $f
+        $foo
+        $g
+        $h
+        $item
+        $j
+        $k
+        $list
+        $m
+        $p
+        $reference
+        $variable
+        $w
+        $x
+        $y
+        $z
+    ]
+    $procedures: [
+        $addItem
+        $asBoolean
+        $asLogical
+        $asNumeric
+        $asReference
+        $asSequential
+    ]
+    $addresses: [
+        "1.EvaluateStatement": 1
+        "2.EvaluateStatement": 9
+        "3.EvaluateStatement": 11
+        "4.EvaluateStatement": 14
+        "5.EvaluateStatement": 24
+        "6.EvaluateStatement": 29
+        "7.EvaluateStatement": 38
+        "8.EvaluateStatement": 45
+        "9.EvaluateStatement": 49
+        "10.EvaluateStatement": 55
+        "11.EvaluateStatement": 59
+        "12.EvaluateStatement": 63
+        "13.EvaluateStatement": 67
+        "14.EvaluateStatement": 73
+        "15.EvaluateStatement": 79
+        "16.EvaluateStatement": 85
+        "17.EvaluateStatement": 91
+        "18.EvaluateStatement": 97
+        "19.EvaluateStatement": 101
+        "20.EvaluateStatement": 107
+        "21.EvaluateStatement": 113
+        "22.EvaluateStatement": 119
+        "23.EvaluateStatement": 125
+        "24.EvaluateStatement": 131
+        "25.EvaluateStatement": 135
+        "26.EvaluateStatement": 141
+        "27.EvaluateStatement": 147
+        "28.EvaluateStatement": 153
+        "29.EvaluateStatement": 159
+    ]
+    $instructions: "
+        1.EvaluateStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$foo`
+        LOAD VARIABLE $bar
+        INVOKE $setValue WITH 3 PARAMETERS
+        PUSH LITERAL `$baz`
+        PUSH LITERAL `5`
+        INVOKE $setValue WITH 3 PARAMETERS
+        STORE VARIABLE $$result
+        
+        2.EvaluateStatement:
+        LOAD VARIABLE $variable
+        STORE VARIABLE $$result
+        
+        3.EvaluateStatement:
+        PUSH LITERAL `13`
+        INVOKE $isPrime WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        4.EvaluateStatement:
+        LOAD VARIABLE $a
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $b
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $sum WITH 2 PARAMETERS
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $c
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $product WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        5.EvaluateStatement:
+        LOAD VARIABLE $reference
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-1
+        LOAD DOCUMENT $$location-1
+        STORE VARIABLE $$result
+        
+        6.EvaluateStatement:
+        LOAD VARIABLE $customer
+        EXECUTE $asSequential ON TARGET
+        PUSH LITERAL `$order`
+        INVOKE $getValue WITH 2 PARAMETERS
+        PUSH LITERAL `$item`
+        INVOKE $getValue WITH 2 PARAMETERS
+        PUSH LITERAL `5`
+        INVOKE $getValue WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        7.EvaluateStatement:
+        LOAD VARIABLE $list
+        INVOKE $list
+        LOAD VARIABLE $item
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $addItem ON TARGET WITH PARAMETERS
+        STORE VARIABLE $$result
+        
+        8.EvaluateStatement:
+        PUSH LITERAL `23`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $factorial WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        9.EvaluateStatement:
+        PUSH LITERAL `2`
+        EXECUTE $asNumeric ON TARGET
+        PUSH LITERAL `8`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $exponential WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        10.EvaluateStatement:
+        PUSH LITERAL `pi`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $negative WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        11.EvaluateStatement:
+        PUSH LITERAL `5`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $inverse WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        12.EvaluateStatement:
+        PUSH LITERAL `(3, 4i)`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $conjugate WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        13.EvaluateStatement:
+        LOAD VARIABLE $x
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $y
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $product WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        14.EvaluateStatement:
+        LOAD VARIABLE $a
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $b
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $quotient WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        15.EvaluateStatement:
+        LOAD VARIABLE $c
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $d
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $remainder WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        16.EvaluateStatement:
+        LOAD VARIABLE $x
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $y
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $sum WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        17.EvaluateStatement:
+        LOAD VARIABLE $w
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $z
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $difference WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        18.EvaluateStatement:
+        PUSH LITERAL `(3, 4i)`
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $magnitude WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        19.EvaluateStatement:
+        LOAD VARIABLE $a
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $b
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $less WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        20.EvaluateStatement:
+        LOAD VARIABLE $c
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $d
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $equal WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        21.EvaluateStatement:
+        LOAD VARIABLE $f
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $g
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $more WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        22.EvaluateStatement:
+        LOAD VARIABLE $h
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $j
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $is WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        23.EvaluateStatement:
+        LOAD VARIABLE $k
+        EXECUTE $asNumeric ON TARGET
+        LOAD VARIABLE $m
+        EXECUTE $asNumeric ON TARGET
+        INVOKE $matches WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        24.EvaluateStatement:
+        LOAD VARIABLE $p
+        EXECUTE $asLogical ON TARGET
+        INVOKE $complement WITH PARAMETER
+        STORE VARIABLE $$result
+        
+        25.EvaluateStatement:
+        LOAD VARIABLE $a
+        EXECUTE $asLogical ON TARGET
+        LOAD VARIABLE $b
+        EXECUTE $asLogical ON TARGET
+        INVOKE $and WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        26.EvaluateStatement:
+        LOAD VARIABLE $c
+        EXECUTE $asLogical ON TARGET
+        LOAD VARIABLE $d
+        EXECUTE $asLogical ON TARGET
+        INVOKE $sans WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        27.EvaluateStatement:
+        LOAD VARIABLE $f
+        EXECUTE $asLogical ON TARGET
+        LOAD VARIABLE $g
+        EXECUTE $asLogical ON TARGET
+        INVOKE $xor WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        28.EvaluateStatement:
+        LOAD VARIABLE $h
+        EXECUTE $asLogical ON TARGET
+        LOAD VARIABLE $j
+        EXECUTE $asLogical ON TARGET
+        INVOKE $or WITH 2 PARAMETERS
+        STORE VARIABLE $$result
+        
+        29.EvaluateStatement:
+        LOAD VARIABLE $foo
+        STORE VARIABLE $$value-2
+        LOAD VARIABLE $$value-2
+        EXECUTE $asBoolean ON TARGET
+        LOAD VARIABLE $$value-2
+        PUSH LITERAL `5`
+        INVOKE $default WITH 3 PARAMETERS
+        STORE VARIABLE $$result
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        A00428096006B82128082805B8218002601580022802FFFF80026004D004
+        6005D004B023D0046007D004B01880026014D0058001780180026008D006
+        280BB00D280AB00D2805B00D80026011A011600EB001A817D80180022804
+        D004A80B80022803D0042806D004B00A80022807D004A81580022805D004
+        A80E80022801D004A80680026017D0046018D004B01880026004D0046005
+        D004B01A80026007D0046009D004B01D80026017D0046018D004B0238002
+        6016D0046019D004B00880022801D004A81280026004D0046005D004B010
+        80026007D0046009D004B0098002600AD004600CD004B0148002600DD004
+        600FD004B00F80026010D0046012D004B01380026013D003A80580026004
+        D0036005D003B00380026007D0036009D003B01E8002600AD003600CD003
+        B0248002600DD003600FD003B0168002600B80036003D00260032805B807
+        80026002E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

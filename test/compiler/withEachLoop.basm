@@ -1,46 +1,88 @@
-1.WithStatement:
-PUSH LITERAL `$sequence`
-EXECUTE $asSequential ON TARGET
-EXECUTE $iterator ON TARGET
-STORE VARIABLE $$iterator-1
-
-1.1.ConditionClause:
-LOAD VARIABLE $$iterator-1
-EXECUTE $hasNext ON TARGET
-JUMP TO 1.WithStatementDone ON FALSE
-LOAD VARIABLE $$iterator-1
-EXECUTE $getNext ON TARGET
-STORE VARIABLE $symbol
-
-1.1.1.EvaluateStatement:
-PUSH LITERAL `true`
-STORE VARIABLE $x
-
-1.1.2.IfStatement:
-SKIP INSTRUCTION
-
-1.1.2.1.ConditionClause:
-LOAD VARIABLE $x
-EXECUTE $asBoolean ON TARGET
-JUMP TO 1.1.2.IfStatementDone ON FALSE
-
-1.1.2.1.1.EvaluateStatement:
-PUSH LITERAL `none`
-STORE VARIABLE $y
-
-1.1.2.1.2.ContinueStatement:
-JUMP TO 1.1.ConditionClause
-
-1.1.2.IfStatementDone:
-SKIP INSTRUCTION
-
-1.1.3.EvaluateStatement:
-PUSH LITERAL `any`
-STORE VARIABLE $z
-
-1.ConditionRepeat:
-JUMP TO 1.1.ConditionClause
-
-1.WithStatementDone:
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [
+        $$iterator-1
+        $$result
+        $symbol
+        $x
+        $y
+        $z
+    ]
+    $procedures: [
+        $asBoolean
+        $asSequential
+        $getNext
+        $hasNext
+        $iterator
+    ]
+    $addresses: [
+        "1.WithStatement": 1
+        "1.1.ConditionClause": 5
+        "1.1.1.EvaluateStatement": 11
+        "1.1.2.IfStatement": 13
+        "1.1.2.1.ConditionClause": 14
+        "1.1.2.1.1.EvaluateStatement": 17
+        "1.1.2.1.2.ContinueStatement": 19
+        "1.1.2.IfStatementDone": 20
+        "1.1.3.EvaluateStatement": 21
+        "1.ConditionRepeat": 23
+        "1.WithStatementDone": 24
+    ]
+    $instructions: "
+        1.WithStatement:
+        PUSH LITERAL `$sequence`
+        EXECUTE $asSequential ON TARGET
+        EXECUTE $iterator ON TARGET
+        STORE VARIABLE $$iterator-1
+        
+        1.1.ConditionClause:
+        LOAD VARIABLE $$iterator-1
+        EXECUTE $hasNext ON TARGET
+        JUMP TO 1.WithStatementDone ON FALSE
+        LOAD VARIABLE $$iterator-1
+        EXECUTE $getNext ON TARGET
+        STORE VARIABLE $symbol
+        
+        1.1.1.EvaluateStatement:
+        PUSH LITERAL `true`
+        STORE VARIABLE $x
+        
+        1.1.2.IfStatement:
+        SKIP INSTRUCTION
+        
+        1.1.2.1.ConditionClause:
+        LOAD VARIABLE $x
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 1.1.2.IfStatementDone ON FALSE
+        
+        1.1.2.1.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $y
+        
+        1.1.2.1.2.ContinueStatement:
+        JUMP TO 1.1.ConditionClause
+        
+        1.1.2.IfStatementDone:
+        SKIP INSTRUCTION
+        
+        1.1.3.EvaluateStatement:
+        PUSH LITERAL `any`
+        STORE VARIABLE $z
+        
+        1.ConditionRepeat:
+        JUMP TO 1.1.ConditionClause
+        
+        1.WithStatementDone:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        2804D002D00580016001D00418186001D00380032803800400006004D001
+        181428028005000500002801800600056002E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

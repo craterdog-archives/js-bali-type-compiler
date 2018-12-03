@@ -1,20 +1,46 @@
-1.WaitStatement:
-PUSH LITERAL `$message`
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$queue-1
-LOAD MESSAGE $$queue-1
-STORE VARIABLE $message
-
-2.WaitStatement:
-LOAD VARIABLE $messages
-PUSH LITERAL `$foo`
-INVOKE $getValue WITH 2 PARAMETERS
-PUSH LITERAL `5`
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$queue-2
-LOAD MESSAGE $$queue-2
-INVOKE $setValue WITH 3 PARAMETERS
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [
+        $$queue-1
+        $$queue-2
+        $$result
+        $message
+        $messages
+    ]
+    $procedures: [$asReference]
+    $addresses: [
+        "1.WaitStatement": 1
+        "2.WaitStatement": 7
+    ]
+    $instructions: "
+        1.WaitStatement:
+        PUSH LITERAL `$message`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$queue-1
+        LOAD MESSAGE $$queue-1
+        STORE VARIABLE $message
+        
+        2.WaitStatement:
+        LOAD VARIABLE $messages
+        PUSH LITERAL `$foo`
+        INVOKE $getValue WITH 2 PARAMETERS
+        PUSH LITERAL `5`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$queue-2
+        LOAD MESSAGE $$queue-2
+        INVOKE $setValue WITH 3 PARAMETERS
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        28042802D00180016801800460052803B00D28012802D00180026802B821
+        6003E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

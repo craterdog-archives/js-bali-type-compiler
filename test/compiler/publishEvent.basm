@@ -1,14 +1,30 @@
-1.PublishStatement:
-INVOKE $catalog
-PUSH LITERAL `$type`
-PUSH LITERAL `$changeEvent`
-INVOKE $setValue WITH 3 PARAMETERS
-PUSH LITERAL `$key`
-PUSH LITERAL `$foo`
-INVOKE $setValue WITH 3 PARAMETERS
-PUSH LITERAL `$value`
-PUSH LITERAL `5`
-INVOKE $setValue WITH 3 PARAMETERS
-STORE MESSAGE $$eventQueue
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [$$eventQueue, $$result]
+    $procedures: []
+    $addresses: [
+        "1.PublishStatement": 1
+    ]
+    $instructions: "
+        1.PublishStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `$changeEvent`
+        INVOKE $setValue WITH 3 PARAMETERS
+        PUSH LITERAL `$key`
+        PUSH LITERAL `$foo`
+        INVOKE $setValue WITH 3 PARAMETERS
+        PUSH LITERAL `$value`
+        PUSH LITERAL `5`
+        INVOKE $setValue WITH 3 PARAMETERS
+        STORE MESSAGE $$eventQueue
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: 'A00428052802B82128042803B82128062801B82188016002E800'(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

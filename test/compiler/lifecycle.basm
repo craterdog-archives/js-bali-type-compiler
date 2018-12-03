@@ -1,59 +1,101 @@
-1.CheckoutStatement:
-PUSH LITERAL `$document`
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-1
-LOAD DOCUMENT $$location-1
-STORE VARIABLE $document
-
-2.SaveStatement:
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-2
-LOAD VARIABLE $document
-STORE DRAFT $$location-2
-
-3.CommitStatement:
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-3
-LOAD VARIABLE $document
-STORE DOCUMENT $$location-3
-
-4.CheckoutStatement:
-LOAD VARIABLE $documents
-LOAD VARIABLE $i
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-4
-LOAD DOCUMENT $$location-4
-INVOKE $setValue WITH 3 PARAMETERS
-
-5.SaveStatement:
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-5
-LOAD VARIABLE $documents
-EXECUTE $asSequential ON TARGET
-LOAD VARIABLE $i
-INVOKE $getValue WITH 2 PARAMETERS
-STORE DRAFT $$location-5
-
-6.CommitStatement:
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-6
-LOAD VARIABLE $documents
-EXECUTE $asSequential ON TARGET
-LOAD VARIABLE $i
-INVOKE $getValue WITH 2 PARAMETERS
-STORE DOCUMENT $$location-6
-
-7.DiscardStatement:
-PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-EXECUTE $asReference ON TARGET
-STORE VARIABLE $$location-7
-PUSH LITERAL `none`
-STORE DRAFT $$location-7
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [
+        $$location-1
+        $$location-2
+        $$location-3
+        $$location-4
+        $$location-5
+        $$location-6
+        $$location-7
+        $$result
+        $document
+        $documents
+        $i
+    ]
+    $procedures: [
+        $asReference
+        $asSequential
+    ]
+    $addresses: [
+        "1.CheckoutStatement": 1
+        "2.SaveStatement": 7
+        "3.CommitStatement": 12
+        "4.CheckoutStatement": 17
+        "5.SaveStatement": 24
+        "6.CommitStatement": 32
+        "7.DiscardStatement": 40
+    ]
+    $instructions: "
+        1.CheckoutStatement:
+        PUSH LITERAL `$document`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-1
+        LOAD DOCUMENT $$location-1
+        STORE VARIABLE $document
+        
+        2.SaveStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-2
+        LOAD VARIABLE $document
+        STORE DRAFT $$location-2
+        
+        3.CommitStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-3
+        LOAD VARIABLE $document
+        STORE DOCUMENT $$location-3
+        
+        4.CheckoutStatement:
+        LOAD VARIABLE $documents
+        LOAD VARIABLE $i
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-4
+        LOAD DOCUMENT $$location-4
+        INVOKE $setValue WITH 3 PARAMETERS
+        
+        5.SaveStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-5
+        LOAD VARIABLE $documents
+        EXECUTE $asSequential ON TARGET
+        LOAD VARIABLE $i
+        INVOKE $getValue WITH 2 PARAMETERS
+        STORE DRAFT $$location-5
+        
+        6.CommitStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-6
+        LOAD VARIABLE $documents
+        EXECUTE $asSequential ON TARGET
+        LOAD VARIABLE $i
+        INVOKE $getValue WITH 2 PARAMETERS
+        STORE DOCUMENT $$location-6
+        
+        7.DiscardStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        EXECUTE $asReference ON TARGET
+        STORE VARIABLE $$location-7
+        PUSH LITERAL `none`
+        STORE DRAFT $$location-7
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        28032802D0018001780180092802D0018002600990022802D00180036009
+        9803600A600B2802D00180047804B8212802D0018005600AD002600BB00D
+        90052802D0018006600AD002600BB00D98062802D0018007280190076008
+        E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

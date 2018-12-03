@@ -36,7 +36,7 @@ module.exports = function(grunt) {
       build: [
         'dist/*',
         'test/config/repository/types/*',
-        '!test/config/repository/types/#TXGBQGFYQKCQY1ZAJY5J3S1Y8WV27XBZv1.bdoc',
+        '!test/config/repository/types/#L3GKMG6A8Q6JJDNMZY513AGZ0G78HSTLv1.bdoc',
         'test/config/repository/documents/*',
         'test/config/repository/drafts/*',
         'test/config/repository/queues/*'

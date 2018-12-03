@@ -1,43 +1,71 @@
-1.SelectStatement:
-PUSH LITERAL `$selection`
-STORE VARIABLE $$selector-1
-
-1.1.OptionClause:
-LOAD VARIABLE $$selector-1
-PUSH LITERAL `"alpha"`
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 1.2.OptionClause ON FALSE
-
-1.1.1.EvaluateStatement:
-PUSH LITERAL `none`
-STORE VARIABLE $$result
-
-1.1.OptionClauseDone:
-JUMP TO 1.SelectStatementDone
-
-1.2.OptionClause:
-LOAD VARIABLE $$selector-1
-PUSH LITERAL `"beta"`
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 1.3.OptionClause ON FALSE
-
-1.2.1.EvaluateStatement:
-PUSH LITERAL `none`
-STORE VARIABLE $$result
-
-1.2.OptionClauseDone:
-JUMP TO 1.SelectStatementDone
-
-1.3.OptionClause:
-LOAD VARIABLE $$selector-1
-PUSH LITERAL `"gamma"`
-INVOKE $matches WITH 2 PARAMETERS
-JUMP TO 1.SelectStatementDone ON FALSE
-
-1.3.1.EvaluateStatement:
-PUSH LITERAL `none`
-STORE VARIABLE $$result
-
-1.SelectStatementDone:
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [$$result, $$selector-1]
+    $procedures: []
+    $addresses: [
+        "1.SelectStatement": 1
+        "1.1.OptionClause": 3
+        "1.1.1.EvaluateStatement": 7
+        "1.1.OptionClauseDone": 9
+        "1.2.OptionClause": 10
+        "1.2.1.EvaluateStatement": 14
+        "1.2.OptionClauseDone": 16
+        "1.3.OptionClause": 17
+        "1.3.1.EvaluateStatement": 21
+        "1.SelectStatementDone": 23
+    ]
+    $instructions: "
+        1.SelectStatement:
+        PUSH LITERAL `$selection`
+        STORE VARIABLE $$selector-1
+        
+        1.1.OptionClause:
+        LOAD VARIABLE $$selector-1
+        PUSH LITERAL `"alpha"`
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 1.2.OptionClause ON FALSE
+        
+        1.1.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.1.OptionClauseDone:
+        JUMP TO 1.SelectStatementDone
+        
+        1.2.OptionClause:
+        LOAD VARIABLE $$selector-1
+        PUSH LITERAL `"beta"`
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 1.3.OptionClause ON FALSE
+        
+        1.2.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.2.OptionClauseDone:
+        JUMP TO 1.SelectStatementDone
+        
+        1.3.OptionClause:
+        LOAD VARIABLE $$selector-1
+        PUSH LITERAL `"gamma"`
+        INVOKE $matches WITH 2 PARAMETERS
+        JUMP TO 1.SelectStatementDone ON FALSE
+        
+        1.3.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.SelectStatementDone:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '
+        2802800260022803B013180A28018001001760022804B013181128018001
+        001760022805B0131817280180016001E800
+    '(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

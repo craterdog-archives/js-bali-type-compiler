@@ -1,86 +1,82 @@
 [
-    $function1: [
-        $constants: []
-        $parameters: []
-        $literals: [true]
-        $variables: []
-        $procedures: []
-        $addresses: [
-            "1.ReturnStatement": 1
+    $literals: [true]
+    $constants: []
+    $procedures: [
+        $function1: [
+            $parameters: []
+            $variables: []
+            $procedures: []
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+            "(
+                $mediatype: "application/basm"
+            )
+            $bytecode: '2801E800'(
+                $base: 16
+                $mediatype: "application/bcod"
+            )
         ]
-        $intructions: "
-            1.ReturnStatement:
-            PUSH LITERAL `true`
-            HANDLE RESULT
-        "(
-            $mediatype: "application/basm"
-        )
-        $bytecode: '2801E800'(
-            $base: 16
-            $mediatype: "application/bcod"
-        )
-    ]
-    $function2: [
-        $constants: []
-        $parameters: [$first]
-        $literals: []
-        $variables: [$first]
-        $procedures: []
-        $addresses: [
-            "1.ReturnStatement": 1
+        $function2: [
+            $parameters: [$first]
+            $variables: [$first]
+            $procedures: []
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $first
+                HANDLE RESULT
+            "(
+                $mediatype: "application/basm"
+            )
+            $bytecode: '6001E800'(
+                $base: 16
+                $mediatype: "application/bcod"
+            )
         ]
-        $intructions: "
-            1.ReturnStatement:
-            LOAD VARIABLE $first
-            HANDLE RESULT
-        "(
-            $mediatype: "application/basm"
-        )
-        $bytecode: '6001E800'(
-            $base: 16
-            $mediatype: "application/bcod"
-        )
-    ]
-    $message1: [
-        $constants: []
-        $parameters: []
-        $literals: []
-        $variables: [$target]
-        $procedures: []
-        $addresses: [
-            "1.ReturnStatement": 1
+        $message1: [
+            $parameters: []
+            $variables: [$target]
+            $procedures: []
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                HANDLE RESULT
+            "(
+                $mediatype: "application/basm"
+            )
+            $bytecode: '6001E800'(
+                $base: 16
+                $mediatype: "application/bcod"
+            )
         ]
-        $intructions: "
-            1.ReturnStatement:
-            LOAD VARIABLE $target
-            HANDLE RESULT
-        "(
-            $mediatype: "application/basm"
-        )
-        $bytecode: '6001E800'(
-            $base: 16
-            $mediatype: "application/bcod"
-        )
-    ]
-    $message2: [
-        $constants: []
-        $parameters: [$first, $second]
-        $literals: []
-        $variables: [$second]
-        $procedures: []
-        $addresses: [
-            "1.ReturnStatement": 1
+        $message2: [
+            $parameters: [$first, $second]
+            $variables: [$second]
+            $procedures: []
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $second
+                HANDLE RESULT
+            "(
+                $mediatype: "application/basm"
+            )
+            $bytecode: '6001E800'(
+                $base: 16
+                $mediatype: "application/bcod"
+            )
         ]
-        $intructions: "
-            1.ReturnStatement:
-            LOAD VARIABLE $second
-            HANDLE RESULT
-        "(
-            $mediatype: "application/basm"
-        )
-        $bytecode: '6001E800'(
-            $base: 16
-            $mediatype: "application/bcod"
-        )
     ]
 ]

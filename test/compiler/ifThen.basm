@@ -1,15 +1,34 @@
-1.IfStatement:
-SKIP INSTRUCTION
-
-1.1.ConditionClause:
-PUSH LITERAL `true`
-EXECUTE $asBoolean ON TARGET
-JUMP TO 1.IfStatementDone ON FALSE
-
-1.1.1.EvaluateStatement:
-LOAD VARIABLE $yes
-STORE VARIABLE $$result
-
-1.IfStatementDone:
-LOAD VARIABLE $$result
-HANDLE RESULT
+[
+    $parameters: []
+    $variables: [$$result, $yes]
+    $procedures: [$asBoolean]
+    $addresses: [
+        "1.IfStatement": 1
+        "1.1.ConditionClause": 2
+        "1.1.1.EvaluateStatement": 5
+        "1.IfStatementDone": 7
+    ]
+    $instructions: "
+        1.IfStatement:
+        SKIP INSTRUCTION
+        
+        1.1.ConditionClause:
+        PUSH LITERAL `true`
+        EXECUTE $asBoolean ON TARGET
+        JUMP TO 1.IfStatementDone ON FALSE
+        
+        1.1.1.EvaluateStatement:
+        LOAD VARIABLE $yes
+        STORE VARIABLE $$result
+        
+        1.IfStatementDone:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "(
+        $mediatype: "application/basm"
+    )
+    $bytecode: '00002801D0011807600280016001E800'(
+        $base: 16
+        $mediatype: "application/bcod"
+    )
+]

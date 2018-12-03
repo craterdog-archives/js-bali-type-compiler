@@ -17,7 +17,7 @@
  */
 var bali = require('bali-component-framework');
 var utilities = require('../utilities');
-var assembler = require('./Assembler').assembler;
+var EOL = '\n';  // POSIX end of line character
 
 
 // PUBLIC FUNCTIONS
@@ -38,140 +38,45 @@ exports.compiler = new Compiler();
 
 
 /**
- * This method compiles the document that is cited by the specified citation.
+ * This method compiles the source code for a procedure into a compilation context
+ * containing the corresponding assembly instructions for the Bali Virtual Machine™.
  * 
- * @param {Object} nebula A singleton object that implements the Bali Nebula API™.
- * @param {Catalog} citation A citation referencing the document to be compiled.
- * @returns {Catalog} A document citation for the resulting compiled type document.
+ * @param {Catalog} type The type context for the document being compiled.
+ * @param {Source} source The source code for the procedure.
+ * @returns {Catalog} The compiled context for the procedure.
  */
-Compiler.prototype.compileDocument = function(nebula, citation) {
-    // retrieve the document
-    var document = nebula.retrieveDocument(citation);
+Compiler.prototype.compileProcedure = function(type, source) {
+    var context = new bali.Catalog();
+    var procedure = source.procedure;
 
-    // traverse the ancestry for the document (child -> parent)
-    var ancestry = new bali.Stack();
-    var parent = document.getValue('$parent');
-    while (parent) {
-        ancestry.addItem(parent);
-        parent = nebula.retrieveDocument(parent).getValue('$parent');
-    }
-
-    // extract the procedures for the ancestors (parent -> child)
-    var type = new bali.Catalog();
-    var iterator = ancestry.getIterator();
-    while (iterator.hasNext()) {
-        var ancestor = iterator.getNext();
-        type.addItems(nebula.retrieveType(ancestor).getValue('$procedures'));
-    }
-
-    // compile each procedure defined in the document
-    iterator = document.getValue('$procedures').getIterator();
-    while (iterator.hasNext()) {
-
-        // retrieve the source code for the procedure
-        var association = iterator.getNext();
-        var procedureName = association.key.toString();
-        var source = association.value.getValue('$source');
-        var procedure = source.procedure;
-
-        // compile the source code
-        var instructions = this.compileProcedure(procedure);
-        instructions = utilities.parser.parseDocument(instructions);
-
-        // create the context required by the assembler
-        var context = new bali.Catalog();
-        var constants = new bali.Set();
-        context.setValue('$constants', constants);
-        // TODO: fill in the constants from the type analysis
-        var parameters = new bali.List();
-        context.setValue('$parameters', parameters);
-        if (source.parameters) {
-            var collection = source.parameters.collection;
-            if (collection.type === bali.types.CATALOG) {
-                parameters.addItems(collection.getKeys());
-            } else {
-                parameters.addItems(collection);
-            }
+    // extract the parameter names for the procedure
+    var parameters = new bali.List();
+    if (source.parameters) {
+        var collection = source.parameters.collection;
+        if (collection.type === bali.types.CATALOG) {
+            parameters.addItems(collection.getKeys());
+        } else {
+            parameters.addItems(collection);
         }
-
-        // assemble the instructions
-        assembler.analyzeInstructions(context, instructions);
-        var bytecode = assembler.assembleInstructions(context, instructions);
-
-        // format the instructions and add to the context
-        var formatter = new utilities.Formatter('    ');
-        instructions = bali.parser.parseDocument('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
-        context.setValue('$intructions', instructions);
-
-        // format the bytecode and add to the context
-        var base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
-        bytecode = bali.parser.parseDocument("'" + base16 + EOL + "            '" + '($base: 16, $mediatype: "application/bcod")');
-        context.setValue('$bytecode', bytecode);
-
-        // record the context for the procedure in the type
-        type.setValue(procedureName, context);
     }
+    context.setValue('$parameters', parameters);
+    context.setValue('$variables', new bali.Set());
+    context.setValue('$procedures', new bali.Set());
+    context.setValue('$addresses', new bali.Catalog());
 
-    // checkin the newly compiled type
-    var typeCitation = nebula.commitType(citation, type);
-
-    return typeCitation;
-};
-        
-
-/**
- * This function traverses a parse tree structure containing a Bali procedure
- * generating the corresponding assembly instructions for the Bali Virtual
- * Machine™.
- * 
- * @param {List} procedure The parse tree structure for the procedure.
- * @returns {String} The assembly code instructions.
- */
-Compiler.prototype.compileProcedure = function(procedure) {
-    var visitor = new CompilingVisitor();
+    // compile the procedure into assembly instructions
+    var visitor = new CompilingVisitor(type, context);
     procedure.acceptVisitor(visitor);
+
+    // format the instructions and add to the procedure context
     var instructions = visitor.getInstructions();
-    return instructions;
+    instructions = utilities.parser.parseDocument(instructions);
+    var formatter = new utilities.Formatter('    ');
+    instructions = bali.parser.parseDocument('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
+    context.setValue('$instructions', instructions);
+
+    return context;
 };
-
-
-// PRIVATE FUNCTIONS
-
-var EOL = '\n';  // POSIX end of line character
-
-
-/*
- * This function defines a missing conversion function for the standard String class.
- */
-String.prototype.toTitleCase = function () {
-    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
-
-/*
- * This function defines a missing stack function for the standard Array class.
- * The push(item) and pop() methods are already defined.
- */
-Array.prototype.peek = function() {
-    return this[this.length - 1];
-};
-
-/*
- * This function returns the subclauses of a statement in an array.
- * 
- * @param {Object} statement The statement containing zero or more subclauses.
- * @returns {Array} An array containing the subclauses for the statement.
- */
-function getSubClauses(statement) {
-    var subClauses = [];
-    var iterator = statement.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        if (item.type === bali.types.BLOCK) {
-            subClauses.push(item);
-        }
-    }
-    return subClauses;
-}
 
 
 // PRIVATE CLASSES
@@ -182,9 +87,9 @@ function getSubClauses(statement) {
  * to construct the corresponding Bali Virtual Machine™ instructions for the syntax
  * tree is it traversing.
  */
-function CompilingVisitor() {
+function CompilingVisitor(type, context) {
     bali.Visitor.call(this);
-    this.builder = new InstructionBuilder();
+    this.builder = new InstructionBuilder(type, context);
     this.temporaryVariableCount = 1;
     return this;
 }
@@ -255,7 +160,7 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
 // breakClause: 'break' 'loop'
 CompilingVisitor.prototype.visitBreakClause = function(tree) {
     // retrieve the loop label from the parent context
-    var procedures = this.builder.procedures;
+    var procedures = this.builder.stack;
     var procedure;
     var loopLabel;
     var numberOfProcedures = procedures.length;
@@ -437,7 +342,7 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
  */
 CompilingVisitor.prototype.visitContinueClause = function(tree) {
     // retrieve the loop label from the parent context
-    var procedures = this.builder.procedures;
+    var procedures = this.builder.stack;
     var procedure;
     var loopLabel;
     var numberOfProcedures = procedures.length;
@@ -1517,7 +1422,7 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
 CompilingVisitor.prototype.visitWithClause = function(tree) {
-    var variable = tree.getSize() > 2 ? tree.getChild(1) : this.createTemporaryVariable('item');
+    var variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
     var sequence = tree.getChild(-2);
     var block = tree.getChild(-1);
     var clausePrefix = this.builder.getClausePrefix();
@@ -1595,6 +1500,44 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
 };
 
 
+// PRIVATE FUNCTIONS
+
+/*
+ * This function returns the subclauses of a statement in an array.
+ * 
+ * @param {Object} statement The statement containing zero or more subclauses.
+ * @returns {Array} An array containing the subclauses for the statement.
+ */
+function getSubClauses(statement) {
+    var subClauses = [];
+    var iterator = statement.getIterator();
+    while (iterator.hasNext()) {
+        var item = iterator.getNext();
+        if (item.type === bali.types.BLOCK) {
+            subClauses.push(item);
+        }
+    }
+    return subClauses;
+}
+
+
+/*
+ * This function defines a missing conversion function for the standard String class.
+ */
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+
+/*
+ * This function defines a missing stack function for the standard Array class.
+ * The push(item) and pop() methods are already defined.
+ */
+Array.prototype.peek = function() {
+    return this[this.length - 1];
+};
+
+
 // PRIVATE BUILDER CLASS
 
 /*
@@ -1605,9 +1548,15 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
  * clause number.  For example, a prefix of '2.3.4.' would correspond to the
  * fourth statement in the third clause of the second statement in the main procedure.
  */
-function InstructionBuilder() {
+function InstructionBuilder(type, context) {
+    this.literals = type.getValue('$literals');
+    this.constants = type.getValue('$constants');
+    this.variables = context.getValue('$variables');
+    this.procedures = context.getValue('$procedures');
+    this.addresses = context.getValue('$addresses');
+    this.address = 1;  // cardinal based addressing
+    this.stack = [];  // stack of procedure contexts
     this.asmcode = '';
-    this.procedures = [];  // stack of procedure contexts
     return this;
 }
 InstructionBuilder.prototype.constructor = InstructionBuilder;
@@ -1619,16 +1568,16 @@ InstructionBuilder.prototype.constructor = InstructionBuilder;
  */
 InstructionBuilder.prototype.pushProcedureContext = function(procedure) {
     var statementCount = procedure.getSize();
-    if (this.procedures.length > 0) {
-        var parent = this.procedures.peek();
-        this.procedures.push({
+    if (this.stack.length > 0) {
+        var parent = this.stack.peek();
+        this.stack.push({
             statementNumber: 1,
             statementCount: statementCount,
             prefix: parent.prefix + parent.statementNumber + '.' + parent.statement.clauseNumber + '.'
         });
         parent.statement.clauseNumber++;
     } else {
-        this.procedures.push({
+        this.stack.push({
             statementNumber: 1,
             statementCount: statementCount,
             prefix: ''
@@ -1642,7 +1591,7 @@ InstructionBuilder.prototype.pushProcedureContext = function(procedure) {
  * that procedure.
  */
 InstructionBuilder.prototype.popProcedureContext = function() {
-    this.procedures.pop();
+    this.stack.pop();
 };
 
 
@@ -1655,7 +1604,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
     var subClauses = getSubClauses(mainClause);
     var handleClauses = tree.toArray().slice(1);
     var clauseCount = subClauses.length + handleClauses.length;
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     procedure.statement = {
         mainClause: mainClause,
         subClauses: subClauses,
@@ -1687,7 +1636,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
  * that statement.
  */
 InstructionBuilder.prototype.popStatementContext = function() {
-    this.procedures.peek().statement = undefined;
+    this.stack.peek().statement = undefined;
 };
 
 
@@ -1695,7 +1644,7 @@ InstructionBuilder.prototype.popStatementContext = function() {
  * This method determines whether or not the current statement contains clauses.
  */
 InstructionBuilder.prototype.hasClauses = function() {
-    var statement = this.procedures.peek().statement;
+    var statement = this.stack.peek().statement;
     return statement.clauseCount > 0;
 };
 
@@ -1704,7 +1653,7 @@ InstructionBuilder.prototype.hasClauses = function() {
  * This method determines whether or not the current statement contains handlers.
  */
 InstructionBuilder.prototype.hasHandlers = function() {
-    var statement = this.procedures.peek().statement;
+    var statement = this.stack.peek().statement;
     return statement.handleClauses.length > 0;
 };
 
@@ -1716,7 +1665,7 @@ InstructionBuilder.prototype.hasHandlers = function() {
  * are also included in the numbering.
  */
 InstructionBuilder.prototype.getClauseNumber = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     var number = procedure.statement.clauseNumber;
     return number;
 };
@@ -1727,7 +1676,7 @@ InstructionBuilder.prototype.getClauseNumber = function() {
  * statements are numbered sequentially starting with the number 1.
  */
 InstructionBuilder.prototype.getStatementNumber = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     var number = procedure.statementNumber;
     return number;
 };
@@ -1737,7 +1686,7 @@ InstructionBuilder.prototype.getStatementNumber = function() {
  * This method increments by one the statement counter within the current procedure context.
  */
 InstructionBuilder.prototype.incrementStatementCount = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     procedure.statementNumber++;
 };
 
@@ -1747,7 +1696,7 @@ InstructionBuilder.prototype.incrementStatementCount = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getStatementPrefix = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     var prefix = procedure.prefix + procedure.statementNumber + '.';
     return prefix;
 };
@@ -1757,7 +1706,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  * This method returns the type of the current statement.
  */
 InstructionBuilder.prototype.getStatementType = function() {
-    var statement = this.procedures.peek().statement;
+    var statement = this.stack.peek().statement;
     var type = bali.types.typeName(statement.mainClause.type).toTitleCase().slice(0, -6);
     return type;
 };
@@ -1767,7 +1716,7 @@ InstructionBuilder.prototype.getStatementType = function() {
  * This method returns the context for the current statement.
  */
 InstructionBuilder.prototype.getStatementContext = function() {
-    var statement = this.procedures.peek().statement;
+    var statement = this.stack.peek().statement;
     return statement;
 };
 
@@ -1777,7 +1726,7 @@ InstructionBuilder.prototype.getStatementContext = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getClausePrefix = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     var prefix = procedure.prefix + procedure.statementNumber + '.' + procedure.statement.clauseNumber + '.';
     return prefix;
 };
@@ -1788,7 +1737,7 @@ InstructionBuilder.prototype.getClausePrefix = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getNextClausePrefix = function() {
-    var procedure = this.procedures.peek();
+    var procedure = this.stack.peek();
     var prefix = procedure.prefix + procedure.statementNumber + '.' + (procedure.statement.clauseNumber + 1) + '.';
     return prefix;
 };
@@ -1816,11 +1765,13 @@ InstructionBuilder.prototype.insertLabel = function(label) {
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
+        this.addresses.setValue(new bali.Text(this.nextLabel), this.address);
         if (this.asmcode !== '') this.asmcode += EOL;  // not the first instruction
         this.asmcode += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
     }
     this.asmcode += instruction + EOL;
+    this.address++;
 };
 
 
@@ -1847,16 +1798,22 @@ InstructionBuilder.prototype.insertJumpInstruction = function(label, context) {
  * This method inserts a 'push' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
-    var instruction = 'PUSH ' + type;
+    var instruction = 'PUSH ' + type + ' ';
     switch (type) {
         case 'HANDLER':
-            instruction += ' ' + value;  // value as a label
+            instruction += value;
             break;
         case 'LITERAL':
-            instruction += ' `' + value + '`';  // value as a literal
+            var literal = '`' + value + '`';
+            instruction += literal;
+            this.literals.addItem(bali.parser.parseDocument(value));
             break;
         case 'CONSTANT':
-            instruction += ' ' + value;  // value as a symbol
+            instruction += value;
+            this.constants.addItem(value);
+            break;
+        case 'PARAMETER':
+            instruction += value;
             break;
     }
     this.insertInstruction(instruction);
@@ -1878,6 +1835,12 @@ InstructionBuilder.prototype.insertPopInstruction = function(type) {
 InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
     var instruction = 'LOAD ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
+    if (symbol.includes('$$')) {
+        symbol = new bali.Reserved(symbol);
+    } else {
+        symbol = new bali.Symbol(symbol);
+    }
+    this.variables.addItem(symbol);
 };
 
 
@@ -1887,6 +1850,12 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
 InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
     var instruction = 'STORE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
+    if (symbol.includes('$$')) {
+        symbol = new bali.Reserved(symbol);
+    } else {
+        symbol = new bali.Symbol(symbol);
+    }
+    this.variables.addItem(symbol);
 };
 
 
@@ -1912,10 +1881,11 @@ InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numbe
 /*
  * This method inserts an 'execute' instruction into the assembly source code.
  */
-InstructionBuilder.prototype.insertExecuteInstruction = function(method, context) {
-    var instruction = 'EXECUTE ' + method;
+InstructionBuilder.prototype.insertExecuteInstruction = function(procedure, context) {
+    var instruction = 'EXECUTE ' + procedure;
     if (context) instruction += ' ' + context;
     this.insertInstruction(instruction);
+    this.procedures.addItem(procedure);
 };
 
 
