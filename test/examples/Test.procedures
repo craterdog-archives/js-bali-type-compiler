@@ -23,19 +23,19 @@
         ]
         $function2: [
             $parameters: [$first]
-            $variables: [$first]
+            $variables: []
             $procedures: []
             $addresses: [
                 "1.ReturnStatement": 1
             ]
             $instructions: "
                 1.ReturnStatement:
-                LOAD VARIABLE $first
+                PUSH PARAMETER $first
                 HANDLE RESULT
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '6001E800'(
+            $bytecode: '3801E800'(
                 $base: 16
                 $mediatype: "application/bcod"
             )
@@ -61,19 +61,19 @@
         ]
         $message2: [
             $parameters: [$first, $second]
-            $variables: [$second]
+            $variables: []
             $procedures: []
             $addresses: [
                 "1.ReturnStatement": 1
             ]
             $instructions: "
                 1.ReturnStatement:
-                LOAD VARIABLE $second
+                PUSH PARAMETER $second
                 HANDLE RESULT
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '6001E800'(
+            $bytecode: '3802E800'(
                 $base: 16
                 $mediatype: "application/bcod"
             )

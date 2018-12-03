@@ -67,7 +67,7 @@ describe('Bali Virtual Macine™', function() {
                 //fs.writeFileSync(basmFile, procedure.toString(), 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');
                 expect(expected).to.exist;  // jshint ignore:line
-                expect(source).to.equal(expected);
+                expect(procedure.toString()).to.equal(expected);
             }
         });
 

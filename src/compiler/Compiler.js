@@ -1347,7 +1347,14 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     var variable = '$' + identifier.toString();
-    this.builder.insertLoadInstruction('VARIABLE', variable);
+    if (this.builder.parameters.containsItem(variable)) {
+        this.builder.insertPushInstruction('PARAMETER', variable);
+    } else if (this.builder.constants.containsItem(variable)) {
+        this.builder.insertPushInstruction('CONSTANT', variable);
+    } else {
+        this.builder.insertLoadInstruction('VARIABLE', variable);
+        this.builder.variables.addItem(variable);
+    }
 };
 
 
@@ -1551,6 +1558,7 @@ Array.prototype.peek = function() {
 function InstructionBuilder(type, context) {
     this.literals = type.getValue('$literals');
     this.constants = type.getValue('$constants');
+    this.parameters = context.getValue('$parameters');
     this.variables = context.getValue('$variables');
     this.procedures = context.getValue('$procedures');
     this.addresses = context.getValue('$addresses');
