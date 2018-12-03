@@ -40,16 +40,14 @@ exports.assembler = new Assembler();
  * This method traverses a list of assembly instructions that implement a procedure
  * and extracts from it the context of the procedure needed to assemble the instructions.
  * 
- * @param {List} instructions The list of instructions that implement the procedure
- * to be analyzed.
- * @param {Parameters} parameters An optional list of parameters (and default values) that
- * are associated with the procedure. 
+ * @param {Catalog} context The context acquired by analyzing the type to which this procedure
+ * belongs.
+ * @param {List} instructions The list of instructions that implement the procedure to be analyzed.
  * @returns {Object} context The resulting context.
  */
-Assembler.prototype.analyzeInstructions = function(instructions, parameters) {
-    var visitor = new AnalyzingVisitor(parameters);
+Assembler.prototype.analyzeInstructions = function(context, instructions) {
+    var visitor = new AnalyzingVisitor(context);
     instructions.acceptVisitor(visitor);
-    return visitor.getContext();
 };
 
 
@@ -57,11 +55,11 @@ Assembler.prototype.analyzeInstructions = function(instructions, parameters) {
  * This method traverses a list of Bali assembly instructions and assembles them into
  * their corresponding bytecode instructions.
  * 
- * @param {List} instructions The list of instructions to be assembled into bytecode.
  * @param {Catalog} context The context required by the assembler to generate the bytecode.
+ * @param {List} instructions The list of instructions to be assembled into bytecode.
  * @returns {Array} An array containing the bytecode instructions.
  */
-Assembler.prototype.assembleInstructions = function(instructions, context) {
+Assembler.prototype.assembleInstructions = function(context, instructions) {
     var visitor = new AssemblingVisitor(context);
     instructions.acceptVisitor(visitor);
     return visitor.getBytecode();
@@ -70,41 +68,21 @@ Assembler.prototype.assembleInstructions = function(instructions, context) {
 
 // PRIVATE CLASSES
 
-function AnalyzingVisitor(parameters) {
-    this.parameters = new bali.Catalog();
-    this.procedures = new bali.Set();
+function AnalyzingVisitor(context) {
     this.literals = new bali.Set();
     this.variables = new bali.Set();
+    this.procedures = new bali.Set();
     this.addresses = new bali.Catalog();
-    this.address = 1;  // bali VM unit based addressing
-    if (parameters) {
-        var collection = parameters.collection;
-        if (collection.constructor.name === 'Catalog') {
-            this.parameters.addItems(collection);
-            this.variables.addItems(collection.getKeys());
-        } else {
-            var iterator = collection.getIterator();
-            while (iterator.hasNext()) {
-                var parameter = iterator.getNext();
-                this.parameters.setValue(parameter, bali.Filter.NONE);
-                this.variables.addItem(parameter);
-            }
-        }
-    }
+    this.address = 1;  // cardinal based addressing
+    this.context = context;
+    context.setValue('$literals', this.literals);
+    context.setValue('$variables', this.variables);
+    context.setValue('$procedures', this.procedures);
+    context.setValue('$addresses', this.addresses);
+
     return this;
 }
 AnalyzingVisitor.prototype.constructor = AnalyzingVisitor;
-
-
-AnalyzingVisitor.prototype.getContext = function() {
-    var context = new bali.Catalog();
-    context.setValue('$parameters', this.parameters);
-    context.setValue('$procedures', this.procedures);
-    context.setValue('$literals', this.literals);
-    context.setValue('$variables', this.variables);
-    context.setValue('$addresses', this.addresses);
-    return context;
-};
 
 
 // document: EOL* instructions EOL* EOF

@@ -4,7 +4,7 @@
 [002]:    2803    11     3    PUSH LITERAL 3
 [003]:    D001    62     1    EXECUTE 1 ON TARGET
 [004]:    1808    03 [008]    JUMP TO [008] ON FALSE
-[005]:    6005    30     5    LOAD VARIABLE 5
+[005]:    6003    30     3    LOAD VARIABLE 3
 [006]:    8001    40     1    STORE VARIABLE 1
 [007]:    0012    00 [012]    JUMP TO [012]
 [008]:    2802    11     2    PUSH LITERAL 2

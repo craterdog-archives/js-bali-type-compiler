@@ -1,9 +1,10 @@
 [
     $function1: [
-        $parameters: [:]
-        $procedures: []
+        $constants: []
+        $parameters: []
         $literals: [true]
         $variables: []
+        $procedures: []
         $addresses: [
             "1.ReturnStatement": 1
         ]
@@ -20,10 +21,11 @@
         )
     ]
     $function2: [
-        $parameters: [$first: none]
-        $procedures: []
+        $constants: []
+        $parameters: [$first]
         $literals: []
         $variables: [$first]
+        $procedures: []
         $addresses: [
             "1.ReturnStatement": 1
         ]
@@ -40,10 +42,11 @@
         )
     ]
     $message1: [
-        $parameters: [:]
-        $procedures: []
+        $constants: []
+        $parameters: []
         $literals: []
         $variables: [$target]
+        $procedures: []
         $addresses: [
             "1.ReturnStatement": 1
         ]
@@ -60,13 +63,11 @@
         )
     ]
     $message2: [
-        $parameters: [
-            $first: none
-            $second: none
-        ]
-        $procedures: []
+        $constants: []
+        $parameters: [$first, $second]
         $literals: []
-        $variables: [$first, $second]
+        $variables: [$second]
+        $procedures: []
         $addresses: [
             "1.ReturnStatement": 1
         ]
@@ -77,7 +78,7 @@
         "(
             $mediatype: "application/basm"
         )
-        $bytecode: '6002E800'(
+        $bytecode: '6001E800'(
             $base: 16
             $mediatype: "application/bcod"
         )

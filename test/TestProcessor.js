@@ -25,7 +25,7 @@ var Processor = require('../src/processor/Processor').Processor;
 
 
 /*
-<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>
+<bali:[$protocol:v1,$tag:#TXGBQGFYQKCQY1ZAJY5J3S1Y8WV27XBZ,$version:v1,$digest:'XR24VNKN7G7D51T0LXLLNNNGVGJ0GDHBMFJSKKPBZD1DXX82AFA1S52NDAJYGHPQW16MWGHY3CGXQK6LCQ860HG9Q6NAHT2R421YJ4R']>
  */
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -72,10 +72,11 @@ var TASK_TEMPLATE =
         '            $instruction: 0\n' +
         '            $address: 1\n' +
         '            $bytecode: %bytecode\n' +
-        '            $parameters: %parameters\n' +
-        '            $procedures: %procedures($type: $Set)\n' +
         '            $literals: %literals($type: $Set)\n' +
+        '            $constants: %constants\n' +
+        '            $parameters: %parameters\n' +
         '            $variables: %variables\n' +
+        '            $procedures: %procedures($type: $Set)\n' +
         '            $handlers: []($type: $Stack)\n' +
         '        ]\n' +
         '    ]($type: $Stack)\n' +
@@ -96,36 +97,51 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
     var instructions = utilities.parser.parseDocument(source, true);
-    var parameters = bali.Parameters.fromCollection(['$x', '$y']);
-    var assemblerContext = assembler.analyzeInstructions(instructions, parameters);
-    var procedures = assemblerContext.getValue('$procedures');
-    var literals = assemblerContext.getValue('$literals');
+    var context = new bali.Catalog();
+    context.setValue('$constants', new bali.Set());
+    context.setValue('$parameters', bali.List.fromCollection(['$x', '$y']));
+    assembler.analyzeInstructions(context, instructions);
+
+    var literals = context.getValue('$literals');
+
+    var constants = new bali.Catalog();
+    var iterator = context.getValue('$constants').getIterator();
+    while (iterator.hasNext()) {
+        var constant = iterator.getNext();
+        constants.setValue(constant, bali.Filter.NONE);
+    }
+
+    var parameters = new bali.Catalog();
+    iterator = context.getValue('$parameters').getIterator();
+    while (iterator.hasNext()) {
+        var parameter = iterator.getNext();
+        parameters.setValue(parameter, bali.Filter.NONE);
+    }
+    parameters.setValue('$x', bali.parser.parseDocument(MESSAGE));
+    parameters.sortItems();
+
     var variables = new bali.Catalog();
-    var iterator = assemblerContext.getValue('$variables').getIterator();
+    iterator = context.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
         variables.setValue(variable, bali.Filter.NONE);
     }
     variables.setValue('$target', bali.Filter.NONE);
-    parameters = new bali.List();
-    iterator = assemblerContext.getValue('$parameters').getIterator();
-    while (iterator.hasNext()) {
-        var parameter = iterator.getNext();
-        parameters.addItem(parameter.key);
-        variables.setValue(parameter.key, parameter.value);
-    }
     variables.setValue('$queue', bali.parser.parseDocument(QUEUE));
     variables.setValue('$citation', bali.parser.parseDocument(CITATION));
-    variables.setValue('$x', bali.parser.parseDocument(MESSAGE));
     variables.sortItems();
-    var bytecode = assembler.assembleInstructions(instructions, assemblerContext);
+
+    var procedures = context.getValue('$procedures');
+
+    var bytecode = assembler.assembleInstructions(context, instructions);
     var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
     var base16 = bali.codex.base16Encode(bytes, '            ');
     source = TASK_TEMPLATE;
-    source = source.replace(/%procedures/, procedures.toDocument('            '));
     source = source.replace(/%literals/, literals.toDocument('            '));
+    source = source.replace(/%constants/, constants.toDocument('            '));
     source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
+    source = source.replace(/%procedures/, procedures.toDocument('            '));
     source = source.replace(/%bytecode/, "'" + base16 + "'");
     var task = bali.parser.parseDocument(source);
     return task;
@@ -412,7 +428,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(1);
 
             // 1.Execute:
-            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
+            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#TXGBQGFYQKCQY1ZAJY5J3S1Y8WV27XBZ,$version:v1,$digest:'XR24VNKN7G7D51T0LXLLNNNGVGJ0GDHBMFJSKKPBZD1DXX82AFA1S52NDAJYGHPQW16MWGHY3CGXQK6LCQ860HG9Q6NAHT2R421YJ4R']>`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             // EXECUTE $function1
@@ -431,7 +447,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.getSize()).to.equal(0);
 
             // 2.ExecuteWithParameters:
-            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>`
+            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#TXGBQGFYQKCQY1ZAJY5J3S1Y8WV27XBZ,$version:v1,$digest:'XR24VNKN7G7D51T0LXLLNNNGVGJ0GDHBMFJSKKPBZD1DXX82AFA1S52NDAJYGHPQW16MWGHY3CGXQK6LCQ860HG9Q6NAHT2R421YJ4R']>`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             // INVOKE $list
@@ -441,6 +457,9 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(3);
             // INVOKE $addItem WITH 2 PARAMETERS
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            // INVOKE $parameters WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             // EXECUTE $function2 WITH PARAMETERS

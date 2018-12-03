@@ -1,15 +1,7 @@
 [
     $play: [
-        $parameters: [:]
-        $procedures: [
-            $asCatalog
-            $asSequential
-            $getNext
-            $hasNext
-            $iterator
-            $moveTower
-            $push
-        ]
+        $constants: []
+        $parameters: []
         $literals: [
             1
             infinity
@@ -31,6 +23,15 @@
             $n
             $numberOfDisks
             $target
+        ]
+        $procedures: [
+            $asCatalog
+            $asSequential
+            $getNext
+            $hasNext
+            $iterator
+            $moveTower
+            $push
         ]
         $addresses: [
             "1.EvaluateStatement": 1
@@ -200,17 +201,12 @@
         )
     ]
     $moveTower: [
+        $constants: []
         $parameters: [
-            $height: none
-            $fromPeg: none
-            $toPeg: none
-            $withPeg: none
-        ]
-        $procedures: [
-            $asBoolean
-            $asNumeric
-            $moveDisk
-            $moveTower
+            $height
+            $fromPeg
+            $toPeg
+            $withPeg
         ]
         $literals: [1]
         $variables: [
@@ -220,6 +216,12 @@
             $target
             $toPeg
             $withPeg
+        ]
+        $procedures: [
+            $asBoolean
+            $asNumeric
+            $moveDisk
+            $moveTower
         ]
         $addresses: [
             "1.IfStatement": 1
@@ -304,16 +306,8 @@
         )
     ]
     $moveDisk: [
-        $parameters: [
-            $fromPeg: none
-            $toPeg: none
-        ]
-        $procedures: [
-            $append
-            $asSequential
-            $pop
-            $push
-        ]
+        $constants: []
+        $parameters: [$fromPeg, $toPeg]
         $literals: [
             $pegs
             $steps
@@ -325,6 +319,12 @@
             $fromPeg
             $target
             $toPeg
+        ]
+        $procedures: [
+            $append
+            $asSequential
+            $pop
+            $push
         ]
         $addresses: [
             "1.EvaluateStatement": 1

@@ -32,11 +32,13 @@ describe('Bali Virtual Machine™', function() {
                 var codeFile = testFolder + prefix + '.code';
                 var source = fs.readFileSync(basmFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var instruction = utilities.parser.parseDocument(source);
-                expect(instruction).to.exist;  // jshint ignore:line
-                var parameters = bali.Parameters.fromCollection(['$x', '$y']);
-                var context = assembler.analyzeInstructions(instruction, parameters);
-                var bytecode = assembler.assembleInstructions(instruction, context);
+                var instructions = utilities.parser.parseDocument(source);
+                expect(instructions).to.exist;  // jshint ignore:line
+                var parameters = bali.Set.fromCollection(['$x', '$y']);
+                var context = new bali.Catalog();
+                context.setValue('$parameters', parameters);
+                assembler.analyzeInstructions(context, instructions);
+                var bytecode = assembler.assembleInstructions(context, instructions);
                 expect(bytecode).to.exist;  // jshint ignore:line
                 var formatted = utilities.bytecode.bytecodeToString(bytecode);
                 expect(formatted).to.exist;  // jshint ignore:line

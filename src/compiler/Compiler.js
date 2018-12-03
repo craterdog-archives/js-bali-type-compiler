@@ -72,16 +72,31 @@ Compiler.prototype.compileDocument = function(nebula, citation) {
         var association = iterator.getNext();
         var procedureName = association.key.toString();
         var source = association.value.getValue('$source');
-        var parameters = source.parameters;
         var procedure = source.procedure;
 
         // compile the source code
         var instructions = this.compileProcedure(procedure);
         instructions = utilities.parser.parseDocument(instructions);
 
+        // create the context required by the assembler
+        var context = new bali.Catalog();
+        var constants = new bali.Set();
+        context.setValue('$constants', constants);
+        // TODO: fill in the constants from the type analysis
+        var parameters = new bali.List();
+        context.setValue('$parameters', parameters);
+        if (source.parameters) {
+            var collection = source.parameters.collection;
+            if (collection.type === bali.types.CATALOG) {
+                parameters.addItems(collection.getKeys());
+            } else {
+                parameters.addItems(collection);
+            }
+        }
+
         // assemble the instructions
-        var context = assembler.analyzeInstructions(instructions, parameters);
-        var bytecode = assembler.assembleInstructions(instructions, context);
+        assembler.analyzeInstructions(context, instructions);
+        var bytecode = assembler.assembleInstructions(context, instructions);
 
         // format the instructions and add to the context
         var formatter = new utilities.Formatter('    ');

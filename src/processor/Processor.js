@@ -235,34 +235,67 @@ function exportTask(task) {
 function pushProcedure(processor, target, type, parameters, index) {
     var currentContext = processor.context;
     var name = currentContext.procedures.getItem(index);
-    var context = processor.nebula.retrieveType(type);
-    var catalog = context.getValue(name);
-    var bytes = catalog.getValue('$bytecode').getBuffer();
+    var procedure = processor.nebula.retrieveType(type).getValue(name);
+
+    var bytes = procedure.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
-    var procedures = catalog.getValue('$procedures');
-    var literals = catalog.getValue('$literals');
+
+    var literals = procedure.getValue('$literals');
+
+    var constants = new bali.Catalog();
+    var iterator = procedure.getValue('$constants').getIterator();
+    while (iterator.hasNext()) {
+        var constant = iterator.getNext();
+        constants.setValue(constant, bali.Filter.NONE);
+    }
+
+    console.log('parameters: ' + parameters);
+    var collection = parameters.collection;
+    parameters = new bali.Catalog();
+    iterator = procedure.getValue('$parameters').getIterator();
+    while (iterator.hasNext()) {
+        var counter = 1;
+        var value;
+        var parameter = iterator.getNext();
+        if (collection.type === bali.types.CATALOG) {
+            value = collection.getValue(parameter);
+        } else {
+            value = collection.getItem(counter);
+        }
+        value = value || bali.Filter.NONE;
+        parameters.setValue(parameter, value);
+        counter++;
+    }
+
     var variables = new bali.Catalog();
-    var iterator = catalog.getValue('$variables').getIterator();
+    iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
         variables.setValue(variable, bali.Filter.NONE);
     }
     variables.setValue('$target', target);
+
+    var procedures = procedure.getValue('$procedures');
+
     var handlers = new bali.Stack();
+
     var nextContext = {
         type: type,
         name: name,
         instruction: 0,
         address: 0,  // this will be incremented before the next instruction is executed
         bytecode: bytecode,
-        parameters: parameters,
-        procedures: procedures,
         literals: literals,
+        constants: constants,
+        parameters: parameters,
         variables: variables,
+        procedures: procedures,
         handlers: handlers
     };
+
     // push the current procedure context onto the stack
     processor.task.contexts.addItem(exportProcedure(currentContext));
+
     // set the new procedure as the current procedure
     processor.context = nextContext;
 }
@@ -286,10 +319,11 @@ function importProcedure(catalog) {
         instruction: catalog.getValue('$instruction').toNumber(),
         address: catalog.getValue('$address').toNumber(),
         bytecode: bytecode,
-        parameters: catalog.getValue('$parameters'),
-        procedures: catalog.getValue('$procedures'),
         literals: catalog.getValue('$literals'),
+        constants: catalog.getValue('$constants'),
+        parameters: catalog.getValue('$parameters'),
         variables: catalog.getValue('$variables'),
+        procedures: catalog.getValue('$procedures'),
         handlers: catalog.getValue('$handlers')
     };
     return procedure;
@@ -308,10 +342,11 @@ function exportProcedure(procedure) {
     catalog.setValue('$instruction', procedure.instruction);
     catalog.setValue('$address', procedure.address);
     catalog.setValue('$bytecode', bytecode);
-    catalog.setValue('$parameters', procedure.parameters);
-    catalog.setValue('$procedures', procedure.procedures);
     catalog.setValue('$literals', procedure.literals);
+    catalog.setValue('$constants', procedure.constants);
+    catalog.setValue('$parameters', procedure.parameters);
     catalog.setValue('$variables', procedure.variables);
+    catalog.setValue('$procedures', procedure.procedures);
     catalog.setValue('$handlers', procedure.handlers);
     return catalog;
 }
@@ -581,7 +616,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
-        var parameters = new bali.Catalog();
+        var parameters = new bali.Parameters(new bali.List());
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         pushProcedure(processor, target, type, parameters, index);
@@ -593,6 +628,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
+        console.log('parameters: ' + JSON.stringify(parameters, null, 2));
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         pushProcedure(processor, target, type, parameters, index);
@@ -603,7 +639,7 @@ var instructionHandlers = [
         if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
-        var parameters = new bali.Catalog();
+        var parameters = new bali.Parameters(new bali.List());
         var target = processor.task.stack.removeItem();
         var type = new bali.Reference(target.getType());
         pushProcedure(processor, target, type, parameters, index);
