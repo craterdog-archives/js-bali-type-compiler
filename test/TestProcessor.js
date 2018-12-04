@@ -121,9 +121,9 @@ function loadTask(filename) {
         '$foo',
         'none',
         'true',
-        bali.parser.parseDocument('{return prefix + name + suffix}')
+        bali.parser.parseDocument('{return prefix + name}')
     ]);
-    var constants = bali.Catalog.fromCollection(['$constant']);
+    var constants = bali.Catalog.fromCollection({constant: 5});
     var type = new bali.Catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
@@ -134,7 +134,7 @@ function loadTask(filename) {
     var variables = bali.List.fromCollection(['$citation', '$foo', '$queue', '$target']);
     var procedures = bali.List.fromCollection(['$function1', '$function2', '$message1', '$message2']);
     var addresses = new bali.Catalog();
-    addresses.setValue('"3.PushSource"', 3);
+    addresses.setValue('"3.PushLiteral"', 3);
     addresses.setValue('"1.3.ConditionClause"', 8);
     addresses.setValue('"1.4.ConditionClause"', 11);
     addresses.setValue('"1.6.ConditionClause"', 17);
@@ -152,13 +152,8 @@ function loadTask(filename) {
     // retrieve the bytecode
     var bytecode = procedure.getValue('$bytecode');
 
-    // set constant values
-    var iterator = constants.getIterator();
-    constants = new bali.Catalog();
-    constants.setValue('$constant', 5);
-
     // set parameter values
-    iterator = parameters.getIterator();
+    var iterator = parameters.getIterator();
     parameters = new bali.Catalog();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
@@ -308,34 +303,61 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(1);
 
             // 1.PushHandler:
-            // PUSH HANDLER 3.PushSource
+            // PUSH HANDLER 3.PushLiteral
             processor.step();
             expect(processor.context.handlers.getSize()).to.equal(1);
+            expect(processor.context.handlers.topItem().toNumber()).to.equal(3);
 
-            // 2.PushElement:
+            // 2.PushLiteral:
             // PUSH LITERAL "five"
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"five"'))).to.equal(true);
 
-            // 3.PushSource:
-            // PUSH LITERAL `{return prefix + name + suffix}`
+            // 3.PushLiteral:
+            // PUSH LITERAL `{return prefix + name}`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.topItem().toString()).to.equal('{return prefix + name}');
 
-            // 4.PopHandler:
+            // 4.PushConstant:
+            // PUSH CONSTANT $constant
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.task.stack.topItem().toNumber()).to.equal(5);
+
+            // 5.PushParameter:
+            // PUSH PARAMETER $y
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(4);
+            expect(processor.task.stack.topItem().isEqualTo(bali.Filter.NONE)).to.equal(true);
+
+            // 6.PopHandler:
             // POP HANDLER
             processor.step();
             expect(processor.context.handlers.getSize()).to.equal(0);
 
-            // 5.PopComponent:
+            // 7.PopComponent:
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.task.stack.topItem().toNumber()).to.equal(5);
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.topItem().toString()).to.equal('{return prefix + name}');
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"five"'))).to.equal(true);
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
 
             // EOF
             expect(processor.step()).to.equal(false);
-            expect(processor.task.clock).to.equal(5);
-            expect(processor.task.balance).to.equal(995);
+            expect(processor.task.clock).to.equal(10);
+            expect(processor.task.balance).to.equal(990);
             expect(processor.task.status).to.equal('$active');
         });
 
