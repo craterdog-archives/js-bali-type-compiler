@@ -64,7 +64,7 @@ describe('Bali Virtual Macine™', function() {
                 // assemble the procedure into bytecode
                 compiler.assembler.assembleProcedure(type, procedure);
 
-                fs.writeFileSync(basmFile, procedure.toString(), 'utf8');
+                //fs.writeFileSync(basmFile, procedure.toString(), 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');
                 expect(expected).to.exist;  // jshint ignore:line
                 expect(procedure.toString()).to.equal(expected);
@@ -93,9 +93,9 @@ describe('Bali Virtual Macine™', function() {
                 documentCitation = api.commitDocument(documentCitation, draft);
                 var typeCitation = compiler.compileType(api, documentCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
-                console.log('type citation: ' + typeCitation);
+                //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);
-                fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
+                //fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
                 expect(procedures.toString() + '\n').to.equal(expected);
             }

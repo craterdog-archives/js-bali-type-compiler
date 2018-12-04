@@ -1,5 +1,5 @@
 1.LoadParameter:
-LOAD VARIABLE $x
+PUSH PARAMETER $x
 
 2.StoreVariable:
 STORE VARIABLE $foo

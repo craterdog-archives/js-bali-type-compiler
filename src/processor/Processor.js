@@ -232,27 +232,29 @@ function exportTask(task) {
 }
 
 
-function pushProcedure(processor, target, type, parameters, index) {
-    var currentContext = processor.context;
-    var name = currentContext.procedures.getItem(index);
-    var procedure = processor.nebula.retrieveType(type).getValue(name);
+function pushProcedure(processor, target, citation, parameters, index) {
 
+    // save the current procedure context
+    var currentContext = processor.context;
+
+    // retrieve the type and procedure to be executed
+    var name = currentContext.procedures.getItem(index);
+    var type = processor.nebula.retrieveType(citation);
+    var procedures = type.getValue('$procedures');
+    var procedure = procedures.getValue(name);
+
+    // retrieve the bytecode from the compiled procedure
     var bytes = procedure.getValue('$bytecode').getBuffer();
     var bytecode = utilities.bytesToBytecode(bytes);
 
-    var literals = procedure.getValue('$literals');
+    // retrieve the literals and constants from the compiled type
+    var literals = type.getValue('$literals');
+    var constants = type.getValue('$constants');
 
-    var constants = new bali.Catalog();
-    var iterator = procedure.getValue('$constants').getIterator();
-    while (iterator.hasNext()) {
-        var constant = iterator.getNext();
-        constants.setValue(constant, bali.Filter.NONE);
-    }
-
-    console.log('parameters: ' + parameters);
+    // set the parameter values
     var collection = parameters.collection;
     parameters = new bali.Catalog();
-    iterator = procedure.getValue('$parameters').getIterator();
+    var iterator = procedure.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
         var counter = 1;
         var value;
@@ -267,6 +269,7 @@ function pushProcedure(processor, target, type, parameters, index) {
         counter++;
     }
 
+    // set the initial values of the variables to 'none' except for the 'target' variable
     var variables = new bali.Catalog();
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
@@ -275,12 +278,15 @@ function pushProcedure(processor, target, type, parameters, index) {
     }
     variables.setValue('$target', target);
 
-    var procedures = procedure.getValue('$procedures');
+    // retrieve the called procedure names from the procedure
+    procedures = procedure.getValue('$procedures');
 
+    // create an empty exception handler stack
     var handlers = new bali.Stack();
 
+    // construct the next procedure context
     var nextContext = {
-        type: type,
+        type: citation,
         name: name,
         instruction: 0,
         address: 0,  // this will be incremented before the next instruction is executed
@@ -296,7 +302,7 @@ function pushProcedure(processor, target, type, parameters, index) {
     // push the current procedure context onto the stack
     processor.task.contexts.addItem(exportProcedure(currentContext));
 
-    // set the new procedure as the current procedure
+    // set the next procedure as the current procedure
     processor.context = nextContext;
 }
 
@@ -428,9 +434,13 @@ var instructionHandlers = [
         processor.task.stack.addItem(constant);
     },
 
-    // UNIMPLEMENTED PUSH OPERATION
+    // PUSH PARAMETER constant
     function(processor, operand) {
-        throw new Error('An unimplemented PUSH operation was attempted: 13');
+        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
+        var index = operand;
+        // lookup the parameter associated with the index
+        var parameter = processor.context.parameters.getItem(index).value;
+        processor.task.stack.addItem(parameter);
     },
 
     // POP HANDLER
@@ -628,7 +638,6 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
-        console.log('parameters: ' + JSON.stringify(parameters, null, 2));
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         pushProcedure(processor, target, type, parameters, index);
@@ -682,10 +691,8 @@ var instructionHandlers = [
 
     // HANDLE RESULT
     function(processor, operand) {
-        console.log('HANDLE RESULT');
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         if (!popProcedure(processor)) {
-            console.log('we are done');
             // we're done
             processor.context = undefined;
             var result = processor.task.stack.removeItem();
