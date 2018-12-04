@@ -1,21 +1,47 @@
 [
     $literals: [
-        1
-        infinity
-        $Number($range: [1..infinity])
-        $pegs
-        $range
+        "peg A"
+        $type
         $Stack(
             $Number($range: [1..infinity])
         )
-        $steps
-        $type
-        "Move disk {disk} from {fromPeg} to {toPeg}."
-        "peg A"
+        $Number($range: [1..infinity])
+        $range
+        1
+        infinity
         "peg B"
+        $type
+        $Stack(
+            $Number($range: [1..infinity])
+        )
+        $Number($range: [1..infinity])
+        $range
+        1
+        infinity
         "peg C"
+        $type
+        $Stack(
+            $Number($range: [1..infinity])
+        )
+        $Number($range: [1..infinity])
+        $range
+        1
+        infinity
+        1
+        $pegs
+        "peg A"
+        "peg A"
+        "peg C"
+        "peg B"
+        $steps
+        1
+        1
+        $pegs
+        $pegs
+        $steps
+        "Move disk {disk} from {fromPeg} to {toPeg}."
     ]
-    $constants: []
+    $constants: [:]
     $procedures: [
         $play: [
             $parameters: []
@@ -189,14 +215,14 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                A004280AA011A00428082806A0112803A004280528012802B01CB821A817
-                B020B001A817B020B821A817B020B821280BA011A00428082806A0112803
-                A004280528012802B01CB821A817B020B001A817B020B821A817B020B821
-                280CA011A00428082806A0112803A004280528012802B01CB821A817B020
-                B001A817B020B821A817B020B821B821A011B82160042801B01CD002D005
-                80016001D00418606001D00380036005D0022804B00D280AB00DA0116003
-                B001A817D8078002004D00006005A0116004B001280AB001280CB001280B
-                B001A817D80680026005D0022807B00DD001E800
+                A0042801A011A00428022803A0112804A004280528062807B01CB821A817
+                B020B001A817B020B821A817B020B8212808A011A00428022803A0112804
+                A004280528062807B01CB821A817B020B001A817B020B821A817B020B821
+                280FA011A00428022803A0112804A004280528062807B01CB821A817B020
+                B001A817B020B821A817B020B821B821A011B82160042806B01CD002D005
+                80016001D00418606001D00380036005D0022817B00D2801B00DA0116003
+                B001A817D8078002004D00006005A0116004B0012801B001280FB0012808
+                B001A817D80680026005D002281CB00DD001E800
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -289,9 +315,9 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                00003801D00118306002A0113801D0022801D002B008B0013802B0013804
+                00003801D00118306002A0113801D0022806D002B008B0013802B0013804
                 B0013803B001A817D80480016002A0113802B0013803B001A817D8038001
-                6002A0113801D0022801D002B008B0013804B0013803B0013802B001A817
+                6002A0113801D0022806D002B008B0013804B0013803B0013802B001A817
                 D80480016001E800
             '(
                 $base: 16
@@ -358,8 +384,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                6003D0022804B00D3801B00DD00380026003D0022804B00D3802B00DA011
-                6002B001A817D80480016003D0022807B00DA0112809B001A817D8018001
+                6003D0022817B00D3801B00DD00380026003D0022817B00D3802B00DA011
+                6002B001A817D80480016003D002281CB00DA0112822B001A817D8018001
                 6001E800
             '(
                 $base: 16

@@ -1,10 +1,10 @@
 [
     $literals: [true]
-    $constants: []
+    $constants: [:]
     $procedures: [
         $function1: [
             $parameters: []
-            $variables: []
+            $variables: [$target]
             $procedures: []
             $addresses: [
                 "1.ReturnStatement": 1
@@ -23,7 +23,7 @@
         ]
         $function2: [
             $parameters: [$first]
-            $variables: []
+            $variables: [$target]
             $procedures: []
             $addresses: [
                 "1.ReturnStatement": 1
@@ -61,7 +61,7 @@
         ]
         $message2: [
             $parameters: [$first, $second]
-            $variables: []
+            $variables: [$target]
             $procedures: []
             $addresses: [
                 "1.ReturnStatement": 1

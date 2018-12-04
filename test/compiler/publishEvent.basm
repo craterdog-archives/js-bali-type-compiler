@@ -1,6 +1,10 @@
 [
     $parameters: []
-    $variables: [$$eventQueue, $$result]
+    $variables: [
+        $$eventQueue
+        $$result
+        $target
+    ]
     $procedures: []
     $addresses: [
         "1.PublishStatement": 1
@@ -23,7 +27,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: 'A00428052802B82128042803B82128062801B82188016002E800'(
+    $bytecode: 'A00428012802B82128032804B82128052806B82188016002E800'(
         $base: 16
         $mediatype: "application/bcod"
     )

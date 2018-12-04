@@ -1,6 +1,11 @@
 [
     $parameters: []
-    $variables: [$$result, $bar, $foo]
+    $variables: [
+        $$result
+        $bar
+        $foo
+        $target
+    ]
     $procedures: []
     $addresses: [
         "1.EvaluateStatement": 1

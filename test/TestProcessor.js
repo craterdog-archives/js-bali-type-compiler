@@ -20,12 +20,12 @@ var repository = nebula.local(testDirectory);
 var api = nebula.api(notaryKey, repository);
 
 var utilities = require('../src/utilities');
-var assembler = require('../src/compiler/Assembler').assembler;
+var assembler = require('../src/compiler').assembler;
 var Processor = require('../src/processor/Processor').Processor;
 
 
 /*
-<bali:[$protocol:v1,$tag:#VVY1M49XZ23D6KRMHP3M3BL178AMK28D,$version:v1,$digest:'WNHB5NQNH3HN5V0PMC1TFC93VCZ1CQF5KST2QHAYR8Q7NZFGML0Z88TVCTZTXNR40ZMKJL848PNV31BN7JJ01NLYD39DLA8AJBQ1G2R']>
+<bali:[$protocol:v1,$tag:#JJX5JKQMCLRMTYTPCZAZHTVW3Z5424X5,$version:v1,$digest:'Y8DSAQ8V7XBP0S6KXS2YM3C0733Q0932V1PQVXZ54RB0APDJ2Q31GY8J1TSRGR80VQ3KKG6LBJD1RAF4VHAYXR2SNKBFV4S2KKMXB90']>
  */
 
 var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
@@ -72,11 +72,11 @@ var TASK_TEMPLATE =
         '            $instruction: 0\n' +
         '            $address: 1\n' +
         '            $bytecode: %bytecode\n' +
-        '            $literals: %literals($type: $Set)\n' +
+        '            $literals: %literals\n' +
         '            $constants: %constants\n' +
         '            $parameters: %parameters\n' +
         '            $variables: %variables\n' +
-        '            $procedures: %procedures($type: $Set)\n' +
+        '            $procedures: %procedures\n' +
         '            $handlers: []($type: $Stack)\n' +
         '        ]\n' +
         '    ]($type: $Stack)\n' +
@@ -97,53 +97,86 @@ var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
     var instructions = utilities.parser.parseDocument(source, true);
-    var context = new bali.Catalog();
-    context.setValue('$constants', new bali.Set());
-    context.setValue('$parameters', bali.List.fromCollection(['$x', '$y']));
-    assembler.analyzeInstructions(context, instructions);
 
-    var literals = context.getValue('$literals');
+    // create the compiled type context
+    var literals = bali.List.fromCollection([
+        '"five"',
+        '"parameter"',
+        '"parameter1"',
+        '"parameter2"',
+        '13',
+        '1',
+        '3',
+        '5',
+        "<bali:[]>",
+        "<bali:[$protocol:v1,$tag:#JJX5JKQMCLRMTYTPCZAZHTVW3Z5424X5,$version:v1,$digest:'Y8DSAQ8V7XBP0S6KXS2YM3C0733Q0932V1PQVXZ54RB0APDJ2Q31GY8J1TSRGR80VQ3KKG6LBJD1RAF4VHAYXR2SNKBFV4S2KKMXB90']>",
+        '[$foo: "bar"](\n' +
+        "    <bali:[$protocol:v1,$tag:#D38BQSSS9AZNDX8H2WJPFN3Y6GACCYDG,$version:v1,$digest:'3JYSLGKH69GR6N572RJ6V4RC8JDSJT99TTJAAJJ95X5ZXZLASCP312ADHT2Q2BGC6N2RDTNKY6ZSJFPCQZ3TY7H6DB5CZLN6YHHA14H']>\n" +
+        ')',
+        'false',
+        'foo',
+        'none',
+        'true',
+        '{return prefix + name + suffix}'
+    ]);
+    var constants = bali.Catalog.fromCollection(['$constant']);
+    var type = new bali.Catalog();
+    type.setValue('$literals', literals);
+    type.setValue('$constants', constants);
 
-    var constants = new bali.Catalog();
-    var iterator = context.getValue('$constants').getIterator();
-    while (iterator.hasNext()) {
-        var constant = iterator.getNext();
-        constants.setValue(constant, bali.Filter.NONE);
-    }
 
-    var parameters = new bali.Catalog();
-    iterator = context.getValue('$parameters').getIterator();
+    // create the compiled procedure context
+    var parameters = bali.List.fromCollection(['$y', '$x']);
+    var variables = bali.List.fromCollection(['$citation', '$foo', '$queue', '$target']);
+    var procedures = bali.List.fromCollection(['$function1', '$function2', '$message1', '$message2']);
+    var addresses = bali.Catalog.fromCollection({});
+    var procedure = new bali.Catalog();
+    procedure.setValue('$parameters', parameters);
+    procedure.setValue('$variables', variables);
+    procedure.setValue('$procedures', procedures);
+    procedure.setValue('$addresses', addresses);
+    procedure.setValue('$instructions', instructions);
+
+    // assemble the procedure into bytecode
+    assembler.assembleProcedure(type, procedure);
+
+    // format the bytecode
+    var bytecode = procedure.getValue('$bytecode');
+    var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
+    var base16 = bali.codex.base16Encode(bytes, '            ');
+
+    // set constant values
+    var iterator = constants.getIterator();
+    constants = new bali.Catalog();
+    constants.setValue('$constant', 5);
+
+    // set parameter values
+    iterator = parameters.getIterator();
+    parameters = new bali.Catalog();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
         parameters.setValue(parameter, bali.Filter.NONE);
     }
     parameters.setValue('$x', bali.parser.parseDocument(MESSAGE));
-    parameters.sortItems();
 
-    var variables = new bali.Catalog();
-    iterator = context.getValue('$variables').getIterator();
-    while (iterator.hasNext()) {
-        var variable = iterator.getNext();
-        variables.setValue(variable, bali.Filter.NONE);
-    }
-    variables.setValue('$target', bali.Filter.NONE);
-    variables.setValue('$queue', bali.parser.parseDocument(QUEUE));
+    // set variable values
+    iterator = variables.getIterator();
+    variables = new bali.Catalog();
     variables.setValue('$citation', bali.parser.parseDocument(CITATION));
-    variables.sortItems();
+    variables.setValue('$foo', bali.Filter.NONE);
+    variables.setValue('$queue', bali.parser.parseDocument(QUEUE));
+    variables.setValue('$target', bali.Filter.NONE);
 
-    var procedures = context.getValue('$procedures');
-
-    var bytecode = assembler.assembleInstructions(context, instructions);
-    var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
-    var base16 = bali.codex.base16Encode(bytes, '            ');
+    // construct the task context
     source = TASK_TEMPLATE;
+    source = source.replace(/%bytecode/, "'" + base16 + "'");
     source = source.replace(/%literals/, literals.toDocument('            '));
     source = source.replace(/%constants/, constants.toDocument('            '));
     source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
     source = source.replace(/%procedures/, procedures.toDocument('            '));
-    source = source.replace(/%bytecode/, "'" + base16 + "'");
     var task = bali.parser.parseDocument(source);
+
     return task;
 }
 

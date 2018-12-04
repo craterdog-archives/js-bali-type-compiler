@@ -161,7 +161,7 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
             value = this.literals.getIndex(value);
             break;
         case utilities.types.CONSTANT:
-            value = this.constants.getIndex(value);
+            value = this.constants.getKeys().getIndex(value);
             break;
         case utilities.types.PARAMETER:
             value = this.parameters.getIndex(value);

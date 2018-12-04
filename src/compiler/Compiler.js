@@ -60,7 +60,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
         }
     }
     context.setValue('$parameters', parameters);
-    context.setValue('$variables', new bali.Set());
+    context.setValue('$variables', bali.Set.fromCollection(['$target']));
     context.setValue('$procedures', new bali.Set());
     context.setValue('$addresses', new bali.Catalog());
 
@@ -1349,7 +1349,7 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
     var variable = '$' + identifier.toString();
     if (this.builder.parameters.containsItem(variable)) {
         this.builder.insertPushInstruction('PARAMETER', variable);
-    } else if (this.builder.constants.containsItem(variable)) {
+    } else if (this.builder.constants.getValue(variable)) {
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
         this.builder.insertLoadInstruction('VARIABLE', variable);
@@ -1818,7 +1818,6 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
             break;
         case 'CONSTANT':
             instruction += value;
-            this.constants.addItem(value);
             break;
         case 'PARAMETER':
             instruction += value;

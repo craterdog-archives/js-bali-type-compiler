@@ -1,6 +1,11 @@
 [
     $parameters: []
-    $variables: [$$result, $no, $yes]
+    $variables: [
+        $$result
+        $no
+        $target
+        $yes
+    ]
     $procedures: [$asBoolean]
     $addresses: [
         "1.IfStatement": 1
@@ -60,7 +65,7 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        00002803D00118086003800100122802D001180E60028001001200002801
+        00002801D00118086004800100122802D001180E60028001001200002803
         800100006001E800
     '(
         $base: 16

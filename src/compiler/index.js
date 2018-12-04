@@ -25,42 +25,36 @@ exports.compiler = new exports.Compiler();
  * @returns {Catalog} A document citation for the resulting compiled type document.
  */
 exports.compileType = function(nebula, citation) {
-    var type;
 
-    // retrieve the document
+    // retrieve the type document
     var document = nebula.retrieveDocument(citation);
 
-    // traverse the ancestry for the document (child -> parent)
-    var ancestry = new bali.Stack();
+    // extract the literals, constants and procedures for the parent type
+    var literals = new bali.List();
+    var constants = new bali.Catalog();
+    var procedures = new bali.Catalog();
     var parent = document.getValue('$parent');
-    while (parent) {
-        ancestry.addItem(parent);
-        parent = nebula.retrieveDocument(parent).getValue('$parent');
+    if (parent) {
+        parent = nebula.retrieveType(parent).getValue('$parent');
+        literals.addItems(parent.getValue('$literals'));
+        constants.addItems(parent.getValue('$constants'));
+        procedures.addItems(parent.getValue('$procedures'));
     }
 
-    // extract the literals, constants and procedures for the ancestors (parent -> child)
-    var literals = new bali.Set();
-    var constants = new bali.Set();
-    var procedures = new bali.Catalog();
-    var iterator = ancestry.getIterator();
-    while (iterator.hasNext()) {
-        var ancestor = iterator.getNext();
-        type = nebula.retrieveType(ancestor);
-        literals.addItems(type.getValue('$literals'));
-        constants.addItems(type.getValue('$constants'));
-        procedures.addItems(type.getValue('$procedures'));
-    }
+    // add in the constants from the child type document
+    var items = document.getValue('$constants');
+    if (items) constants.addItems(items);
 
     // create the compilation type context
-    type = new bali.Catalog();
+    var type = new bali.Catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
     type.setValue('$procedures', procedures);
 
-    // compile each procedure defined in the document
+    // compile each procedure defined in the type document
     var association, name, procedure;
     procedures = new bali.Catalog();
-    iterator = document.getValue('$procedures').getIterator();
+    var iterator = document.getValue('$procedures').getIterator();
     while (iterator.hasNext()) {
 
         // retrieve the source code for the procedure
