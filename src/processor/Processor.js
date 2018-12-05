@@ -252,11 +252,11 @@ function pushProcedure(processor, target, citation, parameters, index) {
     var constants = type.getValue('$constants');
 
     // set the parameter values
+    var counter = 1;
     var collection = parameters.collection;
     parameters = new bali.Catalog();
     var iterator = procedure.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
-        var counter = 1;
         var value;
         var parameter = iterator.getNext();
         if (collection.type === bali.types.CATALOG) {

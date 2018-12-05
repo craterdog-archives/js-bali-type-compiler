@@ -537,7 +537,7 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.contexts.getSize()).to.equal(1);
                 // 1.ReturnStatement:
-                // LOAD VARIABLE $first
+                // PUSH PARAMETER $first
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
                 // HANDLE RESULT
@@ -549,26 +549,65 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.task.stack.getSize()).to.equal(0);
 
             // 3.ExecuteOnTarget:
-            // PUSH LITERAL `"target"`
+            // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            var expected = processor.task.stack.topItem();
+            expect(expected.toString().includes('[$foo: "bar"]')).to.equal(true);
             // EXECUTE $message1 ON TARGET
             processor.step();
+            expect(processor.task.contexts.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(0);
+                // 1.ReturnStatement:
+                // LOAD VARIABLE $target
+                processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                expect(processor.task.stack.topItem().isEqualTo(expected)).to.equal(true);
+                // HANDLE RESULT
+                processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.topItem().isEqualTo(expected)).to.equal(true);
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
 
             // 4.ExecuteOnTargetWithParameters:
-            // PUSH LITERAL `"target"`
+            // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
             // INVOKE $list
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
             // PUSH LITERAL `"parameter1"`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
             // INVOKE $addItem WITH 2 PARAMETERS
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
             // PUSH LITERAL `"parameter2"`
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
             // INVOKE $addItem WITH 2 PARAMETERS
             processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            // INVOKE $parameters WITH PARAMETER
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
             // EXECUTE $message2 ON TARGET WITH PARAMETERS
             processor.step();
+            expect(processor.task.contexts.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(0);
+                // 1.ReturnStatement:
+                // PUSH PARAMETER $second
+                processor.step();
+                expect(processor.task.stack.topItem().toString()).to.equal('"parameter2"');
+                // HANDLE RESULT
+                processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.topItem().toString()).to.equal('"parameter2"');
+            // POP COMPONENT
+            processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
 
         });
 
