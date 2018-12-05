@@ -189,7 +189,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the JUMP instruction.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/JUMP.basm';
+            var testFile = 'test/processor/JUMP.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
@@ -293,7 +293,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the PUSH and POP instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/PUSH-POP.basm';
+            var testFile = 'test/processor/PUSH-POP.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
@@ -366,7 +366,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the LOAD and STORE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/LOAD-STORE.basm';
+            var testFile = 'test/processor/LOAD-STORE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
@@ -436,7 +436,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the INVOKE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/INVOKE.basm';
+            var testFile = 'test/processor/INVOKE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
@@ -489,7 +489,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the EXECUTE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/instructions/EXECUTE.basm';
+            var testFile = 'test/processor/EXECUTE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
