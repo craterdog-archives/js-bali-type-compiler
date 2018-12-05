@@ -353,6 +353,8 @@ function popContext(processor) {
     var notDone = !processor.task.contexts.isEmpty();
     if (notDone) {
         processor.context = importContext(processor.task.contexts.removeItem());
+    } else {
+        processor.context = undefined;
     }
     return notDone;
 }
@@ -671,15 +673,12 @@ var instructionHandlers = [
         // search up the stack for a handler
         while (processor.context) {
             if (processor.context.handlers.isEmpty()) {
-                if (!processor.task.contexts.isEmpty()) {
-                    // raise the exception up to the calling procedure
-                    processor.context = importContext(processor.task.contexts.removeItem());
-                } else {
+                if (!popContext(processor)) {
                     // unhandled exception
-                    processor.context = undefined;
                     var exception = processor.task.stack.removeItem();
                     processor.task.exception = exception;
                     processor.task.status = DONE;
+                    break;
                 }
             }
             // retrieve the address of the next exception handler
@@ -694,7 +693,6 @@ var instructionHandlers = [
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         if (!popContext(processor)) {
             // we're done
-            processor.context = undefined;
             var result = processor.task.stack.removeItem();
             processor.task.result = result;
             processor.task.status = DONE;

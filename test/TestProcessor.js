@@ -489,7 +489,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the EXECUTE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/processor/EXECUTE.basm';
+            var testFile = 'test/processor/EXECUTE-RETURN.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
