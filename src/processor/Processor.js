@@ -34,7 +34,7 @@ var DONE = '$done';
 function Processor(nebula, task) {
     this.nebula = nebula;
     this.task = importTask(task);
-    this.context = importProcedure(this.task.contexts.removeItem());
+    this.context = importContext(this.task.contexts.removeItem());
     return this;
 }
 Processor.prototype.constructor = Processor;
@@ -84,7 +84,7 @@ Processor.prototype.run = function() {
 Processor.prototype.toString = function() {
     var task = exportTask(this.task);
     var contexts = task.getValue('$contexts');
-    contexts.addItem(exportProcedure(this.context));  // this is affecting the live stack!
+    contexts.addItem(exportContext(this.context));  // this is affecting the live stack!
     var string = task.toString();
     contexts.removeItem();  // so we must remove it again afterward!  TODO: fix this!!!
     return string;
@@ -232,7 +232,49 @@ function exportTask(task) {
 }
 
 
-function pushProcedure(processor, target, citation, parameters, index) {
+function importContext(catalog) {
+    var bytes = catalog.getValue('$bytecode').getBuffer();
+    var bytecode = utilities.bytesToBytecode(bytes);
+    var procedure = {
+        type: catalog.getValue('$type'),
+        name: catalog.getValue('$name'),
+        instruction: catalog.getValue('$instruction').toNumber(),
+        address: catalog.getValue('$address').toNumber(),
+        bytecode: bytecode,
+        literals: catalog.getValue('$literals'),
+        constants: catalog.getValue('$constants'),
+        parameters: catalog.getValue('$parameters'),
+        variables: catalog.getValue('$variables'),
+        procedures: catalog.getValue('$procedures'),
+        handlers: catalog.getValue('$handlers')
+    };
+    return procedure;
+}
+
+
+function exportContext(procedure) {
+    var bytes = utilities.bytecodeToBytes(procedure.bytecode);
+    var base16 = bali.codex.base16Encode(bytes);
+    var source = "'%bytecode'($base: 16, $mediatype: \"application/bcod\")";
+    source = source.replace(/%bytecode/, base16);
+    var bytecode = bali.parser.parseDocument(source);
+    var catalog = new bali.Catalog();
+    catalog.setValue('$type', procedure.type);
+    catalog.setValue('$name', procedure.name);
+    catalog.setValue('$instruction', procedure.instruction);
+    catalog.setValue('$address', procedure.address);
+    catalog.setValue('$bytecode', bytecode);
+    catalog.setValue('$literals', procedure.literals);
+    catalog.setValue('$constants', procedure.constants);
+    catalog.setValue('$parameters', procedure.parameters);
+    catalog.setValue('$variables', procedure.variables);
+    catalog.setValue('$procedures', procedure.procedures);
+    catalog.setValue('$handlers', procedure.handlers);
+    return catalog;
+}
+
+
+function pushContext(processor, target, citation, parameters, index) {
 
     // save the current procedure context
     var currentContext = processor.context;
@@ -300,61 +342,19 @@ function pushProcedure(processor, target, citation, parameters, index) {
     };
 
     // push the current procedure context onto the stack
-    processor.task.contexts.addItem(exportProcedure(currentContext));
+    processor.task.contexts.addItem(exportContext(currentContext));
 
     // set the next procedure as the current procedure
     processor.context = nextContext;
 }
 
 
-function popProcedure(processor) {
+function popContext(processor) {
     var notDone = !processor.task.contexts.isEmpty();
     if (notDone) {
-        processor.context = importProcedure(processor.task.contexts.removeItem());
+        processor.context = importContext(processor.task.contexts.removeItem());
     }
     return notDone;
-}
-
-
-function importProcedure(catalog) {
-    var bytes = catalog.getValue('$bytecode').getBuffer();
-    var bytecode = utilities.bytesToBytecode(bytes);
-    var procedure = {
-        type: catalog.getValue('$type'),
-        name: catalog.getValue('$name'),
-        instruction: catalog.getValue('$instruction').toNumber(),
-        address: catalog.getValue('$address').toNumber(),
-        bytecode: bytecode,
-        literals: catalog.getValue('$literals'),
-        constants: catalog.getValue('$constants'),
-        parameters: catalog.getValue('$parameters'),
-        variables: catalog.getValue('$variables'),
-        procedures: catalog.getValue('$procedures'),
-        handlers: catalog.getValue('$handlers')
-    };
-    return procedure;
-}
-
-
-function exportProcedure(procedure) {
-    var bytes = utilities.bytecodeToBytes(procedure.bytecode);
-    var base16 = bali.codex.base16Encode(bytes);
-    var source = "'%bytecode'($base: 16, $mediatype: \"application/bcod\")";
-    source = source.replace(/%bytecode/, base16);
-    var bytecode = bali.parser.parseDocument(source);
-    var catalog = new bali.Catalog();
-    catalog.setValue('$type', procedure.type);
-    catalog.setValue('$name', procedure.name);
-    catalog.setValue('$instruction', procedure.instruction);
-    catalog.setValue('$address', procedure.address);
-    catalog.setValue('$bytecode', bytecode);
-    catalog.setValue('$literals', procedure.literals);
-    catalog.setValue('$constants', procedure.constants);
-    catalog.setValue('$parameters', procedure.parameters);
-    catalog.setValue('$variables', procedure.variables);
-    catalog.setValue('$procedures', procedure.procedures);
-    catalog.setValue('$handlers', procedure.handlers);
-    return catalog;
 }
 
 
@@ -629,7 +629,7 @@ var instructionHandlers = [
         var parameters = new bali.Parameters(new bali.List());
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
-        pushProcedure(processor, target, type, parameters, index);
+        pushContext(processor, target, type, parameters, index);
     },
 
     // EXECUTE symbol WITH PARAMETERS
@@ -640,7 +640,7 @@ var instructionHandlers = [
         var parameters = processor.task.stack.removeItem();
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
-        pushProcedure(processor, target, type, parameters, index);
+        pushContext(processor, target, type, parameters, index);
     },
 
     // EXECUTE symbol ON TARGET
@@ -651,7 +651,7 @@ var instructionHandlers = [
         var parameters = new bali.Parameters(new bali.List());
         var target = processor.task.stack.removeItem();
         var type = new bali.Reference(target.getType());
-        pushProcedure(processor, target, type, parameters, index);
+        pushContext(processor, target, type, parameters, index);
     },
 
     // EXECUTE symbol ON TARGET WITH PARAMETERS
@@ -662,7 +662,7 @@ var instructionHandlers = [
         var parameters = processor.task.stack.removeItem();
         var target = processor.task.stack.removeItem();
         var type = new bali.Reference(target.getType());
-        pushProcedure(processor, target, type, parameters, index);
+        pushContext(processor, target, type, parameters, index);
     },
 
     // HANDLE EXCEPTION
@@ -673,7 +673,7 @@ var instructionHandlers = [
             if (processor.context.handlers.isEmpty()) {
                 if (!processor.task.contexts.isEmpty()) {
                     // raise the exception up to the calling procedure
-                    processor.context = importProcedure(processor.task.contexts.removeItem());
+                    processor.context = importContext(processor.task.contexts.removeItem());
                 } else {
                     // unhandled exception
                     processor.context = undefined;
@@ -692,7 +692,7 @@ var instructionHandlers = [
     // HANDLE RESULT
     function(processor, operand) {
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
-        if (!popProcedure(processor)) {
+        if (!popContext(processor)) {
             // we're done
             processor.context = undefined;
             var result = processor.task.stack.removeItem();
