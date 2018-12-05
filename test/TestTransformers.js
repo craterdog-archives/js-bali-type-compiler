@@ -18,7 +18,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test Parser and Formatter', function() {
 
         it('should parse and format the same instructions', function() {
-            var file = 'test/source/instructions.basm';
+            var file = 'test/utilities/instructions.basm';
             var source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
             var procedure = utilities.parser.parseDocument(source);
@@ -28,7 +28,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should parse and format the same instructions with indentation', function() {
-            var file = 'test/source/instructions.basm';
+            var file = 'test/utilities/instructions.basm';
             var source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
             var procedure = utilities.parser.parseDocument(source);

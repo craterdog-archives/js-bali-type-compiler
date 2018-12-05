@@ -67,8 +67,8 @@ describe('Bali Virtual Machine™', function() {
             }
 
             var formattedInstructions = utilities.bytecodeToString(bytecode);
-            //fs.writeFileSync('test/compiler/instructions.code', formattedInstructions, 'utf8');
-            var expected = fs.readFileSync('test/compiler/instructions.code', 'utf8');
+            //fs.writeFileSync('test/utilities/formatted.code', formattedInstructions, 'utf8');
+            var expected = fs.readFileSync('test/utilities/formatted.code', 'utf8');
             expect(formattedInstructions).to.equal(expected);
         });
 
