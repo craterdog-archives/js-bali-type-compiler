@@ -10,33 +10,7 @@
         1
         infinity
         "peg B"
-        $type
-        $Stack(
-            $Number($range: [1..infinity])
-        )
-        $Number($range: [1..infinity])
-        $range
-        1
-        infinity
         "peg C"
-        $type
-        $Stack(
-            $Number($range: [1..infinity])
-        )
-        $Number($range: [1..infinity])
-        $range
-        1
-        infinity
-        1
-        $pegs
-        "peg A"
-        "peg A"
-        "peg C"
-        "peg B"
-        $steps
-        1
-        1
-        $pegs
         $pegs
         $steps
         "Move disk {disk} from {fromPeg} to {toPeg}."
@@ -218,11 +192,11 @@
                 A0042801A011A00428022803A0112804A004280528062807B01CB821A817
                 B020B001A817B020B821A817B020B8212808A011A00428022803A0112804
                 A004280528062807B01CB821A817B020B001A817B020B821A817B020B821
-                280FA011A00428022803A0112804A004280528062807B01CB821A817B020
+                2809A011A00428022803A0112804A004280528062807B01CB821A817B020
                 B001A817B020B821A817B020B821B821A011B82160042806B01CD002D005
-                80016001D00418606001D00380036005D0022817B00D2801B00DA0116003
-                B001A817D8078002004D00006005A0116004B0012801B001280FB0012808
-                B001A817D80680026005D002281CB00DD001E800
+                80016001D00418606001D00380036005D002280AB00D2801B00DA0116003
+                B001A817D8078002004D00006005A0116004B0012801B0012809B0012808
+                B001A817D80680026005D002280BB00DD001E800
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -384,8 +358,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                6003D0022817B00D3801B00DD00380026003D0022817B00D3802B00DA011
-                6002B001A817D80480016003D002281CB00DA0112822B001A817D8018001
+                6003D002280AB00D3801B00DD00380026003D002280AB00D3802B00DA011
+                6002B001A817D80480016003D002280BB00DA011280CB001A817D8018001
                 6001E800
             '(
                 $base: 16

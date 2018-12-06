@@ -27,37 +27,10 @@ var EOL = '\n';  // POSIX end of line character
 
 
 /*
-<bali:[$protocol:v1,$tag:#JJX5JKQMCLRMTYTPCZAZHTVW3Z5424X5,$version:v1,$digest:'Y8DSAQ8V7XBP0S6KXS2YM3C0733Q0932V1PQVXZ54RB0APDJ2Q31GY8J1TSRGR80VQ3KKG6LBJD1RAF4VHAYXR2SNKBFV4S2KKMXB90']>
+<bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>
+        #CL4KHJ4W1CKZBXCM90JQCP3D29120WQD
+        1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8
  */
-
-var TYPE_REFERENCE = "<bali:[$protocol:v1,$tag:#WAKWFXPMN7FCG8CF95N7L2P4JHJXH4SD,$version:v1,$digest:none]>";
-
-var TYPE_SOURCE = 
-        '[\n' +
-        '    $procedures: [\n' +
-        '        $functionWithException: [\n' +
-        '            $source: {\n' +
-        '                throw [$type: $test]\n' +
-        '            }\n' +
-        '        ]\n' +
-        '        $functionWithParameters: [\n' +
-        '            $source: {\n' +
-        '                return param1 + param2\n' +
-        '            }\n' +
-        '        ]\n' +
-        '        $message: [\n' +
-        '            $source: {\n' +
-        '                return "It worked."\n' +
-        '            }\n' +
-        '        ]\n' +
-        '        $messageWithException: [\n' +
-        '            $source: {\n' +
-        '                throw [$parameter: param]\n' +
-        '            }\n' +
-        '        ]\n' +
-        '    ]\n' +
-        ']($type: $Class)';
-
 
 var TASK_TEMPLATE =
         '[\n' +
@@ -113,9 +86,9 @@ function loadTask(filename) {
         3,
         5,
         "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#JJX5JKQMCLRMTYTPCZAZHTVW3Z5424X5,$version:v1,$digest:'Y8DSAQ8V7XBP0S6KXS2YM3C0733Q0932V1PQVXZ54RB0APDJ2Q31GY8J1TSRGR80VQ3KKG6LBJD1RAF4VHAYXR2SNKBFV4S2KKMXB90']>",
+        "<bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>",
         bali.parser.parseDocument('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#JJX5JKQMCLRMTYTPCZAZHTVW3Z5424X5,$version:v1,$digest:'Y8DSAQ8V7XBP0S6KXS2YM3C0733Q0932V1PQVXZ54RB0APDJ2Q31GY8J1TSRGR80VQ3KKG6LBJD1RAF4VHAYXR2SNKBFV4S2KKMXB90']>\n" +
+        "    <bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>\n" +
         ')'),
         'false',
         '$foo',
@@ -536,14 +509,60 @@ describe('Bali Virtual Machine™', function() {
             // EXECUTE $function2 WITH PARAMETERS
             processor.step();
             expect(processor.task.contexts.getSize()).to.equal(1);
-                // 1.ReturnStatement:
-                // PUSH PARAMETER $first
+                // 1.ThrowStatement:
+                // PUSH HANDLER 1.ThrowStatementHandlers
+                processor.step();
+                expect(processor.context.handlers.getSize()).to.equal(1);
+                // PUSH LITERAL `none`
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
+                console.log('processor: ' + processor);
+                // HANDLE EXCEPTION
+                processor.step();
+                
+                // 1.ThrowStatementDone:
+                // POP HANDLER
+                // JUMP TO 1.ThrowStatementSucceeded
+                
+                // 1.ThrowStatementHandlers:
+                // SKIP INSTRUCTION
+                processor.step();
+                
+                // 1.1.HandleClause:
+                // STORE VARIABLE $exception
+                processor.step();
+                // LOAD VARIABLE $exception
+                processor.step();
+                // LOAD VARIABLE $exception
+                processor.step();
+                // PUSH LITERAL `none`
+                processor.step();
+                // INVOKE $matches WITH 2 PARAMETERS
+                processor.step();
+                // JUMP TO 1.ThrowStatementFailed ON FALSE
+                processor.step();
+                // POP COMPONENT
+                processor.step();
+                
+                // 1.1.1.ReturnStatement:
+                // PUSH PARAMETER $first
+                processor.step();
                 // HANDLE RESULT
                 processor.step();
-                expect(processor.task.contexts.getSize()).to.equal(0);
-                expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"parameter"'))).to.equal(true);
+                
+                // 1.1.HandleClauseDone:
+                // JUMP TO 1.ThrowStatementSucceeded
+                
+                // 1.ThrowStatementFailed:
+                // HANDLE EXCEPTION
+                
+                // 1.ThrowStatementSucceeded:
+                // SKIP INSTRUCTION
+                
+                // 2.ReturnStatement:
+                // PUSH LITERAL `false`
+                // HANDLE RESULT
+
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(0);
@@ -597,14 +616,55 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.contexts.getSize()).to.equal(1);
             expect(processor.task.stack.getSize()).to.equal(0);
-                // 1.ReturnStatement:
+                // 1.ThrowStatement:
+                // PUSH HANDLER 1.ThrowStatementHandlers
+                processor.step();
                 // PUSH PARAMETER $second
                 processor.step();
-                expect(processor.task.stack.topItem().toString()).to.equal('"parameter2"');
-                // HANDLE RESULT
+                // HANDLE EXCEPTION
                 processor.step();
-                expect(processor.task.contexts.getSize()).to.equal(0);
-                expect(processor.task.stack.topItem().toString()).to.equal('"parameter2"');
+                
+                // 1.ThrowStatementDone:
+                // POP HANDLER
+                // JUMP TO 1.ThrowStatementSucceeded
+                
+                // 1.ThrowStatementHandlers:
+                // SKIP INSTRUCTION
+                processor.step();
+                
+                // 1.1.HandleClause:
+                // STORE VARIABLE $exception
+                processor.step();
+                // LOAD VARIABLE $exception
+                processor.step();
+                // LOAD VARIABLE $exception
+                processor.step();
+                // PUSH LITERAL `none`
+                processor.step();
+                // INVOKE $matches WITH 2 PARAMETERS
+                processor.step();
+                // JUMP TO 1.ThrowStatementFailed ON FALSE
+                processor.step();
+                // POP COMPONENT
+                
+                // 1.1.1.ReturnStatement:
+                // PUSH LITERAL `true`
+                // HANDLE RESULT
+                
+                // 1.1.HandleClauseDone:
+                // JUMP TO 1.ThrowStatementSucceeded
+                
+                // 1.ThrowStatementFailed:
+                // HANDLE EXCEPTION
+                processor.step();
+                
+                // 1.ThrowStatementSucceeded:
+                // SKIP INSTRUCTION
+                
+                // 2.ReturnStatement:
+                // PUSH LITERAL `false`
+                // HANDLE RESULT
+
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(0);

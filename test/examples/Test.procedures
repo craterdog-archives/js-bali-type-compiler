@@ -1,5 +1,5 @@
 [
-    $literals: [true]
+    $literals: [true, none, false]
     $constants: [:]
     $procedures: [
         $function1: [
@@ -23,19 +23,64 @@
         ]
         $function2: [
             $parameters: [$first]
-            $variables: [$target]
+            $variables: [$exception, $target]
             $procedures: []
             $addresses: [
-                "1.ReturnStatement": 1
+                "1.ThrowStatement": 1
+                "1.ThrowStatementDone": 4
+                "1.ThrowStatementHandlers": 6
+                "1.1.HandleClause": 7
+                "1.1.1.ReturnStatement": 14
+                "1.1.HandleClauseDone": 16
+                "1.ThrowStatementFailed": 17
+                "1.ThrowStatementSucceeded": 18
+                "2.ReturnStatement": 19
             ]
             $instructions: "
-                1.ReturnStatement:
+                1.ThrowStatement:
+                PUSH HANDLER 1.ThrowStatementHandlers
+                PUSH LITERAL `none`
+                HANDLE EXCEPTION
+                
+                1.ThrowStatementDone:
+                POP HANDLER
+                JUMP TO 1.ThrowStatementSucceeded
+                
+                1.ThrowStatementHandlers:
+                SKIP INSTRUCTION
+                
+                1.1.HandleClause:
+                STORE VARIABLE $exception
+                LOAD VARIABLE $exception
+                LOAD VARIABLE $exception
+                PUSH LITERAL `none`
+                INVOKE $matches WITH 2 PARAMETERS
+                JUMP TO 1.ThrowStatementFailed ON FALSE
+                POP COMPONENT
+                
+                1.1.1.ReturnStatement:
                 PUSH PARAMETER $first
+                HANDLE RESULT
+                
+                1.1.HandleClauseDone:
+                JUMP TO 1.ThrowStatementSucceeded
+                
+                1.ThrowStatementFailed:
+                HANDLE EXCEPTION
+                
+                1.ThrowStatementSucceeded:
+                SKIP INSTRUCTION
+                
+                2.ReturnStatement:
+                PUSH LITERAL `false`
                 HANDLE RESULT
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '3801E800'(
+            $bytecode: '
+                20062802E0004000001200008001600160012802B013181148003801E800
+                0012E00000002803E800
+            '(
                 $base: 16
                 $mediatype: "application/bcod"
             )
@@ -61,19 +106,64 @@
         ]
         $message2: [
             $parameters: [$first, $second]
-            $variables: [$target]
+            $variables: [$exception, $target]
             $procedures: []
             $addresses: [
-                "1.ReturnStatement": 1
+                "1.ThrowStatement": 1
+                "1.ThrowStatementDone": 4
+                "1.ThrowStatementHandlers": 6
+                "1.1.HandleClause": 7
+                "1.1.1.ReturnStatement": 14
+                "1.1.HandleClauseDone": 16
+                "1.ThrowStatementFailed": 17
+                "1.ThrowStatementSucceeded": 18
+                "2.ReturnStatement": 19
             ]
             $instructions: "
-                1.ReturnStatement:
+                1.ThrowStatement:
+                PUSH HANDLER 1.ThrowStatementHandlers
                 PUSH PARAMETER $second
+                HANDLE EXCEPTION
+                
+                1.ThrowStatementDone:
+                POP HANDLER
+                JUMP TO 1.ThrowStatementSucceeded
+                
+                1.ThrowStatementHandlers:
+                SKIP INSTRUCTION
+                
+                1.1.HandleClause:
+                STORE VARIABLE $exception
+                LOAD VARIABLE $exception
+                LOAD VARIABLE $exception
+                PUSH LITERAL `none`
+                INVOKE $matches WITH 2 PARAMETERS
+                JUMP TO 1.ThrowStatementFailed ON FALSE
+                POP COMPONENT
+                
+                1.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                1.1.HandleClauseDone:
+                JUMP TO 1.ThrowStatementSucceeded
+                
+                1.ThrowStatementFailed:
+                HANDLE EXCEPTION
+                
+                1.ThrowStatementSucceeded:
+                SKIP INSTRUCTION
+                
+                2.ReturnStatement:
+                PUSH LITERAL `false`
                 HANDLE RESULT
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '3802E800'(
+            $bytecode: '
+                20063802E0004000001200008001600160012802B013181148002801E800
+                0012E00000002803E800
+            '(
                 $base: 16
                 $mediatype: "application/bcod"
             )

@@ -1336,6 +1336,7 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 
     // the VM jumps to the handler clauses for the current context
     this.builder.insertHandleInstruction('EXCEPTION');
+    this.builder.requiresFinalization = false;
 };
 
 
@@ -1814,7 +1815,8 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
         case 'LITERAL':
             var literal = '`' + value + '`';
             instruction += literal;
-            this.literals.addItem(bali.parser.parseDocument(value));
+            literal = bali.parser.parseDocument(value);
+            if (!this.literals.containsItem(literal)) this.literals.addItem(literal);
             break;
         case 'CONSTANT':
             instruction += value;
