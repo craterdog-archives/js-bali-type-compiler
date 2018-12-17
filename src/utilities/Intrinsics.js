@@ -19,33 +19,158 @@ var bali = require('bali-component-framework');
 exports.functions = [
     // <invalid>
     function() {
-        throw new Error('MACHINE: No intrinsic function should have an index of zero.');
+        throw new Error('PROCESSOR: No intrinsic function should have an index of zero.');
+    },
+
+    // Angle
+    function(value) {
+        console.log('      Angle(' + value + ')');
+        return new bali.Angle(value);
+    },
+
+    // Association
+    function(key, value) {
+        console.log('      Association(' + key + ', ' + value + ')');
+        return new bali.Association(key, value);
+    },
+
+    // Binary
+    function(value) {
+        console.log('      Binary(' + value + ')');
+        return new bali.Binary(value);
+    },
+
+    // Catalog
+    function() {
+        console.log('      Catalog()');
+        return new bali.Catalog();
+    },
+
+    // Duration
+    function(value) {
+        console.log('      Duration(' + value + ')');
+        return new bali.Duration(value);
+    },
+
+    // Filter
+    function(value) {
+        console.log('      Filter(' + value + ')');
+        return new bali.Filter(value);
+    },
+
+    // List
+    function() {
+        console.log('      List()');
+        return new bali.List();
+    },
+
+    // Moment
+    function(value) {
+        console.log('      Moment(' + value + ')');
+        return new bali.Moment(value);
+    },
+
+    // Number
+    function(value) {
+        console.log('      Number(' + value + ')');
+        return new bali.Complex(value);
+    },
+
+    // Parameters
+    function(collection) {
+        console.log('      Parameters(' + collection.toDocument('      ') + ')');
+        return new bali.Parameters(collection);
+    },
+
+    // Percent
+    function(value) {
+        console.log('      Percent(' + value + ')');
+        return new bali.Percent(value);
+    },
+
+    // Probability
+    function(value) {
+        console.log('      Probability(' + value + ')');
+        return new bali.Probability(value);
+    },
+
+    // Queue
+    function() {
+        console.log('      Queue()');
+        return new bali.Queue();
+    },
+
+    // Range
+    function(firstValue, lastValue) {
+        console.log('      Range(' + firstValue + ', ' + lastValue + ')');
+        return new bali.Range(firstValue, lastValue);
+    },
+
+    // Reference
+    function(value) {
+        console.log('      Reference(' + value + ')');
+        return new bali.Reference(value);
+    },
+
+    // Set
+    function() {
+        console.log('      Set()');
+        return new bali.Set();
+    },
+
+    // Source
+    function(procedure) {
+        console.log('      Source(' + procedure + ')');
+        return new bali.Source(procedure);
+    },
+
+    // Stack
+    function() {
+        console.log('      Stack()');
+        return new bali.Stack();
+    },
+
+    // Symbol
+    function(value) {
+        console.log('      Symbol(' + value + ')');
+        return new bali.Symbol(value);
+    },
+
+    // Tag
+    function(value) {
+        console.log('      Tag(' + value + ')');
+        return new bali.Tag(value);
+    },
+
+    // Text
+    function(value) {
+        console.log('      Text(' + value + ')');
+        return new bali.Text(value);
+    },
+
+    // Tree
+    function(type, complexity) {
+        console.log('      Tree(' + bali.types.nameForType(type) + ', ' + complexity + ')');
+        return new bali.Tree(type, complexity);
+    },
+
+    // Version
+    function(value) {
+        console.log('      Version(' + value + ')');
+        return new bali.Version(value);
     },
 
     // addItem
-    function(list, item) {
-        console.log('      addItem(' + list + ', ' + item + ')');
-        list.addItem(item);
-        return list;
-    },
-
-    // addParameter
-    function(parameters, parameter) {
-        console.log('      addParameter(' + parameters + ', ' + parameter + ')');
-        parameters.addParameter(parameter);
-        return parameters;
+    function(collection, item) {
+        console.log('      addItem(' + collection + ', ' + item + ')');
+        collection.addItem(item);
+        return collection;
     },
 
     // and
     function(firstProbability, secondProbability) {
         console.log('      and(' + firstProbability + ', ' + secondProbability + ')');
         return bali.Probability.and(firstProbability, secondProbability);
-    },
-
-    // catalog
-    function() {
-        console.log('      catalog()');
-        return new bali.Catalog();
     },
 
     // complement
@@ -87,18 +212,7 @@ exports.functions = [
     // factorial
     function(number) {
         console.log('      factorial(' + number + ')');
-        // return bali.Complex.factorial(number);
-        function f(n) {
-            return (n<2) ? 1 : f(n-1) * n;
-        }
-        var factorial = f(number.toNumber());
-        return new bali.Complex(String(factorial));
-    },
-
-    // getType
-    function(component) {
-        console.log('      getType(' + component + ')');
-        return component.getType();
+        return bali.Complex.factorial(number);
     },
 
     // getValue
@@ -125,12 +239,6 @@ exports.functions = [
         return bali.Component.less(firstComponent, secondComponent);
     },
 
-    // list
-    function() {
-        console.log('      list()');
-        return new bali.List();
-    },
-
     // magnitude
     function(number) {
         console.log('      magnitude(' + number + ')');
@@ -138,9 +246,9 @@ exports.functions = [
     },
 
     // matches
-    function(component, template) {
-        console.log('      matches(' + component + ', ' + template + ')');
-        return bali.Component.matches(component, template);
+    function(component, filter) {
+        console.log('      matches(' + component + ', ' + filter + ')');
+        return bali.Component.matches(component, filter);
     },
 
     // more
@@ -161,22 +269,10 @@ exports.functions = [
         return bali.Probability.or(firstProbability, secondProbability);
     },
 
-    // parameters
-    function(collection) {
-        console.log('      parameters(' + collection.toDocument('      ') + ')');
-        return new bali.Parameters(collection);
-    },
-
     // product
     function(firstNumber, secondNumber) {
         console.log('      product(' + firstNumber + ', ' + secondNumber + ')');
         return bali.Complex.product(firstNumber, secondNumber);
-    },
-
-    // queue
-    function() {
-        console.log('      queue()');
-        return new bali.Queue();
     },
 
     // quotient
@@ -191,12 +287,6 @@ exports.functions = [
         return new bali.Probability();
     },
 
-    // range
-    function(firstValue, lastValue) {
-        console.log('      range(' + firstValue + ', ' + lastValue + ')');
-        return new bali.Range(firstValue, lastValue);
-    },
-
     // remainder
     function(firstNumber, secondNumber) {
         console.log('      remainder(' + firstNumber + ', ' + secondNumber + ')');
@@ -207,12 +297,6 @@ exports.functions = [
     function(firstProbability, secondProbability) {
         console.log('      sans(' + firstProbability + ', ' + secondProbability + ')');
         return bali.Probability.sans(firstProbability, secondProbability);
-    },
-
-    // set
-    function() {
-        console.log('      set()');
-        return new bali.Set();
     },
 
     // setParameters
@@ -226,12 +310,6 @@ exports.functions = [
     function(catalog, key, value) {
         console.log('      setValue(' + catalog + ', ' + key + ', ' + value + ')');
         return catalog.setValue(key, value) || bali.Filter.NONE;
-    },
-
-    // stack
-    function() {
-        console.log('      stack()');
-        return new bali.Stack();
     },
 
     // sum
@@ -251,10 +329,31 @@ exports.functions = [
 
 exports.names = [
     '<invalid>',
+    'Angle',
+    'Association',
+    'Binary',
+    'Catalog',
+    'Duration',
+    'Filter',
+    'List',
+    'Moment',
+    'Number',
+    'Parameters',
+    'Percent',
+    'Probability',
+    'Queue',
+    'Range',
+    'Reference',
+    'Set',
+    'Source',
+    'Stack',
+    'Symbol',
+    'Tag',
+    'Text',
+    'Tree',
+    'Version',
     '$addItem',
-    '$addParameter',
     '$and',
-    '$catalog',
     '$complement',
     '$conjugate',
     '$default',
@@ -262,29 +361,22 @@ exports.names = [
     '$equal',
     '$exponential',
     '$factorial',
-    '$getType',
     '$getValue',
     '$inverse',
     '$is',
     '$less',
-    '$list',
     '$magnitude',
     '$matches',
     '$more',
     '$negative',
     '$or',
-    '$parameters',
     '$product',
-    '$queue',
     '$quotient',
     '$random',
-    '$range',
     '$remainder',
     '$sans',
-    '$set',
     '$setParameters',
     '$setValue',
-    '$stack',
     '$sum',
     '$xor'
 ];

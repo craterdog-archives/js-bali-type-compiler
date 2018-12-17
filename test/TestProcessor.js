@@ -27,9 +27,7 @@ var EOL = '\n';  // POSIX end of line character
 
 
 /*
-<bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>
-        #CL4KHJ4W1CKZBXCM90JQCP3D29120WQD
-        1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8
+<bali:[$protocol:v1,$tag:#3Q16VFHF9ZZLB7H1X6CD2HTXK1X0P77L,$version:v1,$digest:'4CY7785JSPX7XXDDWC8SMVB4YH6NZ4L9THJV61A6M09KBWVYRPAKWK74R4T5XRJFX8TZXK1KWM55ZS2ARCBS269BKHN8Y9KKFZJCPBH']>
  */
 
 var TASK_TEMPLATE =
@@ -77,6 +75,9 @@ function loadTask(filename) {
 
     // create the compiled type context
     var literals = bali.List.fromCollection([
+        'true',
+        'none',
+        'false',
         '"five"',
         '"parameter"',
         '"parameter1"',
@@ -86,14 +87,11 @@ function loadTask(filename) {
         3,
         5,
         "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>",
+        "<bali:[$protocol:v1,$tag:#3Q16VFHF9ZZLB7H1X6CD2HTXK1X0P77L,$version:v1,$digest:'4CY7785JSPX7XXDDWC8SMVB4YH6NZ4L9THJV61A6M09KBWVYRPAKWK74R4T5XRJFX8TZXK1KWM55ZS2ARCBS269BKHN8Y9KKFZJCPBH']>",
         bali.parser.parseDocument('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#CL4KHJ4W1CKZBXCM90JQCP3D29120WQD,$version:v1,$digest:'1CJT0ZGPV2DHH44R8AJ4X3AHRLV73F7QFBS9TXHRR5833TXRML44GCNG2DPRZMLFD1TJQQRSN7RKWSKP8NSXHSPX06046544HK04GJ8']>\n" +
+        "    <bali:[$protocol:v1,$tag:#3Q16VFHF9ZZLB7H1X6CD2HTXK1X0P77L,$version:v1,$digest:'4CY7785JSPX7XXDDWC8SMVB4YH6NZ4L9THJV61A6M09KBWVYRPAKWK74R4T5XRJFX8TZXK1KWM55ZS2ARCBS269BKHN8Y9KKFZJCPBH']>\n" +
         ')'),
-        'false',
         '$foo',
-        'none',
-        'true',
         bali.parser.parseDocument('{return prefix + name}')
     ]);
     var constants = bali.Catalog.fromCollection({constant: 5});
@@ -430,7 +428,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $factorial WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().toString()).to.equal('6');
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(6))).to.equal(true);
 
             // 3.InvokeWith2Parameters:
             // PUSH LITERAL `5`
@@ -439,7 +437,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().toString()).to.equal('11');
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(11))).to.equal(true);
 
             // 4.InvokeWith3Parameters:
             // PUSH LITERAL `13`
@@ -448,7 +446,7 @@ describe('Bali Virtual Machine™', function() {
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().toString()).to.equal('11');
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(11))).to.equal(true);
 
             // EOF
             expect(processor.step()).to.equal(false);
@@ -516,7 +514,6 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH LITERAL `none`
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
-                console.log('processor: ' + processor);
                 // HANDLE EXCEPTION
                 processor.step();
                 

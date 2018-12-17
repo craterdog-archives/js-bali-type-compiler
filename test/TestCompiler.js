@@ -45,8 +45,8 @@ describe('Bali Virtual Macine™', function() {
                 var baliFile = testFolder + prefix + '.bali';
                 var basmFile = testFolder + prefix + '.basm';
                 var source = fs.readFileSync(baliFile, 'utf8');
-                source = bali.parser.parseDocument(source);
-                expect(source).to.exist;  // jshint ignore:line
+                var procedure = bali.parser.parseDocument(source);
+                expect(procedure).to.exist;  // jshint ignore:line
 
                 // create the compilation type context
                 var literals = new bali.List();
@@ -58,16 +58,17 @@ describe('Bali Virtual Macine™', function() {
                 type.setValue('$procedures', procedures);
 
                 // compile the procedure
-                var procedure = compiler.compiler.compileProcedure(type, source);
-                expect(procedure).to.exist;  // jshint ignore:line
+                var compiled = compiler.compiler.compileProcedure(type, procedure);
+                expect(compiled).to.exist;  // jshint ignore:line
 
                 // assemble the procedure into bytecode
-                compiler.assembler.assembleProcedure(type, procedure);
+                compiler.assembler.assembleProcedure(type, compiled);
 
-                //fs.writeFileSync(basmFile, procedure.toString(), 'utf8');
+                source = compiled.toString() + '\n';  // POSIX compliant <EOL>
+                //fs.writeFileSync(basmFile, source, 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');
                 expect(expected).to.exist;  // jshint ignore:line
-                expect(procedure.toString()).to.equal(expected);
+                expect(source).to.equal(expected);
             }
         });
 
@@ -95,9 +96,10 @@ describe('Bali Virtual Macine™', function() {
                 expect(typeCitation).to.exist;  // jshint ignore:line
                 //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);
-                //fs.writeFileSync(proceduresFile, procedures.toString() + '\n', 'utf8');
+                source = procedures.toString() + '\n';  // POSIX compliant <EOL>
+                //fs.writeFileSync(proceduresFile, source, 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
-                expect(procedures.toString() + '\n').to.equal(expected);
+                expect(source).to.equal(expected);
             }
         });
 

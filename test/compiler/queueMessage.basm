@@ -23,7 +23,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '2801D0018001A00428026003B82188016002E800'(
+    $bytecode: '2801D0018001FFFF28026003B83088016002E800'(
         $base: 16
         $mediatype: "application/bcod"
     )

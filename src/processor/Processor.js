@@ -672,6 +672,7 @@ var instructionHandlers = [
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // search up the stack for a handler
         while (processor.context) {
+            console.log('handlers: ' + processor.context.handlers);
             if (processor.context.handlers.isEmpty()) {
                 if (!popContext(processor)) {
                     // unhandled exception
@@ -682,9 +683,11 @@ var instructionHandlers = [
                 }
             }
             // retrieve the address of the next exception handler
+            console.log('handlers: ' + processor.context.handlers);
             var handlerAddress = processor.context.handlers.removeItem().toNumber();
             // use that address as the next instruction to be executed
             processor.context.address = handlerAddress;
+            break;
         }
     },
 
