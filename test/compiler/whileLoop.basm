@@ -8,18 +8,18 @@
         $condition
         $target
     ]
-    $procedures: [$asBoolean]
+    $procedures: []
     $addresses: [
         "1.WhileStatement": 1
         "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 5
-        "1.1.2.IfStatement": 7
-        "1.1.2.1.ConditionClause": 8
-        "1.1.2.1.1.BreakStatement": 11
-        "1.1.2.IfStatementDone": 12
-        "1.1.3.EvaluateStatement": 13
-        "1.ConditionRepeat": 15
-        "1.WhileStatementDone": 16
+        "1.1.1.EvaluateStatement": 4
+        "1.1.2.IfStatement": 6
+        "1.1.2.1.ConditionClause": 7
+        "1.1.2.1.1.BreakStatement": 9
+        "1.1.2.IfStatementDone": 10
+        "1.1.3.EvaluateStatement": 11
+        "1.ConditionRepeat": 13
+        "1.WhileStatementDone": 14
     ]
     $instructions: "
         1.WhileStatement:
@@ -27,7 +27,6 @@
         
         1.1.ConditionClause:
         LOAD VARIABLE $condition
-        EXECUTE $asBoolean ON TARGET
         JUMP TO 1.WhileStatementDone ON FALSE
         
         1.1.1.EvaluateStatement:
@@ -39,7 +38,6 @@
         
         1.1.2.1.ConditionClause:
         LOAD VARIABLE $a
-        EXECUTE $asBoolean ON TARGET
         JUMP TO 1.1.2.IfStatementDone ON FALSE
         
         1.1.2.1.1.BreakStatement:
@@ -61,10 +59,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '
-        00006005D00118106003800200006002D001180C00100000600480020002
-        6001E800
-    '(
+    $bytecode: '00006005180E6003800200006002180A000E00006004800200026001E800'(
         $base: 16
         $mediatype: "application/bcod"
     )

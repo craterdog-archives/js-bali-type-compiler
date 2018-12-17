@@ -6,16 +6,16 @@
         $target
         $yes
     ]
-    $procedures: [$asBoolean]
+    $procedures: []
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 5
-        "1.1.ConditionClauseDone": 7
-        "1.2.ElseClause": 8
-        "1.2.1.EvaluateStatement": 9
-        "1.2.ElseClauseDone": 11
-        "1.IfStatementDone": 12
+        "1.1.1.EvaluateStatement": 4
+        "1.1.ConditionClauseDone": 6
+        "1.2.ElseClause": 7
+        "1.2.1.EvaluateStatement": 8
+        "1.2.ElseClauseDone": 10
+        "1.IfStatementDone": 11
     ]
     $instructions: "
         1.IfStatement:
@@ -23,7 +23,6 @@
         
         1.1.ConditionClause:
         PUSH LITERAL `true`
-        EXECUTE $asBoolean ON TARGET
         JUMP TO 1.2.ElseClause ON FALSE
         
         1.1.1.EvaluateStatement:
@@ -49,7 +48,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '00002801D001180860048001000C00006002800100006001E800'(
+    $bytecode: '00002801180760048001000B00006002800100006001E800'(
         $base: 16
         $mediatype: "application/bcod"
     )

@@ -6,19 +6,19 @@
         $target
         $yes
     ]
-    $procedures: [$asBoolean]
+    $procedures: []
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 5
-        "1.1.ConditionClauseDone": 7
-        "1.2.ConditionClause": 8
-        "1.2.1.EvaluateStatement": 11
-        "1.2.ConditionClauseDone": 13
-        "1.3.ElseClause": 14
-        "1.3.1.EvaluateStatement": 15
-        "1.3.ElseClauseDone": 17
-        "1.IfStatementDone": 18
+        "1.1.1.EvaluateStatement": 4
+        "1.1.ConditionClauseDone": 6
+        "1.2.ConditionClause": 7
+        "1.2.1.EvaluateStatement": 9
+        "1.2.ConditionClauseDone": 11
+        "1.3.ElseClause": 12
+        "1.3.1.EvaluateStatement": 13
+        "1.3.ElseClauseDone": 15
+        "1.IfStatementDone": 16
     ]
     $instructions: "
         1.IfStatement:
@@ -26,7 +26,6 @@
         
         1.1.ConditionClause:
         PUSH LITERAL `true`
-        EXECUTE $asBoolean ON TARGET
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
@@ -38,7 +37,6 @@
         
         1.2.ConditionClause:
         PUSH LITERAL `false`
-        EXECUTE $asBoolean ON TARGET
         JUMP TO 1.3.ElseClause ON FALSE
         
         1.2.1.EvaluateStatement:
@@ -65,8 +63,8 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        00002801D00118086004800100122802D001180E60028001001200002803
-        800100006001E800
+        0000280118076004800100102802180C6002800100100000280380010000
+        6001E800
     '(
         $base: 16
         $mediatype: "application/bcod"

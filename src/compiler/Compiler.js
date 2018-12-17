@@ -120,11 +120,9 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     var operator = tree.operator;
     switch (operator) {
@@ -232,7 +230,6 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     // the VM places the value of the reference to the location of the document
     // on top of the component stack
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
 
     // the VM stores the value of the reference to the location into a temporary variable
     var location = this.createTemporaryVariable('location');
@@ -259,7 +256,6 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
     // the VM loads the value of the reference to the location of the persistent
     // document onto the top of the component stack
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
 
     // the VM stores the value of the reference to the location into a temporary variable
     var location = this.createTemporaryVariable('location');
@@ -285,11 +281,9 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM performs the comparison operation
     var operator = tree.operator;
@@ -329,7 +323,6 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asLogical', 'ON TARGET');
 
     // the VM finds the logical complement of the top value on the component stack
     this.builder.insertInvokeInstruction('$complement', 1);
@@ -380,9 +373,6 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
     // the VM loads the value of the proposed expression back onto the component stack
     this.builder.insertLoadInstruction('VARIABLE', value);
 
-    // the VM replaces the proposed value with its boolean value
-    this.builder.insertExecuteInstruction('$asBoolean', 'ON TARGET');
-
     // the VM loads the value of the proposed expression back onto the component stack
     this.builder.insertLoadInstruction('VARIABLE', value);
 
@@ -405,7 +395,6 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
 
     // the VM stores the value of the reference to the location into a temporary variable
     var location = this.createTemporaryVariable('location');
@@ -429,7 +418,6 @@ CompilingVisitor.prototype.visitDiscardClause = function(tree) {
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);  // reference expression
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
 
     // the VM stores the value of the reference to the location into a temporary variable
     var location = this.createTemporaryVariable('location');
@@ -520,11 +508,9 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
 
     // the VM places the result of the base expression on top of the component stack
     firstOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM places the result of the exponent expression on top of the component stack
     secondOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM leaves the result of raising the base to the exponent on top of the component stack
     this.builder.insertInvokeInstruction('$exponential', 2);
@@ -542,7 +528,6 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM leaves the result of the factorial of the value on top of the component stack
     this.builder.insertInvokeInstruction('$factorial', 1);
@@ -663,7 +648,6 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
 
         // the VM places the condition value on top of the component stack
         condition.acceptVisitor(this);
-        this.builder.insertExecuteInstruction('$asBoolean', 'ON TARGET');
 
         // determine what the next label will be
         var nextLabel = this.builder.getNextClausePrefix();
@@ -747,7 +731,6 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM leaves the result of the inversion of the value on top of the component stack
     var operator = tree.operator;
@@ -814,11 +797,9 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
 
     // the VM places the value of the first expression on top of the component stack
     firstOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asLogical', 'ON TARGET');
 
     // the VM places the value of the second expression on top of the component stack
     secondOperand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asLogical', 'ON TARGET');
 
     // the VM leaves the result of the logical operation on the values on top of the component stack
     var operator = tree.operator;
@@ -854,7 +835,6 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asNumeric', 'ON TARGET');
 
     // the VM leaves the result of the magnitude of the value on top of the component stack
     this.builder.insertInvokeInstruction('$magnitude', 1);
@@ -974,7 +954,6 @@ CompilingVisitor.prototype.visitQueueClause = function(tree) {
 
     // the VM stores the reference to the queue in a temporary variable
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
     var queue = this.createTemporaryVariable('queue');
     this.builder.insertStoreInstruction('VARIABLE', queue);
 
@@ -1053,7 +1032,6 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
 
     // the VM stores the value of the reference to the location into a temporary variable
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
     var location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
@@ -1311,7 +1289,6 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
 
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asSequential', 'ON TARGET');
 
     // the VM replaces the value on the component stack with the parent and index of the subcomponent
     indices.acceptVisitor(this);
@@ -1376,7 +1353,6 @@ CompilingVisitor.prototype.visitWaitClause = function(tree) {
     // the VM places the value of the reference to the queue
     // on top of the component stack
     reference.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asReference', 'ON TARGET');
 
     // the VM stores the value of the reference to the queue into a temporary variable
     var queue = this.createTemporaryVariable('queue');
@@ -1410,7 +1386,6 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
 
     // the VM jumps past the end of the loop if the condition expression evaluates to false
     condition.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asBoolean', 'ON TARGET');
     this.builder.insertJumpInstruction(statement.doneLabel, 'ON FALSE');
 
     // if the condition is true, then the VM enters the block
@@ -1441,7 +1416,6 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
 
     // the VM places the value of the sequence expression onto the top of the component stack
     sequence.acceptVisitor(this);
-    this.builder.insertExecuteInstruction('$asSequential', 'ON TARGET');
 
     // the VM replaces the sequence on the component stack with an iterator to it
     this.builder.insertExecuteInstruction('$iterator', 'ON TARGET');

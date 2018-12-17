@@ -8,16 +8,15 @@
         $messages
         $target
     ]
-    $procedures: [$asReference]
+    $procedures: []
     $addresses: [
         "1.WaitStatement": 1
-        "2.WaitStatement": 7
+        "2.WaitStatement": 6
     ]
     $instructions: "
         1.WaitStatement:
         PUSH LITERAL `$message`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        EXECUTE $asReference ON TARGET
         STORE VARIABLE $$queue-1
         LOAD MESSAGE $$queue-1
         STORE VARIABLE $message
@@ -28,7 +27,6 @@
         INVOKE $getValue WITH 2 PARAMETERS
         PUSH LITERAL `5`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        EXECUTE $asReference ON TARGET
         STORE VARIABLE $$queue-2
         LOAD MESSAGE $$queue-2
         INVOKE $setValue WITH 3 PARAMETERS
@@ -37,10 +35,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '
-        28012802D00180016801800460052803B02128042802D00180026802B830
-        6003E800
-    '(
+    $bytecode: '2801280280016801800460052803B0212804280280026802B8306003E800'(
         $base: 16
         $mediatype: "application/bcod"
     )
