@@ -84,9 +84,9 @@ Processor.prototype.run = function() {
 Processor.prototype.toString = function() {
     var task = exportTask(this.task);
     var contexts = task.getValue('$contexts');
-    contexts.addItem(exportContext(this.context));  // this is affecting the live stack!
+    if (this.context) contexts.addItem(exportContext(this.context));  // this is affecting the live stack!
     var string = task.toString();
-    contexts.removeItem();  // so we must remove it again afterward!  TODO: fix this!!!
+    if (this.context) contexts.removeItem();  // so we must remove it again afterward!  TODO: fix this!!!
     return string;
 };
 
@@ -94,11 +94,10 @@ Processor.prototype.toString = function() {
 // PRIVATE FUNCTIONS
 
 /*
- * This function fetches the next 16 bit bytecode instruction from the current procedure context.
+ * This function determines whether or not the task assigned to the specified processor is runnable.
  */
 function isRunnable(processor) {
-    var hasInstructions = processor.context &&
-            processor.context.address <= processor.context.bytecode.length;
+    var hasInstructions = processor.context && processor.context.address <= processor.context.bytecode.length;
     var isActive = processor.task.status === ACTIVE;
     var hasTokens = processor.task.balance > 0;
     return hasInstructions && isActive && hasTokens;
@@ -121,7 +120,7 @@ function fetchInstruction(processor) {
 
 
 /*
- * This function executes the next 16 bit bytecode instruction.
+ * This function executes the current 16 bit bytecode instruction.
  */
 function executeInstruction(processor) {
     // decode the bytecode instruction
@@ -137,7 +136,6 @@ function executeInstruction(processor) {
     // update the state of the task context
     processor.task.clock++;
     processor.task.balance--;
-    processor.context.address++;
 }
 
 
@@ -172,9 +170,15 @@ function publishCompletionEvent(processor) {
         '    $tag: ' + processor.task.tag + '\n' +
         '    $account: ' + processor.task.account + '\n' +
         '    $balance: ' + processor.task.balance + '\n' +
-        '    $clock: ' + processor.task.clock + '\n' +
-        '    $result: ' + processor.task.result.toDocument('    ') + '\n' +
-        ']';
+        '    $clock: ' + processor.task.clock + '\n';
+    if (processor.task.result) {
+        source +=
+        '    $result: ' + processor.task.result.toDocument('    ') + '\n';
+    } else {
+        source +=
+        '    $exception: ' + processor.task.exception.toDocument('    ') + '\n';
+    }
+        source += ']';
     var event = bali.parser.parseDocument(source);
     var citation = processor.nebula.createDraft(event);
     var draft = processor.nebula.retrieveDraft(citation);
@@ -349,17 +353,6 @@ function pushContext(processor, target, citation, parameters, index) {
 }
 
 
-function popContext(processor) {
-    var notDone = !processor.task.contexts.isEmpty();
-    if (notDone) {
-        processor.context = importContext(processor.task.contexts.removeItem());
-    } else {
-        processor.context = undefined;
-    }
-    return notDone;
-}
-
-
 /*
  * This list contains the instruction handlers for each type of machine instruction.
  */
@@ -370,7 +363,9 @@ var instructionHandlers = [
         // otherwise it is a SKIP INSTRUCTION (aka NOOP)
         if (operand) {
             var address = operand;
-            processor.context.address = address - 1;  // account for auto-increment
+            processor.context.address = address;
+        } else {
+            processor.context.address++;
         }
     },
 
@@ -382,7 +377,9 @@ var instructionHandlers = [
         var condition = processor.task.stack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
         if (bali.Filter.NONE.isEqualTo(condition)) {
-            processor.context.address = address - 1;  // account for auto-increment
+            processor.context.address = address;
+        } else {
+            processor.context.address++;
         }
     },
 
@@ -394,7 +391,9 @@ var instructionHandlers = [
         var condition = processor.task.stack.removeItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
         if (bali.Probability.TRUE.isEqualTo(condition)) {
-            processor.context.address = address - 1;  // account for auto-increment
+            processor.context.address = address;
+        } else {
+            processor.context.address++;
         }
     },
 
@@ -406,7 +405,9 @@ var instructionHandlers = [
         var condition = processor.task.stack.removeItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
         if (bali.Probability.FALSE.isEqualTo(condition)) {
-            processor.context.address = address - 1;  // account for auto-increment
+            processor.context.address = address;
+        } else {
+            processor.context.address++;
         }
     },
 
@@ -416,6 +417,7 @@ var instructionHandlers = [
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
         processor.context.handlers.addItem(new bali.Complex(handlerAddress.toString()));
+        processor.context.address++;
     },
 
     // PUSH LITERAL literal
@@ -425,6 +427,7 @@ var instructionHandlers = [
         // lookup the literal associated with the index
         var literal = processor.context.literals.getItem(index);
         processor.task.stack.addItem(literal);
+        processor.context.address++;
     },
 
     // PUSH CONSTANT constant
@@ -434,6 +437,7 @@ var instructionHandlers = [
         // lookup the constant associated with the index
         var constant = processor.context.constants.getItem(index).value;
         processor.task.stack.addItem(constant);
+        processor.context.address++;
     },
 
     // PUSH PARAMETER constant
@@ -443,6 +447,7 @@ var instructionHandlers = [
         // lookup the parameter associated with the index
         var parameter = processor.context.parameters.getItem(index).value;
         processor.task.stack.addItem(parameter);
+        processor.context.address++;
     },
 
     // POP HANDLER
@@ -451,6 +456,7 @@ var instructionHandlers = [
         // remove the current exception handler address from the top of the handlers stack
         // since it is no longer in scope
         processor.context.handlers.removeItem();
+        processor.context.address++;
     },
 
     // POP COMPONENT
@@ -458,6 +464,7 @@ var instructionHandlers = [
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // remove the component that is on top of the component stack since it was not used
         processor.task.stack.removeItem();
+        processor.context.address++;
     },
 
     // UNIMPLEMENTED POP OPERATION
@@ -477,6 +484,7 @@ var instructionHandlers = [
         // lookup the variable associated with the index
         var variable = processor.context.variables.getItem(index).value;
         processor.task.stack.addItem(variable);
+        processor.context.address++;
     },
 
     // LOAD MESSAGE symbol
@@ -490,11 +498,10 @@ var instructionHandlers = [
         var message = processor.nebula.receiveMessage(queue);
         if (message) {
             processor.task.stack.addItem(message);
+            processor.context.address++;
         } else {
             // set the task status to 'waiting'
             processor.task.status = WAITING;
-            // make sure that the same instruction will be tried again
-            processor.context.address--;
         }
     },
 
@@ -509,6 +516,7 @@ var instructionHandlers = [
         var draft = processor.nebula.retrieveDraft(citation);
         // push the draft on top of the component stack
         processor.task.stack.addItem(draft);
+        processor.context.address++;
     },
 
     // LOAD DOCUMENT symbol
@@ -522,6 +530,7 @@ var instructionHandlers = [
         var document = processor.nebula.retrieveDocument(citation);
         // push the document on top of the component stack
         processor.task.stack.addItem(document);
+        processor.context.address++;
     },
 
     // STORE VARIABLE symbol
@@ -532,6 +541,7 @@ var instructionHandlers = [
         var component = processor.task.stack.removeItem();
         // and store the component in the variable associated with the index
         processor.context.variables.getItem(index).setValue(component);
+        processor.context.address++;
     },
 
     // STORE MESSAGE symbol
@@ -545,6 +555,7 @@ var instructionHandlers = [
         // TODO: jump to exception handler if queue isn't a tag
         // send the message to the queue in the nebula
         processor.nebula.queueMessage(queue, message);
+        processor.context.address++;
     },
 
     // STORE DRAFT symbol
@@ -558,6 +569,7 @@ var instructionHandlers = [
         // TODO: jump to exception handler if the citation isn't a citation
         // write the cited draft to the nebula repository
         processor.nebula.saveDraft(citation, draft);
+        processor.context.address++;
     },
 
     // STORE DOCUMENT symbol
@@ -572,6 +584,7 @@ var instructionHandlers = [
         // write the cited document to the nebula repository
         citation = processor.nebula.commitDocument(citation, document);
         processor.context.variables.getItem(index).setValue(citation);
+        processor.context.address++;
     },
 
     // INVOKE symbol
@@ -582,6 +595,7 @@ var instructionHandlers = [
         var result = intrinsics.functions[index]();
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
+        processor.context.address++;
     },
 
     // INVOKE symbol WITH PARAMETER
@@ -594,6 +608,7 @@ var instructionHandlers = [
         var result = intrinsics.functions[index](parameter);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
+        processor.context.address++;
     },
 
     // INVOKE symbol WITH 2 PARAMETERS
@@ -607,6 +622,7 @@ var instructionHandlers = [
         var result = intrinsics.functions[index](parameter1, parameter2);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
+        processor.context.address++;
     },
 
     // INVOKE symbol WITH 3 PARAMETERS
@@ -621,6 +637,7 @@ var instructionHandlers = [
         var result = intrinsics.functions[index](parameter1, parameter2, parameter3);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
+        processor.context.address++;
     },
 
     // EXECUTE symbol
@@ -632,6 +649,7 @@ var instructionHandlers = [
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
+        processor.context.address++;
     },
 
     // EXECUTE symbol WITH PARAMETERS
@@ -643,6 +661,7 @@ var instructionHandlers = [
         var target = bali.Filter.NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
+        processor.context.address++;
     },
 
     // EXECUTE symbol ON TARGET
@@ -654,6 +673,7 @@ var instructionHandlers = [
         var target = processor.task.stack.removeItem();
         var type = new bali.Reference(target.getType());
         pushContext(processor, target, type, parameters, index);
+        processor.context.address++;
     },
 
     // EXECUTE symbol ON TARGET WITH PARAMETERS
@@ -665,6 +685,7 @@ var instructionHandlers = [
         var target = processor.task.stack.removeItem();
         var type = new bali.Reference(target.getType());
         pushContext(processor, target, type, parameters, index);
+        processor.context.address++;
     },
 
     // HANDLE EXCEPTION
@@ -672,33 +693,38 @@ var instructionHandlers = [
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // search up the stack for a handler
         while (processor.context) {
-            console.log('handlers: ' + processor.context.handlers);
-            if (processor.context.handlers.isEmpty()) {
-                if (!popContext(processor)) {
-                    // unhandled exception
-                    var exception = processor.task.stack.removeItem();
-                    processor.task.exception = exception;
+            if (!processor.context.handlers.isEmpty()) {
+                // retrieve the address of the next exception handler
+                var handlerAddress = processor.context.handlers.removeItem().toNumber();
+                // use that address as the next instruction to be executed
+                processor.context.address = handlerAddress;
+                break;
+            } else {
+                if (!processor.task.contexts.isEmpty()) {
+                    // retrieve the previous context from the stack
+                    processor.context = importContext(processor.task.contexts.removeItem());
+                } else {
+                    // task completed with an unhandled exception
+                    processor.task.exception = processor.task.stack.removeItem();
                     processor.task.status = DONE;
-                    break;
+                    processor.context = undefined;
                 }
             }
-            // retrieve the address of the next exception handler
-            console.log('handlers: ' + processor.context.handlers);
-            var handlerAddress = processor.context.handlers.removeItem().toNumber();
-            // use that address as the next instruction to be executed
-            processor.context.address = handlerAddress;
-            break;
         }
     },
 
     // HANDLE RESULT
     function(processor, operand) {
         if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
-        if (!popContext(processor)) {
-            // we're done
-            var result = processor.task.stack.removeItem();
-            processor.task.result = result;
+        if (!processor.task.contexts.isEmpty()) {
+            // retrieve the previous context from the stack
+            processor.context = importContext(processor.task.contexts.removeItem());
+            processor.context.address++;
+        } else {
+            // task completed with a result
+            processor.task.result = processor.task.stack.removeItem();
             processor.task.status = DONE;
+            processor.context = undefined;
         }
     },
 
