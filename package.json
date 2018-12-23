@@ -28,7 +28,7 @@
     "grunt-contrib-uglify": "^4.0.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.2.0",
-    "bali-digital-notary": "^1.2.8"
+    "bali-digital-notary": "^1.3.0"
   },
   "dependencies": {
     "antlr4": "^4.7.1",
