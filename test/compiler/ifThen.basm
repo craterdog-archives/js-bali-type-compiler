@@ -30,7 +30,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '000028011806600380016001E800'(
+    $bytecode: '000028011806600380016001E000'(
         $base: 16
         $mediatype: "application/bcod"
     )

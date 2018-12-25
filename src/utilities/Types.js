@@ -48,8 +48,8 @@ exports.WITH_PARAMETERS = 1;
 exports.ON_TARGET = 2;
 exports.ON_TARGET_WITH_PARAMETERS = 3;
 
-exports.EXCEPTION = 0;
-exports.RESULT = 1;
+exports.RESULT = 0;
+exports.EXCEPTION = 1;
 
 
 // PUBLIC FUNCTIONS
@@ -180,6 +180,6 @@ var EXECUTE_MODIFIERS = [
 ];
 
 var HANDLE_MODIFIERS = [
-    'EXCEPTION',
-    'RESULT'
+    'RESULT',
+    'EXCEPTION'
 ];

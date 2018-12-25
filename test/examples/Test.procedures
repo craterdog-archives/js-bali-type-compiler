@@ -16,7 +16,7 @@
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '2801E800'(
+            $bytecode: '2801E000'(
                 $base: 16
                 $mediatype: "application/bcod"
             )
@@ -78,8 +78,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20062802E0004000001200008001600160012802B026181148003801E800
-                0012E00000002803E800
+                20062802E8004000001200008001600160012802B026181148003801E000
+                0012E80000002803E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -99,7 +99,7 @@
             "(
                 $mediatype: "application/basm"
             )
-            $bytecode: '6001E800'(
+            $bytecode: '6001E000'(
                 $base: 16
                 $mediatype: "application/bcod"
             )
@@ -161,8 +161,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20063802E0004000001200008001600160012802B026181148002801E800
-                0012E00000002803E800
+                20063802E8004000001200008001600160012802B026181148002801E000
+                0012E80000002803E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"

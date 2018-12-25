@@ -434,7 +434,7 @@ var instructionHandlers = [
         processor.context.address++;
     },
 
-    // PUSH PARAMETER constant
+    // PUSH PARAMETER parameter
     function(processor, operand) {
         var index = operand;
         // lookup the parameter associated with the index
@@ -663,6 +663,20 @@ var instructionHandlers = [
         processor.context.address++;
     },
 
+    // HANDLE RESULT
+    function(processor, operand) {
+        if (!processor.task.contexts.isEmpty()) {
+            // retrieve the previous context from the stack
+            processor.context = importContext(processor.task.contexts.removeItem());
+            processor.context.address++;
+        } else {
+            // task completed with a result
+            processor.task.result = processor.task.stack.removeItem();
+            processor.task.status = DONE;
+            processor.context = undefined;
+        }
+    },
+
     // HANDLE EXCEPTION
     function(processor, operand) {
         // search up the stack for a handler
@@ -684,20 +698,6 @@ var instructionHandlers = [
                     processor.context = undefined;
                 }
             }
-        }
-    },
-
-    // HANDLE RESULT
-    function(processor, operand) {
-        if (!processor.task.contexts.isEmpty()) {
-            // retrieve the previous context from the stack
-            processor.context = importContext(processor.task.contexts.removeItem());
-            processor.context.address++;
-        } else {
-            // task completed with a result
-            processor.task.result = processor.task.stack.removeItem();
-            processor.task.status = DONE;
-            processor.context = undefined;
         }
     },
 
