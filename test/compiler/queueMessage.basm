@@ -12,7 +12,7 @@
         1.QueueStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$queue-1
-        INVOKE $catalog
+        INVOKE $Catalog
         PUSH LITERAL `$foo`
         LOAD VARIABLE $bar
         INVOKE $setValue WITH 3 PARAMETERS
@@ -22,7 +22,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '28018001FFFF28026003B83088016002E800'(
+    $bytecode: '28018001A00428026003B83088016002E800'(
         $base: 16
         $mediatype: "application/bcod"
     )

@@ -285,7 +285,7 @@ exports.functions = [
     // random
     function() {
         //console.log('      random()');
-        return new bali.Probability();
+        return bali.Probability.random();
     },
 
     // remainder

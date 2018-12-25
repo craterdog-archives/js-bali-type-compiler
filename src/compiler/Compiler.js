@@ -188,7 +188,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
     // the VM places an empty catalog on the component stack
-    this.builder.insertInvokeInstruction('$catalog', 0);
+    this.builder.insertInvokeInstruction('$Catalog', 0);
 
     // the VM adds each association to the catalog
     this.depth++;
@@ -762,7 +762,7 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
     // the VM replaces the size value on the component stack with a new list of that size
-    this.builder.insertInvokeInstruction('$list', 0);
+    this.builder.insertInvokeInstruction('$List', 0);
 
     // the VM adds each expression to the list
     this.depth++;
@@ -885,7 +885,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
     this.depth--;
 
     // the VM places a new parameters component containing the collection on the top of the component stack
-    this.builder.insertInvokeInstruction('$parameters', 1);
+    this.builder.insertInvokeInstruction('$Parameters', 1);
 
     // the parameter list remains on the component stack
 };
@@ -981,7 +981,7 @@ CompilingVisitor.prototype.visitRange = function(range) {
     lastValue.acceptVisitor(this);  // last value in the range
 
     // the VM replaces the two range values on the component stack with a new range component
-    this.builder.insertInvokeInstruction('$range', 2);
+    this.builder.insertInvokeInstruction('$Range', 2);
 
     if (range.isParameterized()) {
         // the VM loads the parameters associated with the range onto the top of the component stack
@@ -1139,7 +1139,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
     this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new set of that size
-    this.builder.insertInvokeInstruction('$set', 1);
+    this.builder.insertInvokeInstruction('$Set', 1);
 
     // the VM adds each expression to the set
     this.depth++;
@@ -1198,7 +1198,7 @@ CompilingVisitor.prototype.visitStack = function(stack) {
     this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new stack of that size
-    this.builder.insertInvokeInstruction('$stack', 1);
+    this.builder.insertInvokeInstruction('$Stack', 1);
 
     // the VM adds each expression to the stack
     this.depth++;

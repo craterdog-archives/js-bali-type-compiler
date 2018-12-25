@@ -371,7 +371,6 @@ var instructionHandlers = [
 
     // JUMP TO label ON NONE
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var address = operand;
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
@@ -385,7 +384,6 @@ var instructionHandlers = [
 
     // JUMP TO label ON TRUE
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var address = operand;
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
@@ -399,7 +397,6 @@ var instructionHandlers = [
 
     // JUMP TO label ON FALSE
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var address = operand;
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
@@ -413,7 +410,6 @@ var instructionHandlers = [
 
     // PUSH HANDLER label
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero address operand.');
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
         processor.context.handlers.addItem(new bali.Complex(handlerAddress.toString()));
@@ -422,7 +418,6 @@ var instructionHandlers = [
 
     // PUSH LITERAL literal
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the literal associated with the index
         var literal = processor.context.literals.getItem(index);
@@ -432,7 +427,6 @@ var instructionHandlers = [
 
     // PUSH CONSTANT constant
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the constant associated with the index
         var constant = processor.context.constants.getItem(index).value;
@@ -442,7 +436,6 @@ var instructionHandlers = [
 
     // PUSH PARAMETER constant
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the parameter associated with the index
         var parameter = processor.context.parameters.getItem(index).value;
@@ -452,7 +445,6 @@ var instructionHandlers = [
 
     // POP HANDLER
     function(processor, operand) {
-        if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // remove the current exception handler address from the top of the handlers stack
         // since it is no longer in scope
         processor.context.handlers.removeItem();
@@ -461,7 +453,6 @@ var instructionHandlers = [
 
     // POP COMPONENT
     function(processor, operand) {
-        if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // remove the component that is on top of the component stack since it was not used
         processor.task.stack.removeItem();
         processor.context.address++;
@@ -479,7 +470,6 @@ var instructionHandlers = [
 
     // LOAD VARIABLE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the variable associated with the index
         var variable = processor.context.variables.getItem(index).value;
@@ -489,7 +479,6 @@ var instructionHandlers = [
 
     // LOAD MESSAGE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the queue tag associated with the index
         var queue = processor.context.variables.getItem(index).value;
@@ -507,7 +496,6 @@ var instructionHandlers = [
 
     // LOAD DRAFT symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the citation associated with the index
         var citation = processor.context.variables.getItem(index).value;
@@ -521,7 +509,6 @@ var instructionHandlers = [
 
     // LOAD DOCUMENT symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // lookup the citation associated with the index
         var citation = processor.context.variables.getItem(index).value;
@@ -535,7 +522,6 @@ var instructionHandlers = [
 
     // STORE VARIABLE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the component that is on top of the component stack off the stack
         var component = processor.task.stack.removeItem();
@@ -546,7 +532,6 @@ var instructionHandlers = [
 
     // STORE MESSAGE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the message that is on top of the component stack off the stack
         var message = processor.task.stack.removeItem();
@@ -560,7 +545,6 @@ var instructionHandlers = [
 
     // STORE DRAFT symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the draft that is on top of the component stack off the stack
         var draft = processor.task.stack.removeItem();
@@ -574,7 +558,6 @@ var instructionHandlers = [
 
     // STORE DOCUMENT symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the document that is on top of the component stack off the stack
         var document = processor.task.stack.removeItem();
@@ -589,7 +572,6 @@ var instructionHandlers = [
 
     // INVOKE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // call the intrinsic function associated with the index operand
         var result = intrinsics.functions[index]();
@@ -600,7 +582,6 @@ var instructionHandlers = [
 
     // INVOKE symbol WITH PARAMETER
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the parameter off of the component stack
         var parameter = processor.task.stack.removeItem();
@@ -613,7 +594,6 @@ var instructionHandlers = [
 
     // INVOKE symbol WITH 2 PARAMETERS
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the parameters off of the component stack (in reverse order)
         var parameter2 = processor.task.stack.removeItem();
@@ -627,7 +607,6 @@ var instructionHandlers = [
 
     // INVOKE symbol WITH 3 PARAMETERS
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         var index = operand;
         // pop the parameters call off of the component stack (in reverse order)
         var parameter3 = processor.task.stack.removeItem();
@@ -642,7 +621,6 @@ var instructionHandlers = [
 
     // EXECUTE symbol
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
         var parameters = new bali.Parameters(new bali.List());
@@ -654,7 +632,6 @@ var instructionHandlers = [
 
     // EXECUTE symbol WITH PARAMETERS
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
@@ -666,7 +643,6 @@ var instructionHandlers = [
 
     // EXECUTE symbol ON TARGET
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
         var parameters = new bali.Parameters(new bali.List());
@@ -678,7 +654,6 @@ var instructionHandlers = [
 
     // EXECUTE symbol ON TARGET WITH PARAMETERS
     function(processor, operand) {
-        if (!operand) throw new Error('PROCESSOR: The current instruction has a zero index operand.');
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
@@ -690,7 +665,6 @@ var instructionHandlers = [
 
     // HANDLE EXCEPTION
     function(processor, operand) {
-        if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         // search up the stack for a handler
         while (processor.context) {
             if (!processor.context.handlers.isEmpty()) {
@@ -715,7 +689,6 @@ var instructionHandlers = [
 
     // HANDLE RESULT
     function(processor, operand) {
-        if (operand) throw new Error('PROCESSOR: The current instruction has a non-zero operand.');
         if (!processor.task.contexts.isEmpty()) {
             // retrieve the previous context from the stack
             processor.context = importContext(processor.task.contexts.removeItem());
