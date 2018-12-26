@@ -450,34 +450,34 @@ describe('Bali Virtual Machine™', function() {
             // 2.InvokeWithParameter:
             // PUSH LITERAL `3`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(3))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(3))).to.equal(true);
             expect(processor.context.address).to.equal(3);
             // INVOKE $factorial WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(6))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(6))).to.equal(true);
             expect(processor.context.address).to.equal(4);
 
             // 3.InvokeWith2Parameters:
             // PUSH LITERAL `5`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(5))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(5))).to.equal(true);
             expect(processor.context.address).to.equal(5);
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(11))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(11))).to.equal(true);
             expect(processor.context.address).to.equal(6);
 
             // 4.InvokeWith3Parameters:
             // PUSH LITERAL `13`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(13))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(13))).to.equal(true);
             expect(processor.context.address).to.equal(7);
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Complex(11))).to.equal(true);
+            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(11))).to.equal(true);
             expect(processor.context.address).to.equal(8);
 
             // EOF

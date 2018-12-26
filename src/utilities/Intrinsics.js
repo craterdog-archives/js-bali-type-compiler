@@ -16,6 +16,8 @@
 var bali = require('bali-component-framework');
 
 
+// PUBLIC INTRINSIC FUNCTIONS
+
 exports.functions = [
     // <invalid>
     function() {
@@ -25,7 +27,8 @@ exports.functions = [
     // Angle
     function(value) {
         //console.log('      Angle(' + value + ')');
-        return new bali.Angle(value);
+        var angle = constructElement('$Angle', value);
+        return angle;
     },
 
     // Association
@@ -37,7 +40,8 @@ exports.functions = [
     // Binary
     function(value) {
         //console.log('      Binary(' + value + ')');
-        return new bali.Binary(value);
+        var binary = constructElement('$Binary', value);
+        return binary;
     },
 
     // Catalog
@@ -49,13 +53,15 @@ exports.functions = [
     // Duration
     function(value) {
         //console.log('      Duration(' + value + ')');
-        return new bali.Duration(value);
+        var duration = constructElement('$Duration', value);
+        return duration;
     },
 
     // Filter
     function(value) {
         //console.log('      Filter(' + value + ')');
-        return new bali.Filter(value);
+        var filter = constructElement('$Filter', value);
+        return filter;
     },
 
     // List
@@ -67,13 +73,15 @@ exports.functions = [
     // Moment
     function(value) {
         //console.log('      Moment(' + value + ')');
-        return new bali.Moment(value);
+        var moment = constructElement('$Moment', value);
+        return moment;
     },
 
     // Number
     function(value) {
         //console.log('      Number(' + value + ')');
-        return new bali.Complex(value);
+        var number = constructElement('$Number', value);
+        return number;
     },
 
     // Parameters
@@ -85,13 +93,15 @@ exports.functions = [
     // Percent
     function(value) {
         //console.log('      Percent(' + value + ')');
-        return new bali.Percent(value);
+        var percent = constructElement('$Percent', value);
+        return percent;
     },
 
     // Probability
     function(value) {
         //console.log('      Probability(' + value + ')');
-        return new bali.Probability(value);
+        var probability = constructElement('$Probability', value);
+        return probability;
     },
 
     // Queue
@@ -109,7 +119,8 @@ exports.functions = [
     // Reference
     function(value) {
         //console.log('      Reference(' + value + ')');
-        return new bali.Reference(value);
+        var reference = constructElement('$Reference', value);
+        return reference;
     },
 
     // Set
@@ -133,19 +144,22 @@ exports.functions = [
     // Symbol
     function(value) {
         //console.log('      Symbol(' + value + ')');
-        return new bali.Symbol(value);
+        var symbol = constructElement('$Symbol', value);
+        return symbol;
     },
 
     // Tag
     function(value) {
         //console.log('      Tag(' + value + ')');
-        return new bali.Tag(value);
+        var tag = constructElement('$Tag', value);
+        return tag;
     },
 
     // Text
     function(value) {
         //console.log('      Text(' + value + ')');
-        return new bali.Text(value);
+        var text = constructElement('$Text', value);
+        return text;
     },
 
     // Tree
@@ -157,7 +171,8 @@ exports.functions = [
     // Version
     function(value) {
         //console.log('      Version(' + value + ')');
-        return new bali.Version(value);
+        var version = constructElement('$Version', value);
+        return version;
     },
 
     // addItem
@@ -182,7 +197,7 @@ exports.functions = [
     // conjugate
     function(number) {
         //console.log('      conjugate(' + number + ')');
-        return bali.Complex.conjugate(number);
+        return bali.Number.conjugate(number);
     },
 
     // default
@@ -194,7 +209,7 @@ exports.functions = [
     // difference
     function(firstNumber, secondNumber) {
         //console.log('      difference(' + firstNumber + ', ' + secondNumber + ')');
-        return bali.Complex.difference(firstNumber, secondNumber);
+        return bali.Number.difference(firstNumber, secondNumber);
     },
 
     // equal
@@ -206,13 +221,13 @@ exports.functions = [
     // exponential
     function(base, exponent) {
         //console.log('      exponential(' + base + ', ' + exponent + ')');
-        return bali.Complex.exponential(base, exponent);
+        return bali.Number.exponential(base, exponent);
     },
 
     // factorial
     function(number) {
         //console.log('      factorial(' + number + ')');
-        return bali.Complex.factorial(number);
+        return bali.Number.factorial(number);
     },
 
     // getValue
@@ -224,7 +239,7 @@ exports.functions = [
     // inverse
     function(number) {
         //console.log('      inverse(' + number + ')');
-        return bali.Complex.inverse(number);
+        return bali.Number.inverse(number);
     },
 
     // is
@@ -242,7 +257,7 @@ exports.functions = [
     // magnitude
     function(number) {
         //console.log('      magnitude(' + number + ')');
-        return bali.Complex.magnitude(number);
+        return bali.Number.magnitude(number);
     },
 
     // matches
@@ -261,7 +276,7 @@ exports.functions = [
     // negative
     function(number) {
         //console.log('      negative(' + number + ')');
-        return bali.Complex.negative(number);
+        return bali.Number.negative(number);
     },
 
     // or
@@ -273,13 +288,13 @@ exports.functions = [
     // product
     function(firstNumber, secondNumber) {
         //console.log('      product(' + firstNumber + ', ' + secondNumber + ')');
-        return bali.Complex.product(firstNumber, secondNumber);
+        return bali.Number.product(firstNumber, secondNumber);
     },
 
     // quotient
     function(firstNumber, secondNumber) {
         //console.log('      quotient(' + firstNumber + ', ' + secondNumber + ')');
-        return bali.Complex.quotient(firstNumber, secondNumber);
+        return bali.Number.quotient(firstNumber, secondNumber);
     },
 
     // random
@@ -291,7 +306,7 @@ exports.functions = [
     // remainder
     function(firstNumber, secondNumber) {
         //console.log('      remainder(' + firstNumber + ', ' + secondNumber + ')');
-        return bali.Complex.remainder(firstNumber, secondNumber);
+        return bali.Number.remainder(firstNumber, secondNumber);
     },
 
     // sans
@@ -316,9 +331,9 @@ exports.functions = [
     // sum
     function(firstNumber, secondNumber) {
         //console.log('      sum(' + firstNumber + ', ' + secondNumber + ')');
-        //return bali.Complex.sum(firstNumber, secondNumber);
+        //return bali.Number.sum(firstNumber, secondNumber);
         var sum = firstNumber.toNumber() + secondNumber.toNumber();
-        return new bali.Complex(String(sum));
+        return new bali.Number(String(sum));
     },
 
     // xor
@@ -327,6 +342,9 @@ exports.functions = [
         return bali.Probability.xor(firstProbability, secondProbability);
     }
 ];
+
+
+// PUBLIC FUNCTION NAMES
 
 exports.names = [
     '<invalid>',
@@ -387,3 +405,31 @@ exports.invokeByName = function(name, parameters) {
     var result = exports.functions[index].apply(parameters);
     return result;
 };
+
+
+// PRIVATE FUNCTIONS
+
+function constructElement(procedure, value) {
+    var exception;
+    if (value.type !== bali.types.TEXT) {
+        exception = bali.Catalog.fromCollection({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: '$Text',
+            $actual: bali.types.typeName(value.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    try {
+        var constructor = bali[procedure.slice(1)];
+        var element = new constructor(value);
+        return element;
+    } catch (e) {
+        exception = bali.Catalog.fromCollection({
+            $exception: '$parameterValue',
+            $procedure: procedure,
+            $value: value.toString()
+        });
+        throw new bali.Exception(exception);
+    }
+}

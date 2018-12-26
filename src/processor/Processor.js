@@ -412,7 +412,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.context.handlers.addItem(new bali.Complex(handlerAddress.toString()));
+        processor.context.handlers.addItem(new bali.Number(handlerAddress.toString()));
         processor.context.address++;
     },
 
