@@ -1,6 +1,7 @@
 'use strict';
 
-var childProcess = require('child_process');
+const path = require('path');
+const childProcess = require('child_process');
 
 // wrapper function for grunt configuration
 module.exports = function(grunt) {
@@ -18,7 +19,8 @@ module.exports = function(grunt) {
         'test/**/*.js'
       ],
       options: {
-        node: true
+        node: true,
+        esversion: 6
       }
     },
 
@@ -36,7 +38,7 @@ module.exports = function(grunt) {
       build: [
         'dist/*',
         'test/config/repository/types/*',
-        '!test/config/repository/types/#CLVZP92SC3KCY5S94Z1GA535JSKVT3XAv1.bdoc',
+        '!test/config/repository/types/#WG1CC2MF26BV93KPH5X43VXBH92A36MAv1.bdoc',
         'test/config/repository/documents/*',
         'test/config/repository/drafts/*',
         'test/config/repository/queues/*'
@@ -82,28 +84,29 @@ module.exports = function(grunt) {
       }
     },
 
-    // grunt-contrib-concat plugin configuration (file concatenation)
-    concat: {
-      options: {
-        separator: '\n'
+    // grunt-webpack plugin configuration (concatenates and removes whitespace)
+    webpack: {
+      clientConfig: {
+        target: 'web',
+        mode: 'development',
+        node: {
+          fs: "empty"  // required work-around for webpack bug
+        },
+        entry: './index.js',
+        output: {
+          path: path.resolve(__dirname, 'dist'),
+          filename: 'lib-web.js',
+          library: 'vm'
+        }
       },
-      dist: {
-        // concatenate the source files and place the result in destination
-        src: [
-          'src/**/*.js'
-        ],
-        dest: 'dist/<%= pkg.name %>.js'
-      }
-    },
-
-    // grunt-contrib-uglify plugin configuration (removes whitespace)
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      dist: {
-        files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+      serverConfig: {
+        target: 'node',
+        mode: 'development',
+        entry: './index.js',
+        output: {
+          path: path.resolve(__dirname, 'dist'),
+          filename: 'lib-node.js',
+          library: 'vm'
         }
       }
     }
@@ -113,11 +116,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-webpack');
 
   grunt.registerTask('generate', 'Generate the parser code.', ['clean:generate', 'antlr4']);
-  grunt.registerTask('build', 'Build the library.', ['clean:build', 'jshint', 'mochaTest', 'concat', 'uglify']);
+  grunt.registerTask('build', 'Build the module.', ['clean:build', 'jshint', 'mochaTest']);
+  grunt.registerTask('package', 'Package the libraries.', ['clean:build', 'jshint', 'mochaTest', 'webpack']);
   grunt.registerTask('default', 'Default targets.', ['generate', 'build']);
 
   grunt.registerMultiTask('antlr4', 'Task for antlr4 parser/lexer generation in JS', function () {

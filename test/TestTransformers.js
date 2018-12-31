@@ -8,10 +8,10 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
-var fs = require('fs');
-var mocha = require('mocha');
-var expect = require('chai').expect;
-var utilities = require('../src/utilities');
+const fs = require('fs');
+const mocha = require('mocha');
+const expect = require('chai').expect;
+const utilities = require('../src/utilities');
 
 describe('Bali Virtual Machine™', function() {
 

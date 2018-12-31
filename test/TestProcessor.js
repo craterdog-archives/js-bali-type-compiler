@@ -7,30 +7,32 @@
  * under the terms of The MIT License (MIT), as published by the Open   *
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
-var fs = require('fs');
-var mocha = require('mocha');
-var expect = require('chai').expect;
-var bali = require('bali-component-framework');
-var notary = require('bali-digital-notary');
-var nebula = require('bali-nebula-api');
+const fs = require('fs');
+const mocha = require('mocha');
+const expect = require('chai').expect;
+const bali = require('bali-component-framework');
+const notary = require('bali-digital-notary');
+const nebula = require('bali-nebula-api');
 
-var testDirectory = 'test/config/';
-var notaryKey = notary.api(testDirectory);
-var repository = nebula.local(testDirectory);
-var api = nebula.api(notaryKey, repository);
+const testDirectory = 'test/config/';
+const notaryKey = notary.api(testDirectory);
+const repository = nebula.local(testDirectory);
+const api = nebula.api(notaryKey, repository);
 
-var utilities = require('../src/utilities');
-var assembler = require('../src/compiler').assembler;
-var Processor = require('../src/processor/Processor').Processor;
+const utilities = require('../src/utilities');
+const assembler = require('../src/compiler').assembler;
+const Processor = require('../src/processor/Processor').Processor;
 
-var EOL = '\n';  // POSIX end of line character
+const EOL = '\n';  // POSIX end of line character
 
 
 /*
-<bali:[$protocol:v1,$tag:#CLVZP92SC3KCY5S94Z1GA535JSKVT3XA,$version:v1,$digest:'W6DFRP3KGBYL08ZGW23QN6TBPFZ9R0WT2NMYCWWLFCS1CMT102SK4N0BQHGMX1ZLXMZHB1RFHYZP61LMWWGXGB1B3VXZ3L9V0JZSM50']>
+<bali:[$protocol:v1,$tag:#WG1CC2MF26BV93KPH5X43VXBH92A36MA,$version:v1,$digest:'YXKPBZB41H1KS74PH3ZP7KM3S80FKKWY25FJ4363WRDSJCGBS8HS15PFKF9RDNAGJ7G1MG9CRDCX7X875YS67RLPV66786FC4T6K6T8']>
+    #WG1CC2MF26BV93KPH5X43VXBH92A36MA
+    YXKPBZB41H1KS74PH3ZP7KM3S80FKKWY25FJ4363WRDSJCGBS8HS15PFKF9RDNAGJ7G1MG9CRDCX7X875YS67RLPV66786FC4T6K6T8
  */
 
-var TASK_TEMPLATE =
+const TASK_TEMPLATE =
         '[\n' +
         '    $tag: #Y29YH82BHG4SPTGWGFRYBL4RQ33GTX59\n' +
         '    $account: #GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P\n' +
@@ -55,7 +57,7 @@ var TASK_TEMPLATE =
         '    ]($type: $Stack)\n' +
         ']';
 
-var CITATION =
+const CITATION =
         '[\n' +
         '    $protocol: v1\n' +
         '    $tag: #LPDJ6VGTZQQ0N4Q4MG0ZDA46KBLF2WM2\n' +
@@ -63,9 +65,9 @@ var CITATION =
         '    $digest: none\n' +
         ']';
 
-var MESSAGE = '[$foo: "bar"]';
+const MESSAGE = '[$foo: "bar"]';
 
-var QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
+const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
@@ -74,7 +76,7 @@ function loadTask(filename) {
     instructions = formatter.formatInstructions(instructions);
 
     // create the compiled type context
-    var literals = bali.List.fromCollection([
+    var literals = bali.List.from([
         'true',
         'none',
         'false',
@@ -87,23 +89,23 @@ function loadTask(filename) {
         3,
         5,
         "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#CLVZP92SC3KCY5S94Z1GA535JSKVT3XA,$version:v1,$digest:'W6DFRP3KGBYL08ZGW23QN6TBPFZ9R0WT2NMYCWWLFCS1CMT102SK4N0BQHGMX1ZLXMZHB1RFHYZP61LMWWGXGB1B3VXZ3L9V0JZSM50']>",
+        "<bali:[$protocol:v1,$tag:#WG1CC2MF26BV93KPH5X43VXBH92A36MA,$version:v1,$digest:'YXKPBZB41H1KS74PH3ZP7KM3S80FKKWY25FJ4363WRDSJCGBS8HS15PFKF9RDNAGJ7G1MG9CRDCX7X875YS67RLPV66786FC4T6K6T8']>",
         bali.parser.parseDocument('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#CLVZP92SC3KCY5S94Z1GA535JSKVT3XA,$version:v1,$digest:'W6DFRP3KGBYL08ZGW23QN6TBPFZ9R0WT2NMYCWWLFCS1CMT102SK4N0BQHGMX1ZLXMZHB1RFHYZP61LMWWGXGB1B3VXZ3L9V0JZSM50']>\n" +
+        "    <bali:[$protocol:v1,$tag:#WG1CC2MF26BV93KPH5X43VXBH92A36MA,$version:v1,$digest:'YXKPBZB41H1KS74PH3ZP7KM3S80FKKWY25FJ4363WRDSJCGBS8HS15PFKF9RDNAGJ7G1MG9CRDCX7X875YS67RLPV66786FC4T6K6T8']>\n" +
         ')'),
         '$foo',
         bali.parser.parseDocument('{return prefix + name}')
     ]);
-    var constants = bali.Catalog.fromCollection({constant: 5});
+    var constants = bali.Catalog.from({constant: 5});
     var type = new bali.Catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
 
 
     // create the compiled procedure context
-    var parameters = bali.List.fromCollection(['$y', '$x']);
-    var variables = bali.List.fromCollection(['$citation', '$foo', '$queue', '$target']);
-    var procedures = bali.List.fromCollection(['$function1', '$function2', '$message1', '$message2']);
+    var parameters = bali.List.from(['$y', '$x']);
+    var variables = bali.List.from(['$citation', '$foo', '$queue', '$target']);
+    var procedures = bali.List.from(['$function1', '$function2', '$message1', '$message2']);
     var addresses = new bali.Catalog();
     addresses.setValue('"3.PushLiteral"', 3);
     addresses.setValue('"1.3.ConditionClause"', 8);
@@ -177,7 +179,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.1.ConditionClause:
             // PUSH LITERAL `true`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Probability.TRUE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Probability.TRUE)).to.equal(true);
             expect(processor.context.address).to.equal(3);
             // JUMP TO 1.IfStatementDone ON FALSE
             processor.step();
@@ -191,7 +193,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.2.ConditionClause:
             // PUSH LITERAL `false`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Probability.FALSE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Probability.FALSE)).to.equal(true);
             expect(processor.context.address).to.equal(6);
             // JUMP TO 1.3.ConditionClause ON FALSE
             processor.step();
@@ -203,7 +205,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.3.ConditionClause:
             // PUSH LITERAL `true`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Probability.TRUE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Probability.TRUE)).to.equal(true);
             expect(processor.context.address).to.equal(9);
             // JUMP TO 1.4.ConditionClause ON TRUE
             processor.step();
@@ -215,7 +217,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.4.ConditionClause:
             // PUSH LITERAL `false`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Probability.FALSE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Probability.FALSE)).to.equal(true);
             expect(processor.context.address).to.equal(12);
             // JUMP TO 1.IfStatementDone ON TRUE
             processor.step();
@@ -229,7 +231,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.5.ConditionClause:
             // PUSH LITERAL `none`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Filter.NONE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Filter.NONE)).to.equal(true);
             expect(processor.context.address).to.equal(15);
             // JUMP TO 1.6.ConditionClause ON NONE
             processor.step();
@@ -241,7 +243,7 @@ describe('Bali Virtual Machine™', function() {
             // 1.6.ConditionClause:
             // PUSH LITERAL `true`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(bali.Probability.TRUE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Probability.TRUE)).to.equal(true);
             expect(processor.context.address).to.equal(18);
             // JUMP TO 1.IfStatementDone ON NONE
             processor.step();
@@ -283,35 +285,35 @@ describe('Bali Virtual Machine™', function() {
             // PUSH HANDLER 3.PushLiteral
             processor.step();
             expect(processor.context.handlers.getSize()).to.equal(1);
-            expect(processor.context.handlers.topItem().toNumber()).to.equal(3);
+            expect(processor.context.handlers.getTop().toNumber()).to.equal(3);
             expect(processor.context.address).to.equal(2);
 
             // 2.PushLiteral:
             // PUSH LITERAL "five"
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"five"'))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Text('"five"'))).to.equal(true);
             expect(processor.context.address).to.equal(3);
 
             // 3.PushLiteral:
             // PUSH LITERAL `{return prefix + name}`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().toString()).to.equal('{return prefix + name}');
+            expect(processor.task.stack.getTop().toString()).to.equal('{return prefix + name}');
             expect(processor.context.address).to.equal(4);
 
             // 4.PushConstant:
             // PUSH CONSTANT $constant
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(3);
-            expect(processor.task.stack.topItem().toNumber()).to.equal(5);
+            expect(processor.task.stack.getTop().toNumber()).to.equal(5);
             expect(processor.context.address).to.equal(5);
 
             // 5.PushParameter:
             // PUSH PARAMETER $y
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(4);
-            expect(processor.task.stack.topItem().isEqualTo(bali.Filter.NONE)).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(bali.Filter.NONE)).to.equal(true);
             expect(processor.context.address).to.equal(6);
 
             // 6.PopHandler:
@@ -324,17 +326,17 @@ describe('Bali Virtual Machine™', function() {
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(3);
-            expect(processor.task.stack.topItem().toNumber()).to.equal(5);
+            expect(processor.task.stack.getTop().toNumber()).to.equal(5);
             expect(processor.context.address).to.equal(8);
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().toString()).to.equal('{return prefix + name}');
+            expect(processor.task.stack.getTop().toString()).to.equal('{return prefix + name}');
             expect(processor.context.address).to.equal(9);
             // POP COMPONENT
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Text('"five"'))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Text('"five"'))).to.equal(true);
             expect(processor.context.address).to.equal(10);
             // POP COMPONENT
             processor.step();
@@ -366,7 +368,7 @@ describe('Bali Virtual Machine™', function() {
             // PUSH PARAMETER $x
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getTop().toString()).to.equal(MESSAGE);
             expect(processor.context.address).to.equal(2);
 
             // 2.StoreVariable:
@@ -380,7 +382,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD VARIABLE $foo
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getTop().toString()).to.equal(MESSAGE);
             expect(processor.context.address).to.equal(4);
 
             // 4.StoreDraft:
@@ -391,7 +393,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DRAFT $citation
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getTop().toString()).to.equal(MESSAGE);
             expect(processor.context.address).to.equal(6);
 
             // 5.StoreDocument:
@@ -404,7 +406,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DOCUMENT $citation
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().toString()).to.equal(MESSAGE);
+            expect(processor.task.stack.getTop().toString()).to.equal(MESSAGE);
             expect(processor.context.address).to.equal(8);
 
             // 7.StoreMessage:
@@ -417,7 +419,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD MESSAGE $queue
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().getValue('$foo').toString()).to.equal('"bar"');
+            expect(processor.task.stack.getTop().getValue('$foo').toString()).to.equal('"bar"');
             expect(processor.context.address).to.equal(10);
 
             // EOF
@@ -442,7 +444,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(1);
 
             // 1.Invoke:
-            // INVOKE $random
+            // INVOKE $randomInteger
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.context.address).to.equal(2);
@@ -450,34 +452,34 @@ describe('Bali Virtual Machine™', function() {
             // 2.InvokeWithParameter:
             // PUSH LITERAL `3`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(3))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(3))).to.equal(true);
             expect(processor.context.address).to.equal(3);
             // INVOKE $factorial WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(6))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(6))).to.equal(true);
             expect(processor.context.address).to.equal(4);
 
             // 3.InvokeWith2Parameters:
             // PUSH LITERAL `5`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(5))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(5))).to.equal(true);
             expect(processor.context.address).to.equal(5);
             // INVOKE $sum WITH 2 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(11))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(11))).to.equal(true);
             expect(processor.context.address).to.equal(6);
 
             // 4.InvokeWith3Parameters:
             // PUSH LITERAL `13`
             processor.step();
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(13))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(13))).to.equal(true);
             expect(processor.context.address).to.equal(7);
             // INVOKE $default WITH 3 PARAMETERS
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            expect(processor.task.stack.topItem().isEqualTo(new bali.Number(11))).to.equal(true);
+            expect(processor.task.stack.getTop().isEqualTo(new bali.Number(11))).to.equal(true);
             expect(processor.context.address).to.equal(8);
 
             // EOF
@@ -518,7 +520,7 @@ describe('Bali Virtual Machine™', function() {
                 // HANDLE RESULT
                 processor.step();
                 expect(processor.task.contexts.getSize()).to.equal(0);
-                expect(processor.task.stack.topItem().isEqualTo(bali.Probability.TRUE)).to.equal(true);
+                expect(processor.task.stack.getTop().isEqualTo(bali.Probability.TRUE)).to.equal(true);
             expect(processor.context.address).to.equal(3);
             // POP COMPONENT
             processor.step();
@@ -530,7 +532,7 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.context.address).to.equal(5);
-            // INVOKE $List
+            // INVOKE $list
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(6);
@@ -542,7 +544,7 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(8);
-            // INVOKE $Parameters WITH PARAMETER
+            // INVOKE $parameters WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(9);
@@ -554,12 +556,12 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH HANDLER 1.ThrowStatementHandlers
                 processor.step();
                 expect(processor.context.handlers.getSize()).to.equal(1);
-                expect(processor.context.handlers.topItem().toString()).to.equal('6');
+                expect(processor.context.handlers.getTop().toString()).to.equal('6');
                 expect(processor.context.address).to.equal(2);
                 // PUSH LITERAL `none`
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
-                expect(processor.task.stack.topItem().toString()).to.equal('none');
+                expect(processor.task.stack.getTop().toString()).to.equal('none');
                 expect(processor.context.address).to.equal(3);
                 // HANDLE EXCEPTION
                 processor.step();
@@ -605,7 +607,7 @@ describe('Bali Virtual Machine™', function() {
                 // HANDLE RESULT
                 processor.step();
                 expect(processor.task.contexts.getSize()).to.equal(0);
-                expect(processor.task.stack.topItem().toString()).to.equal('"parameter"');
+                expect(processor.task.stack.getTop().toString()).to.equal('"parameter"');
                 
                 // 1.1.HandleClauseDone:
                 // JUMP TO 1.ThrowStatementSucceeded
@@ -630,7 +632,7 @@ describe('Bali Virtual Machine™', function() {
             // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
-            var expected = processor.task.stack.topItem();
+            var expected = processor.task.stack.getTop();
             expect(expected.toString().includes('[$foo: "bar"]')).to.equal(true);
             expect(processor.context.address).to.equal(12);
             // EXECUTE $message1 ON TARGET
@@ -642,12 +644,12 @@ describe('Bali Virtual Machine™', function() {
                 // LOAD VARIABLE $target
                 processor.step();
                 expect(processor.task.stack.getSize()).to.equal(1);
-                expect(processor.task.stack.topItem().isEqualTo(expected)).to.equal(true);
+                expect(processor.task.stack.getTop().isEqualTo(expected)).to.equal(true);
                 expect(processor.context.address).to.equal(2);
                 // HANDLE RESULT
                 processor.step();
                 expect(processor.task.contexts.getSize()).to.equal(0);
-                expect(processor.task.stack.topItem().isEqualTo(expected)).to.equal(true);
+                expect(processor.task.stack.getTop().isEqualTo(expected)).to.equal(true);
             expect(processor.context.address).to.equal(13);
             // POP COMPONENT
             processor.step();
@@ -659,7 +661,7 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.context.address).to.equal(15);
-            // INVOKE $List
+            // INVOKE $list
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(16);
@@ -679,7 +681,7 @@ describe('Bali Virtual Machine™', function() {
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(20);
-            // INVOKE $Parameters WITH PARAMETER
+            // INVOKE $parameters WITH PARAMETER
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(2);
             expect(processor.context.address).to.equal(21);

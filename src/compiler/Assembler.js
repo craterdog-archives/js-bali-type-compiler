@@ -13,9 +13,9 @@
  * This module defines a class that assembles compiled procedures into bytecode that
  * can run on the Bali Virtual Machine™.
  */
-var bali = require('bali-component-framework');
-var utilities = require('../utilities');
-var EOL = '\n';  // POSIX end of line character
+const bali = require('bali-component-framework');
+const utilities = require('../utilities');
+const EOL = '\n';  // POSIX end of line character
 
 
 // PUBLIC FUNCTIONS
@@ -46,7 +46,7 @@ Assembler.prototype.assembleProcedure = function(type, context) {
 
     // assemble the instructions into bytecode
     var instructions = context.getValue('$instructions');
-    instructions = utilities.parser.parseDocument(instructions.getRawString());
+    instructions = utilities.parser.parseDocument(instructions.value);
     var visitor = new AssemblingVisitor(type, context);
     instructions.acceptVisitor(visitor);
 

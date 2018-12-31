@@ -11,7 +11,7 @@
     ]
     $instructions: "
         1.PublishStatement:
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$changeEvent`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -27,7 +27,7 @@
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: 'A00428012802B83028032804B83028052806B83088016002E000'(
+    $bytecode: 'A00B28012802B85F28032804B85F28052806B85F88016002E000'(
         $base: 16
         $mediatype: "application/bcod"
     )

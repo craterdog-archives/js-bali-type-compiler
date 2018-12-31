@@ -9,7 +9,7 @@
  ************************************************************************/
 'use strict';
 
-var bali = require('bali-component-framework');
+const bali = require('bali-component-framework');
 
 exports.Assembler = require('./Assembler').Assembler;
 exports.assembler = new exports.Assembler();

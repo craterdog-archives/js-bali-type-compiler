@@ -13,11 +13,12 @@
  * This module provides a class that parses a document containing instructions
  * for the Bali Virtual Machine™ and produce the corresponding list of instructions.
  */
-var antlr = require('antlr4');
-var ErrorStrategy = require('antlr4/error/ErrorStrategy');
-var bali = require('bali-component-framework');
-var grammar = require('../grammar');
-var types = require('./Types');
+const antlr = require('antlr4');
+const ErrorStrategy = require('antlr4/error/ErrorStrategy');
+const bali = require('bali-component-framework');
+const grammar = require('../grammar');
+const types = require('./Types');
+const EOL = '\n';  // POSIX end of line character
 
 
 // PUBLIC FUNCTIONS
@@ -83,9 +84,6 @@ function convertParseTree(antlrTree) {
 
 
 // PRIVATE CLASSES
-
-var EOL = '\n';  // POSIX end of line character
-
 
 function ParsingVisitor() {
     grammar.InstructionSetVisitor.call(this);

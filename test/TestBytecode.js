@@ -8,18 +8,18 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
-var fs = require('fs');
-var mocha = require('mocha');
-var expect = require('chai').expect;
-var bali = require('bali-component-framework');
-var utilities = require('../src/utilities/Bytecode');
+const fs = require('fs');
+const mocha = require('mocha');
+const expect = require('chai').expect;
+const bali = require('bali-component-framework');
+const utilities = require('../src/utilities/Bytecode');
 
 describe('Bali Virtual Machine™', function() {
 
     describe('Test bytecode utilities on words', function() {
 
         it('should round trip conversions from bytes to bytecodes', function() {
-            var bytes = bali.codex.randomBytes(16);
+            var bytes = bali.random.bytes(16);
             var bytecode = utilities.bytesToBytecode(bytes);
             var bytes2 = utilities.bytecodeToBytes(bytecode);
             expect(bytes2.toString('hex')).to.equal(bytes.toString('hex'));

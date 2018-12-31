@@ -1,5 +1,5 @@
 1.Invoke:
-INVOKE $random
+INVOKE $randomInteger
 
 2.InvokeWithParameter:
 PUSH LITERAL `3`

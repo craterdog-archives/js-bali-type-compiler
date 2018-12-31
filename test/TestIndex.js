@@ -8,15 +8,15 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
-var mocha = require('mocha');
-var expect = require('chai').expect;
+const mocha = require('mocha');
+const expect = require('chai').expect;
 
 describe('Bali Virtual Machine™', function() {
 
     describe('Test the require of the top level index.', function() {
 
         it('should create the initial task context', function() {
-            var vm = require('../index.js');
+            const vm = require('../index.js');
             expect(vm).to.exist;  // jshint ignore:line
         });
 

@@ -15,9 +15,9 @@
  * procedure defined in the document. The bytecode can then be executed on the
  * Bali Virtual Machine™.
  */
-var bali = require('bali-component-framework');
-var utilities = require('../utilities');
-var EOL = '\n';  // POSIX end of line character
+const bali = require('bali-component-framework');
+const utilities = require('../utilities');
+const EOL = '\n';  // POSIX end of line character
 
 
 // PUBLIC FUNCTIONS
@@ -60,7 +60,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
         }
     }
     context.setValue('$parameters', parameters);
-    context.setValue('$variables', bali.Set.fromCollection(['$target']));
+    context.setValue('$variables', bali.Set.from(['$target']));
     context.setValue('$procedures', new bali.Set());
     context.setValue('$addresses', new bali.Catalog());
 
@@ -188,7 +188,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
     // the VM places an empty catalog on the component stack
-    this.builder.insertInvokeInstruction('$Catalog', 0);
+    this.builder.insertInvokeInstruction('$catalog', 0);
 
     // the VM adds each association to the catalog
     this.depth++;
@@ -290,19 +290,19 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
-            this.builder.insertInvokeInstruction('$less', 2);
+            this.builder.insertInvokeInstruction('$isLessThan', 2);
             break;
         case '=':
             // determine whether or not the first value is equal to the second value
-            this.builder.insertInvokeInstruction('$equal', 2);
+            this.builder.insertInvokeInstruction('$isEqualTo', 2);
             break;
         case '>':
             // determine whether or not the first value is more than the second value
-            this.builder.insertInvokeInstruction('$more', 2);
+            this.builder.insertInvokeInstruction('$isMoreThan', 2);
             break;
         case 'is':
             // determine whether or not the first value is the same value as the second value
-            this.builder.insertInvokeInstruction('$is', 2);
+            this.builder.insertInvokeInstruction('$isSameAs', 2);
             break;
         case 'matches':
             // determine whether or not the first value matches the second value
@@ -737,11 +737,11 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
     switch (operator) {
         case '-':
             // take the additive inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$negative', 1);
+            this.builder.insertInvokeInstruction('$inverse', 1);
             break;
         case '/':
             // take the multiplicative inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$inverse', 1);
+            this.builder.insertInvokeInstruction('$reciprocal', 1);
             break;
         case '*':
             // take the complex conjugate of the value on top of the component stack
@@ -762,7 +762,7 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
     // the VM replaces the size value on the component stack with a new list of that size
-    this.builder.insertInvokeInstruction('$List', 0);
+    this.builder.insertInvokeInstruction('$list', 0);
 
     // the VM adds each expression to the list
     this.depth++;
@@ -885,7 +885,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
     this.depth--;
 
     // the VM places a new parameters component containing the collection on the top of the component stack
-    this.builder.insertInvokeInstruction('$Parameters', 1);
+    this.builder.insertInvokeInstruction('$parameters', 1);
 
     // the parameter list remains on the component stack
 };
@@ -981,7 +981,7 @@ CompilingVisitor.prototype.visitRange = function(range) {
     lastValue.acceptVisitor(this);  // last value in the range
 
     // the VM replaces the two range values on the component stack with a new range component
-    this.builder.insertInvokeInstruction('$Range', 2);
+    this.builder.insertInvokeInstruction('$range', 2);
 
     if (range.isParameterized()) {
         // the VM loads the parameters associated with the range onto the top of the component stack
@@ -1139,7 +1139,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
     this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new set of that size
-    this.builder.insertInvokeInstruction('$Set', 1);
+    this.builder.insertInvokeInstruction('$set', 1);
 
     // the VM adds each expression to the set
     this.depth++;
@@ -1198,7 +1198,7 @@ CompilingVisitor.prototype.visitStack = function(stack) {
     this.builder.insertPushInstruction('LITERAL', size);
 
     // the VM replaces the size value on the component stack with a new stack of that size
-    this.builder.insertInvokeInstruction('$Stack', 1);
+    this.builder.insertInvokeInstruction('$stack', 1);
 
     // the VM adds each expression to the stack
     this.depth++;
@@ -1418,7 +1418,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     sequence.acceptVisitor(this);
 
     // the VM replaces the sequence on the component stack with an iterator to it
-    this.builder.insertExecuteInstruction('$iterator', 'ON TARGET');
+    this.builder.insertExecuteInstruction('$getIterator', 'ON TARGET');
 
     // The VM stores the iterater in a temporary variable
     var iterator = this.createTemporaryVariable('iterator');

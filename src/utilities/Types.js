@@ -128,7 +128,7 @@ exports.handleModifierValue = function(string) {
 
 // PRIVATE ATTRIBUTES
 
-var OPERATIONS = [
+const OPERATIONS = [
     'JUMP',
     'PUSH',
     'POP',
@@ -139,47 +139,47 @@ var OPERATIONS = [
     'HANDLE'
 ];
 
-var JUMP_MODIFIERS = [
+const JUMP_MODIFIERS = [
     'ON ANY',
     'ON NONE',
     'ON TRUE',
     'ON FALSE'
 ];
 
-var PUSH_MODIFIERS = [
+const PUSH_MODIFIERS = [
     'HANDLER',
     'LITERAL',
     'CONSTANT',
     'PARAMETER'
 ];
 
-var POP_MODIFIERS = [
+const POP_MODIFIERS = [
     'HANDLER',
     'COMPONENT'
 ];
 
-var LOAD_MODIFIERS = [
+const LOAD_MODIFIERS = [
     'VARIABLE',
     'MESSAGE',
     'DRAFT',
     'DOCUMENT'
 ];
 
-var STORE_MODIFIERS = [
+const STORE_MODIFIERS = [
     'VARIABLE',
     'MESSAGE',
     'DRAFT',
     'DOCUMENT'
 ];
 
-var EXECUTE_MODIFIERS = [
+const EXECUTE_MODIFIERS = [
     '',
     'WITH PARAMETERS',
     'ON TARGET',
     'ON TARGET WITH PARAMETERS'
 ];
 
-var HANDLE_MODIFIERS = [
+const HANDLE_MODIFIERS = [
     'RESULT',
     'EXCEPTION'
 ];

@@ -40,7 +40,7 @@
         STORE VARIABLE $error
         LOAD VARIABLE $error
         LOAD VARIABLE $error
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `"bad"`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -59,7 +59,7 @@
         STORE VARIABLE $error
         LOAD VARIABLE $error
         LOAD VARIABLE $error
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `"horrid"`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -84,8 +84,8 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        20082801800160048801400000240000800360036003A00428022803B830
-        B02618164800280480020024800360036003A00428022805B830B0261823
+        20082801800160048801400000240000800360036003A00B28022803B85F
+        B04018164800280480020024800360036003A00B28022805B85FB0401823
         4800280680020024E8006002E000
     '(
         $base: 16

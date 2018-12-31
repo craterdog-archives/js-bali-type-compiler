@@ -10,9 +10,9 @@
         $z
     ]
     $procedures: [
+        $getIterator
         $getNext
         $hasNext
-        $iterator
     ]
     $addresses: [
         "1.WithStatement": 1
@@ -30,7 +30,7 @@
     $instructions: "
         1.WithStatement:
         PUSH LITERAL `$sequence`
-        EXECUTE $iterator ON TARGET
+        EXECUTE $getIterator ON TARGET
         STORE VARIABLE $$iterator-2
         
         1.1.ConditionClause:
@@ -76,7 +76,7 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        2801D00380026002D00218166002D0018001280280050000600518122803
+        2801D00180026002D00318166002D0028001280280050000600518122803
         8006001600002804800700046003E000
     '(
         $base: 16

@@ -28,9 +28,9 @@
             ]
             $procedures: [
                 $asCatalog
+                $getIterator
                 $getNext
                 $hasNext
-                $iterator
                 $moveTower
                 $push
             ]
@@ -47,90 +47,90 @@
             ]
             $instructions: "
                 1.EvaluateStatement:
-                INVOKE $Catalog
+                INVOKE $catalog
                 PUSH LITERAL `"peg A"`
-                INVOKE $List
-                INVOKE $Catalog
+                INVOKE $list
+                INVOKE $catalog
                 PUSH LITERAL `$type`
                 PUSH LITERAL `$Stack(
                     $Number($range: [1..infinity])
                 )`
-                INVOKE $List
+                INVOKE $list
                 PUSH LITERAL `$Number($range: [1..infinity])`
-                INVOKE $Catalog
+                INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
-                INVOKE $Range WITH 2 PARAMETERS
+                INVOKE $range WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 PUSH LITERAL `"peg B"`
-                INVOKE $List
-                INVOKE $Catalog
+                INVOKE $list
+                INVOKE $catalog
                 PUSH LITERAL `$type`
                 PUSH LITERAL `$Stack(
                     $Number($range: [1..infinity])
                 )`
-                INVOKE $List
+                INVOKE $list
                 PUSH LITERAL `$Number($range: [1..infinity])`
-                INVOKE $Catalog
+                INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
-                INVOKE $Range WITH 2 PARAMETERS
+                INVOKE $range WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 PUSH LITERAL `"peg C"`
-                INVOKE $List
-                INVOKE $Catalog
+                INVOKE $list
+                INVOKE $catalog
                 PUSH LITERAL `$type`
                 PUSH LITERAL `$Stack(
                     $Number($range: [1..infinity])
                 )`
-                INVOKE $List
+                INVOKE $list
                 PUSH LITERAL `$Number($range: [1..infinity])`
-                INVOKE $Catalog
+                INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
-                INVOKE $Range WITH 2 PARAMETERS
+                INVOKE $range WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 
                 2.EvaluateStatement:
-                INVOKE $List
+                INVOKE $list
                 INVOKE $setValue WITH 3 PARAMETERS
                 
                 3.WithStatement:
                 LOAD VARIABLE $numberOfDisks
                 PUSH LITERAL `1`
-                INVOKE $Range WITH 2 PARAMETERS
-                EXECUTE $iterator ON TARGET
+                INVOKE $range WITH 2 PARAMETERS
+                EXECUTE $getIterator ON TARGET
                 STORE VARIABLE $$iterator-1
                 
                 3.1.ConditionClause:
@@ -147,10 +147,10 @@
                 INVOKE $getValue WITH 2 PARAMETERS
                 PUSH LITERAL `"peg A"`
                 INVOKE $getValue WITH 2 PARAMETERS
-                INVOKE $List
+                INVOKE $list
                 LOAD VARIABLE $n
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $push ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
@@ -162,7 +162,7 @@
                 
                 4.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $List
+                INVOKE $list
                 LOAD VARIABLE $numberOfDisks
                 INVOKE $addItem WITH 2 PARAMETERS
                 PUSH LITERAL `"peg A"`
@@ -171,7 +171,7 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 PUSH LITERAL `"peg B"`
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $moveTower ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
@@ -185,14 +185,14 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                A0042801A007A00428022803A0072804A004280528062807B00EB830A80A
-                B02FB018A80AB02FB830A80AB02FB8302808A007A00428022803A0072804
-                A004280528062807B00EB830A80AB02FB018A80AB02FB830A80AB02FB830
-                2809A007A00428022803A0072804A004280528062807B00EB830A80AB02F
-                B018A80AB02FB830A80AB02FB830B830A007B83060042806B00ED0048001
-                6001D003185E6001D00280036005280AB0212801B021A0076003B018A80A
-                D8068002004C00006005A0076004B0182801B0182809B0182808B018A80A
-                D80580026005280BB021D001E000
+                A00B2801A03EA00B28022803A03E2804A00B280528062807B050B85FA846
+                B05EB002A846B05EB85FA846B05EB85F2808A03EA00B28022803A03E2804
+                A00B280528062807B050B85FA846B05EB002A846B05EB85FA846B05EB85F
+                2809A03EA00B28022803A03E2804A00B280528062807B050B85FA846B05E
+                B002A846B05EB85FA846B05EB85FB85FA03EB85F60042806B050D0028001
+                6001D004185E6001D00380036005280AB02E2801B02EA03E6003B002A846
+                D8068002004C00006005A03E6004B0022801B0022809B0022808B002A846
+                D80580026005280BB02ED001E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -225,7 +225,7 @@
                 
                 1.1.1.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $List
+                INVOKE $list
                 PUSH PARAMETER $height
                 PUSH LITERAL `1`
                 INVOKE $difference WITH 2 PARAMETERS
@@ -236,24 +236,24 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 PUSH PARAMETER $toPeg
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $moveTower ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
                 1.1.2.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $List
+                INVOKE $list
                 PUSH PARAMETER $fromPeg
                 INVOKE $addItem WITH 2 PARAMETERS
                 PUSH PARAMETER $toPeg
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $moveDisk ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
                 1.1.3.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $List
+                INVOKE $list
                 PUSH PARAMETER $height
                 PUSH LITERAL `1`
                 INVOKE $difference WITH 2 PARAMETERS
@@ -264,7 +264,7 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 PUSH PARAMETER $fromPeg
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $moveTower ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
@@ -275,9 +275,9 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                00003801182B6002A00738012806B01DB0183802B0183804B0183803B018
-                A80AD80280016002A0073802B0183803B018A80AD80180016002A0073801
-                2806B01DB0183804B0183803B0183802B018A80AD80280016001E000
+                00003801182B6002A03E38012806B016B0023802B0023804B0023803B002
+                A846D80280016002A03E3802B0023803B002A846D80180016002A03E3801
+                2806B016B0023804B0023803B0023802B002A846D80280016001E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -312,10 +312,10 @@
                 INVOKE $getValue WITH 2 PARAMETERS
                 PUSH PARAMETER $toPeg
                 INVOKE $getValue WITH 2 PARAMETERS
-                INVOKE $List
+                INVOKE $list
                 LOAD VARIABLE $disk
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $push ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 
@@ -323,10 +323,10 @@
                 LOAD VARIABLE $target
                 PUSH LITERAL `$steps`
                 INVOKE $getValue WITH 2 PARAMETERS
-                INVOKE $List
+                INVOKE $list
                 PUSH LITERAL `"Move disk {disk} from {fromPeg} to {toPeg}."`
                 INVOKE $addItem WITH 2 PARAMETERS
-                INVOKE $Parameters WITH PARAMETER
+                INVOKE $parameters WITH PARAMETER
                 EXECUTE $append ON TARGET WITH PARAMETERS
                 STORE VARIABLE $$result
                 LOAD VARIABLE $$result
@@ -335,8 +335,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                6003280AB0213801B021D00280026003280AB0213802B021A0076002B018
-                A80AD80380016003280BB021A007280CB018A80AD80180016001E000
+                6003280AB02E3801B02ED00280026003280AB02E3802B02EA03E6002B002
+                A846D80380016003280BB02EA03E280CB002A846D80180016001E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"

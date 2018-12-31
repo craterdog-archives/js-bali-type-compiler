@@ -23,8 +23,8 @@
  * based index or address. The value zero is reserved for specifying an
  * invalid index or address.
  */
-var bali = require('bali-component-framework');
-var types = require('./Types');
+const bali = require('bali-component-framework');
+const types = require('./Types');
 
 
 // PUBLIC FUNCTIONS
@@ -371,6 +371,6 @@ function instructionToString(instruction, optionalOperand) {
 
 // PRIVATE CONSTANTS
 
-var OPCODE_MASK = 0xE000;
-var MODCODE_MASK = 0x1800;
-var OPERAND_MASK = 0x07FF;
+const OPCODE_MASK = 0xE000;
+const MODCODE_MASK = 0x1800;
+const OPERAND_MASK = 0x07FF;

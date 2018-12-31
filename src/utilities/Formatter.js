@@ -13,7 +13,7 @@
  * This module defines a class that formats a list of instructions into a
  * into the canonical source code string representing the instructions.
  */
-var types = require('./Types');
+const types = require('./Types');
 
 
 // PUBLIC FUNCTIONS
@@ -54,7 +54,7 @@ Formatter.prototype.formatInstructions = function(instructions) {
 
 // PRIVATE CLASSES
 
-var EOL = '\n';  // POSIX end of line character
+const EOL = '\n';  // POSIX end of line character
 
 
 function FormattingVisitor(indentation) {
@@ -91,7 +91,7 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
     if (label) {
         // labels are preceded by a blank line unless they are part of the first step
         if (this.source !== this.indentation) this.appendNewline();
-        this.source += label.getRawString() + ':';
+        this.source += label.value + ':';
         this.appendNewline();
     }
     var operation = step.getValue('$operation').toNumber();
@@ -137,7 +137,7 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
         this.source += 'SKIP INSTRUCTION';
     } else {
         this.source += 'JUMP TO ';
-        var operand = instruction.getValue('$operand').getRawString();
+        var operand = instruction.getValue('$operand').value;
         this.source += operand;
         modifier = modifier.toNumber();
         if (modifier !== types.ON_ANY) {
@@ -161,7 +161,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     var operand = instruction.getValue('$operand');
     switch (modifier) {
         case types.HANDLER:
-            operand = operand.getRawString();
+            operand = operand.value;
             break;
         case types.LITERAL:
             operand = '`' + operand.toDocument(this.indentation) + '`';

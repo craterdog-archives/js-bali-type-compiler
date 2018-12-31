@@ -20,9 +20,9 @@
     ]
     $procedures: [
         $find
+        $getIterator
         $getNext
         $hasNext
-        $iterator
     ]
     $addresses: [
         "1.IfStatement": 1
@@ -88,7 +88,7 @@
         1.1.ConditionClause:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $less WITH 2 PARAMETERS
+        INVOKE $isLessThan WITH 2 PARAMETERS
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
@@ -109,7 +109,7 @@
         1.2.ConditionClause:
         LOAD VARIABLE $a
         PUSH LITERAL `0`
-        INVOKE $more WITH 2 PARAMETERS
+        INVOKE $isMoreThan WITH 2 PARAMETERS
         JUMP TO 1.3.ElseClause ON FALSE
         
         1.2.1.EvaluateStatement:
@@ -133,11 +133,11 @@
         
         1.3.1.EvaluateStatement:
         LOAD VARIABLE $b
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$tag`
         LOAD VARIABLE $tag
         INVOKE $setValue WITH 3 PARAMETERS
-        INVOKE $Parameters WITH PARAMETER
+        INVOKE $parameters WITH PARAMETER
         EXECUTE $find ON TARGET WITH PARAMETERS
         STORE VARIABLE $d
         
@@ -163,7 +163,7 @@
         STORE VARIABLE $exception
         LOAD VARIABLE $exception
         LOAD VARIABLE $exception
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$warning`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -178,7 +178,7 @@
         STORE VARIABLE $count
         
         1.4.2.EvaluateStatement:
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something not too serious happened."`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -194,7 +194,7 @@
         STORE VARIABLE $exception
         LOAD VARIABLE $exception
         LOAD VARIABLE $exception
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$moderate`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -203,7 +203,7 @@
         POP COMPONENT
         
         1.5.1.EvaluateStatement:
-        INVOKE $Catalog
+        INVOKE $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something serious happened."`
         INVOKE $setValue WITH 3 PARAMETERS
@@ -254,7 +254,7 @@
         
         2.1.2.2.1.WithStatement:
         LOAD VARIABLE $sequence
-        EXECUTE $iterator ON TARGET
+        EXECUTE $getIterator ON TARGET
         STORE VARIABLE $$iterator-1
         
         2.1.2.2.1.1.ConditionClause:
@@ -329,14 +329,14 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        202960046005B024180D6005800428018005600AE800002760042802B027
-        1819280380026005A82080076007E000002700006005A0042804600FB830
-        A80AD8018009280580022806E0000000400000570000800A600A600AA004
-        28072808B830B0261841480060082809B0318008A004280A280BB830280C
-        600AB83080020057800A600A600AA0042807280DB830B02618564800A004
-        280A280EB830280C600AB830800A600AE8000057E80000000000280F1885
-        6006800B000038011862008500830000600ED00480016001D00318816001
-        D002800C600D800360032810B0261875280F8002007F60032811B026187C
+        202960046005B037180D6005800428018005600AE800002760042802B038
+        1819280380026005A81A80076007E000002700006005A00B2804600FB85F
+        A846D8018009280580022806E0000000400000570000800A600A600AA00B
+        28072808B85FB0401841480060082809B0658008A00B280A280BB85F280C
+        600AB85F80020057800A600A600AA00B2807280DB85FB04018564800A00B
+        280A280EB85F280C600AB85F800A600AE8000057E80000000000280F1885
+        6006800B000038011862008500830000600ED00280016001D00418816001
+        D003800C600D800360032810B0401875280F8002007F60032811B040187C
         28038002007F00000066007F0000006600000000000000596002E000
     '(
         $base: 16

@@ -12,13 +12,13 @@
 /*
  * This class implements the virtual machine for The Bali Nebula™.
  */
-var bali = require('bali-component-framework');
-var utilities = require('../utilities/Bytecode');
-var intrinsics = require('../utilities/Intrinsics');
+const bali = require('bali-component-framework');
+const utilities = require('../utilities/Bytecode');
+const intrinsics = require('../utilities/Intrinsics');
 
-var ACTIVE = '$active';
-var WAITING = '$waiting';
-var DONE = '$done';
+const ACTIVE = '$active';
+const WAITING = '$waiting';
+const DONE = '$done';
 
 
 // PUBLIC FUNCTIONS
@@ -211,7 +211,7 @@ function queueTaskContext(processor) {
     var task = exportTask(processor.task);
     var document = task.toString();
     // queue up the task for a new virtual machine
-    var WAIT_QUEUE = '#3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K';
+    const WAIT_QUEUE = '#3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K';
     processor.nebula.queueMessage(WAIT_QUEUE, document);
 }
 
@@ -231,7 +231,7 @@ function importTask(catalog) {
 
 
 function exportTask(task) {
-    var catalog = bali.Catalog.fromCollection(task);
+    var catalog = bali.Catalog.from(task);
     return catalog;
 }
 
