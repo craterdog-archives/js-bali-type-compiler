@@ -329,6 +329,29 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
 };
 
 
+/*
+ * This method inserts the instructions that cause the VM to replace the values
+ * of two expressions that are on top of the component stack with the resulting
+ * value of a concatenation operation on them.
+ */
+// concatenationExpression: expression '&' expression
+CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
+    var firstOperand = tree.getChild(1);
+    var secondOperand = tree.getChild(2);
+
+    // the VM places the result of the first operand expression on top of the component stack
+    firstOperand.acceptVisitor(this);
+
+    // the VM places the result of the second operand expression on top of the component stack
+    secondOperand.acceptVisitor(this);
+
+    // the VM places the product of the two values on top of the component stack
+    this.builder.insertInvokeInstruction('$concatenation', 2);
+
+    // the resulting value remains on the top of the component stack
+};
+
+
 // continueClause: 'continue' 'loop'
 /*
  *  This method is causes the VM to jump to the beginning of the enclosing loop procedure block.
@@ -363,24 +386,14 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
     var proposedValue = tree.getChild(1);
     var defaultValue = tree.getChild(2);
 
-    // the VM places the result of the first expression on top of the component stack
+    // the VM places the value of the proposed expression on top of the component stack
     proposedValue.acceptVisitor(this);
 
-    // the VM stores the value of the proposed expression into a temporary variable
-    var value = this.createTemporaryVariable('value');
-    this.builder.insertStoreInstruction('VARIABLE', value);
-
-    // the VM loads the value of the proposed expression back onto the component stack
-    this.builder.insertLoadInstruction('VARIABLE', value);
-
-    // the VM loads the value of the proposed expression back onto the component stack
-    this.builder.insertLoadInstruction('VARIABLE', value);
-
-    // the VM places the value of the second expression on top of the component stack
+    // the VM places the value of the default expression on top of the component stack
     defaultValue.acceptVisitor(this);
 
     // the VM leaves the actual value on the top of the component stack
-    this.builder.insertInvokeInstruction('$default', 3);
+    this.builder.insertInvokeInstruction('$default', 2);
 };
 
 
@@ -709,7 +722,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
         list.getItem(i).acceptVisitor(this);
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertInvokeInstruction('$getValue', 2);
+        this.builder.insertInvokeInstruction('$getSubcomponent', 2);
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -1294,7 +1307,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     indices.acceptVisitor(this);
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertInvokeInstruction('$getValue', 2);
+    this.builder.insertInvokeInstruction('$getSubcomponent', 2);
     // the value of the subcomponent remains on the component stack
 };
 
@@ -1477,7 +1490,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
     } else {
         // the VM sets the value of the subcomponent at the given index of the parent component
         // to the value that is on top of the component stack
-        this.builder.insertInvokeInstruction('$setValue', 3);
+        this.builder.insertInvokeInstruction('$setSubcomponent', 3);
     }
 };
 
@@ -1490,7 +1503,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
  * @param {Object} statement The statement containing zero or more subclauses.
  * @returns {Array} An array containing the subclauses for the statement.
  */
-function getSubClauses(statement) {
+function getSubclauses(statement) {
     var subClauses = [];
     var iterator = statement.getIterator();
     while (iterator.hasNext()) {
@@ -1503,12 +1516,11 @@ function getSubClauses(statement) {
 }
 
 
-/*
- * This function defines a missing conversion function for the standard String class.
- */
-String.prototype.toTitleCase = function () {
-    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+// add missing string method
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
 
 
 /*
@@ -1584,7 +1596,7 @@ InstructionBuilder.prototype.popProcedureContext = function() {
  */
 InstructionBuilder.prototype.pushStatementContext = function(tree) {
     var mainClause = tree.getChild(1);
-    var subClauses = getSubClauses(mainClause);
+    var subClauses = getSubclauses(mainClause);
     var handleClauses = tree.toArray().slice(1);
     var clauseCount = subClauses.length + handleClauses.length;
     var procedure = this.stack.peek();
@@ -1598,7 +1610,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     var statement = procedure.statement;
-    var type = bali.types.typeName(statement.mainClause.type).toTitleCase().slice(0, -6);
+    var type = bali.types.typeName(statement.mainClause.type).capitalize().slice(0, -6);
     var prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1690,7 +1702,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     var statement = this.stack.peek().statement;
-    var type = bali.types.typeName(statement.mainClause.type).toTitleCase().slice(0, -6);
+    var type = bali.types.typeName(statement.mainClause.type).capitalize().slice(0, -6);
     return type;
 };
 

@@ -25,457 +25,454 @@ exports.functions = [
     },
 
     // $addChild
-    function() {
+    function(tree, child) {
+        validateParameterType('$addChild', bali.types.TREE, tree);
+        tree.addChild(child);
+        return tree;
     },
 
     // $addItem
     function(collection, item) {
-        //console.log('      addItem(' + collection + ', ' + item + ')');
+        validateParameterAbstraction('$addItem', bali.Collection, collection);
         collection.addItem(item);
         return collection;
     },
 
     // $addItems
-    function() {
+    function(collection, items) {
+        validateParameterAbstraction('$addItems', bali.Collection, collection);
+        collection.addItems(items);
+        return collection;
     },
 
     // $and
     function(first, second) {
-        //console.log('      and(' + first + ', ' + second + ')');
-        var exception;
-        var type = first.type;
-        if (type !== second.type) {
-            exception = bali.Catalog.from({
-                $exception: '$parameterType',
-                $procedure: '$and',
-                $expected: bali.types.typeName(type),
-                $actual: bali.types.typeName(second.type)
-            });
-            throw new bali.Exception(exception);
-        }
-        switch (type) {
-            case bali.types.BINARY:
-                return bali.Binary.and(first, second);
-            case bali.types.PROBABILITY:
-                return bali.Probability.and(first, second);
-            case bali.types.SET:
-                return bali.Set.and(first, second);
-            default:
-                exception = bali.Catalog.from({
-                    $exception: '$parameterType',
-                    $procedure: '$and',
-                    $expected: bali.types.PROBABILITY,
-                    $actual: bali.types.typeName(type)
-                });
-                throw new bali.Exception(exception);
-        }
+        validateParameterAspects('$and', '$Logical', first, second);
+        return first.constructor.and(first, second);
     },
 
     // $angle
-    function(value) {
-        //console.log('      Angle(' + value + ')');
-        var angle = constructElement('$Angle', value);
-        return angle;
+    function(value, parameters) {
+        return constructElement('$angle', value, parameters);
     },
 
     // $arccosine
-    function() {
+    function(ratio) {
+        validateParameterType('$arccosine', bali.types.NUMBER, ratio);
+        var angle = bali.Angle.arccosine(ratio.toNumber());
+        return angle;
     },
 
     // $arcsine
-    function() {
+    function(ratio) {
+        validateParameterType('$arcsine', bali.types.NUMBER, ratio);
+        var angle = bali.Angle.arcsine(ratio.toNumber());
+        return angle;
     },
 
     // $arctangent
-    function() {
+    function(opposite, adjacent) {
+        validateParameterType('$arctangent', bali.types.NUMBER, opposite);
+        validateParameterType('$arctangent', bali.types.NUMBER, adjacent);
+        var angle = bali.Angle.arctangent(opposite.toNumber(), adjacent.toNumber());
+        return angle;
     },
 
     // $association
     function(key, value) {
-        //console.log('      Association(' + key + ', ' + value + ')');
-        try {
-            var association = new bali.Association(key, value);
-            return association;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Association',
-                $key: key,
-                $value: value,
-                $message: 'An invalid key or value was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+        validateParameterAbstraction('$association', bali.Element, key);
+        var association = new bali.Association(key, value);
+        return association;
     },
 
     // $binary
-    function(value) {
-        //console.log('      Binary(' + value + ')');
-        var binary = constructElement('$Binary', value);
-        return binary;
+    function(value, parameters) {
+        return constructElement('$binary', value, parameters);
     },
 
     // $catalog
-    function() {
-        //console.log('      Catalog()');
-        return new bali.Catalog();
+    function(parameters) {
+        return constructCollection('$catalog', parameters);
     },
 
     // $coinToss
-    function() {
+    function(weighting) {
+        validateParameterType('$coinToss', bali.types.NUMBER, weighting);
+        return bali.Probability.coinToss(weighting.toNumber());
     },
 
-    // $comparedTo
-    function() {
+    // $comparison
+    function(first, second) {
+        return first.comparedTo(second);
     },
 
     // $complement
-    function(probability) {
-        //console.log('      complement(' + probability + ')');
-        return bali.Probability.complement(probability);
+    function(angle) {
+        validateParameterType('$complement', bali.types.ANGLE, angle);
+        return bali.Angle.complement(angle);
     },
 
     // $concatenation
-    function() {
+    function(first, second) {
+        validateParameterAspects('$concatenation', '$Combinable', first, second);
+        return first.constructor.concatenation(first, second);
     },
 
     // $conjugate
     function(number) {
-        //console.log('      conjugate(' + number + ')');
+        validateParameterType('$conjugate', bali.types.NUMBER, number);
         return bali.Number.conjugate(number);
     },
 
     // $containsAll
-    function() {
+    function(collection, items) {
+        validateParameterAbstraction('$containsAll', bali.Collection, collection);
+        validateParameterAspect('$containsAll', '$Sequential', items);
+        collection.containsAll(items);
+        return collection;
     },
 
     // $containsAny
-    function() {
+    function(collection, items) {
+        validateParameterAbstraction('$containsAny', bali.Collection, collection);
+        validateParameterAspect('$containsAny', '$Sequential', items);
+        collection.containsAny(items);
+        return collection;
     },
 
     // $containsItem
-    function() {
+    function(collection, item) {
+        validateParameterAbstraction('$containsItem', bali.Collection, collection);
+        collection.containsItem(item);
+        return collection;
     },
 
     // $cosine
-    function() {
+    function(angle) {
+        validateParameterType('$cosine', bali.types.ANGLE, angle);
+        return new bali.Number(bali.Angle.cosine(angle));
     },
 
     // $default
-    function(useProposed, proposedValue, defaultValue) {
-        //console.log('      default(' + useProposed + ', ' + proposedValue + ', ' + defaultValue + ')');
-        return bali.Filter.NONE.isEqualTo(useProposed) ? defaultValue : proposedValue;
+    function(proposedValue, defaultValue) {
+        return bali.Filter.NONE.isEqualTo(proposedValue) ? defaultValue : proposedValue;
     },
 
     // $difference
-    function(firstNumber, secondNumber) {
+    function(first, second) {
+        validateParameterAspects('$difference', '$Scalable', first, second);
+        return first.constructor.difference(first, second);
     },
 
     // $duration
-    function(value) {
-        //console.log('      Duration(' + value + ')');
-        var duration = constructElement('$Duration', value);
-        return duration;
+    function(value, parameters) {
+        return constructElement('$duration', value, parameters);
     },
 
     // $exponential
-    function(base, exponent) {
-        //console.log('      exponential(' + base + ', ' + exponent + ')');
-        return bali.Number.exponential(base, exponent);
+    function(number) {
+        validateParameterType('$exponential', bali.types.NUMBER, number);
+        return bali.Number.exponential(number);
     },
 
     // $extraction
-    function() {
+    function(catalog, keys) {
+        validateParameterType('$extraction', bali.types.CATALOG, catalog);
+        validateParameterType('$extraction', bali.types.SET, keys);
+        return bali.Catalog.extraction(catalog, keys);
     },
 
     // $factorial
     function(number) {
-        //console.log('      factorial(' + number + ')');
+        validateParameterType('$factorial', bali.types.NUMBER, number);
         return bali.Number.factorial(number);
     },
 
     // $filter
-    function(value) {
-        //console.log('      Filter(' + value + ')');
-        var filter = constructElement('$Filter', value);
-        return filter;
+    function(value, parameters) {
+        return constructElement('$filter', value, parameters);
     },
 
     // $getAssociations
-    function() {
+    function(catalog) {
+        validateParameterType('$getAssociations', bali.types.CATALOG, catalog);
+        return catalog.getAssociations();
     },
 
     // $getChild
-    function() {
+    function(tree, index) {
+        validateParameterType('$getChild', bali.types.TREE, tree);
+        validateParameterType('$getChild', bali.types.NUMBER, index);
+        validateIndex('$getChild', tree.getSize(), index);
+        return tree.getChild(index.toNumber());
     },
 
     // $getHash
-    function() {
+    function(component) {
+        return new bali.Number(component.getHash());
     },
 
     // $getHead
-    function() {
-    },
-
-    // $getIdentifier
-    function() {
+    function(queue) {
+        validateParameterType('$getHead', bali.types.QUEUE, queue);
+        return queue.getHead();
     },
 
     // $getImaginary
-    function() {
+    function(number) {
+        validateParameterType('$getImaginary', bali.types.NUMBER, number);
+        return new bali.Number(number.getImaginary());
     },
 
     // $getIndex
-    function() {
+    function(collection, item) {
+        validateParameterAbstraction('$getIndex', bali.Collection, collection);
+        return new bali.Number(collection.getIndex(item));
     },
 
     // $getItem
-    function() {
+    function(collection, index) {
+        validateParameterAbstraction('$getItem', bali.Collection, collection);
+        validateParameterType('$getItem', bali.types.NUMBER, index);
+        validateIndex('$getItem', collection.getSize(), index);
+        return collection.getItem(index.getNumber());
     },
 
     // $getItems
-    function() {
+    function(collection, first, last) {
+        validateParameterAbstraction('$getItems', bali.Collection, collection);
+        validateParameterType('$getItems', bali.types.NUMBER, first);
+        validateParameterType('$getItems', bali.types.NUMBER, last);
+        validateIndex('$getItems', collection.getSize(), first);
+        validateIndex('$getItems', collection.getSize(), last);
+        return collection.getItems(first, last);
     },
 
     // $getKey
-    function() {
+    function(parameters, index) {
+        validateParameterType('$getKey', bali.types.PARAMETERS, parameters);
+        validateParameterType('$getKey', bali.types.NUMBER, index);
+        validateIndex('$getKey', parameters.getSize(), index);
+        return parameters.getKey(index.getNumber());
     },
 
     // $getKeys
-    function() {
+    function(catalog) {
+        validateParameterType('$getKeys', bali.types.CATALOG, catalog);
+        return catalog.getKeys();
     },
 
     // $getMagnitude
     function(number) {
-    },
-
-    // $getNumbers
-    function() {
+        validateParameterType('$getMagnitude', bali.types.NUMBER, number);
+        return new bali.Number(number.getMagnitude());
     },
 
     // $getPhase
-    function() {
+    function(number) {
+        validateParameterType('$getPhase', bali.types.NUMBER, number);
+        return number.getPhase();
     },
 
     // $getReal
-    function() {
+    function(number) {
+        validateParameterType('$getReal', bali.types.NUMBER, number);
+        return new bali.Number(number.getReal());
     },
 
     // $getSize
-    function() {
+    function(sequence) {
+        validateParameterAspect('$getSize', '$Sequential', sequence);
+        return new bali.Number(sequence.getSize());
+    },
+
+    // $getSubcomponent
+    function(collection, index) {
     },
 
     // $getTop
-    function() {
+    function(stack) {
+        validateParameterType('$getTop', bali.types.STACK, stack);
+        return stack.getTop();
     },
 
     // $getType
-    function() {
+    function(component) {
+        return new bali.Reference(component.getType());
     },
 
     // $getValue
     function(catalog, key) {
-        //console.log('      getValue(' + catalog + ', ' + key + ')');
+        validateParameterType('$getValue', bali.types.CATALOG, catalog);
+        validateParameterAbstraction('$getValue', bali.Element, key);
         return catalog.getValue(key) || bali.Filter.NONE;
     },
 
     // $getValues
-    function() {
-    },
-
-    // $identifier
-    function(type, value) {
-        //console.log('      Identifier(' + type + ', ' + value + ')');
-        try {
-            var identifier = new bali.Identifier(type, value);
-            return identifier;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Identifier',
-                $type: type,
-                $value: value,
-                $message: 'An invalid type or value was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+    function(catalog, keys) {
+        validateParameterType('$getValues', bali.types.CATALOG, catalog);
+        validateParameterType('$getValues', bali.types.LIST, keys);
+        return catalog.getValues(keys);
     },
 
     // $insertItem
-    function() {
+    function(list, index, item) {
+        validateParameterType('$insertItem', bali.types.LIST, list);
+        validateParameterType('$insertItem', bali.types.NUMBER, index);
+        validateIndex('$insertItem', list.getSize(), index);
+        list.insertItem(index.getNumber(), item);
+        return list;
+    },
+
+    // $insertItems
+    function(list, index, items) {
+        validateParameterType('$insertItems', bali.types.LIST, list);
+        validateParameterType('$insertItems', bali.types.NUMBER, index);
+        validateParameterAbstraction('$insertItems', bali.Collection, items);
+        validateIndex('$insertItems', list.getSize(), index);
+        list.insertItems(index.getNumber(), items);
+        return list;
     },
 
     // $inverse
-    function(number) {
+    function(scalable) {
+        validateParameterType('$inverse', '$Scalable', scalable);
+        return scalable.constructor.inverse(scalable);
     },
 
     // $isEmpty
-    function() {
+    function(sequence) {
+        validateParameterAspect('$isEmpty', '$Sequential', sequence);
+        return new bali.Probability(sequence.isEmpty());
     },
 
     // $isEqualTo
     function(firstComponent, secondComponent) {
-        //console.log('      isEqualTo(' + firstComponent + ', ' + secondComponent + ')');
-        return firstComponent.comparedTo(secondComponent) === 0;
+        return new bali.Probability(firstComponent.isEqualTo(secondComponent));
     },
 
     // $isInRange
-    function() {
+    function(range, item) {
+        validateParameterType('$isInRange', bali.types.RANGE, range);
+        return new bali.Probability(range.isInRange(item));
     },
 
     // $isInfinite
-    function() {
+    function(number) {
+        validateParameterType('$isInfinite', bali.types.NUMBER, number);
+        return new bali.Probability(number.isInfinite());
     },
 
     // $isLessThan
     function(firstComponent, secondComponent) {
-        //console.log('      isLessThan(' + firstComponent + ', ' + secondComponent + ')');
-        return firstComponent.comparedTo(secondComponent) < 0;
+        return new bali.Probability(firstComponent.comparedTo(secondComponent) < 0);
     },
 
     // $isMoreThan
     function(firstComponent, secondComponent) {
-        //console.log('      isMoreThan(' + firstComponent + ', ' + secondComponent + ')');
-        return firstComponent.comparedTo(secondComponent) > 0;
+        return new bali.Probability(firstComponent.comparedTo(secondComponent) > 0);
     },
 
     // $isParameterized
     function(component) {
-        //console.log('      isParameterized(' + component + ')');
-        return component.isParameterized();
+        return new bali.Probability(component.isParameterized());
     },
 
     // $isSameAs
     function(firstComponent, secondComponent) {
-        //console.log('      isSameAs(' + firstComponent + ', ' + secondComponent + ')');
-        return firstComponent === secondComponent;
-    },
-
-    // $isSimple
-    function() {
+        return new bali.Probability(firstComponent === secondComponent);
     },
 
     // $isUndefined
-    function() {
+    function(number) {
+        validateParameterType('$isUndefined', bali.types.NUMBER, number);
+        return new bali.Probability(number.isUndefined());
     },
 
     // $isZero
-    function() {
+    function(number) {
+        validateParameterType('$isZero', bali.types.NUMBER, number);
+        return new bali.Probability(number.isZero());
     },
 
     // $list
-    function() {
-        //console.log('      List()');
-        return new bali.List();
+    function(parameters) {
+        return constructCollection('$list', parameters);
     },
 
     // $logarithm
-    function() {
+    function(number) {
+        validateParameterType('$logarithm', bali.types.NUMBER, number);
+        return bali.Number.logarithm(number);
     },
 
     // $matches
     function(component, filter) {
-        //console.log('      matches(' + component + ', ' + filter + ')');
-        return component.matches(filter);
+        validateParameterType('$matches', bali.types.FILTER, filter);
+        return new bali.Probability(component.matches(filter));
     },
 
     // $moment
-    function(value) {
-        //console.log('      Moment(' + value + ')');
-        var moment = constructElement('$Moment', value);
-        return moment;
+    function(value, parameters) {
+        return constructElement('$moment', value, parameters);
     },
 
     // $nextVersion
-    function() {
+    function(version, level) {
+        validateParameterType('$nextVersion', bali.types.VERSION, version);
+        validateParameterType('$nextVersion', bali.types.NUMBER, level);
+        validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
+        return bali.Version.nextVersion(version, level);
     },
 
     // $not
-    function() {
+    function(logical) {
+        validateParameterAspect('$not', '$Logical', logical);
+        return logical.constructor.not(logical);
     },
 
     // $number
-    function(value) {
-        //console.log('      Number(' + value + ')');
-        var number = constructElement('$Number', value);
-        return number;
+    function(value, parameters) {
+        return constructElement('$number', value, parameters);
     },
 
     // $or
     function(first, second) {
-        //console.log('      or(' + first + ', ' + second + ')');
-        var exception;
-        var type = first.type;
-        if (type !== second.type) {
-            exception = bali.Catalog.from({
-                $exception: '$parameterType',
-                $procedure: '$or',
-                $expected: bali.types.typeName(type),
-                $actual: bali.types.typeName(second.type)
-            });
-            throw new bali.Exception(exception);
-        }
-        switch (type) {
-            case bali.types.BINARY:
-                return bali.Binary.or(first, second);
-            case bali.types.PROBABILITY:
-                return bali.Probability.or(first, second);
-            case bali.types.SET:
-                return bali.Set.or(first, second);
-            default:
-                exception = bali.Catalog.from({
-                    $exception: '$parameterType',
-                    $procedure: '$or',
-                    $expected: bali.types.PROBABILITY,
-                    $actual: bali.types.typeName(type)
-                });
-                throw new bali.Exception(exception);
-        }
+        validateParameterAspects('$or', '$Logical', first, second);
+        return first.constructor.or(first, second);
     },
 
     // $parameters
     function(collection) {
-        //console.log('      Parameters(' + collection.toDocument('      ') + ')');
-        try {
-            var parameters = new bali.Parameters(collection);
-            return parameters;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Parameters',
-                $collection: collection,
-                $message: 'An invalid collection was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+        validateParameterAbstraction('$parameters', bali.Collection, collection);
+        return bali.Parameters.from(collection);
     },
 
     // $percent
-    function(value) {
-        //console.log('      Percent(' + value + ')');
-        var percent = constructElement('$Percent', value);
-        return percent;
+    function(value, parameters) {
+        return constructElement('$percent', value, parameters);
     },
 
     // $probability
-    function(value) {
-        //console.log('      Probability(' + value + ')');
-        var probability = constructElement('$Probability', value);
-        return probability;
+    function(value, parameters) {
+        return constructElement('$probability', value, parameters);
     },
 
     // $product
-    function() {
+    function(first, second) {
+        validateParameterAspects('$product', '$Numerical', first, second);
+        return first.constructor.product(first, second);
     },
 
     // $queue
-    function() {
-        //console.log('      Queue()');
-        return new bali.Queue();
+    function(parameters) {
+        return constructCollection('$queue', parameters);
     },
 
     // $quotient
-    function() {
+    function(first, second) {
+        validateParameterAspects('$quotient', '$Numerical', first, second);
+        return first.constructor.quotient(first, second);
     },
 
     // $randomBytes
@@ -485,6 +482,7 @@ exports.functions = [
 
     // $randomIndex
     function(length) {
+        validateParameterType('$randomIndex', bali.types.NUMBER, length);
         return new bali.Number(bali.random.index(length));
     },
 
@@ -499,284 +497,298 @@ exports.functions = [
     },
 
     // $range
-    function(first, last) {
-        //console.log('      Range(' + first + ', ' + last + ')');
-        try {
-            var range = new bali.Range(first, last);
-            return range;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Range',
-                $first: first,
-                $last: last,
-                $message: 'An invalid first or last value was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+    function(first, last, parameters) {
+        return constructRange(first, last, parameters);
     },
 
     // $reciprocal
-    function() {
-    },
-
-    // $reduction
-    function() {
+    function(number) {
+        validateParameterType('$reciprocal', bali.types.NUMBER, number);
+        return bali.Number.reciprocal(number);
     },
 
     // $reference
-    function(value) {
-        //console.log('      Reference(' + value + ')');
-        var reference = constructElement('$Reference', value);
-        return reference;
+    function(value, parameters) {
+        return constructElement('$reference', value, parameters);
     },
 
     // $remainder
-    function() {
+    function(first, second) {
+        validateParameterAspects('$remainder', '$Numerical', first, second);
+        return first.constructor.remainder(first, second);
     },
 
     // $removeAll
-    function() {
+    function(collection) {
+        validateParameterAbstraction('$removeAll', bali.Collection, collection);
+        collection.removeAll();
+        return collection;
+    },
+
+    // $removeHead
+    function(queue) {
+        validateParameterType('$removeHead', bali.types.QUEUE, queue);
+        return queue.removeItem();
+    },
+
+    // $removeIndex
+    function(list, index) {
+        validateParameterType('$removeIndex', bali.types.LIST, list);
+        validateParameterType('$removeIndex', bali.types.NUMBER, index);
+        validateIndex('$removeIndex', list.getSize(), index);
+        return list.removeItem(index);
     },
 
     // $removeItem
-    function() {
+    function(set, item) {
+        validateParameterType('$removeItem', bali.types.SET, set);
+        return new bali.Probability(set.removeItem(item));
     },
 
     // $removeItems
-    function() {
+    function(set, items) {
+        validateParameterType('$removeItems', bali.types.SET, set);
+        validateParameterAbstraction('$removeItems', bali.Collection, items);
+        return new bali.Number(set.removeItems(items));
+    },
+
+    // $removeRange
+    function(list, range) {
+        validateParameterType('$removeIndex', bali.types.LIST, list);
+        validateParameterType('$removeIndex', bali.types.RANGE, range);
+        return list.removeItems(range);
+    },
+
+    // $removeTop
+    function(stack) {
+        validateParameterType('$removeTop', bali.types.STACK, stack);
+        return stack.removeItem();
     },
 
     // $removeValue
-    function() {
+    function(catalog, key) {
+        validateParameterType('$removeValue', bali.types.CATALOG, catalog);
+        validateParameterAbstraction('$removeValue', bali.Element, key);
+        return catalog.removeValue(key);
+    },
+
+    // $removeValues
+    function(catalog, keys) {
+        validateParameterType('$removeValues', bali.types.CATALOG, catalog);
+        validateParameterType('$removeValues', bali.types.LIST, keys);
+        return catalog.removeValues(keys);
+    },
+
+    // $reverseAssociations
+    function(catalog) {
+        validateParameterType('$reverseAssociations', bali.types.CATALOG, catalog);
+        catalog.reverseItems();
+        return catalog;
     },
 
     // $reverseItems
-    function() {
+    function(list) {
+        validateParameterType('$reverseItems', bali.types.LIST, list);
+        list.reverseItems();
+        return list;
     },
 
     // $sans
     function(first, second) {
-        //console.log('      sans(' + first + ', ' + second + ')');
-        var exception;
-        var type = first.type;
-        if (type !== second.type) {
-            exception = bali.Catalog.from({
-                $exception: '$parameterType',
-                $procedure: '$sans',
-                $expected: bali.types.typeName(type),
-                $actual: bali.types.typeName(second.type)
-            });
-            throw new bali.Exception(exception);
-        }
-        switch (type) {
-            case bali.types.BINARY:
-                return bali.Binary.sans(first, second);
-            case bali.types.PROBABILITY:
-                return bali.Probability.sans(first, second);
-            case bali.types.SET:
-                return bali.Set.sans(first, second);
-            default:
-                exception = bali.Catalog.from({
-                    $exception: '$parameterType',
-                    $procedure: '$sans',
-                    $expected: bali.types.PROBABILITY,
-                    $actual: bali.types.typeName(type)
-                });
-                throw new bali.Exception(exception);
-        }
+        validateParameterAspects('$sans', '$Logical', first, second);
+        return first.constructor.sans(first, second);
     },
 
     // $scaled
-    function() {
+    function(scalable, factor) {
+        validateParameterAspect('$scaled', '$Scalable', scalable);
+        validateParameterAspect('$factor', '$Numerical', factor);
+        return scalable.constructor.scaled(scalable, factor);
     },
 
     // $set
-    function() {
-        //console.log('      Set()');
-        return new bali.Set();
+    function(parameters) {
+        return constructCollection('$set', parameters);
     },
 
-    // $setItem
-    function() {
+    // $setIndex
+    function(list, index, item) {
+        validateParameterType('$setIndex', bali.types.LIST, list);
+        validateParameterType('$setIndex', bali.types.NUMBER, index);
+        validateIndex('$setIndex', list.getSize(), index);
+        list.setItem(index, item);
+        return list;
     },
 
     // $setParameters
     function(component, parameters) {
-        //console.log('      setParameters(' + component + ', ' + parameters + ')');
         component.setParameters(parameters);
         return bali.Filter.NONE;
     },
 
+    // $setSubcomponent
+    function(collection, index, item) {
+    },
+
     // $setValue
     function(catalog, key, value) {
-        //console.log('      setValue(' + catalog + ', ' + key + ', ' + value + ')');
-        return catalog.setValue(key, value) || bali.Filter.NONE;
+        validateParameterType('$setValue', bali.types.CATALOG, catalog);
+        validateParameterAbstraction('$setValue', bali.Element, key);
+        catalog.setValue(key, value);
+        return catalog;
+    },
+
+    // $setValues
+    function(catalog, associations) {
+        validateParameterType('$setValues', bali.types.CATALOG, catalog);
+        validateParameterType('$setValues', bali.types.CATALOG, associations);
+        catalog.setValues(associations);
+        return catalog;
     },
 
     // $shuffleItems
-    function() {
+    function(list) {
+        validateParameterType('$shuffleItems', bali.types.LIST, list);
+        list.shuffleItems();
+        return list;
     },
 
     // $sine
-    function() {
+    function(angle) {
+        validateParameterType('$sine', bali.types.ANGLE, angle);
+        return new bali.Number(bali.Angle.sine(angle));
+    },
+
+    // $sortAssociations
+    function(catalog) {
+        validateParameterType('$sortAssociations', bali.types.CATALOG, catalog);
+        catalog.sortItems();
+        return catalog;
     },
 
     // $sortItems
-    function() {
+    function(list) {
+        validateParameterType('$sortItems', bali.types.LIST, list);
+        list.sortItems();
+        return list;
     },
 
     // $source
-    function(procedure) {
-        //console.log('      Source(' + procedure + ')');
-        try {
-            var source = new bali.Source(procedure);
-            return source;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Source',
-                $value: procedure,
-                $message: 'An invalid procedure was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+    function(procedure, parameters) {
+        return constructSource(procedure, parameters);
     },
 
     // $stack
-    function() {
-        //console.log('      Stack()');
-        return new bali.Stack();
+    function(parameters) {
+        return constructCollection('$stack', parameters);
     },
 
     // $sum
-    function() {
+    function(first, second) {
+        validateParameterAspects('$sum', '$Scalable', first, second);
+        return first.constructor.sum(first, second);
     },
 
     // $supplement
-    function() {
+    function(angle) {
+        validateParameterType('$supplement', bali.types.ANGLE, angle);
+        return bali.Angle.supplement(angle);
     },
 
     // $symbol
-    function(value) {
-        //console.log('      Symbol(' + value + ')');
-        var symbol = constructElement('$Symbol', value);
-        return symbol;
+    function(value, parameters) {
+        return constructElement('$symbol', value, parameters);
     },
 
     // $tag
-    function(value) {
-        //console.log('      Tag(' + value + ')');
-        var tag = constructElement('$Tag', value);
-        return tag;
+    function(value, parameters) {
+        return constructElement('$tag', value, parameters);
     },
 
     // $tangent
-    function() {
+    function(angle) {
+        validateParameterType('$tangent', bali.types.ANGLE, angle);
+        return new bali.Number(bali.Angle.tangent(angle));
     },
 
     // $text
-    function(value) {
-        //console.log('      Text(' + value + ')');
-        var text = constructElement('$Text', value);
-        return text;
+    function(value, parameters) {
+        return constructElement('$text', value, parameters);
     },
 
     // $toBase2
-    function() {
+    function(binary, indentation) {
+        validateParameterType('$toBase2', bali.types.BINARY, binary);
+        validateParameterType('$toBase2', bali.types.TEXT, indentation);
+        return new bali.Text(binary.toBase2(indentation.toString()));
     },
 
     // $toBase16
-    function() {
+    function(binary, indentation) {
+        validateParameterType('$toBase16', bali.types.BINARY, binary);
+        validateParameterType('$toBase16', bali.types.TEXT, indentation);
+        return new bali.Text(binary.toBase16(indentation.toString()));
     },
 
     // $toBase32
-    function() {
+    function(binary, indentation) {
+        validateParameterType('$toBase32', bali.types.BINARY, binary);
+        validateParameterType('$toBase32', bali.types.TEXT, indentation);
+        return new bali.Text(binary.toBase32(indentation.toString()));
     },
 
     // $toBase64
-    function() {
+    function(binary, indentation) {
+        validateParameterType('$toBase64', bali.types.BINARY, binary);
+        validateParameterType('$toBase64', bali.types.TEXT, indentation);
+        return new bali.Text(binary.toBase64(indentation.toString()));
     },
 
     // $toBoolean
-    function() {
+    function(probability) {
+        validateParameterType('$toBoolean', bali.types.PROBABILITY, probability);
+        return new bali.Probability(probability.toBoolean());
     },
 
     // $toDocument
-    function() {
-    },
-
-    // $toNumber
-    function() {
+    function(component, indentation) {
+        validateParameterType('$toDocument', bali.types.TEXT, indentation);
+        return new bali.Text(component.toDocument(indentation.toString()));
     },
 
     // $toPolar
-    function() {
+    function(number) {
+        validateParameterType('$toPolar', bali.types.NUMBER, number);
+        return new bali.Text(number.toPolar());
     },
 
     // $toRectangular
-    function() {
+    function(number) {
+        validateParameterType('$toRectangular', bali.types.NUMBER, number);
+        return new bali.Text(number.toRectangular());
     },
 
     // $tree
     function(type, complexity) {
-        //console.log('      Tree(' + bali.types.nameForType(type) + ', ' + complexity + ')');
-        try {
-            var tree = new bali.Tree(type, complexity);
-            return tree;
-        } catch (e) {
-            var exception = bali.Catalog.from({
-                $exception: '$parameterValue',
-                $procedure: '$Tree',
-                $type: type,
-                $complexity: complexity,
-                $message: 'An invalid type or complexity was passed into the constructor.'
-            });
-            throw new bali.Exception(exception);
-        }
+        return constructTree(type, complexity);
     },
 
     // $validNextVersion
-    function() {
+    function(current, next) {
+        validateParameterType('$validNextVersion', bali.types.VERSION, current);
+        validateParameterType('$validNextVersion', bali.types.VERSION, next);
+        return new bali.Probability(bali.Version.validNextVersion(current, next));
     },
 
     // $version
-    function(value) {
-        //console.log('      Version(' + value + ')');
-        var version = constructElement('$Version', value);
-        return version;
+    function(value, parameters) {
+        return constructElement('$version', value, parameters);
     },
 
     // $xor
     function(first, second) {
-        //console.log('      xor(' + first + ', ' + second + ')');
-        var exception;
-        var type = first.type;
-        if (type !== second.type) {
-            exception = bali.Catalog.from({
-                $exception: '$parameterType',
-                $procedure: '$xor',
-                $expected: bali.types.typeName(type),
-                $actual: bali.types.typeName(second.type)
-            });
-            throw new bali.Exception(exception);
-        }
-        switch (type) {
-            case bali.types.BINARY:
-                return bali.Binary.xor(first, second);
-            case bali.types.PROBABILITY:
-                return bali.Probability.xor(first, second);
-            case bali.types.SET:
-                return bali.Set.xor(first, second);
-            default:
-                exception = bali.Catalog.from({
-                    $exception: '$parameterType',
-                    $procedure: '$xor',
-                    $expected: bali.types.PROBABILITY,
-                    $actual: bali.types.typeName(type)
-                });
-                throw new bali.Exception(exception);
-        }
+        validateParameterAspects('$xor', '$Logical', first, second);
+        return first.constructor.xor(first, second);
     }
 
 ];
@@ -798,7 +810,7 @@ exports.names = [
     '$binary',
     '$catalog',
     '$coinToss',
-    '$comparedTo',
+    '$comparison',
     '$complement',
     '$concatenation',
     '$conjugate',
@@ -817,7 +829,6 @@ exports.names = [
     '$getChild',
     '$getHash',
     '$getHead',
-    '$getIdentifier',
     '$getImaginary',
     '$getIndex',
     '$getItem',
@@ -825,16 +836,16 @@ exports.names = [
     '$getKey',
     '$getKeys',
     '$getMagnitude',
-    '$getNumbers',
     '$getPhase',
     '$getReal',
     '$getSize',
+    '$getSubcomponent',
     '$getTop',
     '$getType',
     '$getValue',
     '$getValues',
-    '$identifier',
     '$insertItem',
+    '$insertItems',
     '$inverse',
     '$isEmpty',
     '$isEqualTo',
@@ -844,7 +855,6 @@ exports.names = [
     '$isMoreThan',
     '$isParameterized',
     '$isSameAs',
-    '$isSimple',
     '$isUndefined',
     '$isZero',
     '$list',
@@ -867,22 +877,30 @@ exports.names = [
     '$randomProbability',
     '$range',
     '$reciprocal',
-    '$reduction',
     '$reference',
     '$remainder',
     '$removeAll',
+    '$removeHead',
+    '$removeIndex',
     '$removeItem',
     '$removeItems',
+    '$removeRange',
+    '$removeTop',
     '$removeValue',
+    '$removeValues',
+    '$reverseAssociations',
     '$reverseItems',
     '$sans',
     '$scaled',
     '$set',
-    '$setItem',
+    '$setIndex',
     '$setParameters',
+    '$setSubcomponent',
     '$setValue',
+    '$setValues',
     '$shuffleItems',
     '$sine',
+    '$sortAssociations',
     '$sortItems',
     '$source',
     '$stack',
@@ -898,7 +916,6 @@ exports.names = [
     '$toBase64',
     '$toBoolean',
     '$toDocument',
-    '$toNumber',
     '$toPolar',
     '$toRectangular',
     '$tree',
@@ -916,7 +933,13 @@ exports.invokeByName = function(name, parameters) {
 
 // PRIVATE FUNCTIONS
 
-function constructElement(procedure, value) {
+// add missing string method
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+
+function constructElement(procedure, value, parameters) {
     var exception;
     if (value.type !== bali.types.TEXT) {
         exception = bali.Catalog.from({
@@ -927,15 +950,194 @@ function constructElement(procedure, value) {
         });
         throw new bali.Exception(exception);
     }
-    try {
-        var constructor = bali[procedure.slice(1)];
-        var element = new constructor(value);
-        return element;
-    } catch (e) {
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Filter.NONE) {
         exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: '$Parameters',
+            $actual: bali.types.typeName(parameters.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    var constructor = bali[procedure.slice(1).capitalize()];  // $procedure -> Procedure
+    var element = new constructor(value, parameters);
+    return element;
+}
+
+
+function constructSource(procedure, parameters) {
+    var exception;
+    if (procedure.type !== bali.types.TREE) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$source',
+            $expected: '$Tree',
+            $actual: bali.types.typeName(procedure.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Filter.NONE) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$source',
+            $expected: '$Parameters',
+            $actual: bali.types.typeName(parameters.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    var source = new bali.Source(procedure, parameters);
+    return source;
+}
+
+
+function constructRange(first, last, parameters) {
+    var exception;
+    if (!(first instanceof bali.Element)) {
+        const exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$range',
+            $expected: '$Element',
+            $actual: bali.types.typeName(first.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    if (first.type !== last.type) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$range',
+            $expected: bali.types.typeName(first.type),
+            $actual: bali.types.typeName(last.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Filter.NONE) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$range',
+            $expected: '$Parameters',
+            $actual: bali.types.typeName(parameters.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    var range = new bali.Range(first, last, parameters);
+    return range;
+}
+
+
+function constructTree(symbol, complexity) {
+    var exception;
+    if (symbol.type !== bali.types.SYMBOL) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$tree',
+            $expected: '$Symbol',
+            $actual: bali.types.typeName(symbol.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    if (complexity.type !== bali.types.NUMBER) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: '$tree',
+            $expected: '$Number',
+            $actual: bali.types.typeName(complexity.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    var tree = new bali.Tree(bali.types.typeBySymbol(symbol), complexity.toNumber());
+    return tree;
+}
+
+
+function constructCollection(procedure, parameters) {
+    var exception;
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Filter.NONE) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: '$Parameters',
+            $actual: bali.types.typeName(parameters.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    var constructor = bali[procedure.slice(1).capitalize()];  // $procedure -> Procedure
+    var collection = new constructor(parameters);
+    return collection;
+}
+
+
+function validateParameterType(procedure, type, parameter) {
+    if (parameter.type !== type) {
+        const exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: bali.types.typeName(type),
+            $actual: bali.types.typeName(parameter.type)
+        });
+        throw new bali.Exception(exception);
+    }
+}
+
+
+function validateParameterAbstraction(procedure, abstraction, parameter) {
+    if (!(parameter instanceof abstraction)) {
+        const exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: '$' + abstraction.name,
+            $actual: bali.types.typeName(parameter.type)
+        });
+        throw new bali.Exception(exception);
+    }
+}
+
+
+function validateParameterAspect(procedure, aspect, parameter) {
+    var type = parameter.type;
+    if (!bali.types['is' + aspect.slice(1)](type)) {
+        const exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: aspect,
+            $actual: bali.types.typeName(type)
+        });
+        throw new bali.Exception(exception);
+    }
+}
+
+
+function validateParameterAspects(procedure, aspect, first, second) {
+    var exception;
+    var type = first.type;
+    if (type !== second.type) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: bali.types.typeName(type),
+            $actual: bali.types.typeName(second.type)
+        });
+        throw new bali.Exception(exception);
+    }
+    if (!bali.types['is' + aspect.slice(1)](type)) {
+        exception = bali.Catalog.from({
+            $exception: '$parameterType',
+            $procedure: procedure,
+            $expected: aspect,
+            $actual: bali.types.typeName(type)
+        });
+        throw new bali.Exception(exception);
+    }
+}
+
+
+function validateIndex(procedure, size, index) {
+    index = Math.abs(index);
+    if (index === 0 || index > size) {
+        const exception = bali.Catalog.from({
             $exception: '$parameterValue',
             $procedure: procedure,
-            $value: value.toString()
+            $expected: new bali.Range(1, size),
+            $actual: index
         });
         throw new bali.Exception(exception);
     }
