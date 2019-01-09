@@ -1,14 +1,14 @@
 1.Invoke:
-INVOKE $randomInteger
+INVOKE $catalog
 
 2.InvokeWithParameter:
 PUSH LITERAL `3`
-INVOKE $factorial WITH PARAMETER
+INVOKE $inverse WITH PARAMETER
 
 3.InvokeWith2Parameters:
 PUSH LITERAL `5`
 INVOKE $sum WITH 2 PARAMETERS
 
 4.InvokeWith3Parameters:
-PUSH LITERAL `13`
-INVOKE $default WITH 3 PARAMETERS
+PUSH LITERAL `"two"`
+INVOKE $setValue WITH 3 PARAMETERS

@@ -177,7 +177,7 @@ ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
             break;
         case types.CONSTANT:
         case types.PARAMETER:
-            value = new bali.Symbol(operand);
+            value = bali.Symbol.fromLiteral(operand);
             break;
     }
     instruction.setValue('$operand', value);
@@ -207,9 +207,9 @@ ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     instruction.setValue('$modifier', types.loadModifierValue(ctx.children[1].getText()));
     var variable = ctx.children[2].getText();
     if (variable.includes('$$')) {
-        instruction.setValue('$operand', new bali.Reserved(variable));
+        instruction.setValue('$operand', bali.Reserved.fromLiteral(variable));
     } else {
-        instruction.setValue('$operand', new bali.Symbol(variable));
+        instruction.setValue('$operand', bali.Symbol.fromLiteral(variable));
     }
     this.result = instruction;
 };
@@ -226,9 +226,9 @@ ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
     instruction.setValue('$modifier', types.storeModifierValue(ctx.children[1].getText()));
     var variable = ctx.children[2].getText();
     if (variable.includes('$$')) {
-        instruction.setValue('$operand', new bali.Reserved(variable));
+        instruction.setValue('$operand', bali.Reserved.fromLiteral(variable));
     } else {
-        instruction.setValue('$operand', new bali.Symbol(variable));
+        instruction.setValue('$operand', bali.Symbol.fromLiteral(variable));
     }
     this.result = instruction;
 };
@@ -254,7 +254,7 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
             break;
     }
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', new bali.Symbol(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', bali.Symbol.fromLiteral(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 
@@ -274,7 +274,7 @@ ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
     string = string.slice(0, -1);  // strip off last space
     var modifier = types.executeModifierValue(string);
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', new bali.Symbol(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', bali.Symbol.fromLiteral(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 

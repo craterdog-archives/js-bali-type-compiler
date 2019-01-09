@@ -18,13 +18,13 @@
         
         2.EvaluateStatement:
         PUSH LITERAL `5`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $setSubcomponent WITH 3 PARAMETERS
         LOAD VARIABLE $$result
         HANDLE RESULT
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '600280032801B85F6001E000'(
+    $bytecode: '600280032801B8626001E000'(
         $base: 16
         $mediatype: "application/bcod"
     )

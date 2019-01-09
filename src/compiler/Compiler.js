@@ -60,7 +60,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
         }
     }
     context.setValue('$parameters', parameters);
-    context.setValue('$variables', bali.Set.from(['$target']));
+    context.setValue('$variables', bali.Set.fromSequential(['$target']));
     context.setValue('$procedures', new bali.Set());
     context.setValue('$addresses', new bali.Catalog());
 
@@ -187,8 +187,16 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 //     EOL (association EOL)* |
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
-    // the VM places an empty catalog on the component stack
-    this.builder.insertInvokeInstruction('$catalog', 0);
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = catalog.parameters;
+    var numberOfParameters = 0;
+    if (parameters) {
+        catalog.parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
+
+    // the VM replaces the parameters on the component stack with a new parameterized catalog
+    this.builder.insertInvokeInstruction('$catalog', numberOfParameters);
 
     // the VM adds each association to the catalog
     this.depth++;
@@ -203,14 +211,7 @@ CompilingVisitor.prototype.visitCatalog = function(catalog) {
     }
     this.depth--;
 
-    if (catalog.isParameterized()) {
-        // the VM loads the parameters associated with the catalog onto the top of the component stack
-        catalog.parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the catalog
-        this.builder.insertInvokeInstruction('$setParameters', 2);
-    }
-    // the catalog remains on the component stack
+    // the parameterized catalog remains on the component stack
 };
 
 
@@ -464,7 +465,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    var literal = element.toString();
+    var literal = element.source;
     this.builder.insertPushInstruction('LITERAL', literal);
 
     if (element.isParameterized()) {
@@ -602,7 +603,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     this.builder.insertLabel(handleLabel);
 
     // the VM stores the exception that is on top of the component stack in the variable
-    var exception = symbol.toString();
+    var exception = symbol.toLiteral();
     this.builder.insertStoreInstruction('VARIABLE', exception);
 
     // the VM loads the exception back on top of the component stack for the next handler
@@ -774,8 +775,16 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
-    // the VM replaces the size value on the component stack with a new list of that size
-    this.builder.insertInvokeInstruction('$list', 0);
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = list.parameters;
+    var numberOfParameters = 0;
+    if (parameters) {
+        list.parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
+
+    // the VM replaces the parameters on the component stack with a new parameterized list
+    this.builder.insertInvokeInstruction('$list', numberOfParameters);
 
     // the VM adds each expression to the list
     this.depth++;
@@ -787,14 +796,7 @@ CompilingVisitor.prototype.visitList = function(list) {
     }
     this.depth--;
 
-    if (list.isParameterized()) {
-        // the VM loads the parameters associated with the list onto the top of the component stack
-        list.parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the list
-        this.builder.insertInvokeInstruction('$setParameters', 2);
-    }
-    // the list remains on the component stack
+    // the parameterized list remains on the component stack
 };
 
 
@@ -955,6 +957,41 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 
 
 /*
+ * This method constructs a new queue component and places it on top of the
+ * component stack. The queue contains a sequence of values. The order in
+ * which the values are listed is maintained by the queue.
+ */
+// queue:
+//     expression (',' expression)* |
+//     EOL (expression EOL)* |
+//     /*empty queue*/
+CompilingVisitor.prototype.visitQueue = function(queue) {
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = queue.parameters;
+    var numberOfParameters = 0;
+    if (parameters) {
+        queue.parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
+
+    // the VM replaces the parameters on the component stack with a new parameterized queue
+    this.builder.insertInvokeInstruction('$queue', numberOfParameters);
+
+    // the VM adds each expression to the queue
+    this.depth++;
+    var iterator = queue.getIterator();
+    while (iterator.hasNext()) {
+        var item = iterator.getNext();
+        item.acceptVisitor(this);
+        this.builder.insertInvokeInstruction('$addItem', 2);
+    }
+    this.depth--;
+
+    // the parameterized queue remains on the component stack
+};
+
+
+/*
  * This method inserts the instructions that cause the VM to evaluate a
  * message expression and then place the resulting message on a message
  * queue in the Bali Nebula™. The reference to the message
@@ -993,17 +1030,18 @@ CompilingVisitor.prototype.visitRange = function(range) {
     // the VM places the value of the ending expression on the component stack
     lastValue.acceptVisitor(this);  // last value in the range
 
-    // the VM replaces the two range values on the component stack with a new range component
-    this.builder.insertInvokeInstruction('$range', 2);
-
-    if (range.isParameterized()) {
-        // the VM loads the parameters associated with the range onto the top of the component stack
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = range.parameters;
+    var numberOfParameters = 2;
+    if (parameters) {
         range.parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the range
-        this.builder.insertInvokeInstruction('$setParameters', 2);
+        numberOfParameters = 3;
     }
-    // the range remains on the component stack
+
+    // the VM replaces the parameters on the component stack with a new parameterized range
+    this.builder.insertInvokeInstruction('$range', numberOfParameters);
+
+    // the parameterized range remains on the component stack
 };
 
 
@@ -1147,12 +1185,16 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitSet = function(set) {
-    // the VM places the size of the set on the component stack
-    var size = set.getSize();
-    this.builder.insertPushInstruction('LITERAL', size);
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = set.parameters;
+    var numberOfParameters = 0;
+    if (parameters) {
+        set.parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
 
-    // the VM replaces the size value on the component stack with a new set of that size
-    this.builder.insertInvokeInstruction('$set', 1);
+    // the VM replaces the parameters on the component stack with a new parameterized set
+    this.builder.insertInvokeInstruction('$set', numberOfParameters);
 
     // the VM adds each expression to the set
     this.depth++;
@@ -1164,14 +1206,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
     }
     this.depth--;
 
-    if (set.isParameterized()) {
-        // the VM loads the parameters associated with the set onto the top of the component stack
-        set.parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the set
-        this.builder.insertInvokeInstruction('$setParameters', 2);
-    }
-    // the set remains on the component stack
+    // the parameterized set remains on the component stack
 };
 
 
@@ -1183,8 +1218,9 @@ CompilingVisitor.prototype.visitSet = function(set) {
  */
 // source: '{' procedure '}'
 CompilingVisitor.prototype.visitSource = function(source) {
-    // the VM places the source code for the procedure on top of the component stack
-    this.builder.insertPushInstruction('LITERAL', source.toString());
+    // the VM places the source code on top of the component stack
+    var literal = '{' + source.procedure.toString() + '}';  // must include curly braces to be parsed correctly
+    this.builder.insertPushInstruction('LITERAL', literal);
 
     if (source.isParameterized()) {
         // the VM loads the parameters associated with the source code onto the top of the component stack
@@ -1193,6 +1229,8 @@ CompilingVisitor.prototype.visitSource = function(source) {
         // the VM sets the parameters for the source code
         this.builder.insertInvokeInstruction('$setParameters', 2);
     }
+
+    // the parameterized source code remains on the component stack
 };
 
 
@@ -1206,12 +1244,16 @@ CompilingVisitor.prototype.visitSource = function(source) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitStack = function(stack) {
-    // the VM places the size of the stack on the component stack
-    var size = stack.getSize();
-    this.builder.insertPushInstruction('LITERAL', size);
+    // the VM places the parameters (if any) for this component on the component stack
+    const parameters = stack.parameters;
+    var numberOfParameters = 0;
+    if (parameters) {
+        stack.parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
 
-    // the VM replaces the size value on the component stack with a new stack of that size
-    this.builder.insertInvokeInstruction('$stack', 1);
+    // the VM replaces the parameters on the component stack with a new parameterized stack
+    this.builder.insertInvokeInstruction('$stack', numberOfParameters);
 
     // the VM adds each expression to the stack
     this.depth++;
@@ -1223,14 +1265,7 @@ CompilingVisitor.prototype.visitStack = function(stack) {
     }
     this.depth--;
 
-    if (stack.isParameterized()) {
-        // the VM loads the parameters associated with the stack onto the top of the component stack
-        stack.parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the stack
-        this.builder.insertInvokeInstruction('$setParameters', 2);
-    }
-    // the stack remains on the component stack
+    // the parameterized stack remains on the component stack
 };
 
 
@@ -1418,7 +1453,7 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
 CompilingVisitor.prototype.visitWithClause = function(tree) {
-    var variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
+    var variable = tree.getSize() > 2 ? tree.getChild(1).toLiteral() : this.createTemporaryVariable('item');
     var sequence = tree.getChild(-2);
     var block = tree.getChild(-1);
     var clausePrefix = this.builder.getClausePrefix();
@@ -1485,7 +1520,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
 
     if (recipient.type === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
-        var symbol = recipient.toString();
+        var symbol = recipient.toLiteral();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
         // the VM sets the value of the subcomponent at the given index of the parent component
@@ -1496,6 +1531,23 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
 
 
 // PRIVATE FUNCTIONS
+
+/*
+ * This function defines a missing string function for the standard String class.
+ */
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+
+/*
+ * This function defines a missing stack function for the standard Array class.
+ * The push(item) and pop() methods are already defined.
+ */
+Array.prototype.peek = function() {
+    return this[this.length - 1];
+};
+
 
 /*
  * This function returns the subclauses of a statement in an array.
@@ -1514,22 +1566,6 @@ function getSubclauses(statement) {
     }
     return subClauses;
 }
-
-
-// add missing string method
-String.prototype.capitalize = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-
-
-/*
- * This function defines a missing stack function for the standard Array class.
- * The push(item) and pop() methods are already defined.
- */
-Array.prototype.peek = function() {
-    return this[this.length - 1];
-};
 
 
 // PRIVATE BUILDER CLASS
@@ -1831,9 +1867,9 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
     var instruction = 'LOAD ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
     if (symbol.includes('$$')) {
-        symbol = new bali.Reserved(symbol);
+        symbol = bali.Reserved.fromLiteral(symbol);
     } else {
-        symbol = new bali.Symbol(symbol);
+        symbol = bali.Symbol.fromLiteral(symbol);
     }
     this.variables.addItem(symbol);
 };
@@ -1846,9 +1882,9 @@ InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
     var instruction = 'STORE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
     if (symbol.includes('$$')) {
-        symbol = new bali.Reserved(symbol);
+        symbol = bali.Reserved.fromLiteral(symbol);
     } else {
-        symbol = new bali.Symbol(symbol);
+        symbol = bali.Symbol.fromLiteral(symbol);
     }
     this.variables.addItem(symbol);
 };

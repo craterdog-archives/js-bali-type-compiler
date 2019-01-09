@@ -231,13 +231,13 @@ function importTask(catalog) {
 
 
 function exportTask(task) {
-    var catalog = bali.Catalog.from(task);
+    var catalog = bali.Catalog.fromSequential(task);
     return catalog;
 }
 
 
 function importContext(catalog) {
-    var bytes = catalog.getValue('$bytecode').getBuffer();
+    var bytes = catalog.getValue('$bytecode').value;
     var bytecode = utilities.bytesToBytecode(bytes);
     var procedure = {
         type: catalog.getValue('$type'),
@@ -290,7 +290,7 @@ function pushContext(processor, target, citation, parameters, index) {
     var procedure = procedures.getValue(name);
 
     // retrieve the bytecode from the compiled procedure
-    var bytes = procedure.getValue('$bytecode').getBuffer();
+    var bytes = procedure.getValue('$bytecode').value;
     var bytecode = utilities.bytesToBytecode(bytes);
 
     // retrieve the literals and constants from the compiled type
@@ -310,7 +310,7 @@ function pushContext(processor, target, citation, parameters, index) {
         } else {
             value = collection.getItem(counter);
         }
-        value = value || bali.Filter.NONE;
+        value = value || bali.Pattern.fromLiteral('none');
         parameters.setValue(parameter, value);
         counter++;
     }
@@ -320,7 +320,7 @@ function pushContext(processor, target, citation, parameters, index) {
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, bali.Filter.NONE);
+        variables.setValue(variable, bali.Pattern.fromLiteral('none'));
     }
     variables.setValue('$target', target);
 
@@ -375,7 +375,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (bali.Filter.NONE.isEqualTo(condition)) {
+        if (bali.Pattern.fromLiteral('none').isEqualTo(condition)) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -388,7 +388,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
-        if (bali.Probability.TRUE.isEqualTo(condition)) {
+        if (new bali.Probability(true).isEqualTo(condition)) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -401,7 +401,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
-        if (bali.Probability.FALSE.isEqualTo(condition)) {
+        if (new bali.Probability(false).isEqualTo(condition)) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -412,7 +412,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.context.handlers.addItem(new bali.Number(handlerAddress.toString()));
+        processor.context.handlers.addItem(new bali.Number(handlerAddress));
         processor.context.address++;
     },
 
@@ -624,7 +624,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = new bali.Parameters(new bali.List());
-        var target = bali.Filter.NONE;
+        var target = bali.Pattern.fromLiteral('none');
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
@@ -635,7 +635,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
-        var target = bali.Filter.NONE;
+        var target = bali.Pattern.fromLiteral('none');
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
@@ -647,7 +647,7 @@ var instructionHandlers = [
         var index = operand;
         var parameters = new bali.Parameters(new bali.List());
         var target = processor.task.stack.removeItem();
-        var type = new bali.Reference(target.getType());
+        var type = bali.Reference.fromLiteral(target.getType());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
@@ -658,7 +658,7 @@ var instructionHandlers = [
         var index = operand;
         var parameters = processor.task.stack.removeItem();
         var target = processor.task.stack.removeItem();
-        var type = new bali.Reference(target.getType());
+        var type = bali.Reference.fromLiteral(target.getType());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },

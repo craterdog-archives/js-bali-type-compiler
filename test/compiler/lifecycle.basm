@@ -11,7 +11,7 @@
         $$result
         $document
         $documents
-        $i
+        $index
         $target
     ]
     $procedures: []
@@ -46,26 +46,26 @@
         
         4.CheckoutStatement:
         LOAD VARIABLE $documents
-        LOAD VARIABLE $i
+        LOAD VARIABLE $index
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-4
         LOAD DOCUMENT $$location-4
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $setSubcomponent WITH 3 PARAMETERS
         
         5.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-5
         LOAD VARIABLE $documents
-        LOAD VARIABLE $i
-        INVOKE $getValue WITH 2 PARAMETERS
+        LOAD VARIABLE $index
+        INVOKE $getSubcomponent WITH 2 PARAMETERS
         STORE DRAFT $$location-5
         
         6.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-6
         LOAD VARIABLE $documents
-        LOAD VARIABLE $i
-        INVOKE $getValue WITH 2 PARAMETERS
+        LOAD VARIABLE $index
+        INVOKE $getSubcomponent WITH 2 PARAMETERS
         STORE DOCUMENT $$location-6
         
         7.DiscardStatement:
@@ -80,7 +80,7 @@
     )
     $bytecode: '
         2801280280017801800928028002600990022802800360099803600A600B
-        280280047804B85F28028005600A600BB02E900528028006600A600BB02E
+        280280047804B86228028005600A600BB029900528028006600A600BB029
         980628028007280390076008E000
     '(
         $base: 16

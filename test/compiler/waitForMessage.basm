@@ -24,18 +24,18 @@
         2.WaitStatement:
         LOAD VARIABLE $messages
         PUSH LITERAL `$foo`
-        INVOKE $getValue WITH 2 PARAMETERS
+        INVOKE $getSubcomponent WITH 2 PARAMETERS
         PUSH LITERAL `5`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$queue-2
         LOAD MESSAGE $$queue-2
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $setSubcomponent WITH 3 PARAMETERS
         LOAD VARIABLE $$result
         HANDLE RESULT
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '2801280280016801800460052803B02E2804280280026802B85F6003E000'(
+    $bytecode: '2801280280016801800460052803B0292804280280026802B8626003E000'(
         $base: 16
         $mediatype: "application/bcod"
     )

@@ -1,5 +1,10 @@
 [
-    $literals: [true, none, false]
+    $literals: [
+        true
+        none
+        "none"
+        false
+    ]
     $constants: [:]
     $procedures: [
         $function1: [
@@ -53,7 +58,7 @@
                 STORE VARIABLE $exception
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
-                PUSH LITERAL `none`
+                PUSH LITERAL `"none"`
                 INVOKE $matches WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT
@@ -78,8 +83,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20062802E8004000001200008001600160012802B040181148003801E000
-                0012E80000002803E000
+                20062802E8004000001200008001600160012803B03D181148003801E000
+                0012E80000002804E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"
@@ -136,7 +141,7 @@
                 STORE VARIABLE $exception
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
-                PUSH LITERAL `none`
+                PUSH LITERAL `"none"`
                 INVOKE $matches WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT
@@ -161,8 +166,8 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20063802E8004000001200008001600160012802B040181148002801E000
-                0012E80000002803E000
+                20063802E8004000001200008001600160012803B03D181148002801E000
+                0012E80000002804E000
             '(
                 $base: 16
                 $mediatype: "application/bcod"
