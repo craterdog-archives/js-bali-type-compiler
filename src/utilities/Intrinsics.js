@@ -411,8 +411,6 @@ exports.functions = [
 
     // $matches
     function(component, pattern) {
-        // TDOD: remove next line once bug is fixed in bali.Component
-        if (pattern.type === bali.types.TEXT) pattern = pattern.value;
         return new bali.Probability(component.matches(pattern));
     },
 
