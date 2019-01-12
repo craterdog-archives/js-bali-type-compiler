@@ -13,8 +13,7 @@
  * This class implements the virtual machine for The Bali Nebula™.
  */
 const bali = require('bali-component-framework');
-const utilities = require('../utilities/Bytecode');
-const intrinsics = require('../utilities/Intrinsics');
+const utilities = require('../utilities');
 
 const ACTIVE = '$active';
 const WAITING = '$waiting';
@@ -125,9 +124,9 @@ function fetchInstruction(processor) {
 function executeInstruction(processor) {
     // decode the bytecode instruction
     var instruction = processor.context.instruction;
-    var operation = utilities.decodeOperation(instruction);
-    var modifier = utilities.decodeModifier(instruction);
-    var operand = utilities.decodeOperand(instruction);
+    var operation = utilities.bytecode.decodeOperation(instruction);
+    var modifier = utilities.bytecode.decodeModifier(instruction);
+    var operand = utilities.bytecode.decodeOperand(instruction);
 
     // pass execution off to the correct operation handler
     var index = (operation << 2) | modifier;  // index: [0..31]
@@ -238,7 +237,7 @@ function exportTask(task) {
 
 function importContext(catalog) {
     var bytes = catalog.getValue('$bytecode').value;
-    var bytecode = utilities.bytesToBytecode(bytes);
+    var bytecode = utilities.bytecode.bytesToBytecode(bytes);
     var procedure = {
         type: catalog.getValue('$type'),
         name: catalog.getValue('$name'),
@@ -257,7 +256,7 @@ function importContext(catalog) {
 
 
 function exportContext(procedure) {
-    var bytes = utilities.bytecodeToBytes(procedure.bytecode);
+    var bytes = utilities.bytecode.bytecodeToBytes(procedure.bytecode);
     var base16 = bali.codex.base16Encode(bytes);
     var source = "'%bytecode'($base: 16, $mediatype: \"application/bcod\")";
     source = source.replace(/%bytecode/, base16);
@@ -291,7 +290,7 @@ function pushContext(processor, target, citation, parameters, index) {
 
     // retrieve the bytecode from the compiled procedure
     var bytes = procedure.getValue('$bytecode').value;
-    var bytecode = utilities.bytesToBytecode(bytes);
+    var bytecode = utilities.bytecode.bytesToBytecode(bytes);
 
     // retrieve the literals and constants from the compiled type
     var literals = type.getValue('$literals');
@@ -574,7 +573,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.functions[index]();
+        var result = utilities.intrinsics.functions[index]();
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
         processor.context.address++;
@@ -586,7 +585,7 @@ var instructionHandlers = [
         // pop the parameter off of the component stack
         var parameter = processor.task.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.functions[index](parameter);
+        var result = utilities.intrinsics.functions[index](parameter);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
         processor.context.address++;
@@ -599,7 +598,7 @@ var instructionHandlers = [
         var parameter2 = processor.task.stack.removeItem();
         var parameter1 = processor.task.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.functions[index](parameter1, parameter2);
+        var result = utilities.intrinsics.functions[index](parameter1, parameter2);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
         processor.context.address++;
@@ -613,7 +612,7 @@ var instructionHandlers = [
         var parameter2 = processor.task.stack.removeItem();
         var parameter1 = processor.task.stack.removeItem();
         // call the intrinsic function associated with the index operand
-        var result = intrinsics.functions[index](parameter1, parameter2, parameter3);
+        var result = utilities.intrinsics.functions[index](parameter1, parameter2, parameter3);
         // push the result of the function call onto the top of the component stack
         processor.task.stack.addItem(result);
         processor.context.address++;
