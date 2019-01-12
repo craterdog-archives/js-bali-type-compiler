@@ -7,21 +7,19 @@
  * under the terms of The MIT License (MIT), as published by the Open   *
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
+const testDirectory = 'test/config/';
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const notary = require('bali-digital-notary');
 const nebula = require('bali-nebula-api');
-
-const testDirectory = 'test/config/';
 const notaryKey = notary.api(testDirectory);
 const repository = nebula.local(testDirectory);
 const api = nebula.api(notaryKey, repository);
-
 const utilities = require('../src/utilities');
+const vm = require('../src/processor');
 const assembler = require('../src/compiler').assembler;
-const Processor = require('../src/processor/Processor').Processor;
 
 const EOL = '\n';  // POSIX end of line character
 
@@ -168,7 +166,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = new Processor(api, task);
+            var processor = new vm.Processor(api, task);
             expect(processor.context.address).to.equal(1);
 
             // 1.IfStatement:
@@ -278,7 +276,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = new Processor(api, task);
+            var processor = new vm.Processor(api, task);
             expect(processor.context.address).to.equal(1);
 
             // 1.PushHandler:
@@ -361,7 +359,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = new Processor(api, task);
+            var processor = new vm.Processor(api, task);
             expect(processor.context.address).to.equal(1);
 
             // 1.LoadParameter:
@@ -440,7 +438,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = new Processor(api, task);
+            var processor = new vm.Processor(api, task);
             expect(processor.context.address).to.equal(1);
 
             // 1.Invoke:
@@ -500,7 +498,7 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', function() {
-            var processor = new Processor(api, task);
+            var processor = new vm.Processor(api, task);
             expect(processor.context.address).to.equal(1);
 
             // 1.Execute:

@@ -8,17 +8,16 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
+const testDirectory = 'test/config/';
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
-const compiler = require('../src/compiler');
-
-var testDirectory = 'test/config/';
 const notary = require('bali-digital-notary').api(testDirectory);
 const nebula = require('bali-nebula-api');
-var repository = nebula.local(testDirectory);
-var api = nebula.api(notary, repository);
+const repository = nebula.local(testDirectory);
+const api = nebula.api(notary, repository);
+const compiler = require('../src/compiler');
 
 /*  uncomment to generate a new notary key and certificate
 var certificate = notary.generateKeys();

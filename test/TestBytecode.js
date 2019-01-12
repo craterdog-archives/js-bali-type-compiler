@@ -12,7 +12,7 @@ const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
-const utilities = require('../src/utilities/Bytecode');
+const utilities = require('../src/utilities');
 
 describe('Bali Virtual Machine™', function() {
 
@@ -20,16 +20,16 @@ describe('Bali Virtual Machine™', function() {
 
         it('should round trip conversions from bytes to bytecodes', function() {
             var bytes = bali.random.bytes(16);
-            var bytecode = utilities.bytesToBytecode(bytes);
-            var bytes2 = utilities.bytecodeToBytes(bytecode);
+            var bytecode = utilities.bytecode.bytesToBytecode(bytes);
+            var bytes2 = utilities.bytecode.bytecodeToBytes(bytecode);
             expect(bytes2.toString('hex')).to.equal(bytes.toString('hex'));
-            var bytecode2 = utilities.bytesToBytecode(bytes2);
+            var bytecode2 = utilities.bytecode.bytesToBytecode(bytes2);
             expect(JSON.stringify(bytecode2, null, 2)).to.equal(JSON.stringify(bytecode, null, 2));
         });
 
         it('should round trip conversions from bytecodes to bytes', function() {
             var bytecode = [0, 10241, 6164];
-            var bytes = utilities.bytecodeToBytes(bytecode);
+            var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
             expect(bytes.toString('hex')).to.equal('000028011814');
         });
 
@@ -47,27 +47,27 @@ describe('Bali Virtual Machine™', function() {
             for (var i = 0; i < 32; i++) {
                 // test with no operand
                 instruction = i << 11;
-                operation = utilities.decodeOperation(instruction);
-                modifier = utilities.decodeModifier(instruction);
-                encoded = utilities.encodeInstruction(operation, modifier);
-                if (utilities.instructionIsValid(instruction)) {
+                operation = utilities.bytecode.decodeOperation(instruction);
+                modifier = utilities.bytecode.decodeModifier(instruction);
+                encoded = utilities.bytecode.encodeInstruction(operation, modifier);
+                if (utilities.bytecode.instructionIsValid(instruction)) {
                     expect(instruction).to.equal(encoded);
                     bytecode.push(instruction);
                 }
                 // test with operand
                 operand = i + 1;
                 instruction = i << 11 | operand;
-                operation = utilities.decodeOperation(instruction);
-                modifier = utilities.decodeModifier(instruction);
-                encoded = utilities.encodeInstruction(operation, modifier, operand);
-                if (utilities.instructionIsValid(instruction)) {
+                operation = utilities.bytecode.decodeOperation(instruction);
+                modifier = utilities.bytecode.decodeModifier(instruction);
+                encoded = utilities.bytecode.encodeInstruction(operation, modifier, operand);
+                if (utilities.bytecode.instructionIsValid(instruction)) {
                     expect(instruction).to.equal(encoded);
                     bytecode.push(instruction);
                 }
             }
 
-            var formattedInstructions = utilities.bytecodeToString(bytecode);
-            //fs.writeFileSync('test/utilities/formatted.code', formattedInstructions, 'utf8');
+            var formattedInstructions = utilities.bytecode.bytecodeToString(bytecode);
+            //fs.writeFileSync('test/utilities.bytecode/formatted.code', formattedInstructions, 'utf8');
             var expected = fs.readFileSync('test/utilities/formatted.code', 'utf8');
             expect(formattedInstructions).to.equal(expected);
         });
