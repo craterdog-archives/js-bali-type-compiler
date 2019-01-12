@@ -2,7 +2,7 @@
     $literals: [
         true
         none
-        "none"
+        "none"?
         false
     ]
     $constants: [:]
@@ -58,7 +58,7 @@
                 STORE VARIABLE $exception
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
-                PUSH LITERAL `"none"`
+                PUSH LITERAL `"none"?`
                 INVOKE $matches WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT
@@ -141,7 +141,7 @@
                 STORE VARIABLE $exception
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
-                PUSH LITERAL `"none"`
+                PUSH LITERAL `"none"?`
                 INVOKE $matches WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT

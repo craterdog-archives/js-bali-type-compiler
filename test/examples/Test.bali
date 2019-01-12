@@ -10,7 +10,7 @@
         ]
         $function2: [
             $source: {
-                throw none handle $exception matching "none" with {
+                throw none handle $exception matching "none"? with {
                     return first
                 }
                 return false
@@ -23,7 +23,7 @@
         ]
         $message2: [
             $source: {
-                throw second handle $exception matching "none" with {
+                throw second handle $exception matching "none"? with {
                     return true
                 }
                 return false

@@ -8,8 +8,7 @@ JUMP TO 5.store ON FALSE
 
 2.push:
 PUSH HANDLER 8.handle
-PUSH LITERAL `"This is a literal text string
-containing an \` and spanning multiple lines."`
+PUSH LITERAL `"This is a literal text string\ncontaining an \` and spanning multiple lines."`
 PUSH LITERAL `{
     $foo := bar
     $bar := baz

@@ -1,5 +1,7 @@
 grammar InstructionSet;
 
+// RULES
+
 document: EOL* instructions EOL* EOF;
 
 instructions: step (EOL step)*;
@@ -101,13 +103,13 @@ handleInstruction:
 ;
 
 
-// Tokens
+// TOKENS
 
 LABEL: (NUMBER '.')+ IDENTIFIER;
 
 NUMBER: '1'..'9' ('0'..'9')*;
 
-LITERAL: '`' (ESCAPE | CHARACTER)*? '`';
+LITERAL: '`' ('\\`' | ~'`')*? '`';
 
 SYMBOL: '$' IDENTIFIER;
 
@@ -115,17 +117,8 @@ RESERVED: '$$' IDENTIFIER ('-' NUMBER)?;
 
 EOL: '\r'? '\n';
 
+// remove white space
 SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN);
 
 fragment
 IDENTIFIER: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*;
-
-fragment
-CHARACTER: .;
-
-fragment
-BASE16: '0'..'9' | 'A'..'F';
-
-// replace with actual characters when read
-fragment
-ESCAPE: '\\' ('u' BASE16+ | 'b' | 'f' | 'r' | 'n' | 't' | '`' | '\\');

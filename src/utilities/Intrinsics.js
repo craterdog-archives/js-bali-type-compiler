@@ -447,7 +447,7 @@ exports.functions = [
     // $parameters
     function(collection) {
         validateParameterAbstraction('$parameters', bali.Collection, collection);
-        return bali.Parameters.fromSequential(collection);
+        return new bali.Parameters(collection);
     },
 
     // $pattern

@@ -27,8 +27,8 @@ const EOL = '\n';  // POSIX end of line character
 
 
 /*
-    $tag: #SN46VS0YD4X9DZZZ49W55QMG67VL01D1
-    $digest: PWC3HFDRMXQ94Q5WBX4CXNTGD6TPQ5D1KV4KHDTQFWYH8FSBXFB14QHP9C522X1KWZKK5NB512AHY1RQC9VFVHG0AJ1JZQFGZ5Z8BP0
+    $tag: #XB0AH0LKGFK9STMC4N8SCV5BR0LNTMP8
+    $digest: 8G0DYM951Y2QT77Y23JZQNA4JQN2W0SYG0A34RRXSXVZJXA106HKR78Y2D6H65817TVVR9SYAYHT4QKN85JAWTNWNWQ769HHKGFFFFH
  */
 
 const TASK_TEMPLATE =
@@ -70,7 +70,7 @@ const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
     var source = fs.readFileSync(filename, 'utf8');
-    var instructions = utilities.parser.parseDocument(source, true);
+    var instructions = utilities.parser.parseDocument(source);
     var formatter = new utilities.Formatter('    ');
     instructions = formatter.formatInstructions(instructions);
 
@@ -78,9 +78,9 @@ function loadTask(filename) {
     var literals = bali.List.fromSequential([
         'true',
         'none',
+        '"none"?',
         'false',
         '"five"',
-        '"none"',
         '"parameter"',
         '"parameter1"',
         '"parameter2"',
@@ -89,14 +89,14 @@ function loadTask(filename) {
         3,
         5,
         "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#SN46VS0YD4X9DZZZ49W55QMG67VL01D1,$version:v1,$digest:'PWC3HFDRMXQ94Q5WBX4CXNTGD6TPQ5D1KV4KHDTQFWYH8FSBXFB14QHP9C522X1KWZKK5NB512AHY1RQC9VFVHG0AJ1JZQFGZ5Z8BP0']>",
+        "<bali:[$protocol:v1,$tag:#XB0AH0LKGFK9STMC4N8SCV5BR0LNTMP8,$version:v1,$digest:'8G0DYM951Y2QT77Y23JZQNA4JQN2W0SYG0A34RRXSXVZJXA106HKR78Y2D6H65817TVVR9SYAYHT4QKN85JAWTNWNWQ769HHKGFFFFH']>",
         bali.parser.parseDocument('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#SN46VS0YD4X9DZZZ49W55QMG67VL01D1,$version:v1,$digest:'PWC3HFDRMXQ94Q5WBX4CXNTGD6TPQ5D1KV4KHDTQFWYH8FSBXFB14QHP9C522X1KWZKK5NB512AHY1RQC9VFVHG0AJ1JZQFGZ5Z8BP0']>\n" +
+        "    <bali:[$protocol:v1,$tag:#XB0AH0LKGFK9STMC4N8SCV5BR0LNTMP8,$version:v1,$digest:'8G0DYM951Y2QT77Y23JZQNA4JQN2W0SYG0A34RRXSXVZJXA106HKR78Y2D6H65817TVVR9SYAYHT4QKN85JAWTNWNWQ769HHKGFFFFH']>\n" +
         ')'),
         '$foo',
         bali.parser.parseDocument('{return prefix + name}')
     ]);
-    var constants = bali.Catalog.fromSequential({constant: 5});
+    var constants = bali.Catalog.fromSequential({$constant: 5});
     var type = new bali.Catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
@@ -289,7 +289,7 @@ describe('Bali Virtual Machine™', function() {
             expect(processor.context.address).to.equal(2);
 
             // 2.PushLiteral:
-            // PUSH LITERAL "five"
+            // PUSH LITERAL `"five"`
             processor.step();
             expect(processor.task.stack.getSize()).to.equal(1);
             expect(processor.task.stack.getTop().isEqualTo(new bali.Text('five'))).to.equal(true);

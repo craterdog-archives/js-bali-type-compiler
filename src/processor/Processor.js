@@ -320,7 +320,7 @@ function pushContext(processor, target, citation, parameters, index) {
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, bali.Pattern.fromLiteral('none'));
+        variables.setValue(variable, 'none');
     }
     variables.setValue('$target', target);
 
