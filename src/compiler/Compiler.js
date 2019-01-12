@@ -465,7 +465,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    var literal = element.source;
+    var literal = element.toLiteral(true);
     this.builder.insertPushInstruction('LITERAL', literal);
 
     if (element.isParameterized()) {
