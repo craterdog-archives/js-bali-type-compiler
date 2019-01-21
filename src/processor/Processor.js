@@ -132,11 +132,32 @@ function executeInstruction(processor) {
 
     // pass execution off to the correct operation handler
     var index = (operation << 2) | modifier;  // index: [0..31]
-    instructionHandlers[index](processor, operand); // operand: [0..2047]
+    try {
+        instructionHandlers[index](processor, operand); // operand: [0..2047]
+    } catch (e) {
+        handleException(processor, e);
+    }
 
     // update the state of the task context
     processor.task.clock++;
     processor.task.balance--;
+}
+
+
+function handleException(processor, exception) {
+    if (exception instanceof bali.Exception) {
+        // it's a runtime exception
+        exception = exception.value;
+    } else {
+        // it's a bug in the compiler or processor
+        exception = bali.Catalog.fromSequential({
+            $exception: '$bug',
+            $type: exception.constructor.name,
+            $message: exception.toString()
+        });
+    }
+    processor.task.stack.addItem(exception);
+    instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
 }
 
 

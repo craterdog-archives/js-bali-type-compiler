@@ -20,6 +20,8 @@ const NONE = bali.Pattern.fromLiteral('none');
 
 // PUBLIC INTRINSIC FUNCTIONS
 
+// Note: for better performance this is implemented as an array rather than an object with
+//       function name keys. We don't want to have to look up the functions at runtime.
 exports.functions = [
     // <invalid>
     function() {
