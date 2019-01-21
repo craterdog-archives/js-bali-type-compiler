@@ -15,6 +15,8 @@
  */
 const bali = require('bali-component-framework');
 
+const NONE = bali.Pattern.fromLiteral('none');
+
 
 // PUBLIC INTRINSIC FUNCTIONS
 
@@ -155,7 +157,7 @@ exports.functions = [
 
     // $default
     function(proposedValue, defaultValue) {
-        return bali.Pattern.fromLiteral('none').isEqualTo(proposedValue) ? defaultValue : proposedValue;
+        return proposedValue.isEqualTo(NONE) ? defaultValue : proposedValue;
     },
 
     // $difference
@@ -290,7 +292,7 @@ exports.functions = [
         } else {
             subcomponent = parent.getItem(index);
         }
-        return subcomponent || bali.Pattern.fromLiteral('none');
+        return subcomponent || NONE;
     },
 
     // $getTop
@@ -308,7 +310,7 @@ exports.functions = [
     function(catalog, key) {
         validateParameterType('$getValue', bali.types.CATALOG, catalog);
         validateParameterAbstraction('$getValue', bali.Element, key);
-        return catalog.getValue(key) || bali.Pattern.fromLiteral('none');
+        return catalog.getValue(key) || NONE;
     },
 
     // $getValues
@@ -964,7 +966,7 @@ function constructElement(procedure, value, parameters) {
         });
         throw new bali.Exception(exception);
     }
-    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Pattern.fromLiteral('none')) {
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== NONE) {
         exception = bali.Catalog.fromSequential({
             $exception: '$parameterType',
             $procedure: procedure,
@@ -990,7 +992,7 @@ function constructSource(procedure, parameters) {
         });
         throw new bali.Exception(exception);
     }
-    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Pattern.fromSequential('none')) {
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== NONE) {
         exception = bali.Catalog.fromSequential({
             $exception: '$parameterType',
             $procedure: '$source',
@@ -1024,7 +1026,7 @@ function constructRange(first, last, parameters) {
         });
         throw new bali.Exception(exception);
     }
-    if (parameters.type !== bali.types.PARAMETERS && parameters !== bali.Pattern.fromLiteral('none')) {
+    if (parameters.type !== bali.types.PARAMETERS && parameters !== NONE) {
         exception = bali.Catalog.fromSequential({
             $exception: '$parameterType',
             $procedure: '$range',
@@ -1064,7 +1066,7 @@ function constructTree(symbol, complexity) {
 
 
 function constructCollection(procedure, parameters) {
-    if (parameters && parameters.type !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.Pattern.fromLiteral('none'))) {
+    if (parameters && parameters.type !== bali.types.PARAMETERS && !parameters.isEqualTo(NONE)) {
         const exception = bali.Catalog.fromSequential({
             $exception: '$parameterType',
             $procedure: procedure,

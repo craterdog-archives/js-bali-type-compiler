@@ -19,6 +19,8 @@ const ACTIVE = '$active';
 const WAITING = '$waiting';
 const DONE = '$done';
 
+const NONE = bali.Pattern.fromLiteral('none');
+
 
 // PUBLIC FUNCTIONS
 
@@ -91,9 +93,6 @@ Processor.prototype.toString = function() {
 
 
 // PRIVATE FUNCTIONS
-
-const NONE = bali.Pattern.fromLiteral('none');
-
 
 /*
  * This function determines whether or not the task assigned to the specified processor is runnable.
