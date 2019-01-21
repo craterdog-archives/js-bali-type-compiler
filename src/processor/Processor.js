@@ -92,6 +92,9 @@ Processor.prototype.toString = function() {
 
 // PRIVATE FUNCTIONS
 
+const NONE = bali.Pattern.fromLiteral('none');
+
+
 /*
  * This function determines whether or not the task assigned to the specified processor is runnable.
  */
@@ -309,7 +312,7 @@ function pushContext(processor, target, citation, parameters, index) {
         } else {
             value = collection.getItem(counter);
         }
-        value = value || bali.Pattern.fromLiteral('none');
+        value = value || NONE;
         parameters.setValue(parameter, value);
         counter++;
     }
@@ -319,7 +322,7 @@ function pushContext(processor, target, citation, parameters, index) {
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, 'none');
+        variables.setValue(variable, NONE);
     }
     variables.setValue('$target', target);
 
@@ -374,7 +377,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (bali.Pattern.fromLiteral('none').isEqualTo(condition)) {
+        if (condition.isEqualTo(NONE)) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -387,7 +390,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'true' then use the address as the next instruction to be executed
-        if (new bali.Probability(true).isEqualTo(condition)) {
+        if (condition.toBoolean()) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -400,7 +403,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'false' then use the address as the next instruction to be executed
-        if (new bali.Probability(false).isEqualTo(condition)) {
+        if (!condition.toBoolean()) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -623,7 +626,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = new bali.Parameters(new bali.List());
-        var target = bali.Pattern.fromLiteral('none');
+        var target = NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
@@ -634,7 +637,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
-        var target = bali.Pattern.fromLiteral('none');
+        var target = NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;

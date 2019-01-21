@@ -97,13 +97,13 @@ exports.functions = [
 
     // $coinToss
     function(weighting) {
-        validateParameterType('$coinToss', bali.types.NUMBER, weighting);
+        validateParameterType('$coinToss', bali.types.PROBABILITY, weighting);
         return bali.Probability.coinToss(weighting.toNumber());
     },
 
     // $comparison
     function(first, second) {
-        return first.comparedTo(second);
+        return new bali.Number(first.comparedTo(second));
     },
 
     // $complement
@@ -114,7 +114,7 @@ exports.functions = [
 
     // $concatenation
     function(first, second) {
-        validateParameterAspects('$concatenation', '$Combinable', first, second);
+        validateParameterAspects('$concatenation', '$Chainable', first, second);
         return first.constructor.concatenation(first, second);
     },
 
@@ -128,23 +128,23 @@ exports.functions = [
     function(collection, items) {
         validateParameterAbstraction('$containsAll', bali.Collection, collection);
         validateParameterAspect('$containsAll', '$Sequential', items);
-        collection.containsAll(items);
-        return collection;
+        const result = new bali.Probability(collection.containsAll(items));
+        return result;
     },
 
     // $containsAny
     function(collection, items) {
         validateParameterAbstraction('$containsAny', bali.Collection, collection);
         validateParameterAspect('$containsAny', '$Sequential', items);
-        collection.containsAny(items);
-        return collection;
+        const result = new bali.Probability(collection.containsAny(items));
+        return result;
     },
 
     // $containsItem
     function(collection, item) {
         validateParameterAbstraction('$containsItem', bali.Collection, collection);
-        collection.containsItem(item);
-        return collection;
+        const result = new bali.Probability(collection.containsItem(item));
+        return result;
     },
 
     // $cosine
@@ -178,7 +178,7 @@ exports.functions = [
     // $extraction
     function(catalog, keys) {
         validateParameterType('$extraction', bali.types.CATALOG, catalog);
-        validateParameterType('$extraction', bali.types.SET, keys);
+        validateParameterType('$extraction', bali.types.LIST, keys);
         return bali.Catalog.extraction(catalog, keys);
     },
 
@@ -629,6 +629,7 @@ exports.functions = [
 
     // $setParameters
     function(element, parameters) {
+        validateParameterAbstraction('$setParameters', bali.Element, element);
         element.setParameters(parameters);
         return element;
     },
@@ -653,10 +654,10 @@ exports.functions = [
     },
 
     // $setValues
-    function(catalog, associations) {
+    function(catalog, values) {
         validateParameterType('$setValues', bali.types.CATALOG, catalog);
-        validateParameterType('$setValues', bali.types.CATALOG, associations);
-        catalog.setValues(associations);
+        validateParameterType('$setValues', bali.types.CATALOG, values);
+        catalog.setValues(values);
         return catalog;
     },
 
@@ -759,9 +760,8 @@ exports.functions = [
     },
 
     // $toBoolean
-    function(probability) {
-        validateParameterType('$toBoolean', bali.types.PROBABILITY, probability);
-        return new bali.Probability(probability.toBoolean());
+    function(component) {
+        return new bali.Probability(component.toBoolean());
     },
 
     // $toDocument
