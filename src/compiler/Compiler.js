@@ -465,7 +465,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    var literal = element.toLiteral(true);
+    var literal = element.toLiteral();
     this.builder.insertPushInstruction('LITERAL', literal);
 
     if (element.isParameterized()) {
@@ -1021,14 +1021,14 @@ CompilingVisitor.prototype.visitQueueClause = function(tree) {
  */
 // range: expression '..' expression
 CompilingVisitor.prototype.visitRange = function(range) {
-    var firstValue = range.firstItem;
-    var lastValue = range.lastItem;
+    var first = range.getFirst();
+    var last = range.getLast();
 
     // the VM places the value of the starting expression on the component stack
-    firstValue.acceptVisitor(this);  // first value in the range
+    first.acceptVisitor(this);  // first value in the range
 
     // the VM places the value of the ending expression on the component stack
-    lastValue.acceptVisitor(this);  // last value in the range
+    last.acceptVisitor(this);  // last value in the range
 
     // the VM places the parameters (if any) for this component on the component stack
     const parameters = range.parameters;
