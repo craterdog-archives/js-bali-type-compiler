@@ -88,11 +88,11 @@ function loadTask(filename) {
         5,
         "<bali:[]>",
         "<bali:[$protocol:v1,$tag:#XB0AH0LKGFK9STMC4N8SCV5BR0LNTMP8,$version:v1,$digest:'8G0DYM951Y2QT77Y23JZQNA4JQN2W0SYG0A34RRXSXVZJXA106HKR78Y2D6H65817TVVR9SYAYHT4QKN85JAWTNWNWQ769HHKGFFFFH']>",
-        bali.parser.parseDocument('[$foo: "bar"](\n' +
+        bali.parse('[$foo: "bar"](\n' +
         "    <bali:[$protocol:v1,$tag:#XB0AH0LKGFK9STMC4N8SCV5BR0LNTMP8,$version:v1,$digest:'8G0DYM951Y2QT77Y23JZQNA4JQN2W0SYG0A34RRXSXVZJXA106HKR78Y2D6H65817TVVR9SYAYHT4QKN85JAWTNWNWQ769HHKGFFFFH']>\n" +
         ')'),
         '$foo',
-        bali.parser.parseDocument('{return prefix + name}')
+        bali.parse('{return prefix + name}')
     ]);
     var constants = bali.Catalog.fromSequential({$constant: 5});
     var type = new bali.Catalog();
@@ -130,14 +130,14 @@ function loadTask(filename) {
         var parameter = iterator.getNext();
         parameters.setValue(parameter, bali.Pattern.fromLiteral('none'));
     }
-    parameters.setValue('$x', bali.parser.parseDocument(MESSAGE));
+    parameters.setValue('$x', bali.parse(MESSAGE));
 
     // set variable values
     iterator = variables.getIterator();
     variables = new bali.Catalog();
-    variables.setValue('$citation', bali.parser.parseDocument(CITATION));
+    variables.setValue('$citation', bali.parse(CITATION));
     variables.setValue('$foo', bali.Pattern.fromLiteral('none'));
-    variables.setValue('$queue', bali.parser.parseDocument(QUEUE));
+    variables.setValue('$queue', bali.parse(QUEUE));
     variables.setValue('$target', bali.Pattern.fromLiteral('none'));
 
     // construct the task context
@@ -148,7 +148,7 @@ function loadTask(filename) {
     source = source.replace(/%parameters/, parameters.toDocument('            '));
     source = source.replace(/%variables/, variables.toDocument('            '));
     source = source.replace(/%procedures/, procedures.toDocument('            '));
-    var task = bali.parser.parseDocument(source);
+    var task = bali.parse(source);
 
     return task;
 }

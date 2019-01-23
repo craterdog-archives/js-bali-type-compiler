@@ -44,7 +44,7 @@ describe('Bali Virtual Macine™', function() {
                 var baliFile = testFolder + prefix + '.bali';
                 var basmFile = testFolder + prefix + '.basm';
                 var source = fs.readFileSync(baliFile, 'utf8');
-                var procedure = bali.parser.parseDocument(source);
+                var procedure = bali.parse(source);
                 expect(procedure).to.exist;  // jshint ignore:line
 
                 // create the compilation type context
@@ -87,7 +87,7 @@ describe('Bali Virtual Macine™', function() {
                 var proceduresFile = testFolder + prefix + '.procedures';
                 var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
-                var type = bali.parser.parseDocument(source);
+                var type = bali.parse(source);
                 var documentCitation = api.createDraft(type);
                 var draft = api.retrieveDraft(documentCitation);
                 documentCitation = api.commitDocument(documentCitation, draft);

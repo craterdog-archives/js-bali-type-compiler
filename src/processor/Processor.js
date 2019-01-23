@@ -201,7 +201,7 @@ function publishCompletionEvent(processor) {
         '    $exception: ' + processor.task.exception.toDocument('    ') + '\n';
     }
         source += ']';
-    var event = bali.parser.parseDocument(source);
+    var event = bali.parse(source);
     var citation = processor.nebula.createDraft(event);
     var draft = processor.nebula.retrieveDraft(citation);
     processor.nebula.publishEvent(draft);
@@ -218,7 +218,7 @@ function publishSuspensionEvent(processor) {
         '    $tag: ' + task.tag + '\n' +
         '    $task: ' + task.toDocument('    ') + '\n' +
         ']';
-    var event = bali.parser.parseDocument(source);
+    var event = bali.parse(source);
     var citation = processor.nebula.createDraft(event);
     var draft = processor.nebula.retrieveDraft(citation);
     processor.nebula.publishEvent(draft);
@@ -283,7 +283,7 @@ function exportContext(procedure) {
     var base16 = bali.codex.base16Encode(bytes);
     var source = "'%bytecode'($base: 16, $mediatype: \"application/bcod\")";
     source = source.replace(/%bytecode/, base16);
-    var bytecode = bali.parser.parseDocument(source);
+    var bytecode = bali.parse(source);
     var catalog = new bali.Catalog();
     catalog.setValue('$type', procedure.type);
     catalog.setValue('$name', procedure.name);

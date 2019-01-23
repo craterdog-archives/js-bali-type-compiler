@@ -72,7 +72,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
     var instructions = visitor.getInstructions();
     instructions = utilities.parser.parseDocument(instructions);
     var formatter = new utilities.Formatter('    ');
-    instructions = bali.parser.parseDocument('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
+    instructions = bali.parse('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
     context.setValue('$instructions', instructions);
 
     return context;
@@ -1837,7 +1837,7 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
         case 'LITERAL':
             var literal = '`' + value + '`';
             instruction += literal;
-            literal = bali.parser.parseDocument(value);
+            literal = bali.parse(value);
             if (!this.literals.containsItem(literal)) this.literals.addItem(literal);
             break;
         case 'CONSTANT':
