@@ -51,7 +51,8 @@ exports.functions = [
 
     // $and
     function(first, second) {
-        validateParameterAspects('$and', '$Logical', first, second);
+        validateParameterAspect('$and', '$Logical', first);
+        validateParameterAspect('$and', '$Logical', second);
         return first.constructor.and(first, second);
     },
 
@@ -118,7 +119,8 @@ exports.functions = [
 
     // $concatenation
     function(first, second) {
-        validateParameterAspects('$concatenation', '$Chainable', first, second);
+        validateParameterAspect('$concatenation', '$Chainable', first);
+        validateParameterAspect('$concatenation', '$Chainable', second);
         return first.constructor.concatenation(first, second);
     },
 
@@ -164,13 +166,21 @@ exports.functions = [
 
     // $difference
     function(first, second) {
-        validateParameterAspects('$difference', '$Scalable', first, second);
+        validateParameterAspect('$difference', '$Scalable', first);
+        validateParameterAspect('$difference', '$Scalable', second);
         return first.constructor.difference(first, second);
     },
 
     // $duration
     function(value, parameters) {
         return constructElement('$duration', value, parameters);
+    },
+
+    // $earlier
+    function(moment, duration) {
+        validateParameterType('$earlier', bali.types.MOMENT, moment);
+        validateParameterType('$earlier', bali.types.DURATION, duration);
+        return bali.Moment.earlier(moment, duration);
     },
 
     // $exponential
@@ -402,6 +412,13 @@ exports.functions = [
         return new bali.Probability(number.isZero());
     },
 
+    // $later
+    function(moment, duration) {
+        validateParameterType('$later', bali.types.MOMENT, moment);
+        validateParameterType('$later', bali.types.DURATION, duration);
+        return bali.Moment.later(moment, duration);
+    },
+
     // $list
     function(parameters) {
         return constructCollection('$list', parameters);
@@ -444,7 +461,8 @@ exports.functions = [
 
     // $or
     function(first, second) {
-        validateParameterAspects('$or', '$Logical', first, second);
+        validateParameterAspect('$or', '$Logical', first);
+        validateParameterAspect('$or', '$Logical', second);
         return first.constructor.or(first, second);
     },
 
@@ -464,6 +482,13 @@ exports.functions = [
         return constructElement('$percent', value, parameters);
     },
 
+    // $period
+    function(first, second) {
+        validateParameterType('$period', bali.types.MOMENT, first);
+        validateParameterType('$period', bali.types.MOMENT, second);
+        return bali.Moment.period(first, second);
+    },
+
     // $probability
     function(value, parameters) {
         return constructElement('$probability', value, parameters);
@@ -471,7 +496,8 @@ exports.functions = [
 
     // $product
     function(first, second) {
-        validateParameterAspects('$product', '$Numerical', first, second);
+        validateParameterAspect('$product', '$Numerical', first);
+        validateParameterAspect('$product', '$Numerical', second);
         return first.constructor.product(first, second);
     },
 
@@ -482,7 +508,8 @@ exports.functions = [
 
     // $quotient
     function(first, second) {
-        validateParameterAspects('$quotient', '$Numerical', first, second);
+        validateParameterAspect('$quotient', '$Numerical', first);
+        validateParameterAspect('$quotient', '$Numerical', second);
         return first.constructor.quotient(first, second);
     },
 
@@ -525,7 +552,8 @@ exports.functions = [
 
     // $remainder
     function(first, second) {
-        validateParameterAspects('$remainder', '$Numerical', first, second);
+        validateParameterAspect('$remainder', '$Numerical', first);
+        validateParameterAspect('$remainder', '$Numerical', second);
         return first.constructor.remainder(first, second);
     },
 
@@ -606,7 +634,8 @@ exports.functions = [
 
     // $sans
     function(first, second) {
-        validateParameterAspects('$sans', '$Logical', first, second);
+        validateParameterAspect('$sans', '$Logical', first);
+        validateParameterAspect('$sans', '$Logical', second);
         return first.constructor.sans(first, second);
     },
 
@@ -704,7 +733,8 @@ exports.functions = [
 
     // $sum
     function(first, second) {
-        validateParameterAspects('$sum', '$Scalable', first, second);
+        validateParameterAspect('$sum', '$Scalable', first);
+        validateParameterAspect('$sum', '$Scalable', second);
         return first.constructor.sum(first, second);
     },
 
@@ -805,7 +835,8 @@ exports.functions = [
 
     // $xor
     function(first, second) {
-        validateParameterAspects('$xor', '$Logical', first, second);
+        validateParameterAspect('$xor', '$Logical', first);
+        validateParameterAspect('$xor', '$Logical', second);
         return first.constructor.xor(first, second);
     }
 
@@ -839,6 +870,7 @@ exports.names = [
     '$default',
     '$difference',
     '$duration',
+    '$earlier',
     '$exponential',
     '$extraction',
     '$factorial',
@@ -874,6 +906,7 @@ exports.names = [
     '$isSameAs',
     '$isUndefined',
     '$isZero',
+    '$later',
     '$list',
     '$logarithm',
     '$matches',
@@ -885,6 +918,7 @@ exports.names = [
     '$parameters',
     '$pattern',
     '$percent',
+    '$period',
     '$probability',
     '$product',
     '$queue',
@@ -1113,30 +1147,6 @@ function validateParameterAspect(procedure, aspect, parameter) {
     var type = parameter.type;
     if (!bali.types['is' + aspect.slice(1)](type)) {
         const exception = bali.Catalog.fromSequential({
-            $exception: '$parameterType',
-            $procedure: procedure,
-            $expected: aspect,
-            $actual: bali.types.typeName(type)
-        });
-        throw new bali.Exception(exception);
-    }
-}
-
-
-function validateParameterAspects(procedure, aspect, first, second) {
-    var exception;
-    var type = first.type;
-    if (type !== second.type) {
-        exception = bali.Catalog.fromSequential({
-            $exception: '$parameterType',
-            $procedure: procedure,
-            $expected: bali.types.typeName(type),
-            $actual: bali.types.typeName(second.type)
-        });
-        throw new bali.Exception(exception);
-    }
-    if (!bali.types['is' + aspect.slice(1)](type)) {
-        exception = bali.Catalog.fromSequential({
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: aspect,
