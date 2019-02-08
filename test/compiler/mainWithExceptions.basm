@@ -88,7 +88,7 @@
         B03F18164800280480020024800360036003A00B28022805B866B03F1823
         4800280680020024E8006002E000
     '(
-        $base: 16
+        $encoding: $base16
         $mediatype: "application/bcod"
     )
 ]

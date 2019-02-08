@@ -11,9 +11,7 @@
             $parameters: []
             $variables: [$target]
             $procedures: []
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
+            $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
                 PUSH LITERAL `true`
@@ -22,7 +20,7 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '2801E000'(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
@@ -86,7 +84,7 @@
                 20062802E8004000001200008001600160012803B03F181148003801E000
                 0012E80000002804E000
             '(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
@@ -94,9 +92,7 @@
             $parameters: []
             $variables: [$target]
             $procedures: []
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
+            $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -105,7 +101,7 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '6001E000'(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
@@ -169,7 +165,7 @@
                 20063802E8004000001200008001600160012803B03F181148002801E000
                 0012E80000002804E000
             '(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]

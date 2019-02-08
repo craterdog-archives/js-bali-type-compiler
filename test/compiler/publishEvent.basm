@@ -6,9 +6,7 @@
         $target
     ]
     $procedures: []
-    $addresses: [
-        "1.PublishStatement": 1
-    ]
+    $addresses: ["1.PublishStatement": 1]
     $instructions: "
         1.PublishStatement:
         INVOKE $catalog
@@ -28,7 +26,7 @@
         $mediatype: "application/basm"
     )
     $bytecode: 'A00B28012802B86628032804B86628052806B86688016002E000'(
-        $base: 16
+        $encoding: $base16
         $mediatype: "application/bcod"
     )
 ]

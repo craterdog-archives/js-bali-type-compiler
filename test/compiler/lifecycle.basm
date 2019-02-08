@@ -83,7 +83,7 @@
         280280047804B86528028005600A600BB02A900528028006600A600BB02A
         980628028007280390076008E000
     '(
-        $base: 16
+        $encoding: $base16
         $mediatype: "application/bcod"
     )
 ]

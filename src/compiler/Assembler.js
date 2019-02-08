@@ -46,14 +46,14 @@ Assembler.prototype.assembleProcedure = function(type, context) {
 
     // assemble the instructions into bytecode
     var instructions = context.getValue('$instructions');
-    instructions = utilities.parser.parseDocument(instructions.value);
+    instructions = utilities.parser.parseDocument(instructions.getValue());
     var visitor = new AssemblingVisitor(type, context);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
     var base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
-    bytecode = bali.parse("'" + base16 + EOL + "            '" + '($base: 16, $mediatype: "application/bcod")');
+    bytecode = bali.parse("'" + base16 + EOL + "            '" + '($encoding: $base16, $mediatype: "application/bcod")');
     context.setValue('$bytecode', bytecode);
 };
 

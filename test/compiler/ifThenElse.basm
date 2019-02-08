@@ -49,7 +49,7 @@
         $mediatype: "application/basm"
     )
     $bytecode: '00002801180760048001000B00006002800100006001E000'(
-        $base: 16
+        $encoding: $base16
         $mediatype: "application/bcod"
     )
 ]

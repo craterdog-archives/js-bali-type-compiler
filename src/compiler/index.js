@@ -59,8 +59,8 @@ exports.compileType = function(nebula, citation) {
 
         // retrieve the source code for the procedure
         association = iterator.getNext();
-        name = association.key;
-        var source = association.value.getValue('$source');
+        name = association.getKey();
+        var source = association.getValue().getValue('$source');
 
         // compile the source code
         procedure = exports.compiler.compileProcedure(type, source);
@@ -73,8 +73,8 @@ exports.compileType = function(nebula, citation) {
 
         // retrieve the compiled procedure
         association = iterator.getNext();
-        name = association.key;
-        procedure = association.value;
+        name = association.getKey();
+        procedure = association.getValue();
 
         // assemble the instructions in the procedure into bytecode
         exports.assembler.assembleProcedure(type, procedure);

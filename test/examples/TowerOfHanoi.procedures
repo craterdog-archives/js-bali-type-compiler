@@ -65,7 +65,7 @@
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
-                INVOKE $list WITH PARAMETER
+                INVOKE $stack WITH PARAMETER
                 INVOKE $setValue WITH 3 PARAMETERS
                 PUSH LITERAL `"peg B"`
                 INVOKE $catalog
@@ -86,7 +86,7 @@
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
-                INVOKE $list WITH PARAMETER
+                INVOKE $stack WITH PARAMETER
                 INVOKE $setValue WITH 3 PARAMETERS
                 PUSH LITERAL `"peg C"`
                 INVOKE $catalog
@@ -107,7 +107,7 @@
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $setValue WITH 3 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
-                INVOKE $list WITH PARAMETER
+                INVOKE $stack WITH PARAMETER
                 INVOKE $setValue WITH 3 PARAMETERS
                 INVOKE $setSubcomponent WITH 3 PARAMETERS
                 
@@ -175,15 +175,15 @@
             )
             $bytecode: '
                 A00B2801A00B28022803A03D2804A00B280528062807B051B866A845B064
-                B002A845B064B866A845A83DB8662808A00B28022803A03D2804A00B2805
-                28062807B051B866A845B064B002A845B064B866A845A83DB8662809A00B
+                B002A845B064B866A845A86DB8662808A00B28022803A03D2804A00B2805
+                28062807B051B866A845B064B002A845B064B866A845A86DB8662809A00B
                 28022803A03D2804A00B280528062807B051B866A845B064B002A845B064
-                B866A845A83DB866B865A03DB86560042806B051D00280016001D004185B
+                B866A845A86DB866B865A03DB86560042806B051D00280016001D004185B
                 6001D00380036005280AB02A2801B02AA03D6003B002A845D80680020049
                 00006005A03D6004B0022801B0022809B0022808B002A845D80580026005
                 280BB02AD001E000
             '(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
@@ -268,17 +268,13 @@
                 A845D80280016002A03D3802B0023803B002A845D80180016002A03D3801
                 2806B016B0023804B0023803B0023802B002A845D80280016001E000
             '(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
         $moveDisk: [
             $parameters: [$fromPeg, $toPeg]
-            $variables: [
-                $$result
-                $disk
-                $target
-            ]
+            $variables: [$$result, $disk, $target]
             $procedures: [$append, $pop, $push]
             $addresses: [
                 "1.EvaluateStatement": 1
@@ -327,7 +323,7 @@
                 6003280AB02A3801B02AD00280026003280AB02A3802B02AA03D6002B002
                 A845D80380016003280BB02AA03D280CB002A845D80180016001E000
             '(
-                $base: 16
+                $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]

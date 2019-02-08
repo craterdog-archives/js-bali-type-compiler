@@ -46,23 +46,25 @@ exports.compiler = new Compiler();
  * @returns {Catalog} The compiled context for the procedure.
  */
 Compiler.prototype.compileProcedure = function(type, source) {
-    var context = new bali.Catalog();
-    var procedure = source.procedure;
+    var context = bali.catalog();
+    var procedure = source.getProcedure();
 
     // extract the parameter names for the procedure
-    var parameters = new bali.List();
-    if (source.parameters) {
-        var collection = source.parameters.collection;
-        if (collection.type === bali.types.CATALOG) {
-            parameters.addItems(collection.getKeys());
-        } else {
-            parameters.addItems(collection);
+    var parameters = bali.list();
+    if (source.isParameterized()) {
+        var iterator = source.getParameters().getIterator();
+        while (iterator.hasNext()) {
+            var parameter = iterator.getNext();
+            if (parameter.getType() === bali.types.ASSOCIATION) {
+                parameter = parameter.getKey();
+            }
+            parameters.addItem(parameter);
         }
     }
     context.setValue('$parameters', parameters);
-    context.setValue('$variables', bali.Set.fromSequential(['$target']));
-    context.setValue('$procedures', new bali.Set());
-    context.setValue('$addresses', new bali.Catalog());
+    context.setValue('$variables', bali.set(['$target']));
+    context.setValue('$procedures', bali.set());
+    context.setValue('$addresses', bali.catalog());
 
     // compile the procedure into assembly instructions
     var visitor = new CompilingVisitor(type, context);
@@ -188,10 +190,10 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = catalog.parameters;
+    const parameters = catalog.getParameters();
     var numberOfParameters = 0;
     if (parameters) {
-        catalog.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 1;
     }
 
@@ -465,12 +467,14 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    var literal = element.toLiteral();
+    const formatter = new bali.Formatter();
+    var literal = formatter.formatLiteral(element);
     this.builder.insertPushInstruction('LITERAL', literal);
 
-    if (element.isParameterized()) {
+    const parameters = element.getParameters();
+    if (parameters) {
         // the VM loads the parameters associated with the element onto the top of the component stack
-        element.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
 
         // the VM sets the parameters for the element
         this.builder.insertInvokeInstruction('$setParameters', 2);
@@ -491,7 +495,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         var recipient = tree.getChild(1);
-        if (recipient.type === bali.types.SUBCOMPONENT_EXPRESSION) {
+        if (recipient.getType() === bali.types.SUBCOMPONENT_EXPRESSION) {
             recipient.acceptVisitor(this);
         }
 
@@ -570,8 +574,8 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     var iterator = parameters.getIterator();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
-        if (parameter.constructor.name === 'Association') {
-            parameter = parameter.value;  // don't place the 'key' on the component stack
+        if (parameter.getType() === bali.types.ASSOCIATION) {
+            parameter = parameter.getValue();  // don't place the 'key' on the component stack
         }
         parameter.acceptVisitor(this);
     }
@@ -603,7 +607,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     this.builder.insertLabel(handleLabel);
 
     // the VM stores the exception that is on top of the component stack in the variable
-    var exception = symbol.toLiteral();
+    var exception = symbol.toString();
     this.builder.insertStoreInstruction('VARIABLE', exception);
 
     // the VM loads the exception back on top of the component stack for the next handler
@@ -652,7 +656,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
     }
 
     // compile each condition
-    var iterator = new bali.Iterator(array);
+    var iterator = bali.iterator(array);
     while (iterator.hasNext()) {
         var condition = iterator.getNext();
         var block = iterator.getNext();
@@ -776,10 +780,10 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = list.parameters;
+    const parameters = list.getParameters();
     var numberOfParameters = 0;
     if (parameters) {
-        list.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 1;
     }
 
@@ -896,7 +900,7 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 CompilingVisitor.prototype.visitParameters = function(parameters) {
     // the VM places the collection on the top of the component stack
     this.depth++;
-    parameters.collection.acceptVisitor(this);
+    parameters.getCollection().acceptVisitor(this);
     this.depth--;
 
     // the VM places a new parameters component containing the collection on the top of the component stack
@@ -967,10 +971,10 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 //     /*empty queue*/
 CompilingVisitor.prototype.visitQueue = function(queue) {
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = queue.parameters;
+    const parameters = queue.getParameters();
     var numberOfParameters = 0;
     if (parameters) {
-        queue.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 1;
     }
 
@@ -1031,10 +1035,10 @@ CompilingVisitor.prototype.visitRange = function(range) {
     last.acceptVisitor(this);  // last value in the range
 
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = range.parameters;
+    const parameters = range.getParameters();
     var numberOfParameters = 2;
     if (parameters) {
-        range.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 3;
     }
 
@@ -1119,7 +1123,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     this.builder.insertStoreInstruction('VARIABLE', selectorVariable);
 
     // check each option
-    var iterator = new bali.Iterator(array);
+    var iterator = bali.iterator(array);
     while (iterator.hasNext()) {
         var option = iterator.getNext();
         var block = iterator.getNext();
@@ -1186,10 +1190,10 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 //     /*empty list*/
 CompilingVisitor.prototype.visitSet = function(set) {
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = set.parameters;
+    const parameters = set.getParameters();
     var numberOfParameters = 0;
     if (parameters) {
-        set.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 1;
     }
 
@@ -1219,12 +1223,13 @@ CompilingVisitor.prototype.visitSet = function(set) {
 // source: '{' procedure '}'
 CompilingVisitor.prototype.visitSource = function(source) {
     // the VM places the source code on top of the component stack
-    var literal = '{' + source.procedure.toString() + '}';  // must include curly braces to be parsed correctly
+    var literal = '{' + source.getProcedure().toString() + '}';  // must include curly braces to be parsed correctly
     this.builder.insertPushInstruction('LITERAL', literal);
 
-    if (source.isParameterized()) {
+    const parameters = source.getParameters();
+    if (parameters) {
         // the VM loads the parameters associated with the source code onto the top of the component stack
-        source.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
 
         // the VM sets the parameters for the source code
         this.builder.insertInvokeInstruction('$setParameters', 2);
@@ -1245,10 +1250,10 @@ CompilingVisitor.prototype.visitSource = function(source) {
 //     /*empty list*/
 CompilingVisitor.prototype.visitStack = function(stack) {
     // the VM places the parameters (if any) for this component on the component stack
-    const parameters = stack.parameters;
+    const parameters = stack.getParameters();
     var numberOfParameters = 0;
     if (parameters) {
-        stack.parameters.acceptVisitor(this);
+        parameters.acceptVisitor(this);
         numberOfParameters = 1;
     }
 
@@ -1453,7 +1458,7 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
 CompilingVisitor.prototype.visitWithClause = function(tree) {
-    var variable = tree.getSize() > 2 ? tree.getChild(1).toLiteral() : this.createTemporaryVariable('item');
+    var variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
     var sequence = tree.getChild(-2);
     var block = tree.getChild(-1);
     var clausePrefix = this.builder.getClausePrefix();
@@ -1518,9 +1523,9 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     // TODO: change invoke to execute for a subcomponent
 
-    if (recipient.type === bali.types.SYMBOL) {
+    if (recipient.getType() === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
-        var symbol = recipient.toLiteral();
+        var symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
         // the VM sets the value of the subcomponent at the given index of the parent component
@@ -1531,14 +1536,6 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
 
 
 // PRIVATE FUNCTIONS
-
-/*
- * This function defines a missing string function for the standard String class.
- */
-String.prototype.capitalize = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
 
 /*
  * This function defines a missing stack function for the standard Array class.
@@ -1560,7 +1557,7 @@ function getSubclauses(statement) {
     var iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
-        if (item.type === bali.types.BLOCK) {
+        if (item.getType() === bali.types.BLOCK) {
             subClauses.push(item);
         }
     }
@@ -1646,7 +1643,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     var statement = procedure.statement;
-    var type = bali.types.typeName(statement.mainClause.type).capitalize().slice(0, -6);
+    var type = bali.types.typeName(statement.mainClause.getType()).slice(1, -6);  // remove '$' and 'Clause'
     var prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1738,7 +1735,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     var statement = this.stack.peek().statement;
-    var type = bali.types.typeName(statement.mainClause.type).capitalize().slice(0, -6);
+    var type = bali.types.typeName(statement.mainClause.getType()).slice(1, -6);  // remove '$' and 'Clause'
     return type;
 };
 
@@ -1796,7 +1793,7 @@ InstructionBuilder.prototype.insertLabel = function(label) {
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
-        this.addresses.setValue(new bali.Text(this.nextLabel), this.address);
+        this.addresses.setValue(bali.text(this.nextLabel), this.address);
         if (this.asmcode !== '') this.asmcode += EOL;  // not the first instruction
         this.asmcode += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
@@ -1866,11 +1863,7 @@ InstructionBuilder.prototype.insertPopInstruction = function(type) {
 InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
     var instruction = 'LOAD ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
-    if (symbol.includes('$$')) {
-        symbol = bali.Reserved.fromLiteral(symbol);
-    } else {
-        symbol = bali.Symbol.fromLiteral(symbol);
-    }
+    symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
 };
 
@@ -1881,11 +1874,7 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
 InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
     var instruction = 'STORE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
-    if (symbol.includes('$$')) {
-        symbol = bali.Reserved.fromLiteral(symbol);
-    } else {
-        symbol = bali.Symbol.fromLiteral(symbol);
-    }
+    symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
 };
 

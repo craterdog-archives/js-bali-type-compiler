@@ -13,6 +13,7 @@
  * This module defines a class that formats a list of instructions into a
  * into the canonical source code string representing the instructions.
  */
+const bali = require('bali-component-framework');
 const types = require('./Types');
 
 
@@ -91,7 +92,7 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
     if (label) {
         // labels are preceded by a blank line unless they are part of the first step
         if (this.source !== this.indentation) this.appendNewline();
-        this.source += label.value + ':';
+        this.source += label.getValue() + ':';
         this.appendNewline();
     }
     var operation = step.getValue('$operation').toNumber();
@@ -137,7 +138,7 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
         this.source += 'SKIP INSTRUCTION';
     } else {
         this.source += 'JUMP TO ';
-        var operand = instruction.getValue('$operand').value;
+        var operand = instruction.getValue('$operand').getValue();
         this.source += operand;
         modifier = modifier.toNumber();
         if (modifier !== types.ON_ANY) {
@@ -161,10 +162,11 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     var operand = instruction.getValue('$operand');
     switch (modifier) {
         case types.HANDLER:
-            operand = operand.value;
+            operand = operand.getValue();
             break;
         case types.LITERAL:
-            operand = '`' + operand.toDocument(this.indentation) + '`';
+            const formatter = new bali.Formatter(this.indentation);
+            operand = '`' + formatter.formatComponent(operand) + '`';
             break;
         case types.CONSTANT:
         case types.PARAMETER:

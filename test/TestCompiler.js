@@ -21,7 +21,7 @@ const compiler = require('../src/compiler');
 
 /*  uncomment to generate a new notary key and certificate
 var certificate = notary.generateKeys();
-var citation = notary.getNotaryCitation();
+var citation = notary.getCitation();
 var certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
 repository.storeCertificate(certificateId, certificate);
 /*                                                          */
@@ -48,10 +48,10 @@ describe('Bali Virtual Macine™', function() {
                 expect(procedure).to.exist;  // jshint ignore:line
 
                 // create the compilation type context
-                var literals = new bali.List();
-                var constants = new bali.Catalog();
-                var procedures = new bali.Catalog();
-                var type = new bali.Catalog();
+                var literals = bali.list();
+                var constants = bali.catalog();
+                var procedures = bali.catalog();
+                var type = bali.catalog();
                 type.setValue('$literals', literals);
                 type.setValue('$constants', constants);
                 type.setValue('$procedures', procedures);

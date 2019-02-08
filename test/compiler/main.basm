@@ -2,9 +2,7 @@
     $parameters: []
     $variables: [$$result, $target]
     $procedures: []
-    $addresses: [
-        "1.EvaluateStatement": 1
-    ]
+    $addresses: ["1.EvaluateStatement": 1]
     $instructions: "
         1.EvaluateStatement:
         PUSH LITERAL `none`
@@ -15,7 +13,7 @@
         $mediatype: "application/basm"
     )
     $bytecode: '280180016001E000'(
-        $base: 16
+        $encoding: $base16
         $mediatype: "application/bcod"
     )
 ]

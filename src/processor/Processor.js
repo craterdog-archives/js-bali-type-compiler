@@ -13,13 +13,12 @@
  * This class implements the virtual machine for The Bali Nebula™.
  */
 const bali = require('bali-component-framework');
+const formatter = bali.Formatter('    ');
 const utilities = require('../utilities');
 
 const ACTIVE = '$active';
 const WAITING = '$waiting';
 const DONE = '$done';
-
-const NONE = bali.Pattern.fromLiteral('none');
 
 
 // PUBLIC FUNCTIONS
@@ -147,14 +146,24 @@ function executeInstruction(processor) {
 function handleException(processor, exception) {
     if (exception instanceof bali.Exception) {
         // it's a runtime exception
-        exception = exception.value;
+        exception = exception.getValue();
     } else {
         // it's a bug in the compiler or processor
-        exception = bali.Catalog.fromSequential({
-            $exception: '$bug',
-            $type: exception.constructor.name,
-            $message: exception.toString()
+        const stack = exception.stack.split('\n').slice(1);
+        stack.forEach(function(line, index) {
+            line = '  ' + line;
+            if (line.length > 80) {
+                line = line.slice(0, 44) + '..' + line.slice(-35, -1);
+            }
+            stack[index] = line;
         });
+        exception = bali.catalog({
+            $exception: '$bug',
+            $type: '"' + exception.constructor.name + '"',
+            $message: '"' + exception + '"',
+            $trace: '"\n' + stack.join('\n') + '"'
+        });
+        console.log('EXCEPTION THROWN: ' + exception);
     }
     processor.task.stack.addItem(exception);
     instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
@@ -194,11 +203,9 @@ function publishCompletionEvent(processor) {
         '    $balance: ' + processor.task.balance + '\n' +
         '    $clock: ' + processor.task.clock + '\n';
     if (processor.task.result) {
-        source +=
-        '    $result: ' + processor.task.result.toDocument('    ') + '\n';
+        source += '    $result: ' + formatter.formatComponent(processor.task.result) + '\n';
     } else {
-        source +=
-        '    $exception: ' + processor.task.exception.toDocument('    ') + '\n';
+        source += '    $exception: ' + formatter.formatComponent(processor.task.exception) + '\n';
     }
         source += ']';
     var event = bali.parse(source);
@@ -216,7 +223,7 @@ function publishSuspensionEvent(processor) {
     var source = '[\n' +
         '    $eventType: $suspension\n' +
         '    $tag: ' + task.tag + '\n' +
-        '    $task: ' + task.toDocument('    ') + '\n' +
+        '    $task: ' + formatter.formatComponent(task) + '\n' +
         ']';
     var event = bali.parse(source);
     var citation = processor.nebula.createDraft(event);
@@ -253,13 +260,20 @@ function importTask(catalog) {
 
 
 function exportTask(task) {
-    var catalog = bali.Catalog.fromSequential(task);
+    var catalog = bali.catalog();
+    catalog.setValue('$tag', task.tag);
+    catalog.setValue('$account', task.account);
+    catalog.setValue('$balance', task.balance);
+    catalog.setValue('$status', task.status);
+    catalog.setValue('$clock', task.clock);
+    catalog.setValue('$stack', task.stack);
+    catalog.setValue('$contexts', task.contexts);
     return catalog;
 }
 
 
 function importContext(catalog) {
-    var bytes = catalog.getValue('$bytecode').value;
+    var bytes = catalog.getValue('$bytecode').getValue();
     var bytecode = utilities.bytecode.bytesToBytecode(bytes);
     var procedure = {
         type: catalog.getValue('$type'),
@@ -281,10 +295,10 @@ function importContext(catalog) {
 function exportContext(procedure) {
     var bytes = utilities.bytecode.bytecodeToBytes(procedure.bytecode);
     var base16 = bali.codex.base16Encode(bytes);
-    var source = "'%bytecode'($base: 16, $mediatype: \"application/bcod\")";
+    var source = "'%bytecode'($encoding: $base16, $mediatype: \"application/bcod\")";
     source = source.replace(/%bytecode/, base16);
     var bytecode = bali.parse(source);
-    var catalog = new bali.Catalog();
+    var catalog = bali.catalog();
     catalog.setValue('$type', procedure.type);
     catalog.setValue('$name', procedure.name);
     catalog.setValue('$instruction', procedure.instruction);
@@ -300,7 +314,7 @@ function exportContext(procedure) {
 }
 
 
-function pushContext(processor, target, citation, parameters, index) {
+function pushContext(processor, target, citation, passedParameters, index) {
 
     // save the current procedure context
     var currentContext = processor.context;
@@ -312,7 +326,7 @@ function pushContext(processor, target, citation, parameters, index) {
     var procedure = procedures.getValue(name);
 
     // retrieve the bytecode from the compiled procedure
-    var bytes = procedure.getValue('$bytecode').value;
+    var bytes = procedure.getValue('$bytecode').getValue();
     var bytecode = utilities.bytecode.bytesToBytecode(bytes);
 
     // retrieve the literals and constants from the compiled type
@@ -321,28 +335,21 @@ function pushContext(processor, target, citation, parameters, index) {
 
     // set the parameter values
     var counter = 1;
-    var collection = parameters.collection;
-    parameters = new bali.Catalog();
+    const parameters = bali.catalog();
     var iterator = procedure.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
-        var value;
         var parameter = iterator.getNext();
-        if (collection.type === bali.types.CATALOG) {
-            value = collection.getValue(parameter);
-        } else {
-            value = collection.getItem(counter);
-        }
-        value = value || NONE;
+        var value = passedParameters.getValue(parameter, counter++);
+        value = value || bali.NONE;
         parameters.setValue(parameter, value);
-        counter++;
     }
 
     // set the initial values of the variables to 'none' except for the 'target' variable
-    var variables = new bali.Catalog();
+    var variables = bali.catalog();
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
         var variable = iterator.getNext();
-        variables.setValue(variable, NONE);
+        variables.setValue(variable, bali.NONE);
     }
     variables.setValue('$target', target);
 
@@ -350,7 +357,7 @@ function pushContext(processor, target, citation, parameters, index) {
     procedures = procedure.getValue('$procedures');
 
     // create an empty exception handler stack
-    var handlers = new bali.Stack();
+    var handlers = bali.stack();
 
     // construct the next procedure context
     var nextContext = {
@@ -397,7 +404,7 @@ var instructionHandlers = [
         // pop the condition component off the component stack
         var condition = processor.task.stack.removeItem();
         // if the condition is 'none' then use the address as the next instruction to be executed
-        if (condition.isEqualTo(NONE)) {
+        if (condition.isEqualTo(bali.NONE)) {
             processor.context.address = address;
         } else {
             processor.context.address++;
@@ -434,7 +441,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
-        processor.context.handlers.addItem(new bali.Number(handlerAddress));
+        processor.context.handlers.addItem(bali.number(handlerAddress));
         processor.context.address++;
     },
 
@@ -451,7 +458,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the constant associated with the index
-        var constant = processor.context.constants.getItem(index).value;
+        var constant = processor.context.constants.getItem(index).getValue();
         processor.task.stack.addItem(constant);
         processor.context.address++;
     },
@@ -460,7 +467,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the parameter associated with the index
-        var parameter = processor.context.parameters.getItem(index).value;
+        var parameter = processor.context.parameters.getItem(index).getValue();
         processor.task.stack.addItem(parameter);
         processor.context.address++;
     },
@@ -494,7 +501,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the variable associated with the index
-        var variable = processor.context.variables.getItem(index).value;
+        var variable = processor.context.variables.getItem(index).getValue();
         processor.task.stack.addItem(variable);
         processor.context.address++;
     },
@@ -503,7 +510,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the queue tag associated with the index
-        var queue = processor.context.variables.getItem(index).value;
+        var queue = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if queue isn't a tag
         // attempt to receive a message from the queue in the nebula
         var message = processor.nebula.receiveMessage(queue);
@@ -520,7 +527,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the citation associated with the index
-        var citation = processor.context.variables.getItem(index).value;
+        var citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // retrieve the cited draft from the nebula repository
         var draft = processor.nebula.retrieveDraft(citation);
@@ -533,7 +540,7 @@ var instructionHandlers = [
     function(processor, operand) {
         var index = operand;
         // lookup the citation associated with the index
-        var citation = processor.context.variables.getItem(index).value;
+        var citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // retrieve the cited document from the nebula repository
         var document = processor.nebula.retrieveDocument(citation);
@@ -558,7 +565,7 @@ var instructionHandlers = [
         // pop the message that is on top of the component stack off the stack
         var message = processor.task.stack.removeItem();
         // lookup the queue tag associated with the index operand
-        var queue = processor.context.variables.getItem(index).value;
+        var queue = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if queue isn't a tag
         // send the message to the queue in the nebula
         processor.nebula.queueMessage(queue, message);
@@ -571,7 +578,7 @@ var instructionHandlers = [
         // pop the draft that is on top of the component stack off the stack
         var draft = processor.task.stack.removeItem();
         // lookup the citation associated with the index operand
-        var citation = processor.context.variables.getItem(index).value;
+        var citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // write the cited draft to the nebula repository
         processor.nebula.saveDraft(citation, draft);
@@ -584,7 +591,7 @@ var instructionHandlers = [
         // pop the document that is on top of the component stack off the stack
         var document = processor.task.stack.removeItem();
         // lookup the citation associated with the index operand
-        var citation = processor.context.variables.getItem(index).value;
+        var citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // write the cited document to the nebula repository
         citation = processor.nebula.commitDocument(citation, document);
@@ -645,8 +652,8 @@ var instructionHandlers = [
     function(processor, operand) {
         // setup the new procedure context
         var index = operand;
-        var parameters = new bali.Parameters(new bali.List());
-        var target = NONE;
+        var parameters = bali.parameters(bali.list());
+        var target = bali.NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
@@ -657,7 +664,7 @@ var instructionHandlers = [
         // setup the new procedure context
         var index = operand;
         var parameters = processor.task.stack.removeItem();
-        var target = NONE;
+        var target = bali.NONE;
         var type = processor.task.stack.removeItem();
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
@@ -667,9 +674,9 @@ var instructionHandlers = [
     function(processor, operand) {
         // setup the new procedure context
         var index = operand;
-        var parameters = new bali.Parameters(new bali.List());
+        var parameters = bali.parameters(bali.list());
         var target = processor.task.stack.removeItem();
-        var type = bali.Reference.fromLiteral(target.getType());
+        var type = bali.parse(target.getTypeReference());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
@@ -680,7 +687,7 @@ var instructionHandlers = [
         var index = operand;
         var parameters = processor.task.stack.removeItem();
         var target = processor.task.stack.removeItem();
-        var type = bali.Reference.fromLiteral(target.getType());
+        var type = bali.parse(target.getTypeReference());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
