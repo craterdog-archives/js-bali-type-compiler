@@ -297,7 +297,7 @@ exports.functions = [
     function(parent, index) {
         var subcomponent;
         validateParent('$getSubcomponent', parent, index);
-        if (parent.getType() === bali.types.CATATLOG) {
+        if (parent.getTypeId() === bali.types.CATATLOG) {
             subcomponent = parent.getValue(index);
         } else {
             subcomponent = parent.getItem(index);
@@ -313,7 +313,7 @@ exports.functions = [
 
     // $getType
     function(component) {
-        return bali.parse(component.getType());
+        return bali.parse(component.getTypeId());
     },
 
     // $getValue
@@ -668,7 +668,7 @@ exports.functions = [
     // $setSubcomponent
     function(parent, index, item) {
         validateParent('$getSubcomponent', parent, index);
-        if (parent.getType() === bali.types.CATATLOG) {
+        if (parent.getTypeId() === bali.types.CATATLOG) {
             parent.setValue(index, item);
         } else {
             parent.setItem(index, item);
@@ -986,20 +986,20 @@ exports.invokeByName = function(name, parameters) {
 
 function constructElement(procedure, value, parameters) {
     var exception;
-    if (value.getType() !== bali.types.TEXT) {
+    if (value.getTypeId() !== bali.types.TEXT) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: '$Text',
-            $actual: bali.types.typeName(value.getType())
+            $actual: bali.types.typeName(value.getTypeId())
         });
     }
-    if (parameters.getType() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
+    if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: '$Parameters',
-            $actual: bali.types.typeName(parameters.getType())
+            $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
     var constructor = bali[procedure.slice(1)];  // $procedure -> procedure
@@ -1010,20 +1010,20 @@ function constructElement(procedure, value, parameters) {
 
 function constructSource(procedure, parameters) {
     var exception;
-    if (procedure.getType() !== bali.types.TREE) {
+    if (procedure.getTypeId() !== bali.types.TREE) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$source',
             $expected: '$Tree',
-            $actual: bali.types.typeName(procedure.getType())
+            $actual: bali.types.typeName(procedure.getTypeId())
         });
     }
-    if (parameters.getType() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
+    if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$source',
             $expected: '$Parameters',
-            $actual: bali.types.typeName(parameters.getType())
+            $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
     var source = bali.source(procedure, parameters);
@@ -1038,23 +1038,23 @@ function constructRange(first, last, parameters) {
             $exception: '$parameterType',
             $procedure: '$range',
             $expected: '$Element',
-            $actual: bali.types.typeName(first.getType())
+            $actual: bali.types.typeName(first.getTypeId())
         });
     }
-    if (first.getType() !== last.getType()) {
+    if (first.getTypeId() !== last.getTypeId()) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$range',
-            $expected: bali.types.typeName(first.getType()),
-            $actual: bali.types.typeName(last.getType())
+            $expected: bali.types.typeName(first.getTypeId()),
+            $actual: bali.types.typeName(last.getTypeId())
         });
     }
-    if (parameters.getType() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
+    if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$range',
             $expected: '$Parameters',
-            $actual: bali.types.typeName(parameters.getType())
+            $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
     var range = bali.range(first, last, parameters);
@@ -1064,20 +1064,20 @@ function constructRange(first, last, parameters) {
 
 function constructTree(symbol, complexity) {
     var exception;
-    if (symbol.getType() !== bali.types.SYMBOL) {
+    if (symbol.getTypeId() !== bali.types.SYMBOL) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$tree',
             $expected: '$Symbol',
-            $actual: bali.types.typeName(symbol.getType())
+            $actual: bali.types.typeName(symbol.getTypeId())
         });
     }
-    if (complexity.getType() !== bali.types.NUMBER) {
+    if (complexity.getTypeId() !== bali.types.NUMBER) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: '$tree',
             $expected: '$Number',
-            $actual: bali.types.typeName(complexity.getType())
+            $actual: bali.types.typeName(complexity.getTypeId())
         });
     }
     var tree = bali.tree(bali.types.typeBySymbol(symbol), complexity.toNumber());
@@ -1086,12 +1086,12 @@ function constructTree(symbol, complexity) {
 
 
 function constructCollection(procedure, parameters) {
-    if (parameters && parameters.getType() !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.NONE)) {
+    if (parameters && parameters.getTypeId() !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.NONE)) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: '$Parameters',
-            $actual: bali.types.typeName(parameters.getType())
+            $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
     var constructor = bali[procedure.slice(1)];  // $procedure -> procedure
@@ -1101,12 +1101,12 @@ function constructCollection(procedure, parameters) {
 
 
 function validateParameterType(procedure, type, parameter) {
-    if (parameter.getType() !== type) {
+    if (parameter.getTypeId() !== type) {
         throw bali.exception({
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: bali.types.typeName(type),
-            $actual: bali.types.typeName(parameter.getType())
+            $actual: bali.types.typeName(parameter.getTypeId())
         });
     }
 }
@@ -1118,14 +1118,14 @@ function validateParameterAbstraction(procedure, abstraction, parameter) {
             $exception: '$parameterType',
             $procedure: procedure,
             $expected: '$' + abstraction.name,
-            $actual: bali.types.typeName(parameter.getType())
+            $actual: bali.types.typeName(parameter.getTypeId())
         });
     }
 }
 
 
 function validateParameterAspect(procedure, aspect, parameter) {
-    var type = parameter.getType();
+    var type = parameter.getTypeId();
     if (!bali.types['is' + aspect.slice(1)](type)) {
         throw bali.exception({
             $exception: '$parameterType',
@@ -1138,7 +1138,7 @@ function validateParameterAspect(procedure, aspect, parameter) {
 
 
 function validateParent(procedure, parent, index) {
-    switch (parent.getType()) {
+    switch (parent.getTypeId()) {
         case bali.types.LIST:
             validateIndex(procedure, parent.getSize(), index);
             break;
@@ -1150,7 +1150,7 @@ function validateParent(procedure, parent, index) {
                 $exception: '$parameterType',
                 $procedure: procedure,
                 $expected: '$Parent',
-                $actual: bali.types.typeName(parent.getType())
+                $actual: bali.types.typeName(parent.getTypeId())
             });
     }
 }

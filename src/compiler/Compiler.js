@@ -55,7 +55,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
         var iterator = source.getParameters().getIterator();
         while (iterator.hasNext()) {
             var parameter = iterator.getNext();
-            if (parameter.getType() === bali.types.ASSOCIATION) {
+            if (parameter.getTypeId() === bali.types.ASSOCIATION) {
                 parameter = parameter.getKey();
             }
             parameters.addItem(parameter);
@@ -495,7 +495,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         var recipient = tree.getChild(1);
-        if (recipient.getType() === bali.types.SUBCOMPONENT_EXPRESSION) {
+        if (recipient.getTypeId() === bali.types.SUBCOMPONENT_EXPRESSION) {
             recipient.acceptVisitor(this);
         }
 
@@ -574,7 +574,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     var iterator = parameters.getIterator();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
-        if (parameter.getType() === bali.types.ASSOCIATION) {
+        if (parameter.getTypeId() === bali.types.ASSOCIATION) {
             parameter = parameter.getValue();  // don't place the 'key' on the component stack
         }
         parameter.acceptVisitor(this);
@@ -1523,7 +1523,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     // TODO: change invoke to execute for a subcomponent
 
-    if (recipient.getType() === bali.types.SYMBOL) {
+    if (recipient.getTypeId() === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
         var symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
@@ -1557,7 +1557,7 @@ function getSubclauses(statement) {
     var iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
-        if (item.getType() === bali.types.BLOCK) {
+        if (item.getTypeId() === bali.types.BLOCK) {
             subClauses.push(item);
         }
     }
@@ -1643,7 +1643,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     var statement = procedure.statement;
-    var type = bali.types.typeName(statement.mainClause.getType()).slice(1, -6);  // remove '$' and 'Clause'
+    var type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
     var prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1735,7 +1735,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     var statement = this.stack.peek().statement;
-    var type = bali.types.typeName(statement.mainClause.getType()).slice(1, -6);  // remove '$' and 'Clause'
+    var type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
     return type;
 };
 

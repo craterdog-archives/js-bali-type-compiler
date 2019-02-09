@@ -676,7 +676,7 @@ var instructionHandlers = [
         var index = operand;
         var parameters = bali.parameters(bali.list());
         var target = processor.task.stack.removeItem();
-        var type = bali.parse(target.getTypeReference());
+        var type = bali.parse(target.getType());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
@@ -687,7 +687,7 @@ var instructionHandlers = [
         var index = operand;
         var parameters = processor.task.stack.removeItem();
         var target = processor.task.stack.removeItem();
-        var type = bali.parse(target.getTypeReference());
+        var type = bali.parse(target.getType());
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
