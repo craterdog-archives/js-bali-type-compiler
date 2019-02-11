@@ -182,7 +182,7 @@ exports.functions = [
     // $deleteAll
     function(collection) {
         validateParameterAbstraction('$deleteAll', bali.Collection, collection);
-        collection.removeAll();  // TODO: change name to deleteAll for consistency
+        collection.deleteAll();
         return collection;
     },
 
@@ -469,7 +469,7 @@ exports.functions = [
 
     // $isMatchedBy
     function(component, pattern) {
-        return component.matches(pattern);  // TODO: refactor the matches() method to be isMatchedBy
+        return bali.probability(component.isMatchedBy(pattern));
     },
 
     // $isMoreThan

@@ -336,7 +336,7 @@ function pushContext(processor, target, citation, passedParameters, index) {
     var iterator = procedure.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
         var key = iterator.getNext();
-        var value = passedParameters.getValue(key, counter++);  // TODO: change to getParameter()
+        var value = passedParameters.getParameter(key, counter++);
         value = value || bali.NONE;
         parameters.setValue(key, value);
     }
