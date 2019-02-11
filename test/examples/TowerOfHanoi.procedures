@@ -18,7 +18,11 @@
         $play: [
             $parameters: []
             $variables: [
-                $$iterator-1
+                $$index-1
+                $$index-2
+                $$index-4
+                $$index-5
+                $$iterator-3
                 $$result
                 $n
                 $numberOfDisks
@@ -28,20 +32,22 @@
                 $asCatalog
                 $getIterator
                 $getNext
+                $getSubcomponent
                 $hasNext
                 $moveTower
                 $push
+                $setSubcomponent
             ]
             $addresses: [
                 "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 66
-                "3.WithStatement": 68
-                "3.1.ConditionClause": 73
-                "3.1.1.EvaluateStatement": 79
-                "3.ConditionRepeat": 90
-                "3.WithStatementDone": 91
-                "4.EvaluateStatement": 92
-                "5.ReturnStatement": 105
+                "2.EvaluateStatement": 71
+                "3.WithStatement": 78
+                "3.1.ConditionClause": 83
+                "3.1.1.EvaluateStatement": 89
+                "3.ConditionRepeat": 108
+                "3.WithStatementDone": 109
+                "4.EvaluateStatement": 110
+                "5.ReturnStatement": 123
             ]
             $instructions: "
                 1.EvaluateStatement:
@@ -109,33 +115,51 @@
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $stack WITH PARAMETER
                 INVOKE $setValue WITH 3 PARAMETERS
-                INVOKE $setSubcomponent WITH 3 PARAMETERS
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
                 
                 2.EvaluateStatement:
                 INVOKE $list
-                INVOKE $setSubcomponent WITH 3 PARAMETERS
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
                 
                 3.WithStatement:
                 LOAD VARIABLE $numberOfDisks
                 PUSH LITERAL `1`
                 INVOKE $range WITH 2 PARAMETERS
                 EXECUTE $getIterator ON TARGET
-                STORE VARIABLE $$iterator-1
+                STORE VARIABLE $$iterator-3
                 
                 3.1.ConditionClause:
-                LOAD VARIABLE $$iterator-1
+                LOAD VARIABLE $$iterator-3
                 EXECUTE $hasNext ON TARGET
                 JUMP TO 3.WithStatementDone ON FALSE
-                LOAD VARIABLE $$iterator-1
+                LOAD VARIABLE $$iterator-3
                 EXECUTE $getNext ON TARGET
                 STORE VARIABLE $n
                 
                 3.1.1.EvaluateStatement:
                 LOAD VARIABLE $target
+                INVOKE $list
                 PUSH LITERAL `$pegs`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 PUSH LITERAL `"peg A"`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                STORE VARIABLE $$index-4
+                INVOKE $list
+                LOAD VARIABLE $$index-4
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 INVOKE $list
                 LOAD VARIABLE $n
                 INVOKE $addItem WITH 2 PARAMETERS
@@ -167,21 +191,27 @@
                 5.ReturnStatement:
                 LOAD VARIABLE $target
                 PUSH LITERAL `$steps`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                STORE VARIABLE $$index-5
+                INVOKE $list
+                LOAD VARIABLE $$index-5
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 EXECUTE $asCatalog ON TARGET
                 HANDLE RESULT
             "(
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                A00B2801A00B28022803A03D2804A00B280528062807B051B866A845B064
-                B002A845B064B866A845A86DB8662808A00B28022803A03D2804A00B2805
-                28062807B051B866A845B064B002A845B064B866A845A86DB8662809A00B
-                28022803A03D2804A00B280528062807B051B866A845B064B002A845B064
-                B866A845A86DB866B865A03DB86560042806B051D00280016001D004185B
-                6001D00380036005280AB02A2801B02AA03D6003B002A845D80680020049
-                00006005A03D6004B0022801B0022809B0022808B002A845D80580026005
-                280BB02AD001E000
+                A00F2801A00F28022803A04C2804A00F280528062807B063B878A854B077
+                B002A854B077B878A854A87FB8782808A00F28022803A04C2804A00F2805
+                28062807B063B878A854B077B002A854B077B878A854A87FB8782809A00F
+                28022803A04C2804A00F280528062807B063B878A854B077B002A854B077
+                B878A854A87FB8788001A04C6001B002A854D808A04C8002A04C6002B002
+                A854D80860082806B063D00280056005D005186D6005D00380076009A04C
+                280AB002A854D80428018003A04C6003B002A854D804A04C6007B002A854
+                D8078006005300006009A04C6008B0022801B0022809B0022808B002A854
+                D80680066009280B8004A04C6004B002A854D804D001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -264,9 +294,9 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                00003801182B6002A03D38012806B016B0023802B0023804B0023803B002
-                A845D80280016002A03D3802B0023803B002A845D80180016002A03D3801
-                2806B016B0023804B0023803B0023802B002A845D80280016001E000
+                00003801182B6002A04C38012806B019B0023802B0023804B0023803B002
+                A854D80280016002A04C3802B0023803B002A854D80180016002A04C3801
+                2806B019B0023804B0023803B0023802B002A854D80280016001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -274,29 +304,57 @@
         ]
         $moveDisk: [
             $parameters: [$fromPeg, $toPeg]
-            $variables: [$$result, $disk, $target]
-            $procedures: [$append, $pop, $push]
+            $variables: [
+                $$index-1
+                $$index-2
+                $$index-3
+                $$result
+                $disk
+                $target
+            ]
+            $procedures: [
+                $append
+                $getSubcomponent
+                $pop
+                $push
+            ]
             $addresses: [
                 "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 8
-                "3.EvaluateStatement": 19
+                "2.EvaluateStatement": 16
+                "3.EvaluateStatement": 35
             ]
             $instructions: "
                 1.EvaluateStatement:
                 LOAD VARIABLE $target
+                INVOKE $list
                 PUSH LITERAL `$pegs`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 PUSH PARAMETER $fromPeg
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 EXECUTE $pop ON TARGET
                 STORE VARIABLE $disk
                 
                 2.EvaluateStatement:
                 LOAD VARIABLE $target
+                INVOKE $list
                 PUSH LITERAL `$pegs`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 PUSH PARAMETER $toPeg
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 INVOKE $list
                 LOAD VARIABLE $disk
                 INVOKE $addItem WITH 2 PARAMETERS
@@ -307,7 +365,12 @@
                 3.EvaluateStatement:
                 LOAD VARIABLE $target
                 PUSH LITERAL `$steps`
-                INVOKE $getSubcomponent WITH 2 PARAMETERS
+                STORE VARIABLE $$index-3
+                INVOKE $list
+                LOAD VARIABLE $$index-3
+                INVOKE $addItem WITH 2 PARAMETERS
+                INVOKE $parameters WITH PARAMETER
+                EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
                 INVOKE $list
                 PUSH LITERAL `"Move disk {disk} from {fromPeg} to {toPeg}."`
                 INVOKE $addItem WITH 2 PARAMETERS
@@ -320,8 +383,10 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                6003280AB02A3801B02AD00280026003280AB02A3802B02AA03D6002B002
-                A845D80380016003280BB02AA03D280CB002A845D80180016001E000
+                6006A04C280AB002A854D80238018001A04C6001B002A854D802D0038005
+                6006A04C280AB002A854D80238028002A04C6002B002A854D802A04C6005
+                B002A854D80480046006280B8003A04C6003B002A854D802A04C280CB002
+                A854D80180046004E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"

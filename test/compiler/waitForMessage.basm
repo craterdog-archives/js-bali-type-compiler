@@ -1,6 +1,7 @@
 [
     $parameters: []
     $variables: [
+        $$index-3
         $$queue-1
         $$queue-2
         $$result
@@ -8,7 +9,10 @@
         $messages
         $target
     ]
-    $procedures: []
+    $procedures: [
+        $getSubcomponent
+        $setSubcomponent
+    ]
     $addresses: [
         "1.WaitStatement": 1
         "2.WaitStatement": 6
@@ -23,19 +27,30 @@
         
         2.WaitStatement:
         LOAD VARIABLE $messages
+        INVOKE $list
         PUSH LITERAL `$foo`
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
         PUSH LITERAL `5`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$queue-2
         LOAD MESSAGE $$queue-2
-        INVOKE $setSubcomponent WITH 3 PARAMETERS
+        STORE VARIABLE $$index-3
+        INVOKE $list
+        LOAD VARIABLE $$index-3
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
         LOAD VARIABLE $$result
         HANDLE RESULT
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: '2801280280016801800460052803B02A2804280280026802B8656003E000'(
+    $bytecode: '
+        280128028002680280056006A04C2803B002A854D8012804280280036803
+        8001A04C6001B002A854D8026004E000
+    '(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

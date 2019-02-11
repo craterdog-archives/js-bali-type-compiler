@@ -1,28 +1,34 @@
 [
     $parameters: []
     $variables: [
+        $$index-5
+        $$index-7
+        $$index-9
         $$location-1
+        $$location-10
         $$location-2
         $$location-3
         $$location-4
-        $$location-5
         $$location-6
-        $$location-7
+        $$location-8
         $$result
         $document
         $documents
         $index
         $target
     ]
-    $procedures: []
+    $procedures: [
+        $getSubcomponent
+        $setSubcomponent
+    ]
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 6
         "3.CommitStatement": 10
         "4.CheckoutStatement": 14
-        "5.SaveStatement": 20
-        "6.CommitStatement": 26
-        "7.DiscardStatement": 32
+        "5.SaveStatement": 25
+        "6.CommitStatement": 36
+        "7.DiscardStatement": 47
     ]
     $instructions: "
         1.CheckoutStatement:
@@ -50,38 +56,54 @@
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-4
         LOAD DOCUMENT $$location-4
-        INVOKE $setSubcomponent WITH 3 PARAMETERS
+        STORE VARIABLE $$index-5
+        INVOKE $list
+        LOAD VARIABLE $$index-5
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
         
         5.SaveStatement:
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-5
-        LOAD VARIABLE $documents
-        LOAD VARIABLE $index
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
-        STORE DRAFT $$location-5
-        
-        6.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-6
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
-        STORE DOCUMENT $$location-6
+        STORE VARIABLE $$index-7
+        INVOKE $list
+        LOAD VARIABLE $$index-7
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        STORE DRAFT $$location-6
+        
+        6.CommitStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$location-8
+        LOAD VARIABLE $documents
+        LOAD VARIABLE $index
+        STORE VARIABLE $$index-9
+        INVOKE $list
+        LOAD VARIABLE $$index-9
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        STORE DOCUMENT $$location-8
         
         7.DiscardStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-7
+        STORE VARIABLE $$location-10
         PUSH LITERAL `none`
-        STORE DRAFT $$location-7
+        STORE DRAFT $$location-10
         LOAD VARIABLE $$result
         HANDLE RESULT
     "(
         $mediatype: "application/basm"
     )
     $bytecode: '
-        2801280280017801800928028002600990022802800360099803600A600B
-        280280047804B86528028005600A600BB02A900528028006600A600BB02A
-        980628028007280390076008E000
+        2801280280047804800C28028006600C900628028007600C9807600D600E
+        2802800878088001A04C6001B002A854D80228028009600D600E8002A04C
+        6002B002A854D80190092802800A600D600E8003A04C6003B002A854D801
+        980A2802800528039005600BE000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

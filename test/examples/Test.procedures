@@ -57,7 +57,7 @@
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
                 PUSH LITERAL `"none"?`
-                INVOKE $matches WITH 2 PARAMETERS
+                INVOKE $isMatchedBy WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT
                 
@@ -81,7 +81,7 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20062802E8004000001200008001600160012803B03F181148003801E000
+                20062802E8004000001200008001600160012803B045181148003801E000
                 0012E80000002804E000
             '(
                 $encoding: $base16
@@ -138,7 +138,7 @@
                 LOAD VARIABLE $exception
                 LOAD VARIABLE $exception
                 PUSH LITERAL `"none"?`
-                INVOKE $matches WITH 2 PARAMETERS
+                INVOKE $isMatchedBy WITH 2 PARAMETERS
                 JUMP TO 1.ThrowStatementFailed ON FALSE
                 POP COMPONENT
                 
@@ -162,7 +162,7 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                20063802E8004000001200008001600160012803B03F181148002801E000
+                20063802E8004000001200008001600160012803B045181148002801E000
                 0012E80000002804E000
             '(
                 $encoding: $base16

@@ -1,6 +1,7 @@
 [
     $parameters: []
     $variables: [
+        $$index-2
         $$location-1
         $$result
         $a
@@ -27,7 +28,10 @@
         $y
         $z
     ]
-    $procedures: [$addItem]
+    $procedures: [
+        $addItem
+        $getSubcomponent
+    ]
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 9
@@ -35,29 +39,29 @@
         "4.EvaluateStatement": 14
         "5.EvaluateStatement": 20
         "6.EvaluateStatement": 24
-        "7.EvaluateStatement": 32
-        "8.EvaluateStatement": 39
-        "9.EvaluateStatement": 42
-        "10.EvaluateStatement": 46
-        "11.EvaluateStatement": 49
-        "12.EvaluateStatement": 52
-        "13.EvaluateStatement": 55
-        "14.EvaluateStatement": 59
-        "15.EvaluateStatement": 63
-        "16.EvaluateStatement": 67
-        "17.EvaluateStatement": 71
-        "18.EvaluateStatement": 75
-        "19.EvaluateStatement": 78
-        "20.EvaluateStatement": 82
-        "21.EvaluateStatement": 86
-        "22.EvaluateStatement": 90
-        "23.EvaluateStatement": 94
-        "24.EvaluateStatement": 98
-        "25.EvaluateStatement": 101
-        "26.EvaluateStatement": 105
-        "27.EvaluateStatement": 109
-        "28.EvaluateStatement": 113
-        "29.EvaluateStatement": 117
+        "7.EvaluateStatement": 43
+        "8.EvaluateStatement": 50
+        "9.EvaluateStatement": 53
+        "10.EvaluateStatement": 57
+        "11.EvaluateStatement": 60
+        "12.EvaluateStatement": 63
+        "13.EvaluateStatement": 66
+        "14.EvaluateStatement": 70
+        "15.EvaluateStatement": 74
+        "16.EvaluateStatement": 78
+        "17.EvaluateStatement": 82
+        "18.EvaluateStatement": 86
+        "19.EvaluateStatement": 89
+        "20.EvaluateStatement": 93
+        "21.EvaluateStatement": 97
+        "22.EvaluateStatement": 101
+        "23.EvaluateStatement": 105
+        "24.EvaluateStatement": 109
+        "25.EvaluateStatement": 112
+        "26.EvaluateStatement": 116
+        "27.EvaluateStatement": 120
+        "28.EvaluateStatement": 124
+        "29.EvaluateStatement": 128
     ]
     $instructions: "
         1.EvaluateStatement:
@@ -95,12 +99,23 @@
         
         6.EvaluateStatement:
         LOAD VARIABLE $customer
+        INVOKE $list
         PUSH LITERAL `$order`
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $list
         PUSH LITERAL `$item`
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
         PUSH LITERAL `5`
-        INVOKE $getSubcomponent WITH 2 PARAMETERS
+        STORE VARIABLE $$index-2
+        INVOKE $list
+        LOAD VARIABLE $$index-2
+        INVOKE $addItem WITH 2 PARAMETERS
+        INVOKE $parameters WITH PARAMETER
+        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
         STORE VARIABLE $$result
         
         7.EvaluateStatement:
@@ -200,7 +215,7 @@
         23.EvaluateStatement:
         LOAD VARIABLE $k
         LOAD VARIABLE $m
-        INVOKE $matches WITH 2 PARAMETERS
+        INVOKE $isMatchedBy WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
         24.EvaluateStatement:
@@ -243,15 +258,15 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        A00B28016005B86628022803B8668002601580022804FFFF800260036004
-        B06E6006B04A8002601380017801800260072805B02A2806B02A2803B02A
-        80026010A03D600DB002A845D80180022807A81B800228082809B0198002
-        280AA83180022803A8528002280BA810800260176018B04A800260036004
-        B04C800260066008B054800260176018B06E800260166019B0168002280B
-        FFFF800260036004B036800260066008B03380026009600BB0378002600C
-        600EB0398002600F6011B03F80026012A80E800260036004B00480026006
-        6008B06080026009600BB07F8002600C600EB0448002600A2803B0158002
-        6002E000
+        A00F28016006B87828022803B8788003601680032804FFFF800360046005
+        B0806007B05B800360148002780280036008A04C2805B002A854D802A04C
+        2806B002A854D80228038001A04C6001B002A854D80280036011A04C600E
+        B002A854D80180032807A81E800328082809B01C8003280AA83F80032803
+        A8648003280BA812800360186019B05B800360046005B05D800360076009
+        B067800360186019B08080036017601AB0198003280BFFFF800360046005
+        B044800360076009B0418003600A600CB0468003600D600FB04880036010
+        6012B04580036013A810800360046005B004800360076009B0728003600A
+        600CB0898003600D600FB0538003600B2803B01780036003E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

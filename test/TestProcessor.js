@@ -25,8 +25,11 @@ const EOL = '\n';  // POSIX end of line character
 
 
 /*
-    $tag: #WZ376Q7R5FTYAMPSA2ZJF9SNR10TRFG3
-    $digest: J6QHVN514XJQC7NJFY4RMWPR3XMR4NBNFB0XMH593NWN9FAZB1YHADNTV304QN844YWQ2N8DZDM751HH4HYV6ZGK0PW5C7AFVS09YTH
+    $tag: #F37WQ14F5SP73NQH5PJ6PAH2F87KZR6Z
+    $digest: W15GGVWJPMHGHD9R8K8ACLMND5FK1MAZQ05TCA54615TNT6WR46JH7J3DN3WS3SPMLK8LXA2D8W2F2ALSYS9QXDMZ9C0FTDNB0FP0CH
+
+    $tag: #S5XNQ2TT1P3CQXXWAQKB57V4Z2VY7W6Q
+    $digest: 3M01PLZ82S7M8A2XJGHK02D7GXZB7X512DDP0VMCJTC8GJ4TBL6A63524CFJ2NL064Y11N22ZGLH1X4CRCJ98DALMB0F4X31SSTXT0R
  */
 
 const TASK_TEMPLATE =
@@ -87,9 +90,9 @@ function loadTask(filename) {
         3,
         5,
         "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#WZ376Q7R5FTYAMPSA2ZJF9SNR10TRFG3,$version:v1,$digest:'J6QHVN514XJQC7NJFY4RMWPR3XMR4NBNFB0XMH593NWN9FAZB1YHADNTV304QN844YWQ2N8DZDM751HH4HYV6ZGK0PW5C7AFVS09YTH']>",
+        "<bali:[$protocol:v1,$tag:#S5XNQ2TT1P3CQXXWAQKB57V4Z2VY7W6Q,$version:v1,$digest:'3M01PLZ82S7M8A2XJGHK02D7GXZB7X512DDP0VMCJTC8GJ4TBL6A63524CFJ2NL064Y11N22ZGLH1X4CRCJ98DALMB0F4X31SSTXT0R']>",
         bali.parse('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#WZ376Q7R5FTYAMPSA2ZJF9SNR10TRFG3,$version:v1,$digest:'J6QHVN514XJQC7NJFY4RMWPR3XMR4NBNFB0XMH593NWN9FAZB1YHADNTV304QN844YWQ2N8DZDM751HH4HYV6ZGK0PW5C7AFVS09YTH']>\n" +
+        "    <bali:[$protocol:v1,$tag:#S5XNQ2TT1P3CQXXWAQKB57V4Z2VY7W6Q,$version:v1,$digest:'3M01PLZ82S7M8A2XJGHK02D7GXZB7X512DDP0VMCJTC8GJ4TBL6A63524CFJ2NL064Y11N22ZGLH1X4CRCJ98DALMB0F4X31SSTXT0R']>\n" +
         ')'),
         '$foo',
         bali.parse('{return prefix + name}')
@@ -587,7 +590,7 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH LITERAL `"none"`
                 processor.step();
                 expect(processor.context.address).to.equal(11);
-                // INVOKE $matches WITH 2 PARAMETERS
+                // INVOKE $isMatchedBy WITH 2 PARAMETERS
                 processor.step();
                 expect(processor.context.address).to.equal(12);
                 // JUMP TO 1.ThrowStatementFailed ON FALSE
@@ -720,7 +723,7 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH LITERAL `"none"`
                 processor.step();
                 expect(processor.context.address).to.equal(11);
-                // INVOKE $matches WITH 2 PARAMETERS
+                // INVOKE $isMatchedBy WITH 2 PARAMETERS
                 processor.step();
                 expect(processor.context.address).to.equal(12);
                 // JUMP TO 1.ThrowStatementFailed ON FALSE

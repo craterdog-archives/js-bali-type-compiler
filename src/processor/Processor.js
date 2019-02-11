@@ -144,10 +144,7 @@ function executeInstruction(processor) {
 
 
 function handleException(processor, exception) {
-    if (exception instanceof bali.Exception) {
-        // it's a runtime exception
-        exception = exception.getValue();
-    } else {
+    if (!(exception instanceof bali.Exception)) {
         // it's a bug in the compiler or processor
         const stack = exception.stack.split('\n').slice(1);
         stack.forEach(function(line, index) {
@@ -163,7 +160,7 @@ function handleException(processor, exception) {
             $message: '"' + exception + '"',
             $trace: '"\n' + stack.join('\n') + '"'
         });
-        console.log('EXCEPTION THROWN: ' + exception);
+        console.log('BUG: ' + exception);
     }
     processor.task.stack.addItem(exception);
     instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
@@ -338,10 +335,10 @@ function pushContext(processor, target, citation, passedParameters, index) {
     const parameters = bali.catalog();
     var iterator = procedure.getValue('$parameters').getIterator();
     while (iterator.hasNext()) {
-        var parameter = iterator.getNext();
-        var value = passedParameters.getValue(parameter, counter++);
+        var key = iterator.getNext();
+        var value = passedParameters.getValue(key, counter++);  // TODO: change to getParameter()
         value = value || bali.NONE;
-        parameters.setValue(parameter, value);
+        parameters.setValue(key, value);
     }
 
     // set the initial values of the variables to 'none' except for the 'target' variable

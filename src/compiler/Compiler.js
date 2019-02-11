@@ -309,7 +309,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
             break;
         case 'matches':
             // determine whether or not the first value matches the second value
-            this.builder.insertInvokeInstruction('$matches', 2);
+            this.builder.insertInvokeInstruction('$isMatchedBy', 2);
             break;
     }
 };
@@ -616,7 +616,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     // the VM compares the template expression with the actual exception
     this.builder.insertLoadInstruction('VARIABLE', exception);
     template.acceptVisitor(this);
-    this.builder.insertInvokeInstruction('$matches', 2);
+    this.builder.insertInvokeInstruction('$isMatchedBy', 2);
 
     // if the template and exception did not match the VM jumps past this exception handler
     var nextLabel = this.builder.getNextClausePrefix() + 'HandleClause';
@@ -723,11 +723,20 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
     // traverse all but the last index
     for (var i = 1; i < size; i++) {
 
+        // the VM places a new empty list on the component stack
+        this.builder.insertInvokeInstruction('$list', 0);
+
         // the VM places the value of the next index onto the top of the component stack
         list.getItem(i).acceptVisitor(this);
 
+        // the VM adds the index to the list as its only item
+        this.builder.insertInvokeInstruction('$addItem', 2);
+
+        // the VM replaces the list that is on top of the component stack with a new parameters component
+        this.builder.insertInvokeInstruction('$parameters', 1);
+
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertInvokeInstruction('$getSubcomponent', 2);
+        this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH PARAMETERS');
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -1138,7 +1147,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         option.acceptVisitor(this);
 
         // the VM checks to see if the selector and option match and places the result on the component stack
-        this.builder.insertInvokeInstruction('$matches', 2);
+        this.builder.insertInvokeInstruction('$isMatchedBy', 2);
 
         // determine what the next label will be
         var nextLabel = this.builder.getNextClausePrefix();
@@ -1338,17 +1347,29 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     var component = tree.getChild(1);
     var indices = tree.getChild(2);
 
-    // TODO: replace invoke with execute no matter what
-
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
 
     // the VM replaces the value on the component stack with the parent and index of the subcomponent
     indices.acceptVisitor(this);
 
+    // the VM saves off the index for after the list is created
+    var index = this.createTemporaryVariable('index');
+    this.builder.insertStoreInstruction('VARIABLE', index);
+
+    // the VM places a new empty list on the component stack
+    this.builder.insertInvokeInstruction('$list', 0);
+
+    // the VM adds the index to the list as its only item
+    this.builder.insertLoadInstruction('VARIABLE', index);
+    this.builder.insertInvokeInstruction('$addItem', 2);
+
+    // the VM replaces the list that is on top of the component stack with a new parameters component
+    this.builder.insertInvokeInstruction('$parameters', 1);
+
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertInvokeInstruction('$getSubcomponent', 2);
-    // the value of the subcomponent remains on the component stack
+    this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH PARAMETERS');
+    // the parent and index have been replaced by the value of the subcomponent
 };
 
 
@@ -1521,16 +1542,27 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  * component stack.
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
-    // TODO: change invoke to execute for a subcomponent
-
     if (recipient.getTypeId() === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
         var symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
+        // the VM saves off the index for after the list is created
+        var index = this.createTemporaryVariable('index');
+        this.builder.insertStoreInstruction('VARIABLE', index);
+
+        // the VM places a new empty list on the component stack
+        this.builder.insertInvokeInstruction('$list', 0);
+
+        // the VM adds the index to the list as its only item
+        this.builder.insertLoadInstruction('VARIABLE', index);
+        this.builder.insertInvokeInstruction('$addItem', 2);
+
+        // the VM replaces the list that is on top of the component stack with a new parameters component
+        this.builder.insertInvokeInstruction('$parameters', 1);
+
         // the VM sets the value of the subcomponent at the given index of the parent component
-        // to the value that is on top of the component stack
-        this.builder.insertInvokeInstruction('$setSubcomponent', 3);
+        this.builder.insertExecuteInstruction('$setSubcomponent', 'ON TARGET WITH PARAMETERS');
     }
 };
 
