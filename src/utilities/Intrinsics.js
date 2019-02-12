@@ -122,8 +122,8 @@ exports.functions = [
     },
 
     // $catalog
-    function(sequence, parameters) {
-        return constructCollection('$catalog', sequence, parameters);
+    function(parameters) {
+        return constructCollection('$catalog', parameters);
     },
 
     // $complement
@@ -507,8 +507,8 @@ exports.functions = [
     },
 
     // $list
-    function(sequence, parameters) {
-        return constructCollection('$list', sequence, parameters);
+    function(parameters) {
+        return constructCollection('$list', parameters);
     },
 
     // $literal
@@ -605,8 +605,8 @@ exports.functions = [
     },
 
     // $queue
-    function(sequence, parameters) {
-        return constructCollection('$queue', sequence, parameters);
+    function(parameters) {
+        return constructCollection('$queue', parameters);
     },
 
     // $quotient
@@ -756,8 +756,8 @@ exports.functions = [
     },
 
     // $set
-    function(sequence, parameters) {
-        return constructCollection('$set', sequence, parameters);
+    function(parameters) {
+        return constructCollection('$set', parameters);
     },
 
     // $setAssociationValue
@@ -831,8 +831,8 @@ exports.functions = [
     },
 
     // $stack
-    function(sequence, parameters) {
-        return constructCollection('$stack', sequence, parameters);
+    function(parameters) {
+        return constructCollection('$stack', parameters);
     },
 
     // $sum
@@ -1145,7 +1145,7 @@ function constructTree(symbol, complexity) {
 }
 
 
-function constructCollection(procedure, sequence, parameters) {
+function constructCollection(procedure, parameters) {
     if (parameters && parameters.getTypeId() !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.NONE)) {
         throw bali.exception({
             $exception: '$parameterType',
@@ -1154,7 +1154,7 @@ function constructCollection(procedure, sequence, parameters) {
             $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
-    const collection = bali[procedure.slice(1)](sequence, parameters);
+    const collection = bali[procedure.slice(1)](parameters);
     return collection;
 }
 
