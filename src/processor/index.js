@@ -9,4 +9,6 @@
  ************************************************************************/
 'use strict';
 
+const compiler = require('../compiler');
+
 exports.Processor = require('./Processor').Processor;

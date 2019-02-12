@@ -16,14 +16,16 @@ const utilities = require('../src/utilities');
 describe('Bali Virtual Machine™', function() {
 
     describe('Test Parser and Formatter', function() {
+        const parser = new utilities.Parser(true);
 
         it('should parse and format the same instructions', function() {
             var file = 'test/utilities/instructions.basm';
             var source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = utilities.parser.parseDocument(source);
+            var procedure = parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            var formatted = utilities.formatter.formatInstructions(procedure);
+            const formatter = new utilities.Formatter();
+            var formatted = formatter.formatInstructions(procedure);
             expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
 
@@ -31,9 +33,9 @@ describe('Bali Virtual Machine™', function() {
             var file = 'test/utilities/instructions.basm';
             var source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = utilities.parser.parseDocument(source);
+            var procedure = parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            var formatter = new utilities.Formatter('    ');
+            const formatter = new utilities.Formatter('    ');
             var formatted = formatter.formatInstructions(procedure);
             var expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
             expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>

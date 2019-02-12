@@ -9,18 +9,47 @@
  ************************************************************************/
 'use strict';
 
-var utilities = require('./src/utilities/');
-exports.types = utilities.types;
-exports.bytecode = utilities.bytecode;
-exports.intrinsics = utilities.intrinsics;
-exports.parser = utilities.parser;
-exports.formatter = utilities.formatter;
+const bali = require('bali-component-framework');
 
-var compiler = require('./src/compiler/');
-exports.Assembler = compiler.Assembler;
-exports.Compiler = compiler.Compiler;
-exports.assembler = compiler.assembler;
-exports.compiler = compiler.compiler;
 
-var processor = require('./src/processor/');
-exports.Processor = processor.Processor;
+// EXPORTS
+
+const utilities = require('./src/utilities');
+Object.keys(utilities).forEach(function(key) {
+    exports[key] = utilities[key];
+});
+
+const compiler = require('./src/compiler');
+Object.keys(compiler).forEach(function(key) {
+    exports[key] = compiler[key];
+});
+
+const processor = require('./src/processor');
+Object.keys(processor).forEach(function(key) {
+    exports[key] = processor[key];
+});
+
+
+// FUNCTIONS
+
+const parse = function(document, debug) {
+    const parser = new utilities.Parser(debug);
+    return parser.parseDocument(document);
+};
+exports.parse = parse;
+
+const format = function(instructions, indentation) {
+    const formatter = new utilities.Formatter(indentation);
+    return formatter.formatInstructions(instructions);
+};
+exports.format = format;
+
+const compile = function(nebula, citation) {
+    return compiler.compile(nebula, citation);
+};
+exports.compile = compile;
+
+const process = function(nebula, task) {
+    return new processor.Processor(nebula, task);
+};
+exports.process = process;

@@ -122,8 +122,8 @@ exports.functions = [
     },
 
     // $catalog
-    function(parameters) {
-        return constructCollection('$catalog', parameters);
+    function(sequence, parameters) {
+        return constructCollection('$catalog', sequence, parameters);
     },
 
     // $complement
@@ -507,8 +507,8 @@ exports.functions = [
     },
 
     // $list
-    function(parameters) {
-        return constructCollection('$list', parameters);
+    function(sequence, parameters) {
+        return constructCollection('$list', sequence, parameters);
     },
 
     // $literal
@@ -605,8 +605,8 @@ exports.functions = [
     },
 
     // $queue
-    function(parameters) {
-        return constructCollection('$queue', parameters);
+    function(sequence, parameters) {
+        return constructCollection('$queue', sequence, parameters);
     },
 
     // $quotient
@@ -756,8 +756,8 @@ exports.functions = [
     },
 
     // $set
-    function(parameters) {
-        return constructCollection('$set', parameters);
+    function(sequence, parameters) {
+        return constructCollection('$set', sequence, parameters);
     },
 
     // $setAssociationValue
@@ -831,8 +831,8 @@ exports.functions = [
     },
 
     // $stack
-    function(parameters) {
-        return constructCollection('$stack', parameters);
+    function(sequence, parameters) {
+        return constructCollection('$stack', sequence, parameters);
     },
 
     // $sum
@@ -1156,7 +1156,7 @@ function constructCollection(procedure, sequence, parameters) {
         });
     }
     var constructor = bali[procedure.slice(1)];  // $procedure -> procedure
-    var collection = new constructor(parameters);
+    var collection = new constructor(sequence, parameters);
     return collection;
 }
 

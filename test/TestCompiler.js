@@ -15,9 +15,11 @@ const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const notary = require('bali-digital-notary').api(testDirectory);
 const nebula = require('bali-nebula-api');
-const repository = nebula.local(testDirectory);
+const repository = nebula.repository(testDirectory);
 const api = nebula.api(notary, repository);
-const compiler = require('../src/compiler');
+const vm = require('../');
+const compiler = new vm.Compiler();
+const assembler = new vm.Assembler();
 
 /*  uncomment to generate a new notary key and certificate
 var certificate = notary.generateKeys();
@@ -57,11 +59,11 @@ describe('Bali Virtual Macine™', function() {
                 type.setValue('$procedures', procedures);
 
                 // compile the procedure
-                var compiled = compiler.compiler.compileProcedure(type, procedure);
+                var compiled = compiler.compileProcedure(type, procedure);
                 expect(compiled).to.exist;  // jshint ignore:line
 
                 // assemble the procedure into bytecode
-                compiler.assembler.assembleProcedure(type, compiled);
+                assembler.assembleProcedure(type, compiled);
 
                 source = compiled.toString() + '\n';  // POSIX compliant <EOL>
                 //fs.writeFileSync(basmFile, source, 'utf8');
@@ -88,10 +90,10 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
-                var documentCitation = api.createDraft(type);
-                var draft = api.retrieveDraft(documentCitation);
-                documentCitation = api.commitDocument(documentCitation, draft);
-                var typeCitation = compiler.compileType(api, documentCitation);
+                var typeCitation = api.createDraft(type);
+                var draft = api.retrieveDraft(typeCitation);
+                typeCitation = api.commitDocument(typeCitation, draft);
+                typeCitation = vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
                 //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);
