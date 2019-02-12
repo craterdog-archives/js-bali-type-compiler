@@ -47,7 +47,7 @@ exports.formatter = new Formatter();
  * @returns {String} The source code for the instructions.
  */
 Formatter.prototype.formatInstructions = function(instructions) {
-    var visitor = new FormattingVisitor(this.indentation);
+    const visitor = new FormattingVisitor(this.indentation);
     instructions.acceptVisitor(visitor);
     return visitor.source;
 };
@@ -74,7 +74,7 @@ FormattingVisitor.prototype.appendNewline = function() {
 // document: EOL* instructions EOL* EOF
 // instructions: step (EOL step)*
 FormattingVisitor.prototype.visitList = function(procedure) {
-    var iterator = procedure.getIterator();
+    const iterator = procedure.getIterator();
     var step = iterator.getNext();
     step.acceptVisitor(this);
     while (iterator.hasNext()) {
@@ -88,14 +88,14 @@ FormattingVisitor.prototype.visitList = function(procedure) {
 // step: label? instruction
 // label: EOL? LABEL ':' EOL
 FormattingVisitor.prototype.visitCatalog = function(step) {
-    var label = step.getValue('$label');
+    const label = step.getValue('$label');
     if (label) {
         // labels are preceded by a blank line unless they are part of the first step
         if (this.source !== this.indentation) this.appendNewline();
         this.source += label.getValue() + ':';
         this.appendNewline();
     }
-    var operation = step.getValue('$operation').toNumber();
+    const operation = step.getValue('$operation').toNumber();
     switch (operation) {
         case types.JUMP:
             this.visitJumpInstruction(step);
@@ -138,7 +138,7 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
         this.source += 'SKIP INSTRUCTION';
     } else {
         this.source += 'JUMP TO ';
-        var operand = instruction.getValue('$operand').getValue();
+        const operand = instruction.getValue('$operand').getValue();
         this.source += operand;
         modifier = modifier.toNumber();
         if (modifier !== types.ON_ANY) {
@@ -156,7 +156,7 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
 //     'PUSH' 'PARAMETER' SYMBOL |
 FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     this.source += 'PUSH ';
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.pushModifierString(modifier);
     this.source += ' ';
     var operand = instruction.getValue('$operand');
@@ -182,7 +182,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
 //     'POP' 'COMPONENT'
 FormattingVisitor.prototype.visitPopInstruction = function(instruction) {
     this.source += 'POP ';
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.popModifierString(modifier);
 };
 
@@ -194,10 +194,10 @@ FormattingVisitor.prototype.visitPopInstruction = function(instruction) {
 //     'LOAD' 'DOCUMENT' variable
 FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     this.source += 'LOAD ';
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.loadModifierString(modifier);
     this.source += ' ';
-    var operand = instruction.getValue('$operand').toString();
+    const operand = instruction.getValue('$operand').toString();
     this.source += operand;
 };
 
@@ -209,10 +209,10 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
 //     'STORE' 'DOCUMENT' variable
 FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
     this.source += 'STORE ';
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.storeModifierString(modifier);
     this.source += ' ';
-    var operand = instruction.getValue('$operand').toString();
+    const operand = instruction.getValue('$operand').toString();
     this.source += operand;
 };
 
@@ -224,7 +224,7 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
 FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     this.source += 'INVOKE ';
     this.source += instruction.getValue('$operand');
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     if (modifier > 0) {
         this.source += ' WITH ';
         if (modifier > 1) {
@@ -245,7 +245,7 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     this.source += 'EXECUTE ';
     this.source += instruction.getValue('$operand');
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     if (modifier !== types.WITH_NOTHING) {
         this.source += ' ';
         this.source += types.executeModifierString(modifier);
@@ -258,6 +258,6 @@ FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
 //     'HANDLE' 'RESULT'
 FormattingVisitor.prototype.visitHandleInstruction = function(instruction) {
     this.source += 'HANDLE ';
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.handleModifierString(modifier);
 };

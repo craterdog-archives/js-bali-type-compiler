@@ -22,9 +22,9 @@ const compiler = new vm.Compiler();
 const assembler = new vm.Assembler();
 
 /*  uncomment to generate a new notary key and certificate
-var certificate = notary.generateKeys();
-var citation = notary.getCitation();
-var certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
+const certificate = notary.generateKeys();
+const citation = notary.getCitation();
+const certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
 repository.storeCertificate(certificateId, certificate);
 /*                                                          */
 
@@ -34,8 +34,8 @@ describe('Bali Virtual Macine™', function() {
     describe('Test the compiler.', function() {
 
         it('should compile source documents into assembly instructions', function() {
-            var testFolder = 'test/compiler/';
-            var files = fs.readdirSync(testFolder);
+            const testFolder = 'test/compiler/';
+            const files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;
@@ -78,8 +78,8 @@ describe('Bali Virtual Macine™', function() {
     describe('Test the analysis and compilation of example types', function() {
 
         it('should compile example type documents into compiled type documents.', function() {
-            var testFolder = 'test/examples/';
-            var files = fs.readdirSync(testFolder);
+            const testFolder = 'test/examples/';
+            const files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;

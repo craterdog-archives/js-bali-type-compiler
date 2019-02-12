@@ -48,12 +48,12 @@ Assembler.prototype.assembleProcedure = function(type, context) {
     var instructions = context.getValue('$instructions');
     const parser = new utilities.Parser();
     instructions = parser.parseDocument(instructions.getValue());
-    var visitor = new AssemblingVisitor(type, context);
+    const visitor = new AssemblingVisitor(type, context);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
-    var base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
+    const base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
     bytecode = bali.parse("'" + base16 + EOL + "            '" + '($encoding: $base16, $mediatype: "application/bcod")');
     context.setValue('$bytecode', bytecode);
 };
@@ -82,7 +82,7 @@ AssemblingVisitor.prototype.getBytecode = function() {
 // document: EOL* instructions EOL* EOF
 // instructions: step (EOL step)*
 AssemblingVisitor.prototype.visitList = function(instructions) {
-    var iterator = instructions.getIterator();
+    const iterator = instructions.getIterator();
     while (iterator.hasNext()) {
         var step = iterator.getNext();
         step.acceptVisitor(this);
@@ -94,7 +94,7 @@ AssemblingVisitor.prototype.visitList = function(instructions) {
 // label: EOL? LABEL ':' EOL
 AssemblingVisitor.prototype.visitCatalog = function(step) {
     // can ignore the label at this stage since they don't show up in the bytecode
-    var operation = step.getValue('$operation').toNumber();
+    const operation = step.getValue('$operation').toNumber();
     switch (operation) {
         case utilities.types.JUMP:
             this.visitJumpInstruction(step);
@@ -138,8 +138,8 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
         word = utilities.bytecode.encodeInstruction(utilities.types.SKIP, 0, 0);
     } else {
         modifier = modifier.toNumber();
-        var label = instruction.getValue('$operand');
-        var address = this.addresses.getValue(label);
+        const label = instruction.getValue('$operand');
+        const address = this.addresses.getValue(label);
         word = utilities.bytecode.encodeInstruction(utilities.types.JUMP, modifier, address);
     }
     this.bytecode.push(word);
@@ -152,7 +152,7 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'PARAMETER' SYMBOL
 AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getValue('$modifier').toNumber();
     var value = instruction.getValue('$operand');
     switch(modifier) {
         case utilities.types.HANDLER:
@@ -168,7 +168,7 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
             value = this.parameters.getIndex(value);
             break;
     }
-    var word = utilities.bytecode.encodeInstruction(utilities.types.PUSH, modifier, value);
+    const word = utilities.bytecode.encodeInstruction(utilities.types.PUSH, modifier, value);
     this.bytecode.push(word);
 };
 
@@ -177,8 +177,8 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
 //     'POP' 'HANDLER' |
 //     'POP' 'COMPONENT'
 AssemblingVisitor.prototype.visitPopInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
-    var word = utilities.bytecode.encodeInstruction(utilities.types.POP, modifier);
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const word = utilities.bytecode.encodeInstruction(utilities.types.POP, modifier);
     this.bytecode.push(word);
 };
 
@@ -189,10 +189,10 @@ AssemblingVisitor.prototype.visitPopInstruction = function(instruction) {
 //     'LOAD' 'DRAFT' variable |
 //     'LOAD' 'DOCUMENT' variable
 AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
-    var symbol = instruction.getValue('$operand');
-    var index = this.variables.getIndex(symbol);
-    var word = utilities.bytecode.encodeInstruction(utilities.types.LOAD, modifier, index);
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const symbol = instruction.getValue('$operand');
+    const index = this.variables.getIndex(symbol);
+    const word = utilities.bytecode.encodeInstruction(utilities.types.LOAD, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -203,10 +203,10 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
 //     'STORE' 'DRAFT' variable |
 //     'STORE' 'DOCUMENT' variable
 AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
-    var symbol = instruction.getValue('$operand');
-    var index = this.variables.getIndex(symbol);
-    var word = utilities.bytecode.encodeInstruction(utilities.types.STORE, modifier, index);
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const symbol = instruction.getValue('$operand');
+    const index = this.variables.getIndex(symbol);
+    const word = utilities.bytecode.encodeInstruction(utilities.types.STORE, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -216,10 +216,10 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 //     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
-    var count = instruction.getValue('$modifier').toNumber();
-    var symbol = instruction.getValue('$operand');
-    var index = utilities.intrinsics.names.indexOf(symbol.toString());
-    var word = utilities.bytecode.encodeInstruction(utilities.types.INVOKE, count, index);
+    const count = instruction.getValue('$modifier').toNumber();
+    const symbol = instruction.getValue('$operand');
+    const index = utilities.intrinsics.names.indexOf(symbol.toString());
+    const word = utilities.bytecode.encodeInstruction(utilities.types.INVOKE, count, index);
     this.bytecode.push(word);
 };
 
@@ -230,10 +230,10 @@ AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' |
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
-    var symbol = instruction.getValue('$operand');
-    var index = this.procedures.getIndex(symbol);
-    var word = utilities.bytecode.encodeInstruction(utilities.types.EXECUTE, modifier, index);
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const symbol = instruction.getValue('$operand');
+    const index = this.procedures.getIndex(symbol);
+    const word = utilities.bytecode.encodeInstruction(utilities.types.EXECUTE, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -242,7 +242,7 @@ AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
 //     'HANDLE' 'EXCEPTION' |
 //     'HANDLE' 'RESULT'
 AssemblingVisitor.prototype.visitHandleInstruction = function(instruction) {
-    var modifier = instruction.getValue('$modifier').toNumber();
-    var word = utilities.bytecode.encodeInstruction(utilities.types.HANDLE, modifier);
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const word = utilities.bytecode.encodeInstruction(utilities.types.HANDLE, modifier);
     this.bytecode.push(word);
 };

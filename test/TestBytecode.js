@@ -19,17 +19,17 @@ describe('Bali Virtual Machine™', function() {
     describe('Test bytecode utilities on words', function() {
 
         it('should round trip conversions from bytes to bytecodes', function() {
-            var bytes = bali.random.bytes(16);
-            var bytecode = utilities.bytecode.bytesToBytecode(bytes);
-            var bytes2 = utilities.bytecode.bytecodeToBytes(bytecode);
+            const bytes = bali.random.bytes(16);
+            const bytecode = utilities.bytecode.bytesToBytecode(bytes);
+            const bytes2 = utilities.bytecode.bytecodeToBytes(bytecode);
             expect(bytes2.toString('hex')).to.equal(bytes.toString('hex'));
-            var bytecode2 = utilities.bytecode.bytesToBytecode(bytes2);
+            const bytecode2 = utilities.bytecode.bytesToBytecode(bytes2);
             expect(JSON.stringify(bytecode2, null, 2)).to.equal(JSON.stringify(bytecode, null, 2));
         });
 
         it('should round trip conversions from bytecodes to bytes', function() {
-            var bytecode = [0, 10241, 6164];
-            var bytes = utilities.bytecode.bytecodeToBytes(bytecode);
+            const bytecode = [0, 10241, 6164];
+            const bytes = utilities.bytecode.bytecodeToBytes(bytecode);
             expect(bytes.toString('hex')).to.equal('000028011814');
         });
 
@@ -38,7 +38,7 @@ describe('Bali Virtual Machine™', function() {
     describe('Test bytecode utilities on instructions', function() {
 
         it('should construct and compare instructions with and without operands', function() {
-            var bytecode = [];
+            const bytecode = [];
             var operand;
             var operation;
             var modifier;
@@ -66,9 +66,9 @@ describe('Bali Virtual Machine™', function() {
                 }
             }
 
-            var formattedInstructions = utilities.bytecode.bytecodeToString(bytecode);
+            const formattedInstructions = utilities.bytecode.bytecodeToString(bytecode);
             //fs.writeFileSync('test/utilities.bytecode/formatted.code', formattedInstructions, 'utf8');
-            var expected = fs.readFileSync('test/utilities/formatted.code', 'utf8');
+            const expected = fs.readFileSync('test/utilities/formatted.code', 'utf8');
             expect(formattedInstructions).to.equal(expected);
         });
 

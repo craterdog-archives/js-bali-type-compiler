@@ -26,11 +26,11 @@ exports.compile = function(nebula, citation) {
     const assembler = new exports.Assembler();
 
     // retrieve the type document
-    var document = nebula.retrieveDocument(citation);
+    const document = nebula.retrieveDocument(citation);
 
     // extract the literals, constants and procedures for the parent type
-    var literals = bali.list();
-    var constants = bali.catalog();
+    const literals = bali.list();
+    const constants = bali.catalog();
     var procedures = bali.catalog();
     var parent = document.getValue('$parent');
     if (parent) {
@@ -41,11 +41,11 @@ exports.compile = function(nebula, citation) {
     }
 
     // add in the constants from the child type document
-    var items = document.getValue('$constants');
+    const items = document.getValue('$constants');
     if (items) constants.addItems(items);
 
     // create the compilation type context
-    var type = bali.catalog();
+    const type = bali.catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
     type.setValue('$procedures', procedures);
@@ -59,7 +59,7 @@ exports.compile = function(nebula, citation) {
         // retrieve the source code for the procedure
         association = iterator.getNext();
         name = association.getKey();
-        var source = association.getValue().getValue('$source');
+        const source = association.getValue().getValue('$source');
 
         // compile the source code
         procedure = compiler.compileProcedure(type, source);

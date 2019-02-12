@@ -39,10 +39,10 @@ const types = require('./Types');
  * @return {number} The bytecode for the instruction.
  */
 exports.encodeInstruction = function(operation, modifier, optionalOperand) {
-    var opcode = (operation << 13) & OPCODE_MASK;
-    var modcode = (modifier << 11) & MODCODE_MASK;
-    var operand = optionalOperand === undefined ? 0 : optionalOperand;
-    var instruction = opcode | modcode | operand;
+    const opcode = (operation << 13) & OPCODE_MASK;
+    const modcode = (modifier << 11) & MODCODE_MASK;
+    const operand = optionalOperand === undefined ? 0 : optionalOperand;
+    const instruction = opcode | modcode | operand;
     return instruction;
 };
 
@@ -54,7 +54,7 @@ exports.encodeInstruction = function(operation, modifier, optionalOperand) {
  * @return {number} The decoded operation.
  */
 exports.decodeOperation = function(instruction) {
-    var operation = (instruction & OPCODE_MASK) >>> 13;
+    const operation = (instruction & OPCODE_MASK) >>> 13;
     return operation;
 };
 
@@ -66,7 +66,7 @@ exports.decodeOperation = function(instruction) {
  * @return {number} The decoded modifier.
  */
 exports.decodeModifier = function(instruction) {
-    var modifier = (instruction & MODCODE_MASK) >>> 11;
+    const modifier = (instruction & MODCODE_MASK) >>> 11;
     return modifier;
 };
 
@@ -78,7 +78,7 @@ exports.decodeModifier = function(instruction) {
  * @return {number} The decoded operand.
  */
 exports.decodeOperand = function(instruction) {
-    var operand = instruction & OPERAND_MASK;
+    const operand = instruction & OPERAND_MASK;
     return operand;
 };
 
@@ -91,9 +91,9 @@ exports.decodeOperand = function(instruction) {
  * @return {boolean} Whether or not the operand is an address.
  */
 exports.operandIsAddress = function(instruction) {
-    var operation = exports.decodeOperation(instruction);
-    var modifier = exports.decodeModifier(instruction);
-    var operand = exports.decodeOperand(instruction);
+    const operation = exports.decodeOperation(instruction);
+    const modifier = exports.decodeModifier(instruction);
+    const operand = exports.decodeOperand(instruction);
     switch (operation) {
         case types.JUMP:
             return operand > 0;
@@ -113,8 +113,8 @@ exports.operandIsAddress = function(instruction) {
  * @return {boolean} Whether or not the operand is an index.
  */
 exports.operandIsIndex = function(instruction) {
-    var operation = exports.decodeOperation(instruction);
-    var modifier = exports.decodeModifier(instruction);
+    const operation = exports.decodeOperation(instruction);
+    const modifier = exports.decodeModifier(instruction);
     switch (operation) {
         case types.PUSH:
             return modifier !== types.HANDLER;
@@ -137,9 +137,9 @@ exports.operandIsIndex = function(instruction) {
  * @return {boolean} Whether or not the instruction is valid.
  */
 exports.instructionIsValid = function(instruction) {
-    var operation = exports.decodeOperation(instruction);
-    var modifier = exports.decodeModifier(instruction);
-    var operand = exports.decodeOperand(instruction);
+    const operation = exports.decodeOperation(instruction);
+    const modifier = exports.decodeModifier(instruction);
+    const operand = exports.decodeOperand(instruction);
     switch (operation) {
         case types.JUMP:
             // the SKIP INSTRUCTION is the only one allowed to have a zero operand
@@ -186,8 +186,8 @@ exports.instructionIsValid = function(instruction) {
 
 
 exports.instructionToBase16 = function(instruction) {
-    var bytes = bali.codex.shortToBytes(instruction);
-    var base16 = bali.codex.base16Encode(bytes);
+    const bytes = bali.codex.shortToBytes(instruction);
+    const base16 = bali.codex.base16Encode(bytes);
     return base16;
 };
 
@@ -199,7 +199,7 @@ exports.instructionToBase16 = function(instruction) {
  * @returns {Array} The corresponding bytecode array.
  */
 exports.bytesToBytecode = function(bytes) {
-    var bytecode = [];
+    const bytecode = [];
     for (var i = 0; i < bytes.length; i += 2) {
         var word = bytes[i] << 8;
         word |= bytes[i + 1] & 0xFF;
@@ -216,7 +216,7 @@ exports.bytesToBytecode = function(bytes) {
  * @returns {Buffer} A buffer containing the byte string for the bytecode.
  */
 exports.bytecodeToBytes = function(bytecode) {
-    var bytes = Buffer.alloc(bytecode.length * 2);
+    const bytes = Buffer.alloc(bytecode.length * 2);
     for (var i = 0; i < bytecode.length; i++) {
         bytes[2 * i] = bytecode[i] >> 8 & 0xFF;
         bytes[2 * i + 1] = bytecode[i] & 0xFF;
@@ -252,7 +252,7 @@ exports.bytecodeToString = function(bytecode) {
  * @returns {string} The canonical string representation of the index.
  */
 function indexToString(index) {
-    var string = index.toString();
+    const string = index.toString();
     return string;
 }
 
@@ -282,8 +282,8 @@ function addressAsString(address) {
  */
 function wordToString(address, instruction) {
     address = addressAsString(address);
-    var operation = exports.decodeOperation(instruction);
-    var modifier = exports.decodeModifier(instruction);
+    const operation = exports.decodeOperation(instruction);
+    const modifier = exports.decodeModifier(instruction);
     var operand = exports.decodeOperand(instruction);
     if (exports.operandIsAddress(instruction)) {
         operand = addressAsString(operand);
@@ -296,14 +296,14 @@ function wordToString(address, instruction) {
     while (bytes.length < 4) bytes = '0' + bytes;
 
     // format the description
-    var description = instructionToString(instruction);
+    const description = instructionToString(instruction);
 
     // format the bytecode
     while (operand.length < 5) operand = ' ' + operand;  // pad operand string with spaces
-    var bytecode = '' + operation + modifier + ' ' + operand;
+    const bytecode = '' + operation + modifier + ' ' + operand;
 
     // put them all together
-    var formatted = address + ':    ' + bytes + '    ' + bytecode + '    ' + description;
+    const formatted = address + ':    ' + bytes + '    ' + bytecode + '    ' + description;
     return formatted;
 }
 
@@ -317,8 +317,8 @@ function wordToString(address, instruction) {
  * @return {String} The human readable form of the instruction.
  */
 function instructionToString(instruction, optionalOperand) {
-    var operation = exports.decodeOperation(instruction);
-    var modifier = exports.decodeModifier(instruction);
+    const operation = exports.decodeOperation(instruction);
+    const modifier = exports.decodeModifier(instruction);
 
     var operand = exports.decodeOperand(instruction);
     if (optionalOperand !== undefined) {

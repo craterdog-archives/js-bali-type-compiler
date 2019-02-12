@@ -50,9 +50,9 @@ exports.parser = new Parser();
  * @returns {List} The resulting list of instructions.
  */
 Parser.prototype.parseDocument = function(document) {
-    var parser = initializeParser(document, this.debug);
-    var antlrTree = parser.document();
-    var list = convertParseTree(antlrTree);
+    const parser = initializeParser(document, this.debug);
+    const antlrTree = parser.document();
+    const list = convertParseTree(antlrTree);
     return list;
 };
 
@@ -60,13 +60,13 @@ Parser.prototype.parseDocument = function(document) {
 // PRIVATE FUNCTIONS
 
 function initializeParser(document, debug) {
-    var chars = new antlr.InputStream(document);
-    var lexer = new grammar.InstructionSetLexer(chars);
-    var listener = new CustomErrorListener(debug);
+    const chars = new antlr.InputStream(document);
+    const lexer = new grammar.InstructionSetLexer(chars);
+    const listener = new CustomErrorListener(debug);
     lexer.removeErrorListeners();
     lexer.addErrorListener(listener);
-    var tokens = new antlr.CommonTokenStream(lexer);
-    var parser = new grammar.InstructionSetParser(tokens);
+    const tokens = new antlr.CommonTokenStream(lexer);
+    const parser = new grammar.InstructionSetParser(tokens);
     parser.buildParseTrees = true;
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
@@ -76,9 +76,9 @@ function initializeParser(document, debug) {
 
 
 function convertParseTree(antlrTree) {
-    var visitor = new ParsingVisitor();
+    const visitor = new ParsingVisitor();
     antlrTree.accept(visitor);
-    var instructions = visitor.result;
+    const instructions = visitor.result;
     return instructions;
 }
 
@@ -101,8 +101,8 @@ ParsingVisitor.prototype.visitDocument = function(ctx) {
 
 // instructions: step (EOL step)*
 ParsingVisitor.prototype.visitInstructions = function(ctx) {
-    var instructions = bali.list();
-    var steps = ctx.step();
+    const instructions = bali.list();
+    const steps = ctx.step();
     steps.forEach(function(step) {
         step.accept(this);
         instructions.addItem(this.result);
@@ -114,8 +114,8 @@ ParsingVisitor.prototype.visitInstructions = function(ctx) {
 // step: label? instruction
 ParsingVisitor.prototype.visitStep = function(ctx) {
     ctx.instruction().accept(this);
-    var instruction = this.result;
-    var label = ctx.label();
+    const instruction = this.result;
+    const label = ctx.label();
     if (label) {
         label.accept(this);
         instruction.setValue('$label', this.result);
@@ -132,7 +132,7 @@ ParsingVisitor.prototype.visitLabel = function(ctx) {
 
 // skipInstruction: 'SKIP INSTRUCTION'
 ParsingVisitor.prototype.visitSkipInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.SKIP);
     this.result = instruction;
 };
@@ -144,7 +144,7 @@ ParsingVisitor.prototype.visitSkipInstruction = function(ctx) {
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
 //     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 ParsingVisitor.prototype.visitJumpInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.JUMP);
     var modifier = types.ON_ANY;
     if (ctx.children.length > 3) {
@@ -162,11 +162,11 @@ ParsingVisitor.prototype.visitJumpInstruction = function(ctx) {
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'PARAMETER' SYMBOL
 ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.PUSH);
-    var modifier = types.pushModifierValue(ctx.children[1].getText());
+    const modifier = types.pushModifierValue(ctx.children[1].getText());
     instruction.setValue('$modifier', modifier);
-    var operand = ctx.children[2].getText();
+    const operand = ctx.children[2].getText();
     var value;
     switch (modifier) {
         case types.HANDLER:
@@ -189,7 +189,7 @@ ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
 //     'POP' 'HANDLER' |
 //     'POP' 'COMPONENT'
 ParsingVisitor.prototype.visitPopInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.POP);
     instruction.setValue('$modifier', types.popModifierValue(ctx.children[1].getText()));
     this.result = instruction;
@@ -202,10 +202,10 @@ ParsingVisitor.prototype.visitPopInstruction = function(ctx) {
 //     'LOAD' 'DRAFT' variable |
 //     'LOAD' 'DOCUMENT' variable
 ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.LOAD);
     instruction.setValue('$modifier', types.loadModifierValue(ctx.children[1].getText()));
-    var variable = ctx.children[2].getText();
+    const variable = ctx.children[2].getText();
     instruction.setValue('$operand', bali.parse(variable));
     this.result = instruction;
 };
@@ -217,10 +217,10 @@ ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
 //     'STORE' 'DRAFT' variable |
 //     'STORE' 'DOCUMENT' variable
 ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.STORE);
     instruction.setValue('$modifier', types.storeModifierValue(ctx.children[1].getText()));
-    var variable = ctx.children[2].getText();
+    const variable = ctx.children[2].getText();
     instruction.setValue('$operand', bali.parse(variable));
     this.result = instruction;
 };
@@ -231,7 +231,7 @@ ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
 //     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
 ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.INVOKE);
     var modifier;
     switch (ctx.children.length) {
@@ -257,14 +257,14 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' |
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
 ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.EXECUTE);
     var string = '';
     for (var i = 2; i < ctx.children.length; i++) {
         string += ctx.children[i].getText() + ' ';
     }
     string = string.slice(0, -1);  // strip off last space
-    var modifier = types.executeModifierValue(string);
+    const modifier = types.executeModifierValue(string);
     instruction.setValue('$modifier', modifier);
     instruction.setValue('$operand', bali.parse(ctx.SYMBOL().getText()));
     this.result = instruction;
@@ -275,7 +275,7 @@ ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
 //     'HANDLE' 'EXCEPTION' |
 //     'HANDLE' 'RESULT'
 ParsingVisitor.prototype.visitHandleInstruction = function(ctx) {
-    var instruction = bali.catalog();
+    const instruction = bali.catalog();
     instruction.setValue('$operation', types.HANDLE);
     instruction.setValue('$modifier', types.handleModifierValue(ctx.children[1].getText()));
     this.result = instruction;
@@ -314,7 +314,7 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
 
 
 CustomErrorStrategy.prototype.recoverInline = function(recognizer) {
-    var exception = new antlr.error.InputMismatchException(recognizer);
+    const exception = new antlr.error.InputMismatchException(recognizer);
     this.reportError(recognizer, exception);
     this.recover(recognizer, exception);
 };
@@ -337,10 +337,10 @@ CustomErrorListener.prototype.constructor = CustomErrorListener;
 
 CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken, lineNumber, columnNumber, message, e) {
     // log a message
-    var token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
-    var input = token ? offendingToken.getInputStream() : recognizer._input;
-    var lines = input.toString().split(EOL);
-    var character = lines[lineNumber - 1][columnNumber];
+    const token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
+    const input = token ? offendingToken.getInputStream() : recognizer._input;
+    const lines = input.toString().split(EOL);
+    const character = lines[lineNumber - 1][columnNumber];
     if (!token) {
         message = "LEXER: An unexpected character was encountered: '" + character + "'";
     } else {
@@ -349,20 +349,20 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
     logMessage(recognizer, message);
 
     // stop processing
-    var error = new Error(message);
+    const error = new Error(message);
     throw error;
 };
 
 
 CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startIndex, stopIndex, exact, alternatives, configs) {
     if (this.debug) {
-        var rule = getRule(recognizer, dfa);
+        const rule = getRule(recognizer, dfa);
         alternatives = [];
         configs.items.forEach(function(item) {
             alternatives.push(item.alt);
         });
         alternatives = "{" + alternatives.join(", ") + "}";
-        var message = 'PARSER: Ambiguous input was encountered for rule: ' + rule + ', alternatives: ' + alternatives;
+        const message = 'PARSER: Ambiguous input was encountered for rule: ' + rule + ', alternatives: ' + alternatives;
         logMessage(recognizer, message);
     }
 };
@@ -370,8 +370,8 @@ CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startI
 
 CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa, startIndex, stopIndex, prediction, configs) {
     if (this.debug) {
-        var rule = getRule(recognizer, dfa);
-        var message = 'PARSER Encountered a context sensitive rule: ' + rule;
+        const rule = getRule(recognizer, dfa);
+        const message = 'PARSER Encountered a context sensitive rule: ' + rule;
         logMessage(recognizer, message);
     }
 };
@@ -380,14 +380,14 @@ CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, df
 // PRIVATE FUNCTIONS
 
 function getRule(recognizer, dfa) {
-    var description = dfa.decision.toString();
-    var ruleIndex = dfa.atnStartState.ruleIndex;
+    const description = dfa.decision.toString();
+    const ruleIndex = dfa.atnStartState.ruleIndex;
 
-    var ruleNames = recognizer.ruleNames;
+    const ruleNames = recognizer.ruleNames;
     if (ruleIndex < 0 || ruleIndex >= ruleNames.length) {
         return description;
     }
-    var ruleName = ruleNames[ruleIndex] || '<unknown>';
+    const ruleName = ruleNames[ruleIndex] || '<unknown>';
     return description + " (" + ruleName + ")";
 }
 
@@ -397,12 +397,12 @@ function logMessage(recognizer, message) {
     console.error(message.slice(0, 160));
 
     // log the lines before and after the invalid line and highlight the invalid token
-    var offendingToken = recognizer._precedenceStack ? recognizer.getCurrentToken() : undefined;
-    var token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
-    var input = token ? offendingToken.getInputStream() : recognizer._input;
-    var lines = input.toString().split(EOL);
-    var lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;
-    var columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;
+    const offendingToken = recognizer._precedenceStack ? recognizer.getCurrentToken() : undefined;
+    const token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
+    const input = token ? offendingToken.getInputStream() : recognizer._input;
+    const lines = input.toString().split(EOL);
+    const lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;
+    const columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;
     if (lineNumber > 1) {
         console.error(lines[lineNumber - 2]);
     }
@@ -412,7 +412,7 @@ function logMessage(recognizer, message) {
         line += ' ';
     }
     var start = token ? offendingToken.start : columnNumber;
-    var stop = token ? offendingToken.stop : columnNumber;
+    const stop = token ? offendingToken.stop : columnNumber;
     while (start++ <= stop) {
         line += '^';
     }

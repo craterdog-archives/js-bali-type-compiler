@@ -70,10 +70,10 @@ const MESSAGE = '[$foo: "bar"]';
 const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
-    var source = fs.readFileSync(filename, 'utf8');
     const parser = new utilities.Parser(true);
+    const formatter = new utilities.Formatter('    ');
+    var source = fs.readFileSync(filename, 'utf8');
     var instructions = parser.parseDocument(source);
-    var formatter = new utilities.Formatter('    ');
     instructions = formatter.formatInstructions(instructions);
 
     // create the compiled type context
@@ -98,8 +98,8 @@ function loadTask(filename) {
         '$foo',
         bali.parse('{return prefix + name}')
     ]);
-    var constants = bali.catalog({$constant: 5});
-    var type = bali.catalog();
+    const constants = bali.catalog({$constant: 5});
+    const type = bali.catalog();
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
 
@@ -107,14 +107,14 @@ function loadTask(filename) {
     // create the compiled procedure context
     var parameters = bali.list(['$y', '$x']);
     var variables = bali.list(['$citation', '$foo', '$queue', '$target']);
-    var procedures = bali.list(['$function1', '$function2', '$message1', '$message2']);
-    var addresses = bali.catalog();
+    const procedures = bali.list(['$function1', '$function2', '$message1', '$message2']);
+    const addresses = bali.catalog();
     addresses.setValue('"3.PushLiteral"', 3);
     addresses.setValue('"1.3.ConditionClause"', 8);
     addresses.setValue('"1.4.ConditionClause"', 11);
     addresses.setValue('"1.6.ConditionClause"', 17);
     addresses.setValue('"1.IfStatementDone"', 20);
-    var procedure = bali.catalog();
+    const procedure = bali.catalog();
     procedure.setValue('$parameters', parameters);
     procedure.setValue('$variables', variables);
     procedure.setValue('$procedures', procedures);
@@ -125,10 +125,10 @@ function loadTask(filename) {
     assembler.assembleProcedure(type, procedure);
 
     // retrieve the bytecode
-    var bytecode = procedure.getValue('$bytecode');
+    const bytecode = procedure.getValue('$bytecode');
 
     // set parameter values
-    var iterator = parameters.getIterator();
+    const iterator = parameters.getIterator();
     parameters = bali.catalog();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
@@ -151,7 +151,7 @@ function loadTask(filename) {
     source = source.replace(/%parameters/, bali.format(parameters, '            '));
     source = source.replace(/%variables/, bali.format(variables, '            '));
     source = source.replace(/%procedures/, bali.format(procedures, '            '));
-    var task = bali.parse(source);
+    const task = bali.parse(source);
 
     return task;
 }
@@ -273,13 +273,13 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the PUSH and POP instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/processor/PUSH-POP.basm';
+            const testFile = 'test/processor/PUSH-POP.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var process = new vm.Processor(api, task);
+            const process = new vm.Processor(api, task);
             expect(process.context.address).to.equal(1);
 
             // 1.PushHandler:
@@ -356,13 +356,13 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the LOAD and STORE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/processor/LOAD-STORE.basm';
+            const testFile = 'test/processor/LOAD-STORE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var process = new vm.Processor(api, task);
+            const process = new vm.Processor(api, task);
             expect(process.context.address).to.equal(1);
 
             // 1.LoadParameter:
@@ -435,13 +435,13 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the INVOKE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/processor/INVOKE.basm';
+            const testFile = 'test/processor/INVOKE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var process = new vm.Processor(api, task);
+            const process = new vm.Processor(api, task);
             expect(process.context.address).to.equal(1);
 
             // 1.Invoke:
@@ -495,13 +495,13 @@ describe('Bali Virtual Machine™', function() {
     describe('Test the EXECUTE instructions.', function() {
 
         it('should create the initial task context', function() {
-            var testFile = 'test/processor/EXECUTE-HANDLE.basm';
+            const testFile = 'test/processor/EXECUTE-HANDLE.basm';
             task = loadTask(testFile);
             expect(task).to.exist;  // jshint ignore:line
         });
 
         it('should execute the test instructions', function() {
-            var process = new vm.Processor(api, task);
+            const process = new vm.Processor(api, task);
             expect(process.context.address).to.equal(1);
 
             // 1.Execute:
@@ -633,7 +633,7 @@ describe('Bali Virtual Machine™', function() {
             // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            var expected = process.task.stack.getTop();
+            const expected = process.task.stack.getTop();
             expect(expected.toString().includes('[$foo: "bar"]')).to.equal(true);
             expect(process.context.address).to.equal(12);
             // EXECUTE $message1 ON TARGET

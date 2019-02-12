@@ -19,25 +19,25 @@ describe('Bali Virtual Machine™', function() {
         const parser = new utilities.Parser(true);
 
         it('should parse and format the same instructions', function() {
-            var file = 'test/utilities/instructions.basm';
-            var source = fs.readFileSync(file, 'utf8');
+            const file = 'test/utilities/instructions.basm';
+            const source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = parser.parseDocument(source);
+            const procedure = parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new utilities.Formatter();
-            var formatted = formatter.formatInstructions(procedure);
+            const formatted = formatter.formatInstructions(procedure);
             expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
 
         it('should parse and format the same instructions with indentation', function() {
-            var file = 'test/utilities/instructions.basm';
-            var source = fs.readFileSync(file, 'utf8');
+            const file = 'test/utilities/instructions.basm';
+            const source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            var procedure = parser.parseDocument(source);
+            const procedure = parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new utilities.Formatter('    ');
-            var formatted = formatter.formatInstructions(procedure);
-            var expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
+            const formatted = formatter.formatInstructions(procedure);
+            const expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
             expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>
         });
 

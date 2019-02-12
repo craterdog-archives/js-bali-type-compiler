@@ -46,13 +46,13 @@ exports.compiler = new Compiler();
  * @returns {Catalog} The compiled context for the procedure.
  */
 Compiler.prototype.compileProcedure = function(type, source) {
-    var context = bali.catalog();
-    var procedure = source.getProcedure();
+    const context = bali.catalog();
+    const procedure = source.getProcedure();
 
     // extract the parameter names for the procedure
-    var parameters = bali.list();
+    const parameters = bali.list();
     if (source.isParameterized()) {
-        var iterator = source.getParameters().getIterator();
+        const iterator = source.getParameters().getIterator();
         while (iterator.hasNext()) {
             var parameter = iterator.getNext();
             if (parameter.getTypeId() === bali.types.ASSOCIATION) {
@@ -67,14 +67,14 @@ Compiler.prototype.compileProcedure = function(type, source) {
     context.setValue('$addresses', bali.catalog());
 
     // compile the procedure into assembly instructions
-    var visitor = new CompilingVisitor(type, context);
+    const visitor = new CompilingVisitor(type, context);
     procedure.acceptVisitor(visitor);
 
     // format the instructions and add to the procedure context
     var instructions = visitor.getInstructions();
     const parser = new utilities.Parser(true);
     instructions = parser.parseDocument(instructions);
-    var formatter = new utilities.Formatter('    ');
+    const formatter = new utilities.Formatter('    ');
     instructions = bali.parse('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
     context.setValue('$instructions', instructions);
 
@@ -118,8 +118,8 @@ CompilingVisitor.prototype.getInstructions = function() {
  */
 // arithmeticExpression: expression ('*' | '/' | '//' | '+' | '-') expression
 CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
-    var firstOperand = tree.getChild(1);
-    var secondOperand = tree.getChild(2);
+    const firstOperand = tree.getChild(1);
+    const secondOperand = tree.getChild(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -127,7 +127,7 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
     // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
 
-    var operator = tree.operator;
+    const operator = tree.operator;
     switch (operator) {
         case '*':
             // the VM places the product of the two values on top of the component stack
@@ -161,15 +161,15 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
 // breakClause: 'break' 'loop'
 CompilingVisitor.prototype.visitBreakClause = function(tree) {
     // retrieve the loop label from the parent context
-    var procedures = this.builder.stack;
+    const procedures = this.builder.stack;
     var procedure;
     var loopLabel;
-    var numberOfProcedures = procedures.length;
+    const numberOfProcedures = procedures.length;
     for (var i = 0; i < numberOfProcedures; i++) {
         procedure = procedures[numberOfProcedures - i - 1];  // work backwards
         loopLabel = procedure.statement.loopLabel;
         if (loopLabel) {
-            var doneLabel = procedure.statement.doneLabel;
+            const doneLabel = procedure.statement.doneLabel;
             // the VM jumps out of the enclosing loop
             this.builder.insertJumpInstruction(doneLabel);
             return;
@@ -203,7 +203,7 @@ CompilingVisitor.prototype.visitCatalog = function(catalog) {
 
     // the VM adds each association to the catalog
     this.depth++;
-    var iterator = catalog.getIterator();
+    const iterator = catalog.getIterator();
     while (iterator.hasNext()) {
         var association = iterator.getNext();
         // the VM places the association's key and value onto the top of the component stack
@@ -225,8 +225,8 @@ CompilingVisitor.prototype.visitCatalog = function(catalog) {
  */
 // checkoutClause: 'checkout' recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
-    var recipient = tree.getChild(1);
-    var reference = tree.getChild(2);
+    const recipient = tree.getChild(1);
+    const reference = tree.getChild(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
@@ -236,7 +236,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     reference.acceptVisitor(this);
 
     // the VM stores the value of the reference to the location into a temporary variable
-    var location = this.createTemporaryVariable('location');
+    const location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM loads the document from the remote location onto the top of the component stack
@@ -254,15 +254,15 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
  */
 // commitClause: 'commit' expression 'to' expression
 CompilingVisitor.prototype.visitCommitClause = function(tree) {
-    var document = tree.getChild(1);
-    var reference = tree.getChild(2);
+    const document = tree.getChild(1);
+    const reference = tree.getChild(2);
 
     // the VM loads the value of the reference to the location of the persistent
     // document onto the top of the component stack
     reference.acceptVisitor(this);
 
     // the VM stores the value of the reference to the location into a temporary variable
-    var location = this.createTemporaryVariable('location');
+    const location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM loads the value of the document onto the top of the component stack
@@ -280,8 +280,8 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
  */
 // comparisonExpression: expression ('<' | '=' | '>' | 'is' | 'matches') expression
 CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
-    var firstOperand = tree.getChild(1);
-    var secondOperand = tree.getChild(2);
+    const firstOperand = tree.getChild(1);
+    const secondOperand = tree.getChild(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -290,7 +290,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM performs the comparison operation
-    var operator = tree.operator;
+    const operator = tree.operator;
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
@@ -323,7 +323,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
  */
 // complementExpression: 'not' expression
 CompilingVisitor.prototype.visitComplementExpression = function(tree) {
-    var operand = tree.getChild(1);
+    const operand = tree.getChild(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -340,8 +340,8 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
  */
 // concatenationExpression: expression '&' expression
 CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
-    var firstOperand = tree.getChild(1);
-    var secondOperand = tree.getChild(2);
+    const firstOperand = tree.getChild(1);
+    const secondOperand = tree.getChild(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -362,10 +362,10 @@ CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
  */
 CompilingVisitor.prototype.visitContinueClause = function(tree) {
     // retrieve the loop label from the parent context
-    var procedures = this.builder.stack;
+    const procedures = this.builder.stack;
     var procedure;
     var loopLabel;
-    var numberOfProcedures = procedures.length;
+    const numberOfProcedures = procedures.length;
     for (var i = 0; i < numberOfProcedures; i++) {
         procedure = procedures[numberOfProcedures - i - 1];  // work backwards
         loopLabel = procedure.statement.loopLabel;
@@ -387,8 +387,8 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
  */
 // defaultExpression: expression '?' expression
 CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
-    var proposedValue = tree.getChild(1);
-    var defaultValue = tree.getChild(2);
+    const proposedValue = tree.getChild(1);
+    const defaultValue = tree.getChild(2);
 
     // the VM places the value of the proposed expression on top of the component stack
     proposedValue.acceptVisitor(this);
@@ -408,13 +408,13 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
  */
 // dereferenceExpression: '@' expression
 CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
-    var reference = tree.getChild(1);
+    const reference = tree.getChild(1);
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);
 
     // the VM stores the value of the reference to the location into a temporary variable
-    var location = this.createTemporaryVariable('location');
+    const location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM loads the document from the remote location onto the top of the component stack
@@ -431,13 +431,13 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    var reference = tree.getChild(1);
+    const reference = tree.getChild(1);
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);  // reference expression
 
     // the VM stores the value of the reference to the location into a temporary variable
-    var location = this.createTemporaryVariable('location');
+    const location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM stores no document into the remote location
@@ -469,7 +469,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
 
     // the VM loads the element value onto the top of the component stack
     const formatter = new bali.Formatter();
-    var literal = formatter.formatLiteral(element);
+    const literal = formatter.formatLiteral(element);
     this.builder.insertPushInstruction('LITERAL', literal);
 
     const parameters = element.getParameters();
@@ -490,12 +490,12 @@ CompilingVisitor.prototype.visitElement = function(element) {
  */
 // evaluateClause: (recipient ':=')? expression
 CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
-    var expression = tree.getChild(-1);
+    const expression = tree.getChild(-1);
 
     if (tree.getSize() > 1) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
-        var recipient = tree.getChild(1);
+        const recipient = tree.getChild(1);
         if (recipient.getTypeId() === bali.types.SUBCOMPONENT_EXPRESSION) {
             recipient.acceptVisitor(this);
         }
@@ -522,8 +522,8 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
  */
 // exponentialExpression: <assoc=right> expression '^' expression
 CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
-    var firstOperand = tree.getChild(1);
-    var secondOperand = tree.getChild(2);
+    const firstOperand = tree.getChild(1);
+    const secondOperand = tree.getChild(2);
 
     // the VM places the result of the base expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -543,7 +543,7 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
  */
 // factorialExpression: expression '!'
 CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
-    var operand = tree.getChild(1);
+    const operand = tree.getChild(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -561,18 +561,18 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
  */
 // functionExpression: function parameters
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
-    var functionName = '$' + tree.getChild(1).toString();
-    var parameters = tree.getChild(2);
+    const functionName = '$' + tree.getChild(1).toString();
+    const parameters = tree.getChild(2);
 
     // make sure the number of parameters is less than 4
-    var numberOfParameters = parameters.getSize();
+    const numberOfParameters = parameters.getSize();
     if (numberOfParameters > 3) {
         throw new Error('COMPILER: The number of function parameters must be less than 4: ' + numberOfParameters);
     }
 
     // the VM places each parameter on top of the component stack
     this.depth++;
-    var iterator = parameters.getIterator();
+    const iterator = parameters.getIterator();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
         if (parameter.getTypeId() === bali.types.ASSOCIATION) {
@@ -597,18 +597,18 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
  */
 // handleClause: 'handle' symbol 'matching' expression 'with' block
 CompilingVisitor.prototype.visitHandleClause = function(tree) {
-    var symbol = tree.getChild(1);
-    var template = tree.getChild(2);
-    var block = tree.getChild(3);
+    const symbol = tree.getChild(1);
+    const template = tree.getChild(2);
+    const block = tree.getChild(3);
 
     // setup the labels
-    var statement = this.builder.getStatementContext();
-    var clausePrefix = this.builder.getClausePrefix();
-    var handleLabel = clausePrefix + 'HandleClause';
+    const statement = this.builder.getStatementContext();
+    const clausePrefix = this.builder.getClausePrefix();
+    const handleLabel = clausePrefix + 'HandleClause';
     this.builder.insertLabel(handleLabel);
 
     // the VM stores the exception that is on top of the component stack in the variable
-    var exception = symbol.toString();
+    const exception = symbol.toString();
     this.builder.insertStoreInstruction('VARIABLE', exception);
 
     // the VM loads the exception back on top of the component stack for the next handler
@@ -646,18 +646,18 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
  */
 // ifClause: 'if' expression 'then' block ('else' 'if' expression 'then' block)* ('else' block)?
 CompilingVisitor.prototype.visitIfClause = function(tree) {
-    var doneLabel = this.builder.getStatementContext().doneLabel;
+    const doneLabel = this.builder.getStatementContext().doneLabel;
     var elseBlock;
     var clausePrefix;
 
     // separate out the parts of the statement
-    var array = tree.toArray();
+    const array = tree.toArray();
     if (array.length % 2 === 1) {
         elseBlock = array.pop();  // remove the else block
     }
 
     // compile each condition
-    var iterator = bali.iterator(array);
+    const iterator = bali.iterator(array);
     while (iterator.hasNext()) {
         var condition = iterator.getNext();
         var block = iterator.getNext();
@@ -698,7 +698,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
     // the VM executes the optional else block
     if (elseBlock) {
         clausePrefix = this.builder.getClausePrefix();
-        var elseLabel = clausePrefix + 'ElseClause';
+        const elseLabel = clausePrefix + 'ElseClause';
         this.builder.insertLabel(elseLabel);
         elseBlock.acceptVisitor(this);
         this.builder.insertLabel(clausePrefix + 'ElseClauseDone');
@@ -718,8 +718,8 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
 // indices: '[' list ']'
 CompilingVisitor.prototype.visitIndices = function(tree) {
     // the VM has the component to be indexed on top of the component stack
-    var list = tree.getChild(1);
-    var size = list.getSize();
+    const list = tree.getChild(1);
+    const size = list.getSize();
 
     // traverse all but the last index
     for (var i = 1; i < size; i++) {
@@ -755,13 +755,13 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
  */
 // inversionExpression: ('-' | '/' | '*') expression
 CompilingVisitor.prototype.visitInversionExpression = function(tree) {
-    var operand = tree.getChild(1);
+    const operand = tree.getChild(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
 
     // the VM leaves the result of the inversion of the value on top of the component stack
-    var operator = tree.operator;
+    const operator = tree.operator;
     switch (operator) {
         case '-':
             // take the additive inverse of the value on top of the component stack
@@ -802,7 +802,7 @@ CompilingVisitor.prototype.visitList = function(list) {
 
     // the VM adds each expression to the list
     this.depth++;
-    var iterator = list.getIterator();
+    const iterator = list.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         item.acceptVisitor(this);
@@ -821,8 +821,8 @@ CompilingVisitor.prototype.visitList = function(list) {
  */
 // logicalExpression: expression ('and' | 'sans' | 'xor' | 'or') expression
 CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
-    var firstOperand = tree.getChild(1);
-    var secondOperand = tree.getChild(2);
+    const firstOperand = tree.getChild(1);
+    const secondOperand = tree.getChild(2);
 
     // the VM places the value of the first expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -831,7 +831,7 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM leaves the result of the logical operation on the values on top of the component stack
-    var operator = tree.operator;
+    const operator = tree.operator;
     switch (operator) {
         case 'and':
             // find the logical AND of the two values on top of the component stack
@@ -860,7 +860,7 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
  */
 // magnitudeExpression: '|' expression '|'
 CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
-    var operand = tree.getChild(1);
+    const operand = tree.getChild(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -879,16 +879,16 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
  */
 // messageExpression: expression '.' message parameters
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
-    var target = tree.getChild(1);
-    var message = tree.getChild(2);
-    var parameters = tree.getChild(3);
-    var numberOfParameters = parameters.getSize();
+    const target = tree.getChild(1);
+    const message = tree.getChild(2);
+    const parameters = tree.getChild(3);
+    const numberOfParameters = parameters.getSize();
 
     // the VM places the value of the target expression onto the top of the component stack
     target.acceptVisitor(this);
 
     // extract the procedure name
-    var procedureName = '$' + message.toString();
+    const procedureName = '$' + message.toString();
 
     // if there are parameters then compile accordingly
     if (numberOfParameters > 0) {
@@ -939,7 +939,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 
     // the VM executes each statement
     this.depth++;
-    var iterator = procedure.getIterator();
+    const iterator = procedure.getIterator();
     while (iterator.hasNext()) {
         this.builder.requiresFinalization = true;
         var statement = iterator.getNext();
@@ -960,7 +960,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
  */
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
-    var event = tree.getChild(1);
+    const event = tree.getChild(1);
 
     // the VM places the value of the event expression onto the top of the component stack
     event.acceptVisitor(this);
@@ -993,7 +993,7 @@ CompilingVisitor.prototype.visitQueue = function(queue) {
 
     // the VM adds each expression to the queue
     this.depth++;
-    var iterator = queue.getIterator();
+    const iterator = queue.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         item.acceptVisitor(this);
@@ -1013,12 +1013,12 @@ CompilingVisitor.prototype.visitQueue = function(queue) {
  */
 // queueClause: 'queue' expression 'on' expression
 CompilingVisitor.prototype.visitQueueClause = function(tree) {
-    var message = tree.getChild(1);
-    var reference = tree.getChild(2);
+    const message = tree.getChild(1);
+    const reference = tree.getChild(2);
 
     // the VM stores the reference to the queue in a temporary variable
     reference.acceptVisitor(this);
-    var queue = this.createTemporaryVariable('queue');
+    const queue = this.createTemporaryVariable('queue');
     this.builder.insertStoreInstruction('VARIABLE', queue);
 
     // the VM stores the message on the message queue
@@ -1035,8 +1035,8 @@ CompilingVisitor.prototype.visitQueueClause = function(tree) {
  */
 // range: expression '..' expression
 CompilingVisitor.prototype.visitRange = function(range) {
-    var first = range.getFirst();
-    var last = range.getLast();
+    const first = range.getFirst();
+    const last = range.getLast();
 
     // the VM places the value of the starting expression on the component stack
     first.acceptVisitor(this);  // first value in the range
@@ -1068,7 +1068,7 @@ CompilingVisitor.prototype.visitRange = function(range) {
 // returnClause: 'return' expression?
 CompilingVisitor.prototype.visitReturnClause = function(tree) {
     if (tree.getSize() > 0) {
-        var result = tree.getChild(1);
+        const result = tree.getChild(1);
 
         // the VM places the value of the result expression on top of the component stack
         result.acceptVisitor(this);
@@ -1092,12 +1092,12 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
  */
 // saveClause: 'save' expression 'to' expression
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
-    var draft = tree.getChild(1);
-    var reference = tree.getChild(2);
+    const draft = tree.getChild(1);
+    const reference = tree.getChild(2);
 
     // the VM stores the value of the reference to the location into a temporary variable
     reference.acceptVisitor(this);
-    var location = this.createTemporaryVariable('location');
+    const location = this.createTemporaryVariable('location');
     this.builder.insertStoreInstruction('VARIABLE', location);
 
     // the VM loads the value of the draft onto the top of the component stack
@@ -1116,24 +1116,24 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
  */
 // selectClause: 'select' expression 'from' (expression 'do' block)+ ('else' block)?
 CompilingVisitor.prototype.visitSelectClause = function(tree) {
-    var doneLabel = this.builder.getStatementContext().doneLabel;
+    const doneLabel = this.builder.getStatementContext().doneLabel;
     var elseBlock;
     var clausePrefix;
 
     // separate out the parts of the statement
-    var array = tree.toArray();
-    var selector = array.splice(0, 1)[0];  // remove the selector
+    const array = tree.toArray();
+    const selector = array.splice(0, 1)[0];  // remove the selector
     if (array.length % 2 === 1) {
         elseBlock = array.pop();  // remove the else block
     }
 
     // the VM saves the value of the selector expression in a temporary variable
     selector.acceptVisitor(this);
-    var selectorVariable = this.createTemporaryVariable('selector');
+    const selectorVariable = this.createTemporaryVariable('selector');
     this.builder.insertStoreInstruction('VARIABLE', selectorVariable);
 
     // check each option
-    var iterator = bali.iterator(array);
+    const iterator = bali.iterator(array);
     while (iterator.hasNext()) {
         var option = iterator.getNext();
         var block = iterator.getNext();
@@ -1180,7 +1180,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     // the VM executes the optional else block
     if (elseBlock) {
         clausePrefix = this.builder.getClausePrefix();
-        var elseLabel = clausePrefix + 'ElseClause';
+        const elseLabel = clausePrefix + 'ElseClause';
         this.builder.insertLabel(elseLabel);
         elseBlock.acceptVisitor(this);
         this.builder.insertLabel(clausePrefix + 'ElseClauseDone');
@@ -1212,7 +1212,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
 
     // the VM adds each expression to the set
     this.depth++;
-    var iterator = set.getIterator();
+    const iterator = set.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         item.acceptVisitor(this);
@@ -1233,7 +1233,7 @@ CompilingVisitor.prototype.visitSet = function(set) {
 // source: '{' procedure '}'
 CompilingVisitor.prototype.visitSource = function(source) {
     // the VM places the source code on top of the component stack
-    var literal = '{' + source.getProcedure().toString() + '}';  // must include curly braces to be parsed correctly
+    const literal = '{' + source.getProcedure().toString() + '}';  // must include curly braces to be parsed correctly
     this.builder.insertPushInstruction('LITERAL', literal);
 
     const parameters = source.getParameters();
@@ -1272,7 +1272,7 @@ CompilingVisitor.prototype.visitStack = function(stack) {
 
     // the VM adds each expression to the stack
     this.depth++;
-    var iterator = stack.getIterator();
+    const iterator = stack.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         item.acceptVisitor(this);
@@ -1292,7 +1292,7 @@ CompilingVisitor.prototype.visitStack = function(stack) {
 // statement: mainClause handleClause*
 CompilingVisitor.prototype.visitStatement = function(tree) {
     // initialize the context for this statement
-    var statement = this.builder.pushStatementContext(tree);
+    const statement = this.builder.pushStatementContext(tree);
     this.builder.insertLabel(statement.startLabel);
 
     // the VM pushes any exception handlers onto the exception handler stack
@@ -1319,7 +1319,7 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
             this.builder.insertLabel(statement.handlerLabel);
 
             // the VM tries each handler for the exception
-            var handlers = statement.handleClauses;
+            const handlers = statement.handleClauses;
             handlers.forEach(function(handler) {
                 handler.acceptVisitor(this);
             }, this);
@@ -1345,8 +1345,8 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
  */
 // subcomponentExpression: expression indices
 CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
-    var component = tree.getChild(1);
-    var indices = tree.getChild(2);
+    const component = tree.getChild(1);
+    const indices = tree.getChild(2);
 
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
@@ -1355,7 +1355,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     indices.acceptVisitor(this);
 
     // the VM saves off the index for after the list is created
-    var index = this.createTemporaryVariable('index');
+    const index = this.createTemporaryVariable('index');
     this.builder.insertStoreInstruction('VARIABLE', index);
 
     // the VM places a new empty list on the component stack
@@ -1381,7 +1381,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
  */
 // throwClause: 'throw' expression
 CompilingVisitor.prototype.visitThrowClause = function(tree) {
-    var exception = tree.getChild(1);
+    const exception = tree.getChild(1);
 
     // the VM places the value of the exception expression on top of the component stack
     exception.acceptVisitor(this);
@@ -1399,7 +1399,7 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 // variable: IDENTIFIER
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
-    var variable = '$' + identifier.toString();
+    const variable = '$' + identifier.toString();
     if (this.builder.parameters.containsItem(variable)) {
         this.builder.insertPushInstruction('PARAMETER', variable);
     } else if (this.builder.constants.getValue(variable)) {
@@ -1419,8 +1419,8 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
  */
 // waitClause: 'wait' 'for' recipient 'from' expression
 CompilingVisitor.prototype.visitWaitClause = function(tree) {
-    var recipient = tree.getChild(1);
-    var reference = tree.getChild(2);
+    const recipient = tree.getChild(1);
+    const reference = tree.getChild(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
@@ -1430,7 +1430,7 @@ CompilingVisitor.prototype.visitWaitClause = function(tree) {
     reference.acceptVisitor(this);
 
     // the VM stores the value of the reference to the queue into a temporary variable
-    var queue = this.createTemporaryVariable('queue');
+    const queue = this.createTemporaryVariable('queue');
     this.builder.insertStoreInstruction('VARIABLE', queue);
 
     // the VM loads the next message from the remote queue onto the top of the component stack
@@ -1448,12 +1448,12 @@ CompilingVisitor.prototype.visitWaitClause = function(tree) {
  */
 // whileClause: 'while' expression 'do' block
 CompilingVisitor.prototype.visitWhileClause = function(tree) {
-    var condition = tree.getChild(1);
-    var block = tree.getChild(2);
-    var clausePrefix = this.builder.getClausePrefix();
+    const condition = tree.getChild(1);
+    const block = tree.getChild(2);
+    const clausePrefix = this.builder.getClausePrefix();
 
     // construct the loop and done labels
-    var statement = this.builder.getStatementContext();
+    const statement = this.builder.getStatementContext();
     statement.loopLabel = clausePrefix + 'ConditionClause';
 
     // label the start of the loop
@@ -1467,8 +1467,8 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
     block.acceptVisitor(this);
 
     // the VM jumps to the top of the loop for the next iteration
-    var statementPrefix = this.builder.getStatementPrefix();
-    var repeatLabel = statementPrefix + 'ConditionRepeat';
+    const statementPrefix = this.builder.getStatementPrefix();
+    const repeatLabel = statementPrefix + 'ConditionRepeat';
     this.builder.insertLabel(repeatLabel);
     this.builder.insertJumpInstruction(statement.loopLabel);
 };
@@ -1480,13 +1480,13 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
 CompilingVisitor.prototype.visitWithClause = function(tree) {
-    var variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
-    var sequence = tree.getChild(-2);
-    var block = tree.getChild(-1);
-    var clausePrefix = this.builder.getClausePrefix();
+    const variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
+    const sequence = tree.getChild(-2);
+    const block = tree.getChild(-1);
+    const clausePrefix = this.builder.getClausePrefix();
 
     // construct the loop and done labels
-    var statement = this.builder.getStatementContext();
+    const statement = this.builder.getStatementContext();
     statement.loopLabel = clausePrefix + 'ConditionClause';
 
     // the VM places the value of the sequence expression onto the top of the component stack
@@ -1496,7 +1496,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     this.builder.insertExecuteInstruction('$getIterator', 'ON TARGET');
 
     // The VM stores the iterater in a temporary variable
-    var iterator = this.createTemporaryVariable('iterator');
+    const iterator = this.createTemporaryVariable('iterator');
     this.builder.insertStoreInstruction('VARIABLE', iterator);
 
     // label the start of the loop
@@ -1520,8 +1520,8 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     block.acceptVisitor(this);
 
     // the VM jumps to the top of the loop for the next iteration
-    var statementPrefix = this.builder.getStatementPrefix();
-    var repeatLabel = statementPrefix + 'ConditionRepeat';
+    const statementPrefix = this.builder.getStatementPrefix();
+    const repeatLabel = statementPrefix + 'ConditionRepeat';
     this.builder.insertLabel(repeatLabel);
     this.builder.insertJumpInstruction(statement.loopLabel);
 };
@@ -1545,11 +1545,11 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.getTypeId() === bali.types.SYMBOL) {
         // the VM stores the value that is on top of the component stack in the variable
-        var symbol = recipient.toString();
+        const symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
         // the VM saves off the index for after the list is created
-        var index = this.createTemporaryVariable('index');
+        const index = this.createTemporaryVariable('index');
         this.builder.insertStoreInstruction('VARIABLE', index);
 
         // the VM places a new empty list on the component stack
@@ -1586,8 +1586,8 @@ Array.prototype.peek = function() {
  * @returns {Array} An array containing the subclauses for the statement.
  */
 function getSubclauses(statement) {
-    var subClauses = [];
-    var iterator = statement.getIterator();
+    const subClauses = [];
+    const iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         if (item.getTypeId() === bali.types.BLOCK) {
@@ -1628,9 +1628,9 @@ InstructionBuilder.prototype.constructor = InstructionBuilder;
  * it based on the parent procedure context if one exists.
  */
 InstructionBuilder.prototype.pushProcedureContext = function(procedure) {
-    var statementCount = procedure.getSize();
+    const statementCount = procedure.getSize();
     if (this.stack.length > 0) {
-        var parent = this.stack.peek();
+        const parent = this.stack.peek();
         this.stack.push({
             statementNumber: 1,
             statementCount: statementCount,
@@ -1661,11 +1661,11 @@ InstructionBuilder.prototype.popProcedureContext = function() {
  * it.
  */
 InstructionBuilder.prototype.pushStatementContext = function(tree) {
-    var mainClause = tree.getChild(1);
-    var subClauses = getSubclauses(mainClause);
-    var handleClauses = tree.toArray().slice(1);
-    var clauseCount = subClauses.length + handleClauses.length;
-    var procedure = this.stack.peek();
+    const mainClause = tree.getChild(1);
+    const subClauses = getSubclauses(mainClause);
+    const handleClauses = tree.toArray().slice(1);
+    const clauseCount = subClauses.length + handleClauses.length;
+    const procedure = this.stack.peek();
     procedure.statement = {
         mainClause: mainClause,
         subClauses: subClauses,
@@ -1675,9 +1675,9 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
     };
 
     // initialize the procedure configuration for this statement
-    var statement = procedure.statement;
-    var type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
-    var prefix = procedure.prefix + procedure.statementNumber + '.';
+    const statement = procedure.statement;
+    const type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
         statement.doneLabel = prefix + type + 'StatementDone';
@@ -1705,7 +1705,7 @@ InstructionBuilder.prototype.popStatementContext = function() {
  * This method determines whether or not the current statement contains clauses.
  */
 InstructionBuilder.prototype.hasClauses = function() {
-    var statement = this.stack.peek().statement;
+    const statement = this.stack.peek().statement;
     return statement.clauseCount > 0;
 };
 
@@ -1714,7 +1714,7 @@ InstructionBuilder.prototype.hasClauses = function() {
  * This method determines whether or not the current statement contains handlers.
  */
 InstructionBuilder.prototype.hasHandlers = function() {
-    var statement = this.stack.peek().statement;
+    const statement = this.stack.peek().statement;
     return statement.handleClauses.length > 0;
 };
 
@@ -1726,8 +1726,8 @@ InstructionBuilder.prototype.hasHandlers = function() {
  * are also included in the numbering.
  */
 InstructionBuilder.prototype.getClauseNumber = function() {
-    var procedure = this.stack.peek();
-    var number = procedure.statement.clauseNumber;
+    const procedure = this.stack.peek();
+    const number = procedure.statement.clauseNumber;
     return number;
 };
 
@@ -1737,8 +1737,8 @@ InstructionBuilder.prototype.getClauseNumber = function() {
  * statements are numbered sequentially starting with the number 1.
  */
 InstructionBuilder.prototype.getStatementNumber = function() {
-    var procedure = this.stack.peek();
-    var number = procedure.statementNumber;
+    const procedure = this.stack.peek();
+    const number = procedure.statementNumber;
     return number;
 };
 
@@ -1747,7 +1747,7 @@ InstructionBuilder.prototype.getStatementNumber = function() {
  * This method increments by one the statement counter within the current procedure context.
  */
 InstructionBuilder.prototype.incrementStatementCount = function() {
-    var procedure = this.stack.peek();
+    const procedure = this.stack.peek();
     procedure.statementNumber++;
 };
 
@@ -1757,8 +1757,8 @@ InstructionBuilder.prototype.incrementStatementCount = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getStatementPrefix = function() {
-    var procedure = this.stack.peek();
-    var prefix = procedure.prefix + procedure.statementNumber + '.';
+    const procedure = this.stack.peek();
+    const prefix = procedure.prefix + procedure.statementNumber + '.';
     return prefix;
 };
 
@@ -1767,8 +1767,8 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  * This method returns the type of the current statement.
  */
 InstructionBuilder.prototype.getStatementType = function() {
-    var statement = this.stack.peek().statement;
-    var type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const statement = this.stack.peek().statement;
+    const type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
     return type;
 };
 
@@ -1777,7 +1777,7 @@ InstructionBuilder.prototype.getStatementType = function() {
  * This method returns the context for the current statement.
  */
 InstructionBuilder.prototype.getStatementContext = function() {
-    var statement = this.stack.peek().statement;
+    const statement = this.stack.peek().statement;
     return statement;
 };
 
@@ -1787,8 +1787,8 @@ InstructionBuilder.prototype.getStatementContext = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getClausePrefix = function() {
-    var procedure = this.stack.peek();
-    var prefix = procedure.prefix + procedure.statementNumber + '.' + procedure.statement.clauseNumber + '.';
+    const procedure = this.stack.peek();
+    const prefix = procedure.prefix + procedure.statementNumber + '.' + procedure.statement.clauseNumber + '.';
     return prefix;
 };
 
@@ -1798,8 +1798,8 @@ InstructionBuilder.prototype.getClausePrefix = function() {
  * procedure context.
  */
 InstructionBuilder.prototype.getNextClausePrefix = function() {
-    var procedure = this.stack.peek();
-    var prefix = procedure.prefix + procedure.statementNumber + '.' + (procedure.statement.clauseNumber + 1) + '.';
+    const procedure = this.stack.peek();
+    const prefix = procedure.prefix + procedure.statementNumber + '.' + (procedure.statement.clauseNumber + 1) + '.';
     return prefix;
 };
 
@@ -1840,7 +1840,7 @@ InstructionBuilder.prototype.insertInstruction = function(instruction) {
  * This method inserts a 'skip' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertSkipInstruction = function() {
-    var instruction = 'SKIP INSTRUCTION';
+    const instruction = 'SKIP INSTRUCTION';
     this.insertInstruction(instruction);
 };
 
@@ -1885,7 +1885,7 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
  * This method inserts a 'pop' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertPopInstruction = function(type) {
-    var instruction = 'POP ' + type;
+    const instruction = 'POP ' + type;
     this.insertInstruction(instruction);
 };
 
@@ -1894,7 +1894,7 @@ InstructionBuilder.prototype.insertPopInstruction = function(type) {
  * This method inserts a 'load' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
-    var instruction = 'LOAD ' + type + ' ' + symbol;
+    const instruction = 'LOAD ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
     symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
@@ -1905,7 +1905,7 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
  * This method inserts a 'store' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
-    var instruction = 'STORE ' + type + ' ' + symbol;
+    const instruction = 'STORE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
     symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
@@ -1946,7 +1946,7 @@ InstructionBuilder.prototype.insertExecuteInstruction = function(procedure, cont
  * This method inserts a 'handle' instruction into the assembly source code.
  */
 InstructionBuilder.prototype.insertHandleInstruction = function(context) {
-    var instruction = 'HANDLE ' + context;
+    const instruction = 'HANDLE ' + context;
     this.insertInstruction(instruction);
 };
 

@@ -62,14 +62,14 @@ exports.functions = [
     // $arccosine
     function(ratio) {
         validateParameterType('$arccosine', bali.types.NUMBER, ratio);
-        var angle = bali.angle.arccosine(ratio.toNumber());
+        const angle = bali.angle.arccosine(ratio.toNumber());
         return angle;
     },
 
     // $arcsine
     function(ratio) {
         validateParameterType('$arcsine', bali.types.NUMBER, ratio);
-        var angle = bali.angle.arcsine(ratio.toNumber());
+        const angle = bali.angle.arcsine(ratio.toNumber());
         return angle;
     },
 
@@ -77,14 +77,14 @@ exports.functions = [
     function(opposite, adjacent) {
         validateParameterType('$arctangent', bali.types.NUMBER, opposite);
         validateParameterType('$arctangent', bali.types.NUMBER, adjacent);
-        var angle = bali.angle.arctangent(opposite.toNumber(), adjacent.toNumber());
+        const angle = bali.angle.arctangent(opposite.toNumber(), adjacent.toNumber());
         return angle;
     },
 
     // $association
     function(key, value) {
         validateParameterAbstraction('$association', bali.Element, key);
-        var association = bali.association(key, value);
+        const association = bali.association(key, value);
         return association;
     },
 
@@ -1040,8 +1040,8 @@ exports.names = [
 ];
 
 exports.invokeByName = function(name, parameters) {
-    var index = exports.names.indexOf(name);
-    var result = exports.functions[index].apply(parameters);
+    const index = exports.names.indexOf(name);
+    const result = exports.functions[index].apply(parameters);
     return result;
 };
 
@@ -1066,8 +1066,7 @@ function constructElement(procedure, value, parameters) {
             $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
-    var constructor = bali[procedure.slice(1)];  // $procedure -> procedure
-    var element = new constructor(value, parameters);
+    const element = bali[procedure.slice(1)](value, parameters);
     return element;
 }
 
@@ -1089,7 +1088,7 @@ function constructSource(procedure, parameters) {
             $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
-    var source = bali.source(procedure, parameters);
+    const source = bali.source(procedure, parameters);
     return source;
 }
 
@@ -1119,7 +1118,7 @@ function constructRange(first, last, parameters) {
             $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
-    var range = bali.range(first, last, parameters);
+    const range = bali.range(first, last, parameters);
     return range;
 }
 
@@ -1141,7 +1140,7 @@ function constructTree(symbol, complexity) {
             $actual: bali.types.typeName(complexity.getTypeId())
         });
     }
-    var tree = bali.tree(bali.types.typeBySymbol(symbol), complexity.toNumber());
+    const tree = bali.tree(bali.types.typeBySymbol(symbol), complexity.toNumber());
     return tree;
 }
 
@@ -1155,8 +1154,7 @@ function constructCollection(procedure, sequence, parameters) {
             $actual: bali.types.typeName(parameters.getTypeId())
         });
     }
-    var constructor = bali[procedure.slice(1)];  // $procedure -> procedure
-    var collection = new constructor(sequence, parameters);
+    const collection = bali[procedure.slice(1)](sequence, parameters);
     return collection;
 }
 
@@ -1186,7 +1184,7 @@ function validateParameterAbstraction(procedure, abstraction, parameter) {
 
 
 function validateParameterAspect(procedure, aspect, parameter) {
-    var type = parameter.getTypeId();
+    const type = parameter.getTypeId();
     if (!bali.types['is' + aspect.slice(1)](type)) {
         throw bali.exception({
             $exception: '$parameterType',
