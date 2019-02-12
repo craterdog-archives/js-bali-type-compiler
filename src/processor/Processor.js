@@ -345,7 +345,7 @@ function pushContext(processor, target, citation, passedParameters, index) {
     const variables = bali.catalog();
     iterator = procedure.getValue('$variables').getIterator();
     while (iterator.hasNext()) {
-        const variable = iterator.getNext();
+        var variable = iterator.getNext();
         variables.setValue(variable, bali.NONE);
     }
     variables.setValue('$target', target);
@@ -709,7 +709,7 @@ const instructionHandlers = [
         while (processor.context) {
             if (!processor.context.handlers.isEmpty()) {
                 // retrieve the address of the next exception handler
-                const handlerAddress = processor.context.handlers.removeItem().toNumber();
+                var handlerAddress = processor.context.handlers.removeItem().toNumber();
                 // use that address as the next instruction to be executed
                 processor.context.address = handlerAddress;
                 break;
