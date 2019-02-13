@@ -908,9 +908,7 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 // parameters: '(' collection ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
     // the VM places the collection on the top of the component stack
-    this.depth++;
     parameters.getCollection().acceptVisitor(this);
-    this.depth--;
 
     // the VM places a new parameters component containing the collection on the top of the component stack
     this.builder.insertInvokeInstruction('$parameters', 1);
