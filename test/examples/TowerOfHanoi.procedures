@@ -40,14 +40,14 @@
             ]
             $addresses: [
                 "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 71
-                "3.WithStatement": 78
-                "3.1.ConditionClause": 83
-                "3.1.1.EvaluateStatement": 89
-                "3.ConditionRepeat": 108
-                "3.WithStatementDone": 109
-                "4.EvaluateStatement": 110
-                "5.ReturnStatement": 123
+                "2.EvaluateStatement": 80
+                "3.WithStatement": 87
+                "3.1.ConditionClause": 92
+                "3.1.1.EvaluateStatement": 98
+                "3.ConditionRepeat": 117
+                "3.WithStatementDone": 118
+                "4.EvaluateStatement": 119
+                "5.ReturnStatement": 132
             ]
             $instructions: "
                 1.EvaluateStatement:
@@ -63,16 +63,19 @@
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
                 INVOKE $range WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $stack WITH PARAMETER
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 PUSH LITERAL `"peg B"`
                 INVOKE $catalog
                 PUSH LITERAL `$type`
@@ -84,16 +87,19 @@
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
                 INVOKE $range WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $stack WITH PARAMETER
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 PUSH LITERAL `"peg C"`
                 INVOKE $catalog
                 PUSH LITERAL `$type`
@@ -105,16 +111,19 @@
                 PUSH LITERAL `1`
                 PUSH LITERAL `infinity`
                 INVOKE $range WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $stack WITH PARAMETER
-                INVOKE $setValue WITH 3 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
+                INVOKE $addItem WITH 2 PARAMETERS
                 STORE VARIABLE $$index-1
                 INVOKE $list
                 LOAD VARIABLE $$index-1
@@ -203,15 +212,16 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                A00F2801A00F28022803A04C2804A00F280528062807B063B878A854B077
-                B002A854B077B878A854A87FB8782808A00F28022803A04C2804A00F2805
-                28062807B063B878A854B077B002A854B077B878A854A87FB8782809A00F
-                28022803A04C2804A00F280528062807B063B878A854B077B002A854B077
-                B878A854A87FB8788001A04C6001B002A854D808A04C8002A04C6002B002
-                A854D80860082806B063D00280056005D005186D6005D00380076009A04C
-                280AB002A854D80428018003A04C6003B002A854D804A04C6007B002A854
-                D8078006005300006009A04C6008B0022801B0022809B0022808B002A854
-                D80680066009280B8004A04C6004B002A854D804D001E000
+                A00F2801A00F28022803A04C2804A00F280528062807B063B009B002A854
+                B077B002A854B077B009B002A854A87FB009B0022808A00F28022803A04C
+                2804A00F280528062807B063B009B002A854B077B002A854B077B009B002
+                A854A87FB009B0022809A00F28022803A04C2804A00F280528062807B063
+                B009B002A854B077B002A854B077B009B002A854A87FB009B0028001A04C
+                6001B002A854D808A04C8002A04C6002B002A854D80860082806B063D002
+                80056005D00518766005D00380076009A04C280AB002A854D80428018003
+                A04C6003B002A854D804A04C6007B002A854D8078006005C00006009A04C
+                6008B0022801B0022809B0022808B002A854D80680066009280B8004A04C
+                6004B002A854D804D001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"

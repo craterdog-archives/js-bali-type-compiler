@@ -12,20 +12,26 @@
         INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$changeEvent`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         PUSH LITERAL `$key`
         PUSH LITERAL `$foo`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         PUSH LITERAL `$value`
         PUSH LITERAL `5`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         STORE MESSAGE $$eventQueue
         LOAD VARIABLE $$result
         HANDLE RESULT
     "(
         $mediatype: "application/basm"
     )
-    $bytecode: 'A00F28012802B87828032804B87828052806B87888016002E000'(
+    $bytecode: '
+        A00F28012802B009B00228032804B009B00228052806B009B00288016002
+        E000
+    '(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

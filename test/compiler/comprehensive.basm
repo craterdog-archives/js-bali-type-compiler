@@ -38,48 +38,48 @@
         "1.2.ConditionClauseDone": 24
         "1.3.ElseClause": 25
         "1.3.1.EvaluateStatement": 26
-        "1.3.2.EvaluateStatement": 34
-        "1.3.3.ReturnStatement": 36
-        "1.3.ElseClauseDone": 38
-        "1.IfStatementDone": 39
-        "1.IfStatementHandlers": 41
-        "1.4.HandleClause": 42
-        "1.4.1.EvaluateStatement": 52
-        "1.4.2.EvaluateStatement": 56
-        "1.4.HandleClauseDone": 64
-        "1.5.HandleClause": 65
-        "1.5.1.EvaluateStatement": 75
-        "1.5.2.ThrowStatement": 83
-        "1.5.HandleClauseDone": 85
-        "1.IfStatementFailed": 86
-        "1.IfStatementSucceeded": 87
-        "2.WhileStatement": 88
-        "2.1.ConditionClause": 89
-        "2.1.1.EvaluateStatement": 91
-        "2.1.2.IfStatement": 93
-        "2.1.2.1.ConditionClause": 94
-        "2.1.2.1.1.BreakStatement": 96
-        "2.1.2.1.ConditionClauseDone": 97
-        "2.1.2.2.ElseClause": 98
-        "2.1.2.2.1.WithStatement": 99
-        "2.1.2.2.1.1.ConditionClause": 102
-        "2.1.2.2.1.1.1.SelectStatement": 108
-        "2.1.2.2.1.1.1.1.OptionClause": 110
-        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 114
-        "2.1.2.2.1.1.1.1.OptionClauseDone": 116
-        "2.1.2.2.1.1.1.2.OptionClause": 117
-        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 121
-        "2.1.2.2.1.1.1.2.OptionClauseDone": 123
-        "2.1.2.2.1.1.1.3.ElseClause": 124
-        "2.1.2.2.1.1.1.3.1.ContinueStatement": 125
-        "2.1.2.2.1.1.1.3.ElseClauseDone": 126
-        "2.1.2.2.1.1.1.SelectStatementDone": 127
-        "2.1.2.2.1.ConditionRepeat": 128
-        "2.1.2.2.1.WithStatementDone": 129
-        "2.1.2.2.ElseClauseDone": 130
-        "2.1.2.IfStatementDone": 131
-        "2.ConditionRepeat": 132
-        "2.WhileStatementDone": 133
+        "1.3.2.EvaluateStatement": 35
+        "1.3.3.ReturnStatement": 37
+        "1.3.ElseClauseDone": 39
+        "1.IfStatementDone": 40
+        "1.IfStatementHandlers": 42
+        "1.4.HandleClause": 43
+        "1.4.1.EvaluateStatement": 54
+        "1.4.2.EvaluateStatement": 58
+        "1.4.HandleClauseDone": 68
+        "1.5.HandleClause": 69
+        "1.5.1.EvaluateStatement": 80
+        "1.5.2.ThrowStatement": 90
+        "1.5.HandleClauseDone": 92
+        "1.IfStatementFailed": 93
+        "1.IfStatementSucceeded": 94
+        "2.WhileStatement": 95
+        "2.1.ConditionClause": 96
+        "2.1.1.EvaluateStatement": 98
+        "2.1.2.IfStatement": 100
+        "2.1.2.1.ConditionClause": 101
+        "2.1.2.1.1.BreakStatement": 103
+        "2.1.2.1.ConditionClauseDone": 104
+        "2.1.2.2.ElseClause": 105
+        "2.1.2.2.1.WithStatement": 106
+        "2.1.2.2.1.1.ConditionClause": 109
+        "2.1.2.2.1.1.1.SelectStatement": 115
+        "2.1.2.2.1.1.1.1.OptionClause": 117
+        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 121
+        "2.1.2.2.1.1.1.1.OptionClauseDone": 123
+        "2.1.2.2.1.1.1.2.OptionClause": 124
+        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 128
+        "2.1.2.2.1.1.1.2.OptionClauseDone": 130
+        "2.1.2.2.1.1.1.3.ElseClause": 131
+        "2.1.2.2.1.1.1.3.1.ContinueStatement": 132
+        "2.1.2.2.1.1.1.3.ElseClauseDone": 133
+        "2.1.2.2.1.1.1.SelectStatementDone": 134
+        "2.1.2.2.1.ConditionRepeat": 135
+        "2.1.2.2.1.WithStatementDone": 136
+        "2.1.2.2.ElseClauseDone": 137
+        "2.1.2.IfStatementDone": 138
+        "2.ConditionRepeat": 139
+        "2.WhileStatementDone": 140
     ]
     $instructions: "
         1.IfStatement:
@@ -136,7 +136,8 @@
         INVOKE $catalog
         PUSH LITERAL `$tag`
         LOAD VARIABLE $tag
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         INVOKE $parameters WITH PARAMETER
         EXECUTE $find ON TARGET WITH PARAMETERS
         STORE VARIABLE $d
@@ -166,7 +167,8 @@
         INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$warning`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         INVOKE $isMatchedBy WITH 2 PARAMETERS
         JUMP TO 1.5.HandleClause ON FALSE
         POP COMPONENT
@@ -181,10 +183,12 @@
         INVOKE $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something not too serious happened."`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         PUSH LITERAL `$exception`
         LOAD VARIABLE $exception
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
         1.4.HandleClauseDone:
@@ -197,7 +201,8 @@
         INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$moderate`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         INVOKE $isMatchedBy WITH 2 PARAMETERS
         JUMP TO 1.IfStatementFailed ON FALSE
         POP COMPONENT
@@ -206,10 +211,12 @@
         INVOKE $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something serious happened."`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         PUSH LITERAL `$exception`
         LOAD VARIABLE $exception
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         STORE VARIABLE $exception
         
         1.5.2.ThrowStatement:
@@ -329,15 +336,16 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        202960046005B044180D6005800428018005600AE800002760042802B046
-        1819280380026005A81E80076007E000002700006005A00F2804600FB878
-        A854D8018009280580022806E0000000400000570000800A600A600AA00F
-        28072808B878B0451841480060082809B0808008A00F280A280BB878280C
-        600AB87880020057800A600A600AA00F2807280DB878B04518564800A00F
-        280A280EB878280C600AB878800A600AE8000057E80000000000280F1885
-        6006800B000038011862008500830000600ED00280016001D00418816001
-        D003800C600D800360032810B0451875280F8002007F60032811B045187C
-        28038002007F00000066007F0000006600000000000000596002E000
+        202A60046005B044180D6005800428018005600AE800002860042802B046
+        1819280380026005A81E80076007E000002800006005A00F2804600FB009
+        B002A854D8018009280580022806E00000004000005E0000800A600A600A
+        A00F28072808B009B002B0451845480060082809B0808008A00F280A280B
+        B009B002280C600AB009B0028002005E800A600A600AA00F2807280DB009
+        B002B045185D4800A00F280A280EB009B002280C600AB009B002800A600A
+        E800005EE80000000000280F188C6006800B000038011869008C008A0000
+        600ED00280016001D00418886001D003800C600D800360032810B045187C
+        280F8002008660032811B04518832803800200860000006D00860000006D
+        00000000000000606002E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

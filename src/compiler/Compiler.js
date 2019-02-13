@@ -155,6 +155,19 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
 };
 
 
+// association: component ':' expression
+CompilingVisitor.prototype.visitAssociation = function(association) {
+    // the VM places the association key on top of the component stack
+    association.getKey().acceptVisitor(this);
+
+    // the VM places the association value on top of the component stack
+    association.getValue().acceptVisitor(this);
+
+    // the VM replaces the parameters on the component stack with a new association
+    this.builder.insertInvokeInstruction('$association', 2);
+};
+
+
 /*
  *  This method is causes the VM to jump out of the enclosing loop procedure block.
  */
@@ -190,31 +203,8 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 //     EOL (association EOL)* |
 //     ':' /*empty catalog*/
 CompilingVisitor.prototype.visitCatalog = function(catalog) {
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = catalog.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized catalog
-    this.builder.insertInvokeInstruction('$catalog', numberOfParameters);
-
-    // the VM adds each association to the catalog
-    this.depth++;
-    const iterator = catalog.getIterator();
-    while (iterator.hasNext()) {
-        var association = iterator.getNext();
-        // the VM places the association's key and value onto the top of the component stack
-        association.acceptVisitor(this);
-
-        // the VM sets the key in the catalog to the value
-        this.builder.insertInvokeInstruction('$setValue', 3);
-    }
-    this.depth--;
-
-    // the parameterized catalog remains on the component stack
+    // delegate to the abstract type
+    this.visitCollection(catalog);
 };
 
 
@@ -244,6 +234,35 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
     // the VM sets the value of the recipient to the value on the top of the component stack
     this.setRecipient(recipient);
+};
+
+
+// collection: range | list | catalog
+CompilingVisitor.prototype.visitCollection = function(collection) {
+    // the VM places the parameters (if any) for this collection on the component stack
+    const parameters = collection.getParameters();
+    var numberOfParameters = 0;
+    if (parameters) {
+        parameters.acceptVisitor(this);
+        numberOfParameters = 1;
+    }
+
+    // the VM replaces the parameters on the component stack with a new parameterized collection
+    var type = collection.constructor.name;
+    type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
+    this.builder.insertInvokeInstruction(type, numberOfParameters);
+
+    // the VM adds each expression to the collection
+    this.depth++;
+    const iterator = collection.getIterator();
+    while (iterator.hasNext()) {
+        var item = iterator.getNext();
+        item.acceptVisitor(this);
+        this.builder.insertInvokeInstruction('$addItem', 2);
+    }
+    this.depth--;
+
+    // the parameterized collection remains on the component stack
 };
 
 
@@ -789,28 +808,8 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitList = function(list) {
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = list.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized list
-    this.builder.insertInvokeInstruction('$list', numberOfParameters);
-
-    // the VM adds each expression to the list
-    this.depth++;
-    const iterator = list.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-    }
-    this.depth--;
-
-    // the parameterized list remains on the component stack
+    // delegate to the abstract type
+    this.visitCollection(list);
 };
 
 
@@ -980,28 +979,8 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 //     EOL (expression EOL)* |
 //     /*empty queue*/
 CompilingVisitor.prototype.visitQueue = function(queue) {
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = queue.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized queue
-    this.builder.insertInvokeInstruction('$queue', numberOfParameters);
-
-    // the VM adds each expression to the queue
-    this.depth++;
-    const iterator = queue.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-    }
-    this.depth--;
-
-    // the parameterized queue remains on the component stack
+    // delegate to the abstract type
+    this.visitCollection(queue);
 };
 
 
@@ -1199,28 +1178,8 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitSet = function(set) {
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = set.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized set
-    this.builder.insertInvokeInstruction('$set', numberOfParameters);
-
-    // the VM adds each expression to the set
-    this.depth++;
-    const iterator = set.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-    }
-    this.depth--;
-
-    // the parameterized set remains on the component stack
+    // delegate to the abstract type
+    this.visitCollection(set);
 };
 
 
@@ -1259,28 +1218,8 @@ CompilingVisitor.prototype.visitSource = function(source) {
 //     EOL (expression EOL)* |
 //     /*empty list*/
 CompilingVisitor.prototype.visitStack = function(stack) {
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = stack.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized stack
-    this.builder.insertInvokeInstruction('$stack', numberOfParameters);
-
-    // the VM adds each expression to the stack
-    this.depth++;
-    const iterator = stack.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-    }
-    this.depth--;
-
-    // the parameterized stack remains on the component stack
+    // delegate to the abstract type
+    this.visitCollection(stack);
 };
 
 

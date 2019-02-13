@@ -34,44 +34,46 @@
     ]
     $addresses: [
         "1.EvaluateStatement": 1
-        "2.EvaluateStatement": 9
-        "3.EvaluateStatement": 11
-        "4.EvaluateStatement": 14
-        "5.EvaluateStatement": 20
-        "6.EvaluateStatement": 24
-        "7.EvaluateStatement": 43
-        "8.EvaluateStatement": 50
-        "9.EvaluateStatement": 53
-        "10.EvaluateStatement": 57
-        "11.EvaluateStatement": 60
-        "12.EvaluateStatement": 63
-        "13.EvaluateStatement": 66
-        "14.EvaluateStatement": 70
-        "15.EvaluateStatement": 74
-        "16.EvaluateStatement": 78
-        "17.EvaluateStatement": 82
-        "18.EvaluateStatement": 86
-        "19.EvaluateStatement": 89
-        "20.EvaluateStatement": 93
-        "21.EvaluateStatement": 97
-        "22.EvaluateStatement": 101
-        "23.EvaluateStatement": 105
-        "24.EvaluateStatement": 109
-        "25.EvaluateStatement": 112
-        "26.EvaluateStatement": 116
-        "27.EvaluateStatement": 120
-        "28.EvaluateStatement": 124
-        "29.EvaluateStatement": 128
+        "2.EvaluateStatement": 11
+        "3.EvaluateStatement": 13
+        "4.EvaluateStatement": 16
+        "5.EvaluateStatement": 22
+        "6.EvaluateStatement": 26
+        "7.EvaluateStatement": 45
+        "8.EvaluateStatement": 52
+        "9.EvaluateStatement": 55
+        "10.EvaluateStatement": 59
+        "11.EvaluateStatement": 62
+        "12.EvaluateStatement": 65
+        "13.EvaluateStatement": 68
+        "14.EvaluateStatement": 72
+        "15.EvaluateStatement": 76
+        "16.EvaluateStatement": 80
+        "17.EvaluateStatement": 84
+        "18.EvaluateStatement": 88
+        "19.EvaluateStatement": 91
+        "20.EvaluateStatement": 95
+        "21.EvaluateStatement": 99
+        "22.EvaluateStatement": 103
+        "23.EvaluateStatement": 107
+        "24.EvaluateStatement": 111
+        "25.EvaluateStatement": 114
+        "26.EvaluateStatement": 118
+        "27.EvaluateStatement": 122
+        "28.EvaluateStatement": 126
+        "29.EvaluateStatement": 130
     ]
     $instructions: "
         1.EvaluateStatement:
         INVOKE $catalog
         PUSH LITERAL `$foo`
         LOAD VARIABLE $bar
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         PUSH LITERAL `$baz`
         PUSH LITERAL `5`
-        INVOKE $setValue WITH 3 PARAMETERS
+        INVOKE $association WITH 2 PARAMETERS
+        INVOKE $addItem WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
         2.EvaluateStatement:
@@ -258,15 +260,15 @@
         $mediatype: "application/basm"
     )
     $bytecode: '
-        A00F28016006B87828022803B8788003601680032804FFFF800360046005
-        B0806007B05B800360148002780280036008A04C2805B002A854D802A04C
-        2806B002A854D80228038001A04C6001B002A854D80280036011A04C600E
-        B002A854D80180032807A81E800328082809B01C8003280AA83F80032803
-        A8648003280BA812800360186019B05B800360046005B05D800360076009
-        B067800360186019B08080036017601AB0198003280BFFFF800360046005
-        B044800360076009B0418003600A600CB0468003600D600FB04880036010
-        6012B04580036013A810800360046005B004800360076009B0728003600A
-        600CB0898003600D600FB0538003600B2803B01780036003E000
+        A00F28016006B009B00228022803B009B0028003601680032804FFFF8003
+        60046005B0806007B05B800360148002780280036008A04C2805B002A854
+        D802A04C2806B002A854D80228038001A04C6001B002A854D80280036011
+        A04C600EB002A854D80180032807A81E800328082809B01C8003280AA83F
+        80032803A8648003280BA812800360186019B05B800360046005B05D8003
+        60076009B067800360186019B08080036017601AB0198003280BFFFF8003
+        60046005B044800360076009B0418003600A600CB0468003600D600FB048
+        800360106012B04580036013A810800360046005B004800360076009B072
+        8003600A600CB0898003600D600FB0538003600B2803B01780036003E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"
