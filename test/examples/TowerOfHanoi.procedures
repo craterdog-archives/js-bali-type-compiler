@@ -27,7 +27,7 @@
                 $n
                 $numberOfDisks
                 $target
-            ]
+            ]($type: $Set)
             $procedures: [
                 $asCatalog
                 $getIterator
@@ -37,7 +37,7 @@
                 $moveTower
                 $push
                 $setSubcomponent
-            ]
+            ]($type: $Set)
             $addresses: [
                 "1.EvaluateStatement": 1
                 "2.EvaluateStatement": 80
@@ -234,8 +234,8 @@
                 $toPeg
                 $withPeg
             ]
-            $variables: [$$result, $target]
-            $procedures: [$moveDisk, $moveTower]
+            $variables: [$$result, $target]($type: $Set)
+            $procedures: [$moveDisk, $moveTower]($type: $Set)
             $addresses: [
                 "1.IfStatement": 1
                 "1.1.ConditionClause": 2
@@ -321,13 +321,13 @@
                 $$result
                 $disk
                 $target
-            ]
+            ]($type: $Set)
             $procedures: [
                 $append
                 $getSubcomponent
                 $pop
                 $push
-            ]
+            ]($type: $Set)
             $addresses: [
                 "1.EvaluateStatement": 1
                 "2.EvaluateStatement": 16

@@ -9,8 +9,8 @@
     $procedures: [
         $function1: [
             $parameters: []
-            $variables: [$target]
-            $procedures: []
+            $variables: [$target]($type: $Set)
+            $procedures: []($type: $Set)
             $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
@@ -26,8 +26,8 @@
         ]
         $function2: [
             $parameters: [$first]
-            $variables: [$exception, $target]
-            $procedures: []
+            $variables: [$exception, $target]($type: $Set)
+            $procedures: []($type: $Set)
             $addresses: [
                 "1.ThrowStatement": 1
                 "1.ThrowStatementDone": 4
@@ -90,8 +90,8 @@
         ]
         $message1: [
             $parameters: []
-            $variables: [$target]
-            $procedures: []
+            $variables: [$target]($type: $Set)
+            $procedures: []($type: $Set)
             $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
@@ -107,8 +107,8 @@
         ]
         $message2: [
             $parameters: [$first, $second]
-            $variables: [$exception, $target]
-            $procedures: []
+            $variables: [$exception, $target]($type: $Set)
+            $procedures: []($type: $Set)
             $addresses: [
                 "1.ThrowStatement": 1
                 "1.ThrowStatementDone": 4
