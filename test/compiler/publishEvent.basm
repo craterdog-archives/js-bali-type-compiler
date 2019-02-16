@@ -4,8 +4,8 @@
         $$eventQueue
         $$result
         $target
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: ["1.PublishStatement": 1]
     $instructions: "
         1.PublishStatement:

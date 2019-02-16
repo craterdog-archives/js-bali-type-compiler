@@ -66,7 +66,7 @@ describe('Bali Virtual Macine™', function() {
                 assembler.assembleProcedure(type, compiled);
 
                 source = compiled.toString() + '\n';  // POSIX compliant <EOL>
-                //fs.writeFileSync(basmFile, source, 'utf8');
+                fs.writeFileSync(basmFile, source, 'utf8');
                 var expected = fs.readFileSync(basmFile, 'utf8');
                 expect(expected).to.exist;  // jshint ignore:line
                 expect(source).to.equal(expected);
@@ -74,7 +74,7 @@ describe('Bali Virtual Macine™', function() {
         });
 
     });
-
+/*
     describe('Test the analysis and compilation of example types', function() {
 
         it('should compile example type documents into compiled type documents.', function() {
@@ -104,6 +104,17 @@ describe('Bali Virtual Macine™', function() {
             }
         });
 
-    });
+        it('should compile the Component type.', function() {
+            var source = fs.readFileSync('test/types/Component.bali', 'utf8');
+                expect(source).to.exist;  // jshint ignore:line
+                var type = bali.parse(source);
+                var typeCitation = api.createDraft(type);
+                var draft = api.retrieveDraft(typeCitation);
+                typeCitation = api.commitDocument(typeCitation, draft);
+                typeCitation = vm.compile(api, typeCitation);
+                expect(typeCitation).to.exist;  // jshint ignore:line
+        });
 
+    });
+*/
 });

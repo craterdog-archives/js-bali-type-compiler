@@ -1,0 +1,26 @@
+[
+    $description: "
+        This abstract class defines the messages that all elemental components support.
+    "($mediatype: "application/bsmd")
+    $parent: $Component
+    $procedures: [
+        $asBoolean: [
+            $description: "
+                This procedure returns the boolean value equivalent of this value.
+            "($mediatype: "application/bsmd")
+            $type: $Probability($boolean)
+            $source: {
+                return false
+            }
+        ]
+        $asNumeric: [
+            $description: "
+                This procedure returns the numeric value equivalent of this value.
+            "($mediatype: "application/bsmd")
+            $type: $Number
+            $source: {
+                return 0
+            }
+        ]
+    ]
+]($type: $Class($existence: $abstract))

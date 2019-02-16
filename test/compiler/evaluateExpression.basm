@@ -27,11 +27,11 @@
         $x
         $y
         $z
-    ]
+    ]($type: $Set)
     $procedures: [
         $addItem
         $getSubcomponent
-    ]
+    ]($type: $Set)
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 11

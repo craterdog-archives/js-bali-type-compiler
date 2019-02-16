@@ -45,7 +45,8 @@ exports.compile = function(nebula, citation) {
     if (items) constants.addItems(items);
 
     // create the compilation type context
-    const type = bali.catalog();
+    const parameters = bali.parameters(bali.parse('[$type: $Type]'));
+    const type = bali.catalog([], parameters);
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
     type.setValue('$procedures', procedures);

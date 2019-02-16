@@ -5,8 +5,8 @@
         $$result
         $bar
         $target
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: ["1.QueueStatement": 1]
     $instructions: "
         1.QueueStatement:

@@ -16,11 +16,11 @@
         $documents
         $index
         $target
-    ]
+    ]($type: $Set)
     $procedures: [
         $getSubcomponent
         $setSubcomponent
-    ]
+    ]($type: $Set)
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 6

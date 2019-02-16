@@ -1,0 +1,73 @@
+[
+    $description: "
+        This abstract class defines the messages that all composite components support.
+    "($mediatype: "application/bsmd")
+    $parent: $Component
+    $parameters: [
+        $ItemType: [
+            $description: "
+                The type of the subcomponents managed by this composite component.
+            "($mediatype: "application/bsmd")
+            $type: $Reference($Type)
+        ]
+    ]
+    $interfaces: [
+        $sequential: $Sequential
+    ]
+    $attributes: [
+        $description: [
+            $description: "
+                A brief description of the component type including it's purpose.
+            "($mediatype: "application/bsmd")
+            $type: $Text
+        ]
+    ]
+    $procedures: [
+        $asBoolean: [
+            $description: "
+                This procedure returns the boolean value equivalent of this composite component.
+            "($mediatype: "application/bsmd")
+            $type: $Probability($boolean)
+            $source: {
+                return target.asNumeric() > 0
+            }
+        ]
+        $asNumeric: [
+            $description: "
+                This procedure returns the numeric value equivalent of this composite component.
+            "($mediatype: "application/bsmd")
+            $type: $Number(0..infinity)
+            $source: {
+                return target.getSize()
+            }
+        ]
+        $getIterator: [
+            $description: "
+                This procedure returns an iterator component that can be used to iterate over
+                the subcomponents that make up this composite component.
+            "($mediatype: "application/bsmd")
+            $type: $Iterator
+            $source: {
+                return getIterator(target)
+            }
+        ]
+        $getSize: [
+            $description: "
+                This procedure returns the number of subcomponents that make up this component.
+            "($mediatype: "application/bsmd")
+            $type: $Number(0..infinity)
+            $source: {
+                return getSize(target)
+            }
+        ]
+        $isEmpty: [
+            $description: "
+                This procedure returns whether or not this component has any subcomponents.
+            "($mediatype: "application/bsmd")
+            $type: $Probability($boolean)
+            $source: {
+                return not target.getSize() > 0
+            }
+        ]
+    ]
+]($type: $Class($existence: $abstract))

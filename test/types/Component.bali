@@ -1,0 +1,82 @@
+[
+    $description: "
+        This abstract class defines the messages that all components support.
+    "($mediatype: "application/bsmd")
+    $parent: $Component
+    $procedures: [
+        $asSource: [
+            $description: "
+                This procedure returns the source code equivalent of this value.
+            "($mediatype: "application/bsmd")
+            $type: $Text($mediatype: "application/bali")
+            $source: {
+                return format(target)
+            }
+        ]
+        $isA: [
+            $description: "
+                This procedure determines whether or not this component is an instance
+                of the specified type.
+            "($mediatype: "application/bsmd")
+            $parameters: [
+                $type: [
+                    $description: "
+                        The component type to be compared with.
+                    "($mediatype: "application/bsmd")
+                    $type: $Reference($Type)
+                ]
+            ]
+            $type: $Probability($boolean)
+            $source: {
+                $ancestors := @getType(target).getAncestors()
+                with each $ancestor in ancestors do {
+                    if ancestor = type then {
+                        return true
+                    }
+                }
+                return false
+            }($type)
+        ]
+        $getAncestry: [
+            $description: "
+                This procedure returns a list of references to the ancestors for the
+                type of this component.
+            "($mediatype: "application/bsmd")
+            $type: $List($Reference($Type))
+            $source: {
+                $type := getType(target)
+                $ancestors := [type]
+                ancestors.addItems(@type[$ancestors])
+                return ancestors
+            }
+        ]
+        $getArguments: [
+            $description: "
+                This procedure returns a catalog of any arguments that were used to
+                parameterize this component.
+            "($mediatype: "application/bsmd")
+            $type: $Catalog($Argument)
+            $source: {
+                return getArguments(target)
+            }
+        ]
+        $getHash: [
+            $description: "
+                This procedure returns a consistent hash value of this component.
+            "($mediatype: "application/bsmd")
+            $type: $Number(0..4294967295)
+            $source: {
+                return getHash(target)
+            }
+        ]
+        $getType: [
+            $description: "
+                This procedure returns the type of this component.
+            "($mediatype: "application/bsmd")
+            $type: $Reference($Type)
+            $source: {
+                return getType(target)
+            }
+        ]
+    ]
+]($type: $Class($existence: $abstract))

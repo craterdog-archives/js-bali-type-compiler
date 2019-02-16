@@ -7,8 +7,8 @@
         $c
         $condition
         $target
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: [
         "1.WhileStatement": 1
         "1.1.ConditionClause": 2

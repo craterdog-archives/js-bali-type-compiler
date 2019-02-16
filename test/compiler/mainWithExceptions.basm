@@ -6,8 +6,8 @@
         $error
         $message
         $target
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: [
         "1.QueueStatement": 1
         "1.QueueStatementDone": 6

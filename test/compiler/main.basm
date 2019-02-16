@@ -1,7 +1,7 @@
 [
     $parameters: []
-    $variables: [$$result, $target]
-    $procedures: []
+    $variables: [$$result, $target]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: ["1.EvaluateStatement": 1]
     $instructions: "
         1.EvaluateStatement:

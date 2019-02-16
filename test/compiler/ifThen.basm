@@ -1,7 +1,7 @@
 [
     $parameters: []
-    $variables: [$$result, $target, $yes]
-    $procedures: []
+    $variables: [$$result, $target, $yes]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2

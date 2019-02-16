@@ -6,8 +6,8 @@
         $bar
         $foo
         $target
-    ]
-    $procedures: [$setSubcomponent]
+    ]($type: $Set)
+    $procedures: [$setSubcomponent]($type: $Set)
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3

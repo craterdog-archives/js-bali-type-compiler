@@ -8,12 +8,12 @@
         $x
         $y
         $z
-    ]
+    ]($type: $Set)
     $procedures: [
         $getIterator
         $getNext
         $hasNext
-    ]
+    ]($type: $Set)
     $addresses: [
         "1.WithStatement": 1
         "1.1.ConditionClause": 4

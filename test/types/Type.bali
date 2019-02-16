@@ -1,0 +1,54 @@
+[
+    $description: "
+        This abstract class defines the attributes and messages that all types support.
+    "($mediatype: "application/bsmd")
+    $parent: $Composite
+    $parameters: [
+        $existence: {
+            $description: "
+                This parameter describes whether this type is concrete and can be instantiated
+                or if it is abstract and cannot.
+            "($mediatype: "application/bsmd")
+            $type: $Existence
+            $default: $concrete
+        ]
+    ]
+    $attributes: [
+        $parent: [
+            $description: "
+                A reference to the parent type from which this type inherits its behavior.
+            "($mediatype: "application/bsmd")
+            $type: $Reference($Type($abstract))
+        ]
+        $parameters: [
+            $description: "
+                A catalog of the parameters that are used to parameterize instances of this type.
+            "($mediatype: "application/bsmd")
+            $type: $Catalog($Symbol, $Parameter)
+        ]
+        $dependencies: [
+            $description: "
+                A catalog of the other types that this type is dependent upon.
+            "($mediatype: "application/bsmd")
+            $type: $Catalog($Symbol, $Reference($Type))
+        ]
+    ]
+    $procedures: [
+        $getAncestry: [
+            $description: "
+                This procedure returns a list of the types from which this type inherits its
+                behavior.
+            "($mediatype: "application/bsmd")
+            $type: $List($Reference($Type))
+            $source: {
+                $ancestors: [target]
+                $ancestor = parent
+                while ancestor do {
+                    ancestors.addItem(ancestor)
+                    ancestor = @ancestor[parent]
+                }
+                return ancestors
+            }
+        ]
+    ]
+]($type: $Class($existence: $abstract))

@@ -8,11 +8,11 @@
         $message
         $messages
         $target
-    ]
+    ]($type: $Set)
     $procedures: [
         $getSubcomponent
         $setSubcomponent
-    ]
+    ]($type: $Set)
     $addresses: [
         "1.WaitStatement": 1
         "2.WaitStatement": 6

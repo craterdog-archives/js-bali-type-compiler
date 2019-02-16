@@ -4,8 +4,8 @@
         $$result
         $$selector-1
         $target
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: [
         "1.SelectStatement": 1
         "1.1.OptionClause": 3

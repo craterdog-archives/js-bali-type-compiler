@@ -5,8 +5,8 @@
         $no
         $target
         $yes
-    ]
-    $procedures: []
+    ]($type: $Set)
+    $procedures: []($type: $Set)
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
