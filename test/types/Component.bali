@@ -2,7 +2,6 @@
     $description: "
         This abstract class defines the messages that all components support.
     "($mediatype: "application/bsmd")
-    $parent: $Component
     $procedures: [
         $asSource: [
             $description: "

@@ -103,7 +103,7 @@ describe('Bali Virtual Macine™', function() {
                 expect(source).to.equal(expected);
             }
         });
-/*
+
         it('should compile the Component type.', function() {
             var source = fs.readFileSync('test/types/Component.bali', 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
@@ -114,7 +114,7 @@ describe('Bali Virtual Macine™', function() {
                 typeCitation = vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
         });
-*/
+
     });
 
 });
