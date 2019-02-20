@@ -27,14 +27,22 @@ exports.compile = function(nebula, citation) {
 
     // retrieve the type document
     const document = nebula.retrieveDocument(citation);
+    const parameters = document.getParameters();
 
     // extract the literals, constants and procedures for the parent type
     const literals = bali.list();
     const constants = bali.catalog();
     var procedures = bali.catalog();
-    var parent = document.getValue('$parent');
-    if (parent) {
-        parent = nebula.retrieveType(parent).getValue('$parent');
+    var reference = document.getValue('$parent');
+    if (reference) {
+        // TODO: This is a reference to the parent type definition document, not the compiled
+        //       type so its digest will not match the parent type.  How do we address this in
+        //       a way that preserves the merkle pointer chain?
+        citation = extractCitation(reference);
+        citation.setValue('$digest', bali.NONE);
+
+        // retrieve the compiled parent type
+        const parent = nebula.retrieveType(citation);
         literals.addItems(parent.getValue('$literals'));
         constants.addItems(parent.getValue('$constants'));
         procedures.addItems(parent.getValue('$procedures'));
@@ -45,46 +53,62 @@ exports.compile = function(nebula, citation) {
     if (items) constants.addItems(items);
 
     // create the compilation type context
-    const parameters = bali.parameters(bali.parse('[$type: $Type]'));
-    const type = bali.catalog([], parameters);
+    const type = bali.catalog([], bali.parameters({
+        $type: '$Type',
+        $protocol: parameters.getParameter('$protocol'),
+        $tag: parameters.getParameter('$tag'),
+        $version: parameters.getParameter('$version')
+    }));
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);
     type.setValue('$procedures', procedures);
 
-    // compile each procedure defined in the type document
+    // compile each procedure defined in the type definition document
     var association, name, procedure;
-    procedures = bali.catalog();
-    var iterator = document.getValue('$procedures').getIterator();
-    while (iterator.hasNext()) {
+    procedures = document.getValue('$procedures');
+    if (procedures) {
+        // iterate through procedure definitions
+        var iterator = procedures.getIterator();
+        procedures = bali.catalog();  // for compiled procedures
+        while (iterator.hasNext()) {
 
-        // retrieve the source code for the procedure
-        association = iterator.getNext();
-        name = association.getKey();
-        const source = association.getValue().getValue('$source');
+            // retrieve the source code for the procedure
+            association = iterator.getNext();
+            name = association.getKey();
+            const source = association.getValue().getValue('$source');
 
-        // compile the source code
-        procedure = compiler.compileProcedure(type, source);
-        procedures.setValue(name, procedure);
-    }
+            // compile the source code
+            procedure = compiler.compileProcedure(type, source);
+            procedures.setValue(name, procedure);  // compiled procedure
+        }
 
-    // assemble the instructions for each compiled procedure
-    iterator = procedures.getIterator();
-    while (iterator.hasNext()) {
+        // iterate through the compiled procedures
+        iterator = procedures.getIterator();
+        while (iterator.hasNext()) {
 
-        // retrieve the compiled procedure
-        association = iterator.getNext();
-        name = association.getKey();
-        procedure = association.getValue();
+            // retrieve the compiled procedure
+            association = iterator.getNext();
+            name = association.getKey();
+            procedure = association.getValue();
 
-        // assemble the instructions in the procedure into bytecode
-        assembler.assembleProcedure(type, procedure);
+            // assemble the instructions in the procedure into bytecode
+            assembler.assembleProcedure(type, procedure);
 
-        // add the assembled procedure to the type context
-        type.getValue('$procedures').setValue(name, procedure);
+            // add the assembled procedure to the type context
+            type.getValue('$procedures').setValue(name, procedure);
+        }
     }
 
     // checkin the newly compiled type
-    citation = nebula.commitType(citation, type);
+    citation = nebula.commitType(type);
 
+    return citation;
+};
+
+
+// PRIVATE FUNCTIONS
+
+const extractCitation = function(reference) {
+    const citation = bali.parse(reference.getValue().search.slice(1).replace(/\$tag:%23/, '$tag:#'));
     return citation;
 };

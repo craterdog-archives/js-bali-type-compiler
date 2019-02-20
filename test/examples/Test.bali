@@ -30,4 +30,9 @@
             }($first, $second)
         ]
     ]
-]($type: $Class)
+](
+    $type: $Class
+    $protocol: v1
+    $tag: #M8G7XJH640RR4YBCLGNDYABD6328741S
+    $version: v1
+)

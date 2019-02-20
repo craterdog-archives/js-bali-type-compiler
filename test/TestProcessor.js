@@ -25,11 +25,11 @@ const EOL = '\n';  // POSIX end of line character
 
 
 /*
-    $tag: #MAX82QW7HB1VQRQ4XSVQJLY5B86NDDV1
-    $digest: SZW6033CA9BNMY755N57W1BLZ5NKSTPYARHWCL2F5GD3MLYT3WBMQ7741HTJLAL69JFVV0FPZR67NHJFB7DGPD68ADYNSMK6G6QW1YR
-
     $tag: #ZZ48TPFG044GMFWT6WF16TTQ07GV92QQ
     $digest: SQL5K3TMQ0BX0450FJS1Z62SPCY69P9CWW7138AVA1ZGV66FSV8HKAVS306YF2BLLLPLHGBNZTM5ZYL01DMSA6GGQS348D68ZAYJSSH
+
+    $tag: #M8G7XJH640RR4YBCLGNDYABD6328741S
+    $digest: NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0
 
  */
 
@@ -91,10 +91,10 @@ function loadTask(filename) {
         1,
         3,
         5,
-        "<bali:[]>",
-        "<bali:[$protocol:v1,$tag:#ZZ48TPFG044GMFWT6WF16TTQ07GV92QQ,$version:v1,$digest:'SQL5K3TMQ0BX0450FJS1Z62SPCY69P9CWW7138AVA1ZGV66FSV8HKAVS306YF2BLLLPLHGBNZTM5ZYL01DMSA6GGQS348D68ZAYJSSH']>",
+        "<bali:?[]>",
+        "<bali:?[$protocol:v1,$tag:#M8G7XJH640RR4YBCLGNDYABD6328741S,$version:v1,$digest:'']>",
         bali.parse('[$foo: "bar"](\n' +
-        "    <bali:[$protocol:v1,$tag:#ZZ48TPFG044GMFWT6WF16TTQ07GV92QQ,$version:v1,$digest:'SQL5K3TMQ0BX0450FJS1Z62SPCY69P9CWW7138AVA1ZGV66FSV8HKAVS306YF2BLLLPLHGBNZTM5ZYL01DMSA6GGQS348D68ZAYJSSH']>\n" +
+        "    <bali:?[$protocol:v1,$tag:#M8G7XJH640RR4YBCLGNDYABD6328741S,$version:v1,$digest:'NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0']>\n" +
         ')'),
         '$foo',
         bali.parse('{return prefix + name}')
@@ -506,7 +506,7 @@ describe('Bali Virtual Machine™', function() {
             expect(process.context.address).to.equal(1);
 
             // 1.Execute:
-            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
+            // PUSH LITERAL `<bali:?[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             expect(process.context.address).to.equal(2);
@@ -530,7 +530,7 @@ describe('Bali Virtual Machine™', function() {
             expect(process.context.address).to.equal(4);
 
             // 2.ExecuteWithParameters:
-            // PUSH LITERAL `<bali:[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
+            // PUSH LITERAL `<bali:?[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             expect(process.context.address).to.equal(5);
@@ -631,7 +631,7 @@ describe('Bali Virtual Machine™', function() {
             expect(process.context.address).to.equal(11);
 
             // 3.ExecuteOnTarget:
-            // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
+            // PUSH LITERAL `[$foo: "bar"](<bali:?[...]>)`
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             const expected = process.task.stack.getTop();
@@ -659,7 +659,7 @@ describe('Bali Virtual Machine™', function() {
             expect(process.context.address).to.equal(14);
 
             // 4.ExecuteOnTargetWithParameters:
-            // PUSH LITERAL `[$foo: "bar"](<bali:[...]>)`
+            // PUSH LITERAL `[$foo: "bar"](<bali:?[...]>)`
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             expect(process.context.address).to.equal(15);

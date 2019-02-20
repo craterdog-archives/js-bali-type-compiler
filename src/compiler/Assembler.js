@@ -218,7 +218,7 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
-    const index = utilities.intrinsics.names.indexOf(symbol.toString());
+    const index = utilities.intrinsics.getIndex(symbol);
     const word = utilities.bytecode.encodeInstruction(utilities.types.INVOKE, count, index);
     this.bytecode.push(word);
 };

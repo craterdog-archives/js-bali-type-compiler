@@ -92,10 +92,9 @@ describe('Bali Virtual Macine™', function() {
                 var type = bali.parse(source);
                 var typeCitation = api.createDraft(type);
                 var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDocument(typeCitation, draft);
+                typeCitation = api.commitDocument(draft);
                 typeCitation = vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
-                //console.log('type citation: ' + typeCitation);
                 var procedures = api.retrieveType(typeCitation);
                 source = procedures.toString() + '\n';  // POSIX compliant <EOL>
                 //fs.writeFileSync(proceduresFile, source, 'utf8');
@@ -104,17 +103,28 @@ describe('Bali Virtual Macine™', function() {
             }
         });
 
-        it('should compile the Component type.', function() {
-            var source = fs.readFileSync('test/types/Component.bali', 'utf8');
+        it('should compile the Bali types.', function() {
+            const testFolder = 'test/types/';
+            for (var i = 0; i < sources.length; i++) {
+                var source = fs.readFileSync(testFolder + sources[i], 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
                 var typeCitation = api.createDraft(type);
                 var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDocument(typeCitation, draft);
+                typeCitation = api.commitDocument(draft);
                 typeCitation = vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
+            }
         });
 
     });
 
 });
+
+const sources = [
+    'Component.bali',
+    'Sequential.bali',
+    'Element.bali',
+    'Composite.bali',
+    'Type.bali'
+];

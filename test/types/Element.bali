@@ -2,13 +2,13 @@
     $description: "
         This abstract class defines the messages that all elemental components support.
     "($mediatype: "application/bsmd")
-    $parent: $Component
+    $parent: <bali:/Component?[$protocol:v1,$tag:#GC5TG7QPT80BM6243Z15SKR0NB59KD94,$version:v1,$digest:none]>
     $procedures: [
         $asBoolean: [
             $description: "
                 This procedure returns the boolean value equivalent of this value.
             "($mediatype: "application/bsmd")
-            $type: $Probability($boolean)
+            $type: <bali:/Probability>($granularity: $boolean)
             $source: {
                 return false
             }
@@ -17,10 +17,15 @@
             $description: "
                 This procedure returns the numeric value equivalent of this value.
             "($mediatype: "application/bsmd")
-            $type: $Number
+            $type: <bali:/Number>
             $source: {
                 return 0
             }
         ]
     ]
-]($type: $Class($existence: $abstract))
+](
+    $type: <bali:/Class>($existence: $abstract)
+    $protocol: v1
+    $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
+    $version: v1
+)

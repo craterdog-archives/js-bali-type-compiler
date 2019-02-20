@@ -3,13 +3,13 @@
         This interface defines the messages that all composite components that maintain
         a sequence of subcomponents support.
     "($mediatype: "application/bsmd")
-    $parent: $Component
+    $parent: <bali:/Component?[$protocol:v1,$tag:#GC5TG7QPT80BM6243Z15SKR0NB59KD94,$version:v1,$digest:none]>
     $parameters: [
-        $itemType: [
+        $ItemType: [
             $description: "
                 This parameter defines the type of item that the sequential component manages.
             "($mediatype: "application/bsmd")
-            $type: $Reference($Type)
+            $type: <bali:/Reference>($referencedType: <bali:/Type>)
         ]
     ]
     $messages: [
@@ -19,21 +19,26 @@
                 that can be used to iterate over the subcomponents that make up this
                 composite component.
             "($mediatype: "application/bsmd")
-            $type: $Iterator
+            $type: <bali:/Iterator>($ItemType: ItemType)
         ]
         $getSize: [
             $description: "
                 This message causes the target component to return the number of
                 subcomponents that make up this component.
             "($mediatype: "application/bsmd")
-            $type: $Number(0..infinity)
+            $type: <bali:/Number>(0..infinity)
         ]
         $isEmpty: [
             $description: "
                 This message causes the target component to return whether or not this
                 component has any subcomponents.
             "($mediatype: "application/bsmd")
-            $type: $Probability($boolean)
+            $type: <bali:Probability>($granularity: $boolean)
         ]
     ]
-]($type: $Interface)
+](
+    $type: <bali:/Interface>
+    $protocol: v1
+    $tag: #7ZG69N9QGDQSS66RVWYN7P8TYVV3FAM3
+    $version: v1
+)

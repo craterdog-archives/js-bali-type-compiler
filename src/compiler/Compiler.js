@@ -1613,7 +1613,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     const statement = procedure.statement;
-    const type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const type = bali.types.symbolForType(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1705,7 +1705,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = bali.types.typeName(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const type = bali.types.symbolForType(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
     return type;
 };
 

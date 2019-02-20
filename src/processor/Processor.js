@@ -578,7 +578,7 @@ const instructionHandlers = [
         const citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // write the cited draft to the nebula repository
-        processor.nebula.saveDraft(citation, draft);
+        processor.nebula.saveDraft(draft);
         processor.context.address++;
     },
 
@@ -591,7 +591,7 @@ const instructionHandlers = [
         var citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // write the cited document to the nebula repository
-        citation = processor.nebula.commitDocument(citation, document);
+        citation = processor.nebula.commitDocument(document);
         processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
     },
