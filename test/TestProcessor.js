@@ -24,15 +24,6 @@ const assembler = new vm.Assembler();
 const EOL = '\n';  // POSIX end of line character
 
 
-/*
-    $tag: #ZZ48TPFG044GMFWT6WF16TTQ07GV92QQ
-    $digest: SQL5K3TMQ0BX0450FJS1Z62SPCY69P9CWW7138AVA1ZGV66FSV8HKAVS306YF2BLLLPLHGBNZTM5ZYL01DMSA6GGQS348D68ZAYJSSH
-
-    $tag: #M8G7XJH640RR4YBCLGNDYABD6328741S
-    $digest: NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0
-
- */
-
 const TASK_TEMPLATE =
         '[\n' +
         '    $tag: #Y29YH82BHG4SPTGWGFRYBL4RQ33GTX59\n' +
@@ -66,6 +57,12 @@ const CITATION =
         '    $digest: none\n' +
         ']';
 
+const DOCUMENT = '[$foo: "bar"](\n' +
+        '    $protocol: v1\n' +
+        '    $tag: #B11TDWH3C5F8J8Q87XKRAD8BM7L5VYSS\n' +
+        '    $version: v1\n' +
+        ')';
+
 const MESSAGE = '[$foo: "bar"]';
 
 const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
@@ -91,12 +88,16 @@ function loadTask(filename) {
         1,
         3,
         5,
-        "<bali:?[]>",
-        "<bali:?[$protocol:v1,$tag:#M8G7XJH640RR4YBCLGNDYABD6328741S,$version:v1,$digest:'']>",
-        bali.parse('[$foo: "bar"](\n' +
-        "    <bali:?[$protocol:v1,$tag:#M8G7XJH640RR4YBCLGNDYABD6328741S,$version:v1,$digest:'NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0']>\n" +
-        ')'),
+        '$protocol',
+        'v1',
+        '$tag',
+        '#M8G7XJH640RR4YBCLGNDYABD6328741S',
+        '$version',
+        '$digest',
+        "'NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0'",
+        '$type',
         '$foo',
+        '"bar"',
         bali.parse('{return prefix + name}')
     ]);
     const constants = bali.catalog({$constant: 5});
@@ -107,7 +108,7 @@ function loadTask(filename) {
 
     // create the compiled procedure context
     var parameters = bali.list(['$y', '$x']);
-    var variables = bali.list(['$citation', '$foo', '$queue', '$target']);
+    var variables = bali.list(['$citation', '$foo', '$queue', '$target', '$type']);
     const procedures = bali.list(['$function1', '$function2', '$message1', '$message2']);
     const addresses = bali.catalog();
     addresses.setValue('"3.PushLiteral"', 3);
@@ -135,7 +136,7 @@ function loadTask(filename) {
         var parameter = iterator.getNext();
         parameters.setValue(parameter, bali.NONE);
     }
-    parameters.setValue('$x', bali.parse(MESSAGE));
+    parameters.setValue('$x', bali.parse(DOCUMENT));
 
     // set variable values
     variables = bali.catalog();
@@ -143,6 +144,7 @@ function loadTask(filename) {
     variables.setValue('$foo', bali.NONE);
     variables.setValue('$queue', bali.parse(QUEUE));
     variables.setValue('$target', bali.NONE);
+    variables.setValue('$type', bali.NONE);
 
     // construct the task context
     source = TASK_TEMPLATE;
@@ -370,21 +372,21 @@ describe('Bali Virtual Machine™', function() {
             // PUSH PARAMETER $x
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(MESSAGE);
+            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
             expect(process.context.address).to.equal(2);
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
             process.step();
             expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.variables.getItem(2).getValue().toString()).to.equal(MESSAGE);
+            expect(process.context.variables.getItem(2).getValue().toString()).to.equal(DOCUMENT);
             expect(process.context.address).to.equal(3);
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(MESSAGE);
+            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
             expect(process.context.address).to.equal(4);
 
             // 4.StoreDraft:
@@ -395,7 +397,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DRAFT $citation
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(MESSAGE);
+            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
             expect(process.context.address).to.equal(6);
 
             // 5.StoreDocument:
@@ -408,7 +410,7 @@ describe('Bali Virtual Machine™', function() {
             // LOAD DOCUMENT $citation
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(MESSAGE);
+            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
             expect(process.context.address).to.equal(8);
 
             // 7.StoreMessage:
@@ -505,11 +507,137 @@ describe('Bali Virtual Machine™', function() {
             const process = new vm.Processor(api, task);
             expect(process.context.address).to.equal(1);
 
-            // 1.Execute:
-            // PUSH LITERAL `<bali:?[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
+            // 1.SetupType:
+            // INVOKE $catalog
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             expect(process.context.address).to.equal(2);
+            // PUSH LITERAL `$protocol`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(3);
+            // PUSH LITERAL `v1`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(4);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(5);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(6);
+            // PUSH LITERAL `$tag`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(7);
+            // PUSH LITERAL `#M8G7XJH640RR4YBCLGNDYABD6328741S`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(8);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(9);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(10);
+            // PUSH LITERAL `$version`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(11);
+            // PUSH LITERAL `v1`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(12);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(13);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(14);
+            // PUSH LITERAL `$digest`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(15);
+            // PUSH LITERAL `'NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0'`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(16);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(17);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(18);
+            // STORE VARIABLE $type
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(0);
+            expect(process.context.address).to.equal(19);
+
+            // 2.SetupParameters:
+            // INVOKE $catalog
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(20);
+            // PUSH LITERAL `$type`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(21);
+            // LOAD VARIABLE $type
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(22);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(23);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(24);
+            // INVOKE $parameters WITH PARAMETER
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(25);
+
+            // 3.SetupTarget:
+            // INVOKE $catalog WITH PARAMETER
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(26);
+            // PUSH LITERAL `$foo`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(27);
+            // PUSH LITERAL `"bar"`
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(3);
+            expect(process.context.address).to.equal(28);
+            // INVOKE $association WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(2);
+            expect(process.context.address).to.equal(29);
+            // INVOKE $addItem WITH 2 PARAMETERS
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(30);
+            // STORE VARIABLE $target
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(0);
+            expect(process.context.address).to.equal(31);
+
+            // 4.Execute:
+            // LOAD VARIABLE $type
+            process.step();
+            expect(process.task.stack.getSize()).to.equal(1);
+            expect(process.context.address).to.equal(32);
             // EXECUTE $function1
             process.step();
                 expect(process.task.contexts.getSize()).to.equal(1);
@@ -523,33 +651,33 @@ describe('Bali Virtual Machine™', function() {
                 process.step();
                 expect(process.task.contexts.getSize()).to.equal(0);
                 expect(process.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
-            expect(process.context.address).to.equal(3);
+            expect(process.context.address).to.equal(33);
             // POP COMPONENT
             process.step();
             expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(4);
+            expect(process.context.address).to.equal(34);
 
-            // 2.ExecuteWithParameters:
-            // PUSH LITERAL `<bali:?[$protocol:v1,$tag:#...,$version:v1,$digest:'...']>`
+            // 5.ExecuteWithParameters:
+            // LOAD VARIABLE $type
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(5);
+            expect(process.context.address).to.equal(35);
             // INVOKE $list
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(6);
+            expect(process.context.address).to.equal(36);
             // PUSH LITERAL `"parameter"`
             process.step();
             expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(7);
+            expect(process.context.address).to.equal(37);
             // INVOKE $addItem WITH 2 PARAMETERS
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(8);
+            expect(process.context.address).to.equal(38);
             // INVOKE $parameters WITH PARAMETER
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(9);
+            expect(process.context.address).to.equal(39);
             // EXECUTE $function2 WITH PARAMETERS
             process.step();
                 expect(process.task.contexts.getSize()).to.equal(1);
@@ -624,19 +752,19 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH LITERAL `false`
                 // HANDLE RESULT
 
-            expect(process.context.address).to.equal(10);
+            expect(process.context.address).to.equal(40);
             // POP COMPONENT
             process.step();
             expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(11);
+            expect(process.context.address).to.equal(41);
 
-            // 3.ExecuteOnTarget:
-            // PUSH LITERAL `[$foo: "bar"](<bali:?[...]>)`
+            // 6.ExecuteOnTarget:
+            // LOAD VARIABLE $target
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
             const expected = process.task.stack.getTop();
             expect(expected.toString().includes('[$foo: "bar"]')).to.equal(true);
-            expect(process.context.address).to.equal(12);
+            expect(process.context.address).to.equal(42);
             // EXECUTE $message1 ON TARGET
             process.step();
             expect(process.task.contexts.getSize()).to.equal(1);
@@ -652,41 +780,41 @@ describe('Bali Virtual Machine™', function() {
                 process.step();
                 expect(process.task.contexts.getSize()).to.equal(0);
                 expect(process.task.stack.getTop().isEqualTo(expected)).to.equal(true);
-            expect(process.context.address).to.equal(13);
+            expect(process.context.address).to.equal(43);
             // POP COMPONENT
             process.step();
             expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(14);
+            expect(process.context.address).to.equal(44);
 
-            // 4.ExecuteOnTargetWithParameters:
-            // PUSH LITERAL `[$foo: "bar"](<bali:?[...]>)`
+            // 7.ExecuteOnTargetWithParameters:
+            // LOAD VARIABLE $target
             process.step();
             expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(15);
+            expect(process.context.address).to.equal(45);
             // INVOKE $list
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(16);
+            expect(process.context.address).to.equal(46);
             // PUSH LITERAL `"parameter1"`
             process.step();
             expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(17);
+            expect(process.context.address).to.equal(47);
             // INVOKE $addItem WITH 2 PARAMETERS
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(18);
+            expect(process.context.address).to.equal(48);
             // PUSH LITERAL `"parameter2"`
             process.step();
             expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(19);
+            expect(process.context.address).to.equal(49);
             // INVOKE $addItem WITH 2 PARAMETERS
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(20);
+            expect(process.context.address).to.equal(50);
             // INVOKE $parameters WITH PARAMETER
             process.step();
             expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(21);
+            expect(process.context.address).to.equal(51);
             // EXECUTE $message2 ON TARGET WITH PARAMETERS
             process.step();
             expect(process.task.contexts.getSize()).to.equal(1);
@@ -755,8 +883,8 @@ describe('Bali Virtual Machine™', function() {
 
             // EOF
             expect(process.step()).to.equal(false);
-            expect(process.task.clock).to.equal(49);
-            expect(process.task.balance).to.equal(951);
+            expect(process.task.clock).to.equal(79);
+            expect(process.task.balance).to.equal(921);
             expect(process.task.status).to.equal('$done');
         });
 

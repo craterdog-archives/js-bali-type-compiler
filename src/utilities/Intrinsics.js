@@ -1174,7 +1174,7 @@ function constructCollection(procedure, parameters) {
             $actual: bali.types.symbolForType(parameters.getTypeId())
         });
     }
-    const collection = bali[procedure.slice(1)](parameters);
+    const collection = bali[procedure.slice(1)](undefined, parameters);
     return collection;
 }
 

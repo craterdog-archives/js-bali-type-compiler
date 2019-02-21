@@ -2,7 +2,12 @@
     $description: "
         This abstract class defines the messages that all elemental components support.
     "($mediatype: "application/bsmd")
-    $parent: <bali:/Component?[$protocol:v1,$tag:#GC5TG7QPT80BM6243Z15SKR0NB59KD94,$version:v1,$digest:none]>
+    $parent: [
+        $protocol: v1
+        $name: $Component
+        $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
+        $version: v1
+    ]
     $procedures: [
         $asBoolean: [
             $description: "

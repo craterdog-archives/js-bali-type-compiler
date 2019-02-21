@@ -33,12 +33,11 @@ exports.compile = function(nebula, citation) {
     const literals = bali.list();
     const constants = bali.catalog();
     var procedures = bali.catalog();
-    var reference = document.getValue('$parent');
-    if (reference) {
-        // TODO: This is a reference to the parent type definition document, not the compiled
+    citation = document.getValue('$parent');
+    if (citation) {
+        // TODO: This is a citation to the parent type definition document, not the compiled
         //       type so its digest will not match the parent type.  How do we address this in
         //       a way that preserves the merkle pointer chain?
-        citation = extractCitation(reference);
         citation.setValue('$digest', bali.NONE);
 
         // retrieve the compiled parent type

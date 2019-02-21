@@ -574,11 +574,10 @@ const instructionHandlers = [
         const index = operand;
         // pop the draft that is on top of the component stack off the stack
         const draft = processor.task.stack.removeItem();
-        // lookup the citation associated with the index operand
-        const citation = processor.context.variables.getItem(index).getValue();
-        // TODO: jump to exception handler if the citation isn't a citation
-        // write the cited draft to the nebula repository
-        processor.nebula.saveDraft(draft);
+        // write the draft to the nebula repository
+        const citation = processor.nebula.saveDraft(draft);
+        // and store the resulting citation in the variable associated with the index
+        processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
     },
 
@@ -587,11 +586,9 @@ const instructionHandlers = [
         const index = operand;
         // pop the document that is on top of the component stack off the stack
         const document = processor.task.stack.removeItem();
-        // lookup the citation associated with the index operand
-        var citation = processor.context.variables.getItem(index).getValue();
-        // TODO: jump to exception handler if the citation isn't a citation
-        // write the cited document to the nebula repository
-        citation = processor.nebula.commitDocument(document);
+        // write the document to the nebula repository
+        const citation = processor.nebula.commitDocument(document);
+        // and store the resulting citation in the variable associated with the index
         processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
     },
@@ -673,7 +670,7 @@ const instructionHandlers = [
         const index = operand;
         const parameters = bali.parameters(bali.list());
         const target = processor.task.stack.removeItem();
-        const type = bali.parse(target.getType());
+        const type = target.getParameters().getParameter('$type');
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
@@ -684,7 +681,7 @@ const instructionHandlers = [
         const index = operand;
         const parameters = processor.task.stack.removeItem();
         const target = processor.task.stack.removeItem();
-        const type = bali.parse(target.getType());
+        const type = target.getParameters().getParameter('$type');
         pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
