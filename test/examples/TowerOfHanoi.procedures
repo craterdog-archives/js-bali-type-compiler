@@ -404,8 +404,8 @@
         ]
     ]
 ](
-    $type: $Type
-    $protocol: v1
+    $name: $TowerOfHanoi
+    $type: $Class
     $tag: #1M9WB8VXAWP8A0T1K3MHWD4ZFBM3MG7T
     $version: v1
 )

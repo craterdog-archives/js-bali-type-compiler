@@ -14,7 +14,7 @@
                 This parameter describes whether this type is concrete and can be instantiated
                 or if it is abstract and cannot.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Existence>
+            $type: $Existence
             $default: $concrete
         ]
     ]
@@ -23,19 +23,19 @@
             $description: "
                 A reference to the parent type from which this type inherits its behavior.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Reference>($referencedType: <bali:/Type>($abstract))
+            $type: $Reference($referencedType: $Type($abstract))
         ]
         $parameters: [
             $description: "
                 A catalog of the parameters that are used to parameterize instances of this type.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Catalog>($valueType: <bali:/Parameter>)
+            $type: $Catalog($valueType: $Parameter)
         ]
         $dependencies: [
             $description: "
                 A catalog of the other types that this type is dependent upon.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Catalog>($valueType: <bali:/Reference>($referencedType: <bali:/Type>))
+            $type: $Catalog($valueType: $Reference($referencedType: $Type))
         ]
     ]
     $procedures: [
@@ -44,7 +44,7 @@
                 This procedure returns a list of the types from which this type inherits its
                 behavior.
             "($mediatype: "application/bsmd")
-            $type: <bali:/List>(<bali:/Reference>($referencedType: <bali:/Type>))
+            $type: $List($Reference($referencedType: $Type))
             $source: {
                 $ancestors := [target]
                 $ancestor := parent
@@ -57,8 +57,8 @@
         ]
     ]
 ](
-    $type: <bali:/Class>($existence: $abstract)
-    $protocol: v1
+    $name: $Type
+    $type: $Class($existence: $abstract)
     $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
 )

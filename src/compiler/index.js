@@ -53,8 +53,8 @@ exports.compile = function(nebula, citation) {
 
     // create the compilation type context
     const type = bali.catalog([], bali.parameters({
-        $type: '$Type',
-        $protocol: parameters.getParameter('$protocol'),
+        $name: parameters.getParameter('$name'),
+        $type: parameters.getParameter('$type'),
         $tag: parameters.getParameter('$tag'),
         $version: parameters.getParameter('$version')
     }));

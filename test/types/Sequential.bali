@@ -14,7 +14,7 @@
             $description: "
                 This parameter defines the type of item that the sequential component manages.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Reference>($referencedType: <bali:/Type>)
+            $type: $Reference($referencedType: $Type)
         ]
     ]
     $messages: [
@@ -24,26 +24,26 @@
                 that can be used to iterate over the subcomponents that make up this
                 composite component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Iterator>($ItemType: ItemType)
+            $type: $Iterator($ItemType: ItemType)
         ]
         $getSize: [
             $description: "
                 This message causes the target component to return the number of
                 subcomponents that make up this component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Number>(0..infinity)
+            $type: $Number(0..infinity)
         ]
         $isEmpty: [
             $description: "
                 This message causes the target component to return whether or not this
                 component has any subcomponents.
             "($mediatype: "application/bsmd")
-            $type: <bali:Probability>($granularity: $boolean)
+            $type: $robability($granularity: $boolean)
         ]
     ]
 ](
-    $type: <bali:/Interface>
-    $protocol: v1
+    $name: $Sequential
+    $type: $Interface
     $tag: #7ZG69N9QGDQSS66RVWYN7P8TYVV3FAM3
     $version: v1
 )

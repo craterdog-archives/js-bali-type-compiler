@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         'test/config/*'
       ],
       options: {
-        force: false
+        force: true
       }
     },
 

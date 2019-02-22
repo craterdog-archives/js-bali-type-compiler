@@ -7,7 +7,7 @@
             $description: "
                 This procedure returns the source code equivalent of this value.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Text>($mediatype: "application/bali")
+            $type: $Text($mediatype: "application/bali")
             $source: {
                 return format(target)
             }
@@ -22,10 +22,10 @@
                     $description: "
                         The component type to be compared with.
                     "($mediatype: "application/bsmd")
-                    $type: <bali:/Reference>($referencedType: <bali:/Type>)
+                    $type: $Reference($referencedType: $Type)
                 ]
             ]
-            $type: <bali:/Probability>($granularity: $boolean)
+            $type: $Probability($granularity: $boolean)
             $source: {
                 $ancestors := @getType(target).getAncestors()
                 with each $ancestor in ancestors do {
@@ -41,9 +41,9 @@
                 This procedure returns a list of references to the ancestors for the
                 type of this component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/List>(
-                $ItemType: <bali:/Reference>(
-                    $referencedType: <bali:/Type>
+            $type: $List(
+                $ItemType: $Reference(
+                    $referencedType: $Type
                 )
             )
             $source: {
@@ -58,7 +58,7 @@
                 This procedure returns a catalog of any arguments that were used to
                 parameterize this component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Catalog>($valueType: <bali:/Argument>)
+            $type: $Catalog($valueType: $Argument)
             $source: {
                 return getArguments(target)
             }
@@ -67,7 +67,7 @@
             $description: "
                 This procedure returns a consistent hash value of this component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Number>(0..4294967295)
+            $type: $Number(0..4294967295)
             $source: {
                 return getHash(target)
             }
@@ -76,15 +76,15 @@
             $description: "
                 This procedure returns the type of this component.
             "($mediatype: "application/bsmd")
-            $type: <bali:/Reference>($referencedType: <bali:/Type>)
+            $type: $Reference($referencedType: $Type)
             $source: {
                 return getType(target)
             }
         ]
     ]
 ](
-    $type: <bali:/Class>($existence: $abstract)
-    $protocol: v1
+    $name: $Component
+    $type: $Class($existence: $abstract)
     $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
     $version: v1
 )
