@@ -21,12 +21,10 @@ const vm = require('../');
 const compiler = new vm.Compiler();
 const assembler = new vm.Assembler();
 
-/*  uncomment to generate a new notary key and certificate
 const certificate = notary.generateKeys();
 const citation = notary.getCitation();
 const certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
 repository.storeCertificate(certificateId, certificate);
-/*                                                          */
 
 
 describe('Bali Virtual Macine™', function() {
@@ -106,7 +104,9 @@ describe('Bali Virtual Macine™', function() {
         it('should compile the Bali types.', function() {
             const testFolder = 'test/types/';
             for (var i = 0; i < sources.length; i++) {
-                var source = fs.readFileSync(testFolder + sources[i], 'utf8');
+                var file = sources[i];
+                console.log('      ' + file);
+                var source = fs.readFileSync(testFolder + file, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
                 var typeCitation = api.createDraft(type);
