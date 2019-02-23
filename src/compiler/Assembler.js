@@ -121,7 +121,15 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
             this.visitHandleInstruction(step);
             break;
         default:
-            throw new Error('ASSEMBLER: An invalid instruction operation was passed: ' + utilities.types.typeString(operation));
+            throw bali.exception({
+                $module: '$Assembler',
+                $procedure: '$visitCatalog',
+                $exception: '$invalidOperation',
+                $expected: bali.range(0, 7),
+                $actual: operation,
+                $step: step,
+                $message: 'An invalid operation was found in a procedure step.'
+            });
     }
 };
 

@@ -82,16 +82,23 @@ Processor.prototype.run = function() {
  * @returns {String} A string representation of the current processor state.
  */
 Processor.prototype.toString = function() {
-    const task = exportTask(this.task);
-    const contexts = task.getValue('$contexts');
-    if (this.context) contexts.addItem(exportContext(this.context));  // this is affecting the live stack!
-    const string = task.toString();
-    if (this.context) contexts.removeItem();  // so we must remove it again afterward!  TODO: fix this!!!
-    return string;
+    const task = captureState(this);
+    return task.toString();
 };
 
 
 // PRIVATE FUNCTIONS
+
+function captureState(processor) {
+    const task = bali.duplicate(exportTask(processor.task));  // copy the task state
+    const contexts = task.getValue('$contexts');
+    if (processor.context) {
+        const currentContext = exportContext(processor.context);
+        contexts.addItem(bali.duplicate(currentContext));  // add a copy of the context
+    }
+    return task;
+}
+
 
 /*
  * This function determines whether or not the task assigned to the specified processor is runnable.
@@ -155,12 +162,15 @@ function handleException(processor, exception) {
             stack[index] = line;
         });
         exception = bali.catalog({
-            $exception: '$bug',
+            $module: '$Processor',
+            $procedure: '$executeInstruction',
+            $exception: '$processorBug',
             $type: '"' + exception.constructor.name + '"',
+            $processor: captureState(processor),
             $message: '"' + exception + '"',
             $trace: '"\n' + stack.join('\n') + '"'
         });
-        console.log('BUG: ' + exception);
+        console.log('FOUND BUG IN PROCESSOR: ' + exception);
     }
     processor.task.stack.addItem(exception);
     instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
@@ -486,12 +496,26 @@ const instructionHandlers = [
 
     // UNIMPLEMENTED POP OPERATION
     function(processor, operand) {
-        throw new Error('An unimplemented POP operation was attempted: 22');
+        throw bali.exception({
+            $module: '$Processor',
+            $procedure: '$pop3',
+            $exception: '$notImplemented',
+            $operand: operand,
+            $processor: captureState(processor),
+            $message: 'An unimplemented POP operation was attempted.'
+        });
     },
 
     // UNIMPLEMENTED POP OPERATION
     function(processor, operand) {
-        throw new Error('An unimplemented POP operation was attempted: 23');
+        throw bali.exception({
+            $module: '$Processor',
+            $procedure: '$pop4',
+            $exception: '$notImplemented',
+            $operand: operand,
+            $processor: captureState(processor),
+            $message: 'An unimplemented POP operation was attempted.'
+        });
     },
 
     // LOAD VARIABLE symbol
@@ -726,12 +750,26 @@ const instructionHandlers = [
 
     // UNIMPLEMENTED HANDLE OPERATION
     function(processor, operand) {
-        throw new Error('An unimplemented HANDLE operation was attempted: 72');
+        throw bali.exception({
+            $module: '$Processor',
+            $procedure: '$handle3',
+            $exception: '$notImplemented',
+            $operand: operand,
+            $processor: captureState(processor),
+            $message: 'An unimplemented HANDLE operation was attempted.'
+        });
     },
 
     // UNIMPLEMENTED HANDLE OPERATION
     function(processor, operand) {
-        throw new Error('An unimplemented HANDLE operation was attempted: 73');
+        throw bali.exception({
+            $module: '$Processor',
+            $procedure: '$handle4',
+            $exception: '$notImplemented',
+            $operand: operand,
+            $processor: captureState(processor),
+            $message: 'An unimplemented HANDLE operation was attempted.'
+        });
     }
 
 ];

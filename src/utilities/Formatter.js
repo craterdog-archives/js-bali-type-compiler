@@ -122,7 +122,15 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
             this.visitHandleInstruction(step);
             break;
         default:
-            throw new Error('FORMATTER: An invalid instruction operation was passed: ' + types.operationString(operation));
+            throw bali.exception({
+                $module: '$Formatter',
+                $procedure: '$visitCatalog',
+                $exception: '$invalidOperation',
+                $expected: bali.range(0, 7),
+                $actual: operation,
+                $step: step,
+                $message: 'An invalid operation was found in a procedure step.'
+            });
     }
 };
 

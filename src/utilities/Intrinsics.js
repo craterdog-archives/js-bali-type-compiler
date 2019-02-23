@@ -1072,18 +1072,22 @@ function getType(component) {
 function constructElement(procedure, value, parameters) {
     if (value.getTypeId() !== bali.types.TEXT) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: '$Text',
-            $actual: bali.types.symbolForType(value.getTypeId())
+            $actual: bali.types.symbolForType(value.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: '$Parameters',
-            $actual: bali.types.symbolForType(parameters.getTypeId())
+            $actual: bali.types.symbolForType(parameters.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     const element = bali[procedure.slice(1)](value, parameters);
@@ -1094,18 +1098,22 @@ function constructElement(procedure, value, parameters) {
 function constructSource(procedure, parameters) {
     if (procedure.getTypeId() !== bali.types.TREE) {
         throw bali.exception({
+            $module: '$Intrinsics',
+            $procedure: procedure,
             $exception: '$parameterType',
-            $procedure: '$source',
             $expected: '$Tree',
-            $actual: bali.types.symbolForType(procedure.getTypeId())
+            $actual: bali.types.symbolForType(procedure.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
+            $module: '$Intrinsics',
+            $procedure: procedure,
             $exception: '$parameterType',
-            $procedure: '$source',
             $expected: '$Parameters',
-            $actual: bali.types.symbolForType(parameters.getTypeId())
+            $actual: bali.types.symbolForType(parameters.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     const source = bali.source(procedure, parameters);
@@ -1116,26 +1124,32 @@ function constructSource(procedure, parameters) {
 function constructRange(first, last, parameters) {
     if (!(first instanceof bali.Element)) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: '$range',
+            $exception: '$parameterType',
             $expected: '$Element',
-            $actual: bali.types.symbolForType(first.getTypeId())
+            $actual: bali.types.symbolForType(first.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     if (first.getTypeId() !== last.getTypeId()) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: '$range',
+            $exception: '$parameterType',
             $expected: bali.types.symbolForType(first.getTypeId()),
-            $actual: bali.types.symbolForType(last.getTypeId())
+            $actual: bali.types.symbolForType(last.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: '$range',
+            $exception: '$parameterType',
             $expected: '$Parameters',
-            $actual: bali.types.symbolForType(parameters.getTypeId())
+            $actual: bali.types.symbolForType(parameters.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     const range = bali.range(first, last, parameters);
@@ -1146,18 +1160,22 @@ function constructRange(first, last, parameters) {
 function constructTree(symbol, complexity) {
     if (symbol.getTypeId() !== bali.types.SYMBOL) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: '$tree',
+            $exception: '$parameterType',
             $expected: '$Symbol',
-            $actual: bali.types.symbolForType(symbol.getTypeId())
+            $actual: bali.types.symbolForType(symbol.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     if (complexity.getTypeId() !== bali.types.NUMBER) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: '$tree',
+            $exception: '$parameterType',
             $expected: '$Number',
-            $actual: bali.types.symbolForType(complexity.getTypeId())
+            $actual: bali.types.symbolForType(complexity.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     const tree = bali.tree(bali.types.typeForSymbol(symbol), complexity.toNumber());
@@ -1168,10 +1186,12 @@ function constructTree(symbol, complexity) {
 function constructCollection(procedure, parameters) {
     if (parameters && parameters.getTypeId() !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.NONE)) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: '$Parameters',
-            $actual: bali.types.symbolForType(parameters.getTypeId())
+            $actual: bali.types.symbolForType(parameters.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
     const collection = bali[procedure.slice(1)](undefined, parameters);
@@ -1182,10 +1202,12 @@ function constructCollection(procedure, parameters) {
 function validateParameterType(procedure, type, parameter) {
     if (parameter.getTypeId() !== type) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: bali.types.symbolForType(type),
-            $actual: bali.types.symbolForType(parameter.getTypeId())
+            $actual: bali.types.symbolForType(parameter.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
 }
@@ -1194,10 +1216,12 @@ function validateParameterType(procedure, type, parameter) {
 function validateParameterAbstraction(procedure, abstraction, parameter) {
     if (!(parameter instanceof abstraction)) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: '$' + abstraction.name,
-            $actual: bali.types.symbolForType(parameter.getTypeId())
+            $actual: bali.types.symbolForType(parameter.getTypeId()),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
 }
@@ -1207,10 +1231,12 @@ function validateParameterAspect(procedure, aspect, parameter) {
     const type = parameter.getTypeId();
     if (!bali.types['is' + aspect.slice(1)](type)) {
         throw bali.exception({
-            $exception: '$parameterType',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterType',
             $expected: aspect,
-            $actual: bali.types.symbolForType(type)
+            $actual: bali.types.symbolForType(type),
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
 }
@@ -1220,10 +1246,12 @@ function validateIndex(procedure, size, index) {
     index = Math.abs(index);
     if (index === 0 || index > size) {
         throw bali.exception({
-            $exception: '$parameterValue',
+            $module: '$Intrinsics',
             $procedure: procedure,
+            $exception: '$parameterValue',
             $expected: bali.range(1, size),
-            $actual: index
+            $actual: index,
+            $message: 'An invalid parameter type was passed into an intrinsic function.'
         });
     }
 }

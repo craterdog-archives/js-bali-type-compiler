@@ -309,7 +309,12 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
         context.exception = e;
         context = context.parentCtx;
     }
-    throw new Error(e.message);
+    throw bali.exception({
+        $module: '$Parser',
+        $procedure: '$parseDocument',
+        $exception: '$syntaxError',
+        $message: '"' + e.message + '"'
+    });
 };
 
 
@@ -336,21 +341,30 @@ CustomErrorListener.prototype.constructor = CustomErrorListener;
 
 
 CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken, lineNumber, columnNumber, message, e) {
-    // log a message
+    // create the error message
     const token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
     const input = token ? offendingToken.getInputStream() : recognizer._input;
     const lines = input.toString().split(EOL);
     const character = lines[lineNumber - 1][columnNumber];
     if (!token) {
-        message = "LEXER: An unexpected character was encountered: '" + character + "'";
+        message = "An unexpected character was encountered: '" + character + "'";
     } else {
-        message = 'PARSER: An invalid token was encountered: ' + token;
+        message = 'An invalid token was encountered: ' + token;
     }
-    logMessage(recognizer, message);
+    message = addContext(recognizer, message);
 
-    // stop processing
-    const error = new Error(message);
-    throw error;
+    // log the error message if in debug mode
+    if (this.debug) {
+        console.error(message);
+    }
+
+    // stop the processing
+    throw bali.exception({
+        $module: '$Parser',
+        $procedure: '$parseDocument',
+        $exception: '$syntaxError',
+        $message: '"' + message + '"'
+    });
 };
 
 
@@ -362,8 +376,9 @@ CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startI
             alternatives.push(item.alt);
         });
         alternatives = "{" + alternatives.join(", ") + "}";
-        const message = 'PARSER: Ambiguous input was encountered for rule: ' + rule + ', alternatives: ' + alternatives;
-        logMessage(recognizer, message);
+        var message = 'The parser encountered ambiguous input for rule: ' + rule + ', alternatives: ' + alternatives;
+        message = addContext(recognizer, message);
+        console.error(message);
     }
 };
 
@@ -371,8 +386,9 @@ CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startI
 CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa, startIndex, stopIndex, prediction, configs) {
     if (this.debug) {
         const rule = getRule(recognizer, dfa);
-        const message = 'PARSER Encountered a context sensitive rule: ' + rule;
-        logMessage(recognizer, message);
+        var message = 'The parser encountered a context sensitive rule: ' + rule;
+        message = addContext(recognizer, message);
+        console.error(message);
     }
 };
 
@@ -392,11 +408,11 @@ function getRule(recognizer, dfa) {
 }
 
 
-function logMessage(recognizer, message) {
-    // log the error message
-    console.error(message.slice(0, 160));
+function addContext(recognizer, message) {
+    // truncate the main message as needed
+    message = EOL + '    ' + message.slice(0, 160) + EOL;
 
-    // log the lines before and after the invalid line and highlight the invalid token
+    // add the lines before and after the invalid line and highlight the invalid token
     const offendingToken = recognizer._precedenceStack ? recognizer.getCurrentToken() : undefined;
     const token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
     const input = token ? offendingToken.getInputStream() : recognizer._input;
@@ -404,10 +420,10 @@ function logMessage(recognizer, message) {
     const lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;
     const columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;
     if (lineNumber > 1) {
-        console.error(lines[lineNumber - 2]);
+        message += '    [' + (lineNumber - 1) + ']: ' + lines[lineNumber - 2] + EOL;
     }
-    console.error(lines[lineNumber - 1]);
-    var line = '';
+    message += '    [' + lineNumber + ']: ' + lines[lineNumber - 1] + EOL;
+    var line = '    [' + lineNumber + ']: ';
     for (var i = 0; i < columnNumber; i++) {
         line += ' ';
     }
@@ -416,6 +432,9 @@ function logMessage(recognizer, message) {
     while (start++ <= stop) {
         line += '^';
     }
-    console.error(line);
-    if (lineNumber < lines.length) console.error(lines[lineNumber]);
+    message += line + EOL;
+    if (lineNumber < lines.length) {
+        message += '    [' + (lineNumber + 1) + ']: ' + lines[lineNumber] + EOL;
+    }
+    return message;
 }

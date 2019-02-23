@@ -189,7 +189,13 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
         }
     }
     // there was no matching enclosing loop with that label
-    throw new Error('COMPILER: A break statement was found with no enclosing loop.');
+    throw bali.exception({
+        $module: '$Compiler',
+        $procedure: '$visitBreakClause',
+        $exception: '$noEnclosingLoop',
+        $parent: tree.getParent(),
+        $message: 'A break statement was found with no enclosing loop.'
+    });
 };
 
 
@@ -395,7 +401,13 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
         }
     }
     // there was no matching enclosing loop with that label
-    throw new Error('COMPILER: A continue statement was found with no enclosing loop.');
+    throw bali.exception({
+        $module: '$Compiler',
+        $procedure: '$visitContinueClause',
+        $exception: '$noEnclosingLoop',
+        $parent: tree.getParent(),
+        $message: 'A continue statement was found with no enclosing loop.'
+    });
 };
 
 
@@ -586,7 +598,13 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     // make sure the number of parameters is less than 4
     const numberOfParameters = parameters.getSize();
     if (numberOfParameters > 3) {
-        throw new Error('COMPILER: The number of function parameters must be less than 4: ' + numberOfParameters);
+        throw bali.exception({
+            $module: '$Compiler',
+            $procedure: '$visitFunctionExpression',
+            $exception: '$tooManyParameters',
+            $function: tree,
+            $message: 'The number of function parameters must be less than 4.'
+        });
     }
 
     // the VM places each parameter on top of the component stack
