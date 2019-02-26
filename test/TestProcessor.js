@@ -13,7 +13,8 @@ const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
-const notary = require('bali-digital-notary').api(testDirectory);
+const account = bali.parse('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
+const notary = require('bali-digital-notary').api(account, testDirectory);
 const nebula = require('bali-nebula-api');
 const repository = nebula.repository(testDirectory);
 const api = nebula.api(notary, repository);
@@ -27,7 +28,7 @@ const EOL = '\n';  // POSIX end of line character
 const TASK_TEMPLATE =
         '[\n' +
         '    $tag: #Y29YH82BHG4SPTGWGFRYBL4RQ33GTX59\n' +
-        '    $account: #GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P\n' +
+        '    $account: ' + account + '\n' +
         '    $balance: 1000\n' +
         '    $status: $active\n' +
         '    $clock: 0\n' +
