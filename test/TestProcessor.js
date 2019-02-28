@@ -70,7 +70,7 @@ const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
 
 function loadTask(filename) {
     const parser = new utilities.Parser(true);
-    const formatter = new utilities.Formatter('    ');
+    const formatter = new utilities.Formatter(1);
     var source = fs.readFileSync(filename, 'utf8');
     var instructions = parser.parseDocument(source);
     instructions = formatter.formatInstructions(instructions);
@@ -149,12 +149,12 @@ function loadTask(filename) {
 
     // construct the task context
     source = TASK_TEMPLATE;
-    source = source.replace(/%bytecode/, bali.format(bytecode, '            '));
-    source = source.replace(/%literals/, bali.format(literals, '            '));
-    source = source.replace(/%constants/, bali.format(constants, '            '));
-    source = source.replace(/%parameters/, bali.format(parameters, '            '));
-    source = source.replace(/%variables/, bali.format(variables, '            '));
-    source = source.replace(/%procedures/, bali.format(procedures, '            '));
+    source = source.replace(/%bytecode/, bali.format(bytecode, 3));
+    source = source.replace(/%literals/, bali.format(literals, 3));
+    source = source.replace(/%constants/, bali.format(constants, 3));
+    source = source.replace(/%parameters/, bali.format(parameters, 3));
+    source = source.replace(/%variables/, bali.format(variables, 3));
+    source = source.replace(/%procedures/, bali.format(procedures, 3));
     const task = bali.parse(source);
 
     return task;

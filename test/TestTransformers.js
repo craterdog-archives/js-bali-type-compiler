@@ -35,7 +35,7 @@ describe('Bali Virtual Machine™', function() {
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseDocument(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            const formatter = new utilities.Formatter('    ');
+            const formatter = new utilities.Formatter(1);
             const formatted = formatter.formatInstructions(procedure);
             const expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
             expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>

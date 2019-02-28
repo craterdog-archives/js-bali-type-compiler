@@ -21,36 +21,38 @@ const types = require('./Types');
 
 /**
  * This class implements a formatter that formats an instruction list into its
- * corresponding source code in a canonical way. If an optional indentation
- * string is specified, then each line of the generated source code will be indented
- * using that string.
+ * corresponding source code in a canonical way.
  * 
  * @constructor
- * @param {String} indentation A blank string that will be prepended to each indented line in
- * the source code. The default is the empty string.
+ * @param {Number} indentation The number of levels of indentation that should be inserted
+ * to each formatted line. The default is zero.
  * @returns {Formatter} The new component formatter.
  */
 function Formatter(indentation) {
-    this.indentation = indentation;
+
+    // the indentation is a private attribute so methods that use it are defined in the constructor
+    indentation = indentation || 0;
+    if (typeof indentation !== 'number') {
+        throw bali.exception({
+            $module: '$Formatter',
+            $procedure: '$Formatter',
+            $exception: '$invalidParameter',
+            $parameter: indentation,
+            $message: '"The indentation parameter should be the number of levels to indent."'
+        });
+    }
+
+    this.formatInstructions = function(instructions) {
+        const visitor = new FormattingVisitor(indentation);
+        instructions.acceptVisitor(visitor);
+        return visitor.source;
+    };
+
     return this;
 }
 Formatter.prototype.constructor = Formatter;
 exports.Formatter = Formatter;
 exports.formatter = new Formatter();
-
-
-/**
- * This method generates the canonical source code for the specified parse tree
- * component.
- * 
- * @param {List} instructions The list of instructions to be formatted.
- * @returns {String} The source code for the instructions.
- */
-Formatter.prototype.formatInstructions = function(instructions) {
-    const visitor = new FormattingVisitor(this.indentation);
-    instructions.acceptVisitor(visitor);
-    return visitor.source;
-};
 
 
 // PRIVATE CLASSES
@@ -59,15 +61,21 @@ const EOL = '\n';  // POSIX end of line character
 
 
 function FormattingVisitor(indentation) {
-    this.indentation = indentation ? indentation : '';
-    this.source = this.indentation;
+    this.indentation = indentation;
+    this.source = '';
+    for (var i = 0; i < this.indentation; i++) {
+        this.source += '    ';
+    }
     return this;
 }
 FormattingVisitor.prototype.constructor = FormattingVisitor;
 
 
 FormattingVisitor.prototype.appendNewline = function() {
-    this.source += EOL + this.indentation;
+    this.source += EOL;
+    for (var i = 0; i < this.indentation; i++) {
+        this.source += '    ';
+    }
 };
 
 
@@ -91,7 +99,7 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
     const label = step.getValue('$label');
     if (label) {
         // labels are preceded by a blank line unless they are part of the first step
-        if (this.source !== this.indentation) this.appendNewline();
+        if (this.source.length > 4 * this.indentation) this.appendNewline();
         this.source += label.getValue() + ':';
         this.appendNewline();
     }
