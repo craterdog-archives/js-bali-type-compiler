@@ -66,8 +66,6 @@ const DOCUMENT = '[$foo: "bar"](\n' +
 
 const MESSAGE = '[$foo: "bar"]';
 
-const QUEUE = '#5ZZ7B985TKH2DZDTKBPPC9XLSNALS8L2';
-
 function loadTask(filename) {
     const parser = new utilities.Parser(true);
     const formatter = new utilities.Formatter(1);
@@ -143,7 +141,7 @@ function loadTask(filename) {
     variables = bali.catalog();
     variables.setValue('$citation', bali.parse(CITATION));
     variables.setValue('$foo', bali.NONE);
-    variables.setValue('$queue', bali.parse(QUEUE));
+    variables.setValue('$queue', bali.tag());
     variables.setValue('$target', bali.NONE);
     variables.setValue('$type', bali.NONE);
 

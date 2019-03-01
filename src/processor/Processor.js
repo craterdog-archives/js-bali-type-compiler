@@ -247,7 +247,7 @@ function queueTaskContext(processor) {
     const task = exportTask(processor.task);
     const document = task.toString();
     // queue up the task for a new virtual machine
-    const WAIT_QUEUE = '#3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K';
+    const WAIT_QUEUE = bali.tag('3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K');
     processor.nebula.queueMessage(WAIT_QUEUE, document);
 }
 

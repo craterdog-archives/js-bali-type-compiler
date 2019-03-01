@@ -103,11 +103,3 @@ exports.compile = function(nebula, citation) {
 
     return citation;
 };
-
-
-// PRIVATE FUNCTIONS
-
-const extractCitation = function(reference) {
-    const citation = bali.parse(reference.getValue().search.slice(1).replace(/\$tag:%23/, '$tag:#'));
-    return citation;
-};

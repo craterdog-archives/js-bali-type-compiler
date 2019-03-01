@@ -24,7 +24,7 @@ const assembler = new vm.Assembler();
 
 const certificate = notary.generateKeys();
 const citation = notary.getCitation();
-const certificateId = '' + citation.getValue('$tag') + citation.getValue('$version');
+const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
 repository.storeCertificate(certificateId, certificate);
 
 
