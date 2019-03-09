@@ -20,6 +20,9 @@ const ACTIVE = '$active';
 const WAITING = '$waiting';
 const DONE = '$done';
 
+// This private constant sets the POSIX end of line character
+const EOL = '\n';
+
 
 // PUBLIC FUNCTIONS
 
@@ -29,50 +32,19 @@ const DONE = '$done';
  * @constructor
  * @param {Object} nebula An object that implements the Bali Nebula API™.
  * @param {Catalog} task The task for the new processor to execute.
+ * @param {Boolean} debug An optional flag that determines whether or not exceptions
+ * will be logged to the error console.
  * @returns {Processor} The new processor loaded with the task.
  */
-function Processor(nebula, task) {
+const Processor = function(nebula, task, debug) {
     this.nebula = nebula;
     this.task = importTask(task);
+    this.debug = debug || false;
     this.context = importContext(this.task.contexts.removeItem());
     return this;
-}
+};
 Processor.prototype.constructor = Processor;
 exports.Processor = Processor;
-
-
-/**
- * This method executes the next instruction in the current task.
- * 
- * @returns {Boolean} Whether or not an instruction was executed.
- */
-Processor.prototype.step = function() {
-    const wasFetched = fetchInstruction(this);
-    if (wasFetched) {
-        executeInstruction(this);
-    } else {
-        finalizeProcessing(this);
-    }
-    return wasFetched;
-};
-
-
-/**
- * This method executes all of the instructions in the current task until one of the
- * following:
- * <pre>
- *  * the end of the instructions is reached,
- *  * an unhandled exception is thrown,
- *  * the account balance reaches zero,
- *  * or the task is waiting to receive a message from a queue.
- * </pre>
- */
-Processor.prototype.run = function() {
-    while (fetchInstruction(this)) {
-        executeInstruction(this);
-    }
-    finalizeProcessing(this);
-};
 
 
 /**
@@ -87,9 +59,67 @@ Processor.prototype.toString = function() {
 };
 
 
-// PRIVATE FUNCTIONS
+/**
+ * This method executes the next instruction in the current task.
+ * 
+ * @returns {Boolean} Whether or not an instruction was executed.
+ */
+Processor.prototype.step = async function() {
+    try {
+        if (fetchInstruction(this)) {
+            await executeInstruction(this);
+            return true;
+        } else {
+            await finalizeProcessing(this);
+            return false;
+        }
+    } catch (cause) {
+        const exception = bali.exception({
+            $module: '$Processor',
+            $function: '$step',
+            $exception: '$unexpected',
+            $task: captureState(this),
+            $text: bali.text('An unexpected error occurred while attempting to execute a single step of a task.')
+        }, cause);
+        if (this.debug) console.error(exception.toString());
+        throw exception;
+    }
+};
 
-function captureState(processor) {
+
+/**
+ * This method executes all of the instructions in the current task until one of the
+ * following:
+ * <pre>
+ *  * the end of the instructions is reached,
+ *  * an unhandled exception is thrown,
+ *  * the account balance reaches zero,
+ *  * or the task is waiting to receive a message from a queue.
+ * </pre>
+ */
+Processor.prototype.run = async function() {
+    try {
+        while (fetchInstruction(this)) {
+            await executeInstruction(this);
+        }
+        await finalizeProcessing(this);
+    } catch (cause) {
+        const exception = bali.exception({
+            $module: '$Processor',
+            $function: '$run',
+            $exception: '$unexpected',
+            $task: captureState(this),
+            $text: bali.text('An unexpected error occurred while attempting to run a task.')
+        }, cause);
+        if (this.debug) console.error(exception.toString());
+        throw exception;
+    }
+};
+
+
+// PRIVATE SYNCHRONOUS FUNCTIONS
+
+const captureState = function(processor) {
     const task = bali.duplicate(exportTask(processor.task));  // copy the task state
     const contexts = task.getValue('$contexts');
     if (processor.context) {
@@ -97,24 +127,24 @@ function captureState(processor) {
         contexts.addItem(bali.duplicate(currentContext));  // add a copy of the context
     }
     return task;
-}
+};
 
 
 /*
  * This function determines whether or not the task assigned to the specified processor is runnable.
  */
-function isRunnable(processor) {
+const isRunnable = function(processor) {
     const hasInstructions = processor.context && processor.context.address <= processor.context.bytecode.length;
     const isActive = processor.task.status === ACTIVE;
     const hasTokens = processor.task.balance > 0;
     return hasInstructions && isActive && hasTokens;
-}
+};
 
 
 /*
  * This function fetches the next 16 bit bytecode instruction from the current procedure context.
  */
-function fetchInstruction(processor) {
+const fetchInstruction = function(processor) {
     if (isRunnable(processor)) {
         const address = processor.context.address;
         const instruction = processor.context.bytecode[address - 1];
@@ -123,136 +153,10 @@ function fetchInstruction(processor) {
     } else {
         return false;
     }
-}
+};
 
 
-/*
- * This function executes the current 16 bit bytecode instruction.
- */
-function executeInstruction(processor) {
-    // decode the bytecode instruction
-    const instruction = processor.context.instruction;
-    const operation = utilities.bytecode.decodeOperation(instruction);
-    const modifier = utilities.bytecode.decodeModifier(instruction);
-    const operand = utilities.bytecode.decodeOperand(instruction);
-
-    // pass execution off to the correct operation handler
-    const index = (operation << 2) | modifier;  // index: [0..31]
-    try {
-        instructionHandlers[index](processor, operand); // operand: [0..2047]
-    } catch (e) {
-        handleException(processor, e);
-    }
-
-    // update the state of the task context
-    processor.task.clock++;
-    processor.task.balance--;
-}
-
-
-function handleException(processor, exception) {
-    if (!(exception instanceof bali.Exception)) {
-        // it's a bug in the compiler or processor
-        const stack = exception.stack.split('\n').slice(1);
-        stack.forEach(function(line, index) {
-            line = '  ' + line;
-            if (line.length > 80) {
-                line = line.slice(0, 44) + '..' + line.slice(-35, -1);
-            }
-            stack[index] = line;
-        });
-        exception = bali.catalog({
-            $module: '$Processor',
-            $procedure: '$executeInstruction',
-            $exception: '$processorBug',
-            $type: '"' + exception.constructor.name + '"',
-            $processor: captureState(processor),
-            $message: '"' + exception + '"',
-            $trace: '"\n' + stack.join('\n') + '"'
-        });
-        console.log('FOUND BUG IN PROCESSOR: ' + exception);
-    }
-    processor.task.stack.addItem(exception);
-    instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
-}
-
-
-/*
- * This function finalizes the processing depending on the status of the task.
- */
-function finalizeProcessing(processor) {
-    switch (processor.task.status) {
-        case ACTIVE:
-            // the task hit a break point or the account balance is zero so notify any interested parties
-            publishSuspensionEvent(processor);
-            break;
-        case WAITING:
-            // the task is waiting on a message so requeue the task context
-            queueTaskContext(processor);
-            break;
-        case DONE:
-            // the task completed successfully or with an exception so notify any interested parties
-            publishCompletionEvent(processor);
-            break;
-        default:
-    }
-}
-
-
-/*
- * This function publishes a task completion event to the global event queue.
- */
-function publishCompletionEvent(processor) {
-    var source = '[\n' +
-        '    $eventType: $completion\n' +
-        '    $tag: ' + processor.task.tag + '\n' +
-        '    $account: ' + processor.task.account + '\n' +
-        '    $balance: ' + processor.task.balance + '\n' +
-        '    $clock: ' + processor.task.clock + '\n';
-    if (processor.task.result) {
-        source += '    $result: ' + formatter.formatComponent(processor.task.result) + '\n';
-    } else {
-        source += '    $exception: ' + formatter.formatComponent(processor.task.exception) + '\n';
-    }
-        source += ']';
-    const event = bali.parse(source);
-    const citation = processor.nebula.createDraft(event);
-    const draft = processor.nebula.retrieveDraft(citation);
-    processor.nebula.publishEvent(draft);
-}
-
-
-/*
- * This function publishes a task step event to the global event queue.
- */
-function publishSuspensionEvent(processor) {
-    const task = exportTask(processor.task);
-    const source = '[\n' +
-        '    $eventType: $suspension\n' +
-        '    $tag: ' + task.tag + '\n' +
-        '    $task: ' + formatter.formatComponent(task) + '\n' +
-        ']';
-    const event = bali.parse(source);
-    const citation = processor.nebula.createDraft(event);
-    const draft = processor.nebula.retrieveDraft(citation);
-    processor.nebula.publishEvent(draft);
-}
-
-
-/*
- * This function places the current task context on the queue for tasks awaiting messages
- */
-function queueTaskContext(processor) {
-    // convert the task context into its corresponding source document
-    const task = exportTask(processor.task);
-    const document = task.toString();
-    // queue up the task for a new virtual machine
-    const WAIT_QUEUE = bali.tag('3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K');
-    processor.nebula.queueMessage(WAIT_QUEUE, document);
-}
-
-
-function importTask(catalog) {
+const importTask = function(catalog) {
     const task = {
         tag: catalog.getValue('$tag'),
         account: catalog.getValue('$account'),
@@ -263,10 +167,10 @@ function importTask(catalog) {
         contexts: catalog.getValue('$contexts')
     };
     return task;
-}
+};
 
 
-function exportTask(task) {
+const exportTask = function(task) {
     const catalog = bali.catalog();
     catalog.setValue('$tag', task.tag);
     catalog.setValue('$account', task.account);
@@ -276,10 +180,10 @@ function exportTask(task) {
     catalog.setValue('$stack', task.stack);
     catalog.setValue('$contexts', task.contexts);
     return catalog;
-}
+};
 
 
-function importContext(catalog) {
+const importContext = function(catalog) {
     const bytes = catalog.getValue('$bytecode').getValue();
     const bytecode = utilities.bytecode.bytesToBytecode(bytes);
     const procedure = {
@@ -296,10 +200,10 @@ function importContext(catalog) {
         handlers: catalog.getValue('$handlers')
     };
     return procedure;
-}
+};
 
 
-function exportContext(procedure) {
+const exportContext = function(procedure) {
     const bytes = utilities.bytecode.bytecodeToBytes(procedure.bytecode);
     const base16 = bali.codex.base16Encode(bytes);
     var source = "'%bytecode'($encoding: $base16, $mediatype: \"application/bcod\")";
@@ -318,17 +222,147 @@ function exportContext(procedure) {
     catalog.setValue('$procedures', procedure.procedures);
     catalog.setValue('$handlers', procedure.handlers);
     return catalog;
-}
+};
 
 
-function pushContext(processor, target, citation, passedParameters, index) {
+// PRIVATE ASYNCHRONOUS FUNCTIONS
+
+/*
+ * This function executes the current 16 bit bytecode instruction.
+ */
+const executeInstruction = async function(processor) {
+    // decode the bytecode instruction
+    const instruction = processor.context.instruction;
+    const operation = utilities.bytecode.decodeOperation(instruction);
+    const modifier = utilities.bytecode.decodeModifier(instruction);
+    const operand = utilities.bytecode.decodeOperand(instruction);
+
+    // pass execution off to the correct operation handler
+    const index = (operation << 2) | modifier;  // index: [0..31]
+    try {
+        await instructionHandlers[index](processor, operand); // operand: [0..2047]
+    } catch (exception) {
+        await handleException(processor, exception);
+    }
+
+    // update the state of the task context
+    processor.task.clock++;
+    processor.task.balance--;
+};
+
+
+const handleException = async function(processor, exception) {
+    if (!(exception instanceof bali.Exception)) {
+        // it's a bug in the compiler or processor
+        const stack = exception.stack.split(EOL).slice(1);
+        stack.forEach(function(line, index) {
+            line = '  ' + line;
+            if (line.length > 80) {
+                line = line.slice(0, 44) + '..' + line.slice(-35, -1);
+            }
+            stack[index] = line;
+        });
+        exception = bali.catalog({
+            $module: '$Processor',
+            $procedure: '$executeInstruction',
+            $exception: '$processorBug',
+            $type: bali.text(exception.constructor.name),
+            $processor: captureState(processor),
+            $text: bali.text(exception.toString()),
+            $trace: bali.text(EOL + stack.join(EOL))
+        });
+        console.error('FOUND BUG IN PROCESSOR: ' + exception);
+    }
+    processor.task.stack.addItem(exception);
+    await instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
+};
+
+
+/*
+ * This function finalizes the processing depending on the status of the task.
+ */
+const finalizeProcessing = async function(processor) {
+    const status = processor.task.status;
+    switch (status) {
+        case ACTIVE:
+            // the task hit a break point or the account balance is zero so notify any interested parties
+            await publishSuspensionEvent(processor);
+            break;
+        case WAITING:
+            // the task is waiting on a message so requeue the task context
+            await queueTaskContext(processor);
+            break;
+        case DONE:
+            // the task completed successfully or with an exception so notify any interested parties
+            await publishCompletionEvent(processor);
+            break;
+        default:
+    }
+};
+
+
+/*
+ * This function publishes a task completion event to the global event queue.
+ */
+const publishCompletionEvent = async function(processor) {
+    const task = processor.task;
+    const event = bali.catalog({
+        $eventType: '$completion',
+        $tag: task.tag,
+        $account: task.account,
+        $balance: task.balance,
+        $clock: task.clock
+    });
+    if (task.result) {
+        event.setValue('$result', task.result);
+    } else {
+        event.setValue('$exception', task.exception);
+    }
+    const citation = await processor.nebula.createDraft(event);
+    const draft = await processor.nebula.retrieveDraft(citation);
+    await processor.nebula.publishEvent(draft);
+};
+
+
+/*
+ * This function publishes a task step event to the global event queue.
+ */
+const publishSuspensionEvent = async function(processor) {
+    const task = exportTask(processor.task);
+    const event = bali.catalog({
+        $eventType: '$suspension',
+        $tag: task.tag,
+        $task: task
+    });
+    const citation = await processor.nebula.createDraft(event);
+    const draft = await processor.nebula.retrieveDraft(citation);
+    await processor.nebula.publishEvent(draft);
+};
+
+
+/*
+ * This function places the current task context on the queue for tasks awaiting messages
+ */
+const queueTaskContext = async function(processor) {
+    // convert the task context into its corresponding source document
+    const task = exportTask(processor.task);
+    const document = task.toString();
+    // queue up the task for a new virtual machine
+    const WAIT_QUEUE = bali.tag('3F8TVTX4SVG5Z12F3RMYZCTWHV2VPX4K');
+    await processor.nebula.queueMessage(WAIT_QUEUE, document);
+};
+
+
+const pushContext = async function(processor, target, citation, passedParameters, index) {
 
     // save the current procedure context
     const currentContext = processor.context;
 
     // retrieve the type and procedure to be executed
     const name = currentContext.procedures.getItem(index);
-    const type = processor.nebula.retrieveType(citation);
+    const type = await processor.nebula.retrieveType(citation);
+
+    // retrieve the procedures for this type
     var procedures = type.getValue('$procedures');
     const procedure = procedures.getValue(name);
 
@@ -386,15 +420,14 @@ function pushContext(processor, target, citation, passedParameters, index) {
 
     // set the next procedure as the current procedure
     processor.context = nextContext;
-}
+};
 
 
-/*
- * This list contains the instruction handlers for each type of machine instruction.
- */
+// PRIVATE MACHINE INSTRUCTION HANDLERS (ASYNCHRONOUS)
+
 const instructionHandlers = [
     // JUMP TO label
-    function(processor, operand) {
+    async function(processor, operand) {
         // if the operand is not zero then use it as the next instruction to be executed,
         // otherwise it is a SKIP INSTRUCTION (aka NOOP)
         if (operand) {
@@ -406,7 +439,7 @@ const instructionHandlers = [
     },
 
     // JUMP TO label ON NONE
-    function(processor, operand) {
+    async function(processor, operand) {
         const address = operand;
         // pop the condition component off the component stack
         const condition = processor.task.stack.removeItem();
@@ -419,7 +452,7 @@ const instructionHandlers = [
     },
 
     // JUMP TO label ON TRUE
-    function(processor, operand) {
+    async function(processor, operand) {
         const address = operand;
         // pop the condition component off the component stack
         const condition = processor.task.stack.removeItem();
@@ -432,7 +465,7 @@ const instructionHandlers = [
     },
 
     // JUMP TO label ON FALSE
-    function(processor, operand) {
+    async function(processor, operand) {
         const address = operand;
         // pop the condition component off the component stack
         const condition = processor.task.stack.removeItem();
@@ -445,7 +478,7 @@ const instructionHandlers = [
     },
 
     // PUSH HANDLER label
-    function(processor, operand) {
+    async function(processor, operand) {
         const handlerAddress = operand;
         // push the address of the current exception handlers onto the handlers stack
         processor.context.handlers.addItem(bali.number(handlerAddress));
@@ -453,7 +486,7 @@ const instructionHandlers = [
     },
 
     // PUSH LITERAL literal
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the literal associated with the index
         const literal = processor.context.literals.getItem(index);
@@ -462,7 +495,7 @@ const instructionHandlers = [
     },
 
     // PUSH CONSTANT constant
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the constant associated with the index
         const constant = processor.context.constants.getItem(index).getValue();
@@ -471,7 +504,7 @@ const instructionHandlers = [
     },
 
     // PUSH PARAMETER parameter
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the parameter associated with the index
         const parameter = processor.context.parameters.getItem(index).getValue();
@@ -480,7 +513,7 @@ const instructionHandlers = [
     },
 
     // POP HANDLER
-    function(processor, operand) {
+    async function(processor, operand) {
         // remove the current exception handler address from the top of the handlers stack
         // since it is no longer in scope
         processor.context.handlers.removeItem();
@@ -488,14 +521,14 @@ const instructionHandlers = [
     },
 
     // POP COMPONENT
-    function(processor, operand) {
+    async function(processor, operand) {
         // remove the component that is on top of the component stack since it was not used
         processor.task.stack.removeItem();
         processor.context.address++;
     },
 
     // UNIMPLEMENTED POP OPERATION
-    function(processor, operand) {
+    async function(processor, operand) {
         throw bali.exception({
             $module: '$Processor',
             $procedure: '$pop3',
@@ -507,7 +540,7 @@ const instructionHandlers = [
     },
 
     // UNIMPLEMENTED POP OPERATION
-    function(processor, operand) {
+    async function(processor, operand) {
         throw bali.exception({
             $module: '$Processor',
             $procedure: '$pop4',
@@ -519,7 +552,7 @@ const instructionHandlers = [
     },
 
     // LOAD VARIABLE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the variable associated with the index
         const variable = processor.context.variables.getItem(index).getValue();
@@ -528,13 +561,13 @@ const instructionHandlers = [
     },
 
     // LOAD MESSAGE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the queue tag associated with the index
         const queue = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if queue isn't a tag
         // attempt to receive a message from the queue in the nebula
-        const message = processor.nebula.receiveMessage(queue);
+        const message = await processor.nebula.receiveMessage(queue);
         if (message) {
             processor.task.stack.addItem(message);
             processor.context.address++;
@@ -545,33 +578,33 @@ const instructionHandlers = [
     },
 
     // LOAD DRAFT symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the citation associated with the index
         const citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // retrieve the cited draft from the nebula repository
-        const draft = processor.nebula.retrieveDraft(citation);
+        const draft = await processor.nebula.retrieveDraft(citation);
         // push the draft on top of the component stack
         processor.task.stack.addItem(draft);
         processor.context.address++;
     },
 
     // LOAD DOCUMENT symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // lookup the citation associated with the index
         const citation = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if the citation isn't a citation
         // retrieve the cited document from the nebula repository
-        const document = processor.nebula.retrieveDocument(citation);
+        const document = await processor.nebula.retrieveDocument(citation);
         // push the document on top of the component stack
         processor.task.stack.addItem(document);
         processor.context.address++;
     },
 
     // STORE VARIABLE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the component that is on top of the component stack off the stack
         const component = processor.task.stack.removeItem();
@@ -581,7 +614,7 @@ const instructionHandlers = [
     },
 
     // STORE MESSAGE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the message that is on top of the component stack off the stack
         const message = processor.task.stack.removeItem();
@@ -589,36 +622,36 @@ const instructionHandlers = [
         const queue = processor.context.variables.getItem(index).getValue();
         // TODO: jump to exception handler if queue isn't a tag
         // send the message to the queue in the nebula
-        processor.nebula.queueMessage(queue, message);
+        await processor.nebula.queueMessage(queue, message);
         processor.context.address++;
     },
 
     // STORE DRAFT symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the draft that is on top of the component stack off the stack
         const draft = processor.task.stack.removeItem();
         // write the draft to the nebula repository
-        const citation = processor.nebula.saveDraft(draft);
+        const citation = await processor.nebula.createDraft(draft);
         // and store the resulting citation in the variable associated with the index
         processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
     },
 
     // STORE DOCUMENT symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the document that is on top of the component stack off the stack
         const document = processor.task.stack.removeItem();
         // write the document to the nebula repository
-        const citation = processor.nebula.commitDocument(document);
+        const citation = await processor.nebula.commitDocument(document);
         // and store the resulting citation in the variable associated with the index
         processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
     },
 
     // INVOKE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // call the intrinsic function associated with the index operand
         const result = utilities.intrinsics.functions[index]();
@@ -628,7 +661,7 @@ const instructionHandlers = [
     },
 
     // INVOKE symbol WITH PARAMETER
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the parameter off of the component stack
         const parameter = processor.task.stack.removeItem();
@@ -640,7 +673,7 @@ const instructionHandlers = [
     },
 
     // INVOKE symbol WITH 2 PARAMETERS
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the parameters off of the component stack (in reverse order)
         const parameter2 = processor.task.stack.removeItem();
@@ -653,7 +686,7 @@ const instructionHandlers = [
     },
 
     // INVOKE symbol WITH 3 PARAMETERS
-    function(processor, operand) {
+    async function(processor, operand) {
         const index = operand;
         // pop the parameters call off of the component stack (in reverse order)
         const parameter3 = processor.task.stack.removeItem();
@@ -667,51 +700,51 @@ const instructionHandlers = [
     },
 
     // EXECUTE symbol
-    function(processor, operand) {
+    async function(processor, operand) {
         // setup the new procedure context
         const index = operand;
         const parameters = bali.parameters(bali.list());
         const target = bali.NONE;
         const type = processor.task.stack.removeItem();
-        pushContext(processor, target, type, parameters, index);
+        await pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
 
     // EXECUTE symbol WITH PARAMETERS
-    function(processor, operand) {
+    async function(processor, operand) {
         // setup the new procedure context
         const index = operand;
         const parameters = processor.task.stack.removeItem();
         const target = bali.NONE;
         const type = processor.task.stack.removeItem();
-        pushContext(processor, target, type, parameters, index);
+        await pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
 
     // EXECUTE symbol ON TARGET
-    function(processor, operand) {
+    async function(processor, operand) {
         // setup the new procedure context
         const index = operand;
         const parameters = bali.parameters(bali.list());
         const target = processor.task.stack.removeItem();
         const type = target.getParameters().getParameter('$type');
-        pushContext(processor, target, type, parameters, index);
+        await pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
 
     // EXECUTE symbol ON TARGET WITH PARAMETERS
-    function(processor, operand) {
+    async function(processor, operand) {
         // setup the new procedure context
         const index = operand;
         const parameters = processor.task.stack.removeItem();
         const target = processor.task.stack.removeItem();
         const type = target.getParameters().getParameter('$type');
-        pushContext(processor, target, type, parameters, index);
+        await pushContext(processor, target, type, parameters, index);
         processor.context.address++;
     },
 
     // HANDLE RESULT
-    function(processor, operand) {
+    async function(processor, operand) {
         if (!processor.task.contexts.isEmpty()) {
             // retrieve the previous context from the stack
             processor.context = importContext(processor.task.contexts.removeItem());
@@ -725,7 +758,7 @@ const instructionHandlers = [
     },
 
     // HANDLE EXCEPTION
-    function(processor, operand) {
+    async function(processor, operand) {
         // search up the stack for a handler
         while (processor.context) {
             if (!processor.context.handlers.isEmpty()) {
@@ -749,7 +782,7 @@ const instructionHandlers = [
     },
 
     // UNIMPLEMENTED HANDLE OPERATION
-    function(processor, operand) {
+    async function(processor, operand) {
         throw bali.exception({
             $module: '$Processor',
             $procedure: '$handle3',
@@ -761,7 +794,7 @@ const instructionHandlers = [
     },
 
     // UNIMPLEMENTED HANDLE OPERATION
-    function(processor, operand) {
+    async function(processor, operand) {
         throw bali.exception({
             $module: '$Processor',
             $procedure: '$handle4',

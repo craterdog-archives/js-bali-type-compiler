@@ -21,12 +21,12 @@ exports.Compiler = require('./Compiler').Compiler;
 
 // FUNCTIONS
 
-exports.compile = function(nebula, citation) {
+exports.compile = async function(nebula, citation) {
     const compiler = new exports.Compiler();
     const assembler = new exports.Assembler();
 
     // retrieve the type document
-    const document = nebula.retrieveDocument(citation);
+    const document = await nebula.retrieveDocument(citation);
     const parameters = document.getParameters();
 
     // extract the literals, constants and procedures for the parent type
@@ -41,7 +41,7 @@ exports.compile = function(nebula, citation) {
         citation.setValue('$digest', bali.NONE);
 
         // retrieve the compiled parent type
-        const parent = nebula.retrieveType(citation);
+        const parent = await nebula.retrieveType(citation);
         literals.addItems(parent.getValue('$literals'));
         constants.addItems(parent.getValue('$constants'));
         procedures.addItems(parent.getValue('$procedures'));
@@ -99,7 +99,7 @@ exports.compile = function(nebula, citation) {
     }
 
     // checkin the newly compiled type
-    citation = nebula.commitType(type);
+    citation = await nebula.commitType(type);
 
     return citation;
 };

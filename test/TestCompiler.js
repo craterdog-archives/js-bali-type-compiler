@@ -8,27 +8,38 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
+const debug = true;  // set to true for error logging
 const testDirectory = 'test/config/';
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
-const account = bali.parse('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').api(account, testDirectory);
+const account = bali.tag('GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
+const notary = require('bali-digital-notary').api(account, testDirectory, debug);
 const nebula = require('bali-nebula-api');
-const repository = nebula.repository(testDirectory);
-const api = nebula.api(notary, repository);
+const repository = nebula.local(testDirectory, debug);
+const api = nebula.api(notary, repository, debug);
 const vm = require('../');
 const compiler = new vm.Compiler();
 const assembler = new vm.Assembler();
 
-const certificate = notary.generateKeys();
-const citation = notary.getCitation();
-const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
-repository.storeCertificate(certificateId, certificate);
-
 
 describe('Bali Virtual Macine™', function() {
+
+    describe('Initialize the environment', function() {
+
+        it('should initialize the nebula API', async function() {
+            await api.initializeAPI();
+        });
+
+        it('should generate a new key pair and store the certificate in the repository', async function() {
+            const certificate = await notary.generateKeyPair();
+            const citation = await notary.getCitation();
+            const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
+            await repository.createCertificate(certificateId, certificate);
+        });
+
+    });
 
     describe('Test the compiler.', function() {
 
@@ -76,7 +87,7 @@ describe('Bali Virtual Macine™', function() {
 
     describe('Test the analysis and compilation of example types', function() {
 
-        it('should compile example type documents into compiled type documents.', function() {
+        it('should compile example type documents into compiled type documents.', async function() {
             const testFolder = 'test/examples/';
             const files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
@@ -89,12 +100,12 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
-                var typeCitation = api.createDraft(type);
-                var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDocument(draft);
-                typeCitation = vm.compile(api, typeCitation);
+                var typeCitation = await api.createDraft(type);
+                var draft = await api.retrieveDraft(typeCitation);
+                typeCitation = await api.commitDocument(draft);
+                typeCitation = await vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
-                var procedures = api.retrieveType(typeCitation);
+                var procedures = await api.retrieveType(typeCitation);
                 source = procedures.toString() + '\n';  // POSIX compliant <EOL>
                 //fs.writeFileSync(proceduresFile, source, 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');
@@ -102,7 +113,7 @@ describe('Bali Virtual Macine™', function() {
             }
         });
 
-        it('should compile the Bali types.', function() {
+        it('should compile the Bali types.', async function() {
             const testFolder = 'test/types/';
             for (var i = 0; i < sources.length; i++) {
                 var file = sources[i];
@@ -110,9 +121,9 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(testFolder + file, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
-                var typeCitation = api.createDraft(type);
-                var draft = api.retrieveDraft(typeCitation);
-                typeCitation = api.commitDocument(draft);
+                var typeCitation = await api.createDraft(type);
+                var draft = await api.retrieveDraft(typeCitation);
+                typeCitation = await api.commitDocument(draft);
                 typeCitation = vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
             }

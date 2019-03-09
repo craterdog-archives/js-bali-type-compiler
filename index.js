@@ -44,12 +44,12 @@ const format = function(instructions, indentation) {
 };
 exports.format = format;
 
-const compile = function(nebula, citation) {
-    return compiler.compile(nebula, citation);
+const compile = function(nebula, citation, debug) {
+    return compiler.compile(nebula, citation, debug);
 };
 exports.compile = compile;
 
-const process = function(nebula, task) {
-    return new processor.Processor(nebula, task);
+const process = function(nebula, task, debug) {
+    return new processor.Processor(nebula, task, debug);
 };
 exports.process = process;
