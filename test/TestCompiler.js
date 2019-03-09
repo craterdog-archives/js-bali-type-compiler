@@ -100,7 +100,7 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(typeFile, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
-                var typeCitation = await api.createDraft(type);
+                var typeCitation = await api.saveDraft(type);
                 var draft = await api.retrieveDraft(typeCitation);
                 typeCitation = await api.commitDocument(draft);
                 typeCitation = await vm.compile(api, typeCitation);
@@ -121,7 +121,7 @@ describe('Bali Virtual Macine™', function() {
                 var source = fs.readFileSync(testFolder + file, 'utf8');
                 expect(source).to.exist;  // jshint ignore:line
                 var type = bali.parse(source);
-                var typeCitation = await api.createDraft(type);
+                var typeCitation = await api.saveDraft(type);
                 var draft = await api.retrieveDraft(typeCitation);
                 typeCitation = await api.commitDocument(draft);
                 typeCitation = vm.compile(api, typeCitation);
@@ -140,3 +140,4 @@ const sources = [
     'Composite.bali',
     'Type.bali'
 ];
+

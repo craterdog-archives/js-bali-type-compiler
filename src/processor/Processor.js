@@ -318,7 +318,7 @@ const publishCompletionEvent = async function(processor) {
     } else {
         event.setValue('$exception', task.exception);
     }
-    const citation = await processor.nebula.createDraft(event);
+    const citation = await processor.nebula.saveDraft(event);
     const draft = await processor.nebula.retrieveDraft(citation);
     await processor.nebula.publishEvent(draft);
 };
@@ -334,7 +334,7 @@ const publishSuspensionEvent = async function(processor) {
         $tag: task.tag,
         $task: task
     });
-    const citation = await processor.nebula.createDraft(event);
+    const citation = await processor.nebula.saveDraft(event);
     const draft = await processor.nebula.retrieveDraft(citation);
     await processor.nebula.publishEvent(draft);
 };
@@ -632,7 +632,7 @@ const instructionHandlers = [
         // pop the draft that is on top of the component stack off the stack
         const draft = processor.task.stack.removeItem();
         // write the draft to the nebula repository
-        const citation = await processor.nebula.createDraft(draft);
+        const citation = await processor.nebula.saveDraft(draft);
         // and store the resulting citation in the variable associated with the index
         processor.context.variables.getItem(index).setValue(citation);
         processor.context.address++;
