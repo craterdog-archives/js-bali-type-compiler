@@ -180,104 +180,104 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', async function() {
-            var process = vm.process(api, task, debug);
-            expect(process.context.address).to.equal(1);
+            var processor = vm.processor(api, task, debug);
+            expect(processor.context.address).to.equal(1);
 
             // 1.IfStatement:
             // SKIP INSTRUCTION
-            await process.step();
-            expect(process.context.address).to.equal(2);
+            await processor.step();
+            expect(processor.context.address).to.equal(2);
 
             // 1.1.ConditionClause:
             // PUSH LITERAL `true`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
-            expect(process.context.address).to.equal(3);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
+            expect(processor.context.address).to.equal(3);
             // JUMP TO 1.IfStatementDone ON FALSE
-            await process.step();
-            expect(process.context.address).to.equal(4);
+            await processor.step();
+            expect(processor.context.address).to.equal(4);
 
             // 1.1.1.EvaluateStatement:
             // SKIP INSTRUCTION
-            await process.step();
-            expect(process.context.address).to.equal(5);
+            await processor.step();
+            expect(processor.context.address).to.equal(5);
 
             // 1.2.ConditionClause:
             // PUSH LITERAL `false`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.probability(false))).to.equal(true);
-            expect(process.context.address).to.equal(6);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.probability(false))).to.equal(true);
+            expect(processor.context.address).to.equal(6);
             // JUMP TO 1.3.ConditionClause ON FALSE
-            await process.step();
-            expect(process.context.address).to.equal(8);
+            await processor.step();
+            expect(processor.context.address).to.equal(8);
 
             // 1.2.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
 
             // 1.3.ConditionClause:
             // PUSH LITERAL `true`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
-            expect(process.context.address).to.equal(9);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
+            expect(processor.context.address).to.equal(9);
             // JUMP TO 1.4.ConditionClause ON TRUE
-            await process.step();
-            expect(process.context.address).to.equal(11);
+            await processor.step();
+            expect(processor.context.address).to.equal(11);
 
             // 1.3.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
 
             // 1.4.ConditionClause:
             // PUSH LITERAL `false`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.probability(false))).to.equal(true);
-            expect(process.context.address).to.equal(12);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.probability(false))).to.equal(true);
+            expect(processor.context.address).to.equal(12);
             // JUMP TO 1.IfStatementDone ON TRUE
-            await process.step();
-            expect(process.context.address).to.equal(13);
+            await processor.step();
+            expect(processor.context.address).to.equal(13);
 
             // 1.4.1.EvaluateStatement:
             // SKIP INSTRUCTION
-            await process.step();
-            expect(process.context.address).to.equal(14);
+            await processor.step();
+            expect(processor.context.address).to.equal(14);
 
             // 1.5.ConditionClause:
             // PUSH LITERAL `none`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.NONE)).to.equal(true);
-            expect(process.context.address).to.equal(15);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.NONE)).to.equal(true);
+            expect(processor.context.address).to.equal(15);
             // JUMP TO 1.6.ConditionClause ON NONE
-            await process.step();
-            expect(process.context.address).to.equal(17);
+            await processor.step();
+            expect(processor.context.address).to.equal(17);
 
             // 1.5.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
 
             // 1.6.ConditionClause:
             // PUSH LITERAL `true`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
-            expect(process.context.address).to.equal(18);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
+            expect(processor.context.address).to.equal(18);
             // JUMP TO 1.IfStatementDone ON NONE
-            await process.step();
-            expect(process.context.address).to.equal(19);
+            await processor.step();
+            expect(processor.context.address).to.equal(19);
 
             // 1.6.1.EvaluateStatement:
             // JUMP TO 1.IfStatementDone
-            await process.step();
-            expect(process.context.address).to.equal(20);
+            await processor.step();
+            expect(processor.context.address).to.equal(20);
 
             // 1.IfStatementDone:
             // SKIP INSTRUCTION
-            await process.step();
-            expect(process.context.address).to.equal(21);
+            await processor.step();
+            expect(processor.context.address).to.equal(21);
 
             // EOF
-            var result = await process.step();
+            var result = await processor.step();
             expect(result).to.equal(false);
-            expect(process.task.clock).to.equal(17);
-            expect(process.task.balance).to.equal(983);
-            expect(process.task.status).to.equal('$active');
-            expect(process.task.stack.getSize()).to.equal(0);
+            expect(processor.task.clock).to.equal(17);
+            expect(processor.task.balance).to.equal(983);
+            expect(processor.task.status).to.equal('$active');
+            expect(processor.task.stack.getSize()).to.equal(0);
         });
 
     });
@@ -291,77 +291,77 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', async function() {
-            const process = new vm.Processor(api, task, debug);
-            expect(process.context.address).to.equal(1);
+            const processor = vm.processor(api, task, debug);
+            expect(processor.context.address).to.equal(1);
 
             // 1.PushHandler:
             // PUSH HANDLER 3.PushLiteral
-            await process.step();
-            expect(process.context.handlers.getSize()).to.equal(1);
-            expect(process.context.handlers.getTop().toNumber()).to.equal(3);
-            expect(process.context.address).to.equal(2);
+            await processor.step();
+            expect(processor.context.handlers.getSize()).to.equal(1);
+            expect(processor.context.handlers.getTop().toNumber()).to.equal(3);
+            expect(processor.context.address).to.equal(2);
 
             // 2.PushLiteral:
             // PUSH LITERAL `"five"`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().isEqualTo(bali.text('five'))).to.equal(true);
-            expect(process.context.address).to.equal(3);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().isEqualTo(bali.text('five'))).to.equal(true);
+            expect(processor.context.address).to.equal(3);
 
             // 3.PushLiteral:
             // PUSH LITERAL `{return prefix + name}`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.task.stack.getTop().toString()).to.equal('{return prefix + name}');
-            expect(process.context.address).to.equal(4);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.getTop().toString()).to.equal('{return prefix + name}');
+            expect(processor.context.address).to.equal(4);
 
             // 4.PushConstant:
             // PUSH CONSTANT $constant
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.task.stack.getTop().toNumber()).to.equal(5);
-            expect(process.context.address).to.equal(5);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.task.stack.getTop().toNumber()).to.equal(5);
+            expect(processor.context.address).to.equal(5);
 
             // 5.PushParameter:
             // PUSH PARAMETER $y
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(4);
-            expect(process.task.stack.getTop().isEqualTo(bali.NONE)).to.equal(true);
-            expect(process.context.address).to.equal(6);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(4);
+            expect(processor.task.stack.getTop().isEqualTo(bali.NONE)).to.equal(true);
+            expect(processor.context.address).to.equal(6);
 
             // 6.PopHandler:
             // POP HANDLER
-            await process.step();
-            expect(process.context.handlers.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(7);
+            await processor.step();
+            expect(processor.context.handlers.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(7);
 
             // 7.PopComponent:
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.task.stack.getTop().toNumber()).to.equal(5);
-            expect(process.context.address).to.equal(8);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.task.stack.getTop().toNumber()).to.equal(5);
+            expect(processor.context.address).to.equal(8);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.task.stack.getTop().toString()).to.equal('{return prefix + name}');
-            expect(process.context.address).to.equal(9);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.getTop().toString()).to.equal('{return prefix + name}');
+            expect(processor.context.address).to.equal(9);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().isEqualTo(bali.text('five'))).to.equal(true);
-            expect(process.context.address).to.equal(10);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().isEqualTo(bali.text('five'))).to.equal(true);
+            expect(processor.context.address).to.equal(10);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(11);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(11);
 
             // EOF
-            var result = await process.step();
+            var result = await processor.step();
             expect(result).to.equal(false);
-            expect(process.task.clock).to.equal(10);
-            expect(process.task.balance).to.equal(990);
-            expect(process.task.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(10);
+            expect(processor.task.balance).to.equal(990);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -375,73 +375,73 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', async function() {
-            const process = new vm.Processor(api, task, debug);
-            expect(process.context.address).to.equal(1);
+            const processor = vm.processor(api, task, debug);
+            expect(processor.context.address).to.equal(1);
 
             // 1.LoadParameter:
             // PUSH PARAMETER $x
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
-            expect(process.context.address).to.equal(2);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().toString()).to.equal(DOCUMENT);
+            expect(processor.context.address).to.equal(2);
 
             // 2.StoreVariable:
             // STORE VARIABLE $foo
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.variables.getItem(2).getValue().toString()).to.equal(DOCUMENT);
-            expect(process.context.address).to.equal(3);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.variables.getItem(2).getValue().toString()).to.equal(DOCUMENT);
+            expect(processor.context.address).to.equal(3);
 
             // 3.LoadVariable:
             // LOAD VARIABLE $foo
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
-            expect(process.context.address).to.equal(4);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().toString()).to.equal(DOCUMENT);
+            expect(processor.context.address).to.equal(4);
 
             // 4.StoreDraft:
             // STORE DRAFT $citation
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(5);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(5);
             // LOAD DRAFT $citation
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
-            expect(process.context.address).to.equal(6);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().toString()).to.equal(DOCUMENT);
+            expect(processor.context.address).to.equal(6);
 
             // 5.StoreDocument:
             // STORE DOCUMENT $citation
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(7);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(7);
 
             // 6.LoadDocument:
             // LOAD DOCUMENT $citation
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal(DOCUMENT);
-            expect(process.context.address).to.equal(8);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().toString()).to.equal(DOCUMENT);
+            expect(processor.context.address).to.equal(8);
 
             // 7.StoreMessage:
             // STORE MESSAGE $queue
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(9);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(9);
 
             // 8.LoadMessage:
             // LOAD MESSAGE $queue
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().getValue('$foo').toString()).to.equal('"bar"');
-            expect(process.context.address).to.equal(10);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().getValue('$foo').toString()).to.equal('"bar"');
+            expect(processor.context.address).to.equal(10);
 
             // EOF
-            var result = await process.step();
+            var result = await processor.step();
             expect(result).to.equal(false);
-            expect(process.task.clock).to.equal(9);
-            expect(process.task.balance).to.equal(991);
-            expect(process.task.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(9);
+            expect(processor.task.balance).to.equal(991);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -455,54 +455,54 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', async function() {
-            const process = new vm.Processor(api, task, debug);
-            expect(process.context.address).to.equal(1);
+            const processor = vm.processor(api, task, debug);
+            expect(processor.context.address).to.equal(1);
 
             // 1.Invoke:
             // INVOKE $catalog
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(2);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(2);
 
             // 2.InvokeWithParameter:
             // PUSH LITERAL `3`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.number(3))).to.equal(true);
-            expect(process.context.address).to.equal(3);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.number(3))).to.equal(true);
+            expect(processor.context.address).to.equal(3);
             // INVOKE $inverse WITH PARAMETER
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.task.stack.getTop().isEqualTo(bali.number(-3))).to.equal(true);
-            expect(process.context.address).to.equal(4);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.getTop().isEqualTo(bali.number(-3))).to.equal(true);
+            expect(processor.context.address).to.equal(4);
 
             // 3.InvokeWith2Parameters:
             // PUSH LITERAL `5`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.number(5))).to.equal(true);
-            expect(process.context.address).to.equal(5);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.number(5))).to.equal(true);
+            expect(processor.context.address).to.equal(5);
             // INVOKE $sum WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.task.stack.getTop().isEqualTo(bali.number(2))).to.equal(true);
-            expect(process.context.address).to.equal(6);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.task.stack.getTop().isEqualTo(bali.number(2))).to.equal(true);
+            expect(processor.context.address).to.equal(6);
 
             // 4.InvokeWith3Parameters:
             // PUSH LITERAL `"two"`
-            await process.step();
-            expect(process.task.stack.getTop().isEqualTo(bali.text('two'))).to.equal(true);
-            expect(process.context.address).to.equal(7);
+            await processor.step();
+            expect(processor.task.stack.getTop().isEqualTo(bali.text('two'))).to.equal(true);
+            expect(processor.context.address).to.equal(7);
             // INVOKE $setValue WITH 3 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.task.stack.getTop().toString()).to.equal('[2: "two"]');
-            expect(process.context.address).to.equal(8);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.task.stack.getTop().toString()).to.equal('[2: "two"]');
+            expect(processor.context.address).to.equal(8);
 
             // EOF
-            var result = await process.step();
+            var result = await processor.step();
             expect(result).to.equal(false);
-            expect(process.task.clock).to.equal(7);
-            expect(process.task.balance).to.equal(993);
-            expect(process.task.status).to.equal('$active');
+            expect(processor.task.clock).to.equal(7);
+            expect(processor.task.balance).to.equal(993);
+            expect(processor.task.status).to.equal('$active');
         });
 
     });
@@ -516,199 +516,199 @@ describe('Bali Virtual Machine™', function() {
         });
 
         it('should execute the test instructions', async function() {
-            const process = new vm.Processor(api, task, debug);
-            expect(process.context.address).to.equal(1);
+            const processor = vm.processor(api, task, debug);
+            expect(processor.context.address).to.equal(1);
 
             // 1.SetupType:
             // INVOKE $catalog
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(2);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(2);
             // PUSH LITERAL `$protocol`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(3);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(3);
             // PUSH LITERAL `v1`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(4);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(4);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(5);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(5);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(6);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(6);
             // PUSH LITERAL `$tag`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(7);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(7);
             // PUSH LITERAL `#M8G7XJH640RR4YBCLGNDYABD6328741S`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(8);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(8);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(9);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(9);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(10);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(10);
             // PUSH LITERAL `$version`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(11);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(11);
             // PUSH LITERAL `v1`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(12);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(12);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(13);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(13);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(14);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(14);
             // PUSH LITERAL `$digest`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(15);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(15);
             // PUSH LITERAL `'NS4L6V78FNSHYY3F6LK82MMB8GFRR6FD9H3FY5G8W6C6PFHBMVR1S2SPQNHQ8WPZY155Q1F1Y02GVGLZKR37VK2QZ85SW4LGRQA53P0'`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(16);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(16);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(17);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(17);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(18);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(18);
             // STORE VARIABLE $type
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(19);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(19);
 
             // 2.SetupParameters:
             // INVOKE $catalog
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(20);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(20);
             // PUSH LITERAL `$type`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(21);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(21);
             // LOAD VARIABLE $type
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(22);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(22);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(23);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(23);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(24);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(24);
             // INVOKE $parameters WITH PARAMETER
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(25);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(25);
 
             // 3.SetupTarget:
             // INVOKE $catalog WITH PARAMETER
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(26);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(26);
             // PUSH LITERAL `$foo`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(27);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(27);
             // PUSH LITERAL `"bar"`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(28);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(28);
             // INVOKE $association WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(29);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(29);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(30);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(30);
             // STORE VARIABLE $target
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(31);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(31);
 
             // 4.Execute:
             // LOAD VARIABLE $type
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(32);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(32);
             // EXECUTE $function1
-            await process.step();
-                expect(process.task.contexts.getSize()).to.equal(1);
-                expect(process.context.address).to.equal(1);
+            await processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(1);
+                expect(processor.context.address).to.equal(1);
                 // 1.ReturnStatement:
                 // PUSH LITERAL `true`
-                await process.step();
-                expect(process.task.stack.getSize()).to.equal(1);
-                expect(process.context.address).to.equal(2);
+                await processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                expect(processor.context.address).to.equal(2);
                 // HANDLE RESULT
-                await process.step();
-                expect(process.task.contexts.getSize()).to.equal(0);
-                expect(process.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
-            expect(process.context.address).to.equal(33);
+                await processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.getTop().isEqualTo(bali.probability(true))).to.equal(true);
+            expect(processor.context.address).to.equal(33);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(34);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(34);
 
             // 5.ExecuteWithParameters:
             // LOAD VARIABLE $type
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(35);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(35);
             // INVOKE $list
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(36);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(36);
             // PUSH LITERAL `"parameter"`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(37);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(37);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(38);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(38);
             // INVOKE $parameters WITH PARAMETER
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(39);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(39);
             // EXECUTE $function2 WITH PARAMETERS
-            await process.step();
-                expect(process.task.contexts.getSize()).to.equal(1);
-                expect(process.context.address).to.equal(1);
+            await processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(1);
+                expect(processor.context.address).to.equal(1);
                 // 1.ThrowStatement:
                 // PUSH HANDLER 1.ThrowStatementHandlers
-                await process.step();
-                expect(process.context.handlers.getSize()).to.equal(1);
-                expect(process.context.handlers.getTop().toString()).to.equal('6');
-                expect(process.context.address).to.equal(2);
+                await processor.step();
+                expect(processor.context.handlers.getSize()).to.equal(1);
+                expect(processor.context.handlers.getTop().toString()).to.equal('6');
+                expect(processor.context.address).to.equal(2);
                 // PUSH LITERAL `none`
-                await process.step();
-                expect(process.task.stack.getSize()).to.equal(1);
-                expect(process.task.stack.getTop().toString()).to.equal('none');
-                expect(process.context.address).to.equal(3);
+                await processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                expect(processor.task.stack.getTop().toString()).to.equal('none');
+                expect(processor.context.address).to.equal(3);
                 // HANDLE EXCEPTION
-                await process.step();
-                expect(process.context.handlers.isEmpty()).to.equal(true);
-                expect(process.context.address).to.equal(6);
+                await processor.step();
+                expect(processor.context.handlers.isEmpty()).to.equal(true);
+                expect(processor.context.address).to.equal(6);
                 
                 // 1.ThrowStatementDone:
                 // POP HANDLER
@@ -716,40 +716,40 @@ describe('Bali Virtual Machine™', function() {
                 
                 // 1.ThrowStatementHandlers:
                 // SKIP INSTRUCTION
-                await process.step();
-                expect(process.context.address).to.equal(7);
+                await processor.step();
+                expect(processor.context.address).to.equal(7);
                 
                 // 1.1.HandleClause:
                 // STORE VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(8);
+                await processor.step();
+                expect(processor.context.address).to.equal(8);
                 // LOAD VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(9);
+                await processor.step();
+                expect(processor.context.address).to.equal(9);
                 // LOAD VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(10);
+                await processor.step();
+                expect(processor.context.address).to.equal(10);
                 // PUSH LITERAL `"none"`
-                await process.step();
-                expect(process.context.address).to.equal(11);
+                await processor.step();
+                expect(processor.context.address).to.equal(11);
                 // INVOKE $isMatchedBy WITH 2 PARAMETERS
-                await process.step();
-                expect(process.context.address).to.equal(12);
+                await processor.step();
+                expect(processor.context.address).to.equal(12);
                 // JUMP TO 1.ThrowStatementFailed ON FALSE
-                await process.step();
-                expect(process.context.address).to.equal(13);
+                await processor.step();
+                expect(processor.context.address).to.equal(13);
                 // POP COMPONENT
-                await process.step();
-                expect(process.context.address).to.equal(14);
+                await processor.step();
+                expect(processor.context.address).to.equal(14);
                 
                 // 1.1.1.ReturnStatement:
                 // PUSH PARAMETER $first
-                await process.step();
-                expect(process.context.address).to.equal(15);
+                await processor.step();
+                expect(processor.context.address).to.equal(15);
                 // HANDLE RESULT
-                await process.step();
-                expect(process.task.contexts.getSize()).to.equal(0);
-                expect(process.task.stack.getTop().toString()).to.equal('"parameter"');
+                await processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.getTop().toString()).to.equal('"parameter"');
                 
                 // 1.1.HandleClauseDone:
                 // JUMP TO 1.ThrowStatementSucceeded
@@ -764,84 +764,84 @@ describe('Bali Virtual Machine™', function() {
                 // PUSH LITERAL `false`
                 // HANDLE RESULT
 
-            expect(process.context.address).to.equal(40);
+            expect(processor.context.address).to.equal(40);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(41);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(41);
 
             // 6.ExecuteOnTarget:
             // LOAD VARIABLE $target
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            const expected = process.task.stack.getTop();
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            const expected = processor.task.stack.getTop();
             expect(expected.toString().includes('[$foo: "bar"]')).to.equal(true);
-            expect(process.context.address).to.equal(42);
+            expect(processor.context.address).to.equal(42);
             // EXECUTE $message1 ON TARGET
-            await process.step();
-            expect(process.task.contexts.getSize()).to.equal(1);
-            expect(process.task.stack.getSize()).to.equal(0);
-                expect(process.context.address).to.equal(1);
+            await processor.step();
+            expect(processor.task.contexts.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(0);
+                expect(processor.context.address).to.equal(1);
                 // 1.ReturnStatement:
                 // LOAD VARIABLE $target
-                await process.step();
-                expect(process.task.stack.getSize()).to.equal(1);
-                expect(process.task.stack.getTop().isEqualTo(expected)).to.equal(true);
-                expect(process.context.address).to.equal(2);
+                await processor.step();
+                expect(processor.task.stack.getSize()).to.equal(1);
+                expect(processor.task.stack.getTop().isEqualTo(expected)).to.equal(true);
+                expect(processor.context.address).to.equal(2);
                 // HANDLE RESULT
-                await process.step();
-                expect(process.task.contexts.getSize()).to.equal(0);
-                expect(process.task.stack.getTop().isEqualTo(expected)).to.equal(true);
-            expect(process.context.address).to.equal(43);
+                await processor.step();
+                expect(processor.task.contexts.getSize()).to.equal(0);
+                expect(processor.task.stack.getTop().isEqualTo(expected)).to.equal(true);
+            expect(processor.context.address).to.equal(43);
             // POP COMPONENT
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(0);
-            expect(process.context.address).to.equal(44);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(0);
+            expect(processor.context.address).to.equal(44);
 
             // 7.ExecuteOnTargetWithParameters:
             // LOAD VARIABLE $target
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(1);
-            expect(process.context.address).to.equal(45);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(1);
+            expect(processor.context.address).to.equal(45);
             // INVOKE $list
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(46);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(46);
             // PUSH LITERAL `"parameter1"`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(47);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(47);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(48);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(48);
             // PUSH LITERAL `"parameter2"`
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(3);
-            expect(process.context.address).to.equal(49);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(3);
+            expect(processor.context.address).to.equal(49);
             // INVOKE $addItem WITH 2 PARAMETERS
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(50);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(50);
             // INVOKE $parameters WITH PARAMETER
-            await process.step();
-            expect(process.task.stack.getSize()).to.equal(2);
-            expect(process.context.address).to.equal(51);
+            await processor.step();
+            expect(processor.task.stack.getSize()).to.equal(2);
+            expect(processor.context.address).to.equal(51);
             // EXECUTE $message2 ON TARGET WITH PARAMETERS
-            await process.step();
-            expect(process.task.contexts.getSize()).to.equal(1);
-            expect(process.task.stack.getSize()).to.equal(0);
-                expect(process.context.address).to.equal(1);
+            await processor.step();
+            expect(processor.task.contexts.getSize()).to.equal(1);
+            expect(processor.task.stack.getSize()).to.equal(0);
+                expect(processor.context.address).to.equal(1);
                 // 1.ThrowStatement:
                 // PUSH HANDLER 1.ThrowStatementHandlers
-                await process.step();
-                expect(process.context.address).to.equal(2);
+                await processor.step();
+                expect(processor.context.address).to.equal(2);
                 // PUSH PARAMETER $second
-                await process.step();
-                expect(process.context.address).to.equal(3);
+                await processor.step();
+                expect(processor.context.address).to.equal(3);
                 // HANDLE EXCEPTION
-                await process.step();
-                expect(process.context.address).to.equal(6);
+                await processor.step();
+                expect(processor.context.address).to.equal(6);
                 
                 // 1.ThrowStatementDone:
                 // POP HANDLER
@@ -849,28 +849,28 @@ describe('Bali Virtual Machine™', function() {
                 
                 // 1.ThrowStatementHandlers:
                 // SKIP INSTRUCTION
-                await process.step();
-                expect(process.context.address).to.equal(7);
+                await processor.step();
+                expect(processor.context.address).to.equal(7);
                 
                 // 1.1.HandleClause:
                 // STORE VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(8);
+                await processor.step();
+                expect(processor.context.address).to.equal(8);
                 // LOAD VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(9);
+                await processor.step();
+                expect(processor.context.address).to.equal(9);
                 // LOAD VARIABLE $exception
-                await process.step();
-                expect(process.context.address).to.equal(10);
+                await processor.step();
+                expect(processor.context.address).to.equal(10);
                 // PUSH LITERAL `"none"`
-                await process.step();
-                expect(process.context.address).to.equal(11);
+                await processor.step();
+                expect(processor.context.address).to.equal(11);
                 // INVOKE $isMatchedBy WITH 2 PARAMETERS
-                await process.step();
-                expect(process.context.address).to.equal(12);
+                await processor.step();
+                expect(processor.context.address).to.equal(12);
                 // JUMP TO 1.ThrowStatementFailed ON FALSE
-                await process.step();
-                expect(process.context.address).to.equal(17);
+                await processor.step();
+                expect(processor.context.address).to.equal(17);
                 // POP COMPONENT
                 
                 // 1.1.1.ReturnStatement:
@@ -882,7 +882,7 @@ describe('Bali Virtual Machine™', function() {
                 
                 // 1.ThrowStatementFailed:
                 // HANDLE EXCEPTION
-                await process.step();
+                await processor.step();
                 
                 // 1.ThrowStatementSucceeded:
                 // SKIP INSTRUCTION
@@ -894,11 +894,11 @@ describe('Bali Virtual Machine™', function() {
             // POP COMPONENT
 
             // EOF
-            var result = await process.step();
+            var result = await processor.step();
             expect(result).to.equal(false);
-            expect(process.task.clock).to.equal(79);
-            expect(process.task.balance).to.equal(921);
-            expect(process.task.status).to.equal('$done');
+            expect(processor.task.clock).to.equal(79);
+            expect(processor.task.balance).to.equal(921);
+            expect(processor.task.status).to.equal('$done');
         });
 
     });

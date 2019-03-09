@@ -21,7 +21,18 @@ exports.Compiler = require('./Compiler').Compiler;
 
 // FUNCTIONS
 
-exports.compile = async function(nebula, citation) {
+/**
+ * This function compiles a type definition residing in the Bali Nebula™ and returns
+ * a document citation to the newly compiled type.  The type definition must be a
+ * committed document in the Bali Nebula™.
+ * 
+ * @param {Object} nebula A JavaScript object that implements the Bali Nebula API™.
+ * @param {Catalog} citation A Bali document citation to the type definition.
+ * @param {Boolean} debug An optional flag that determines whether or not exceptions
+ * will be logged to the error console.
+ * @returns {Catalog} A Bali document citation to the newly compiled type.
+ */
+exports.compile = async function(nebula, citation, debug) {
     const compiler = new exports.Compiler();
     const assembler = new exports.Assembler();
 
