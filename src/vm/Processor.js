@@ -318,9 +318,7 @@ const publishCompletionEvent = async function(processor) {
     } else {
         event.setValue('$exception', task.exception);
     }
-    const citation = await processor.nebula.saveDraft(event);
-    const draft = await processor.nebula.retrieveDraft(citation);
-    await processor.nebula.publishEvent(draft);
+    await processor.nebula.publishEvent(event);
 };
 
 
@@ -334,9 +332,7 @@ const publishSuspensionEvent = async function(processor) {
         $tag: task.tag,
         $task: task
     });
-    const citation = await processor.nebula.saveDraft(event);
-    const draft = await processor.nebula.retrieveDraft(citation);
-    await processor.nebula.publishEvent(draft);
+    await processor.nebula.publishEvent(event);
 };
 
 
