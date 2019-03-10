@@ -12,7 +12,7 @@ _This project is still in its early stages and the classes and interfaces to the
 For more information on this project click on the following links:
  * [wiki](https://github.com/craterdog-bali/js-bali-virtual-machine/wiki)
  * [node package](https://www.npmjs.com/package/bali-virtual-machine)
- * [release notes](https://github.com/craterdog-bali/js-bali-virtual-machine/wiki/releases)
+ * [release notes](https://github.com/craterdog-bali/js-bali-virtual-machine/wiki/release-notes)
  * [project documentation](https://github.com/craterdog-bali/bali-project-documentation/wiki)
 
 ### Getting Started
@@ -22,8 +22,8 @@ npm install bali-virtual-machine
 ```
 Then add the following line to your NodeJS modules:
 ```
-var notary = require('bali-virtual-machine);
+const vm = require('bali-virtual-machine');
 ```
 
-Check out the example code [here](https://github.com/craterdog-bali/js-bali-virtual-machine/wiki/examples).
+Check out the example code [here](https://github.com/craterdog-bali/js-bali-virtual-machine/wiki/code-examples).
 
