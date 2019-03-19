@@ -33,7 +33,7 @@ describe('Bali Virtual Macine™', function() {
         });
 
         it('should generate a new key pair and store the certificate in the repository', async function() {
-            const certificate = await notary.generateKeyPair();
+            const certificate = await notary.generateKey();
             const citation = await notary.getCitation();
             const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
             await repository.createCertificate(certificateId, certificate);
