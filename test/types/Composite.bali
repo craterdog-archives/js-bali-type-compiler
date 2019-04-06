@@ -80,4 +80,6 @@
     $type: $Class($existence: $abstract)
     $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
     $version: v1
+    $permissions: $Public
+    $previous: none
 )

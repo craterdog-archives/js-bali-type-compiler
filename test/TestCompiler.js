@@ -15,7 +15,7 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const account = bali.tag('GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').api(account, testDirectory, debug);
+const notary = require('bali-digital-notary').api(account, testDirectory, false);
 const nebula = require('bali-nebula-api');
 const repository = nebula.local(testDirectory, debug);
 const api = nebula.api(notary, repository, debug);
@@ -27,10 +27,6 @@ const assembler = new vm.Assembler();
 describe('Bali Virtual Macine™', function() {
 
     describe('Initialize the environment', function() {
-
-        it('should initialize the nebula API', async function() {
-            await api.initializeAPI();
-        });
 
         it('should generate a new key pair and store the certificate in the repository', async function() {
             const certificate = await notary.generateKey();

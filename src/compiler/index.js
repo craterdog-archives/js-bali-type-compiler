@@ -67,7 +67,9 @@ exports.compile = async function(nebula, citation, debug) {
         $name: parameters.getParameter('$name'),
         $type: parameters.getParameter('$type'),
         $tag: parameters.getParameter('$tag'),
-        $version: parameters.getParameter('$version')
+        $version: parameters.getParameter('$version'),
+        $permissions: parameters.getParameter('$permissions'),
+        $previous: parameters.getParameter('$previous')
     }));
     type.setValue('$literals', literals);
     type.setValue('$constants', constants);

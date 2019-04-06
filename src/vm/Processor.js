@@ -312,7 +312,12 @@ const publishCompletionEvent = async function(processor) {
         $account: task.account,
         $balance: task.balance,
         $clock: task.clock
-    });
+    }, bali.parameters({
+        $tag: bali.tag(),
+        $version: bali.version(),
+        $permissions: '$Public',
+        $previous: bali.NONE
+    }));
     if (task.result) {
         event.setValue('$result', task.result);
     } else {
@@ -331,7 +336,12 @@ const publishSuspensionEvent = async function(processor) {
         $eventType: '$suspension',
         $tag: task.tag,
         $task: task
-    });
+    }, bali.parameters({
+        $tag: bali.tag(),
+        $version: bali.version(),
+        $permissions: '$Public',
+        $previous: bali.NONE
+    }));
     await processor.nebula.publishEvent(event);
 };
 

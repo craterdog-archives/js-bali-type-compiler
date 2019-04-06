@@ -46,4 +46,6 @@
     $type: $Interface
     $tag: #7ZG69N9QGDQSS66RVWYN7P8TYVV3FAM3
     $version: v1
+    $permissions: $Public
+    $previous: none
 )

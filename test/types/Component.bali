@@ -87,4 +87,6 @@
     $type: $Class($existence: $abstract)
     $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
     $version: v1
+    $permissions: $Public
+    $previous: none
 )

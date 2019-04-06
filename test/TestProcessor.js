@@ -15,7 +15,7 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const account = bali.parse('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').api(account, testDirectory, debug);
+const notary = require('bali-digital-notary').api(account, testDirectory, false);
 const nebula = require('bali-nebula-api');
 const repository = nebula.local(testDirectory, debug);
 const api = nebula.api(notary, repository, debug);
@@ -51,18 +51,11 @@ const TASK_TEMPLATE =
         '    ]($type: $Stack)\n' +
         ']';
 
-const CITATION =
-        '[\n' +
-        '    $protocol: v1\n' +
-        '    $tag: #LPDJ6VGTZQQ0N4Q4MG0ZDA46KBLF2WM2\n' +
-        '    $version: v2.3\n' +
-        '    $digest: none\n' +
-        ']';
-
 const DOCUMENT = '[$foo: "bar"](\n' +
-        '    $protocol: v1\n' +
         '    $tag: #B11TDWH3C5F8J8Q87XKRAD8BM7L5VYSS\n' +
         '    $version: v1\n' +
+        '    $permissions: $Public\n' +
+        '    $previous: none\n' +
         ')';
 
 const MESSAGE = '[$foo: "bar"]';
@@ -140,7 +133,7 @@ function loadTask(filename) {
 
     // set variable values
     variables = bali.catalog();
-    variables.setValue('$citation', bali.parse(CITATION));
+    variables.setValue('$citation', bali.NONE);
     variables.setValue('$foo', bali.NONE);
     variables.setValue('$queue', bali.tag());
     variables.setValue('$target', bali.NONE);
@@ -166,7 +159,10 @@ describe('Bali Virtual Machine™', function() {
     describe('Initialize the environment', function() {
 
         it('should initialize the nebula API', async function() {
-            await api.initializeAPI();
+            const certificate = await notary.generateKey();
+            const citation = await notary.getCitation();
+            const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
+            await repository.createCertificate(certificateId, certificate);
         });
 
     });

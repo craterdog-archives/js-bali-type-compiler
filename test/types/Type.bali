@@ -61,4 +61,6 @@
     $type: $Class($existence: $abstract)
     $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
+    $permissions: $Public
+    $previous: none
 )

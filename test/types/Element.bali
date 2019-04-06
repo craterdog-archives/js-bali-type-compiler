@@ -33,4 +33,6 @@
     $type: $Class($existence: $abstract)
     $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
     $version: v1
+    $permissions: $Public
+    $previous: none
 )
