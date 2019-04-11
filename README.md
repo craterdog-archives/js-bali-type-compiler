@@ -3,7 +3,7 @@
 ### Bali Virtual Machine
 This project provides a JavaScript version of the virtual machine for the [_Bali Cloud Environment™_](https://github.com/craterdog-bali/bali-project-documentation/wiki).
 
-![Pyramid](https://raw.githubusercontent.com/craterdog-bali/js-bali-virtual-machine/master/docs/images/BaliPyramid-VirtualMachine.png)
+![Pyramid](https://raw.githubusercontent.com/craterdog-bali/js-bali-virtual-machine/master/docs/images/BaliPyramid.png)
 
 _**WARNING**_
 _This project is still in its early stages and the classes and interfaces to the classes are likely to change._
