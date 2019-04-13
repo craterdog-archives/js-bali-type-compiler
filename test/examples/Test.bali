@@ -31,10 +31,10 @@
         ]
     ]
 ](
-    $name: $Test
-    $type: $Class
+    $type: /bali/abstractions/Class/v1
+    $name: /bali/examples/Test
     $tag: #M8G7XJH640RR4YBCLGNDYABD6328741S
     $version: v1
-    $permissions: $Public
+    $permissions: /bali/permissions/public/v1
     $previous: none
 )

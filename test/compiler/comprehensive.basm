@@ -17,13 +17,17 @@
         $sequence
         $tag
         $target
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $procedures: [
         $find
         $getIterator
         $getNext
         $hasNext
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2

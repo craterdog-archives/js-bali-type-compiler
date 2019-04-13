@@ -13,7 +13,7 @@
             $description: "
                 This procedure returns the boolean value equivalent of this value.
             "($mediatype: "application/bsmd")
-            $type: $Probability($granularity: $boolean)
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
                 return false
             }
@@ -22,17 +22,17 @@
             $description: "
                 This procedure returns the numeric value equivalent of this value.
             "($mediatype: "application/bsmd")
-            $type: $Number
+            $type: /bali/elements/Number/v1
             $source: {
                 return 0
             }
         ]
     ]
 ](
-    $name: $Element
-    $type: $Class($existence: $abstract)
+    $type: /bali/abstractions/Class($existence: $abstract)
+    $name: /bali/abstractions/Element
     $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
     $version: v1
-    $permissions: $Public
+    $permissions: /bali/permissions/public/v1
     $previous: none
 )

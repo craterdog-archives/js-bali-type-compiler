@@ -1,7 +1,11 @@
 [
     $parameters: []
-    $variables: [$$result, $target]($type: $Set)
-    $procedures: []($type: $Set)
+    $variables: [$$result, $target](
+        $type: /bali/collections/Set/v1
+    )
+    $procedures: [](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: ["1.EvaluateStatement": 1]
     $instructions: "
         1.EvaluateStatement:

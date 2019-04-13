@@ -27,11 +27,15 @@
         $x
         $y
         $z
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $procedures: [
         $addItem
         $getSubcomponent
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 11
@@ -45,23 +49,22 @@
         "10.EvaluateStatement": 59
         "11.EvaluateStatement": 62
         "12.EvaluateStatement": 65
-        "13.EvaluateStatement": 68
-        "14.EvaluateStatement": 72
-        "15.EvaluateStatement": 76
-        "16.EvaluateStatement": 80
-        "17.EvaluateStatement": 84
+        "13.EvaluateStatement": 69
+        "14.EvaluateStatement": 73
+        "15.EvaluateStatement": 77
+        "16.EvaluateStatement": 81
+        "17.EvaluateStatement": 85
         "18.EvaluateStatement": 88
-        "19.EvaluateStatement": 91
-        "20.EvaluateStatement": 95
-        "21.EvaluateStatement": 99
-        "22.EvaluateStatement": 103
-        "23.EvaluateStatement": 107
+        "19.EvaluateStatement": 92
+        "20.EvaluateStatement": 96
+        "21.EvaluateStatement": 100
+        "22.EvaluateStatement": 104
+        "23.EvaluateStatement": 108
         "24.EvaluateStatement": 111
-        "25.EvaluateStatement": 114
-        "26.EvaluateStatement": 118
-        "27.EvaluateStatement": 122
-        "28.EvaluateStatement": 126
-        "29.EvaluateStatement": 130
+        "25.EvaluateStatement": 115
+        "26.EvaluateStatement": 119
+        "27.EvaluateStatement": 123
+        "28.EvaluateStatement": 127
     ]
     $instructions: "
         1.EvaluateStatement:
@@ -146,110 +149,105 @@
         STORE VARIABLE $$result
         
         11.EvaluateStatement:
-        PUSH LITERAL `5`
-        INVOKE $reciprocal WITH PARAMETER
-        STORE VARIABLE $$result
-        
-        12.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         INVOKE $conjugate WITH PARAMETER
         STORE VARIABLE $$result
         
-        13.EvaluateStatement:
+        12.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         INVOKE $product WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        14.EvaluateStatement:
+        13.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $quotient WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        15.EvaluateStatement:
+        14.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $remainder WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        16.EvaluateStatement:
+        15.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         INVOKE $sum WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        17.EvaluateStatement:
+        16.EvaluateStatement:
         LOAD VARIABLE $w
         LOAD VARIABLE $z
         INVOKE $difference WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        18.EvaluateStatement:
+        17.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         INVOKE $magnitude WITH PARAMETER
         STORE VARIABLE $$result
         
-        19.EvaluateStatement:
+        18.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $isLessThan WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        20.EvaluateStatement:
+        19.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $isEqualTo WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        21.EvaluateStatement:
+        20.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         INVOKE $isMoreThan WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        22.EvaluateStatement:
+        21.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         INVOKE $isSameAs WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        23.EvaluateStatement:
+        22.EvaluateStatement:
         LOAD VARIABLE $k
         LOAD VARIABLE $m
         INVOKE $isMatchedBy WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        24.EvaluateStatement:
+        23.EvaluateStatement:
         LOAD VARIABLE $p
         INVOKE $complement WITH PARAMETER
         STORE VARIABLE $$result
         
-        25.EvaluateStatement:
+        24.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $and WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        26.EvaluateStatement:
+        25.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $sans WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        27.EvaluateStatement:
+        26.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         INVOKE $xor WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        28.EvaluateStatement:
+        27.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         INVOKE $or WITH 2 PARAMETERS
         STORE VARIABLE $$result
         
-        29.EvaluateStatement:
+        28.EvaluateStatement:
         LOAD VARIABLE $foo
         PUSH LITERAL `5`
         INVOKE $default WITH 2 PARAMETERS
@@ -264,11 +262,11 @@
         60046005B0806007B05B800360148002780280036008A04C2805B002A854
         D802A04C2806B002A854D80228038001A04C6001B002A854D80280036011
         A04C600EB002A854D80180032807A81E800328082809B01C8003280AA83F
-        80032803A8648003280BA812800360186019B05B800360046005B05D8003
-        60076009B067800360186019B08080036017601AB0198003280BFFFF8003
-        60046005B044800360076009B0418003600A600CB0468003600D600FB048
-        800360106012B04580036013A810800360046005B004800360076009B072
-        8003600A600CB0898003600D600FB0538003600B2803B01780036003E000
+        8003280BA812800360186019B05B800360046005B05D800360076009B067
+        800360186019B08080036017601AB0198003280BFFFF800360046005B044
+        800360076009B0418003600A600CB0468003600D600FB048800360106012
+        B04580036013A810800360046005B004800360076009B0728003600A600C
+        B0898003600D600FB0538003600B2803B01780036003E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

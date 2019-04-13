@@ -2,8 +2,9 @@
     $literals: [
         "peg A"
         $type
-        $Stack
-        $Number
+        /bali/collections/Stack/v1
+        $itemType
+        /bali/elements/Number/v1
         $range
         1
         infinity
@@ -27,7 +28,9 @@
                 $n
                 $numberOfDisks
                 $target
-            ]($type: $Set)
+            ](
+                $type: /bali/collections/Set/v1
+            )
             $procedures: [
                 $asCatalog
                 $getIterator
@@ -37,17 +40,19 @@
                 $moveTower
                 $push
                 $setSubcomponent
-            ]($type: $Set)
+            ](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: [
                 "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 80
-                "3.WithStatement": 87
-                "3.1.ConditionClause": 92
-                "3.1.1.EvaluateStatement": 98
-                "3.ConditionRepeat": 117
-                "3.WithStatementDone": 118
-                "4.EvaluateStatement": 119
-                "5.ReturnStatement": 132
+                "2.EvaluateStatement": 86
+                "3.WithStatement": 93
+                "3.1.ConditionClause": 98
+                "3.1.1.EvaluateStatement": 104
+                "3.ConditionRepeat": 123
+                "3.WithStatementDone": 124
+                "4.EvaluateStatement": 125
+                "5.ReturnStatement": 138
             ]
             $instructions: "
                 1.EvaluateStatement:
@@ -55,9 +60,10 @@
                 PUSH LITERAL `"peg A"`
                 INVOKE $catalog
                 PUSH LITERAL `$type`
-                PUSH LITERAL `$Stack`
-                INVOKE $list
-                PUSH LITERAL `$Number`
+                PUSH LITERAL `/bali/collections/Stack/v1`
+                INVOKE $catalog
+                PUSH LITERAL `$itemType`
+                PUSH LITERAL `/bali/elements/Number/v1`
                 INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
@@ -67,6 +73,7 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
@@ -79,9 +86,10 @@
                 PUSH LITERAL `"peg B"`
                 INVOKE $catalog
                 PUSH LITERAL `$type`
-                PUSH LITERAL `$Stack`
-                INVOKE $list
-                PUSH LITERAL `$Number`
+                PUSH LITERAL `/bali/collections/Stack/v1`
+                INVOKE $catalog
+                PUSH LITERAL `$itemType`
+                PUSH LITERAL `/bali/elements/Number/v1`
                 INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
@@ -91,6 +99,7 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
@@ -103,9 +112,10 @@
                 PUSH LITERAL `"peg C"`
                 INVOKE $catalog
                 PUSH LITERAL `$type`
-                PUSH LITERAL `$Stack`
-                INVOKE $list
-                PUSH LITERAL `$Number`
+                PUSH LITERAL `/bali/collections/Stack/v1`
+                INVOKE $catalog
+                PUSH LITERAL `$itemType`
+                PUSH LITERAL `/bali/elements/Number/v1`
                 INVOKE $catalog
                 PUSH LITERAL `$range`
                 PUSH LITERAL `1`
@@ -115,6 +125,7 @@
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
+                INVOKE $association WITH 2 PARAMETERS
                 INVOKE $addItem WITH 2 PARAMETERS
                 INVOKE $parameters WITH PARAMETER
                 INVOKE $setParameters WITH 2 PARAMETERS
@@ -212,16 +223,16 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                A00F2801A00F28022803A04C2804A00F280528062807B063B009B002A854
-                B077B002A854B077B009B002A854A87FB009B0022808A00F28022803A04C
-                2804A00F280528062807B063B009B002A854B077B002A854B077B009B002
-                A854A87FB009B0022809A00F28022803A04C2804A00F280528062807B063
-                B009B002A854B077B002A854B077B009B002A854A87FB009B0028001A04C
-                6001B002A854D808A04C8002A04C6002B002A854D80860082806B063D002
-                80056005D00518766005D00380076009A04C280AB002A854D80428018003
-                A04C6003B002A854D804A04C6007B002A854D8078006005C00006009A04C
-                6008B0022801B0022809B0022808B002A854D80680066009280B8004A04C
-                6004B002A854D804D001E000
+                A00F2801A00F28022803A00F28042805A00F280628072808B063B009B002
+                A854B077B009B002A854B077B009B002A854A87FB009B0022809A00F2802
+                2803A00F28042805A00F280628072808B063B009B002A854B077B009B002
+                A854B077B009B002A854A87FB009B002280AA00F28022803A00F28042805
+                A00F280628072808B063B009B002A854B077B009B002A854B077B009B002
+                A854A87FB009B0028001A04C6001B002A854D808A04C8002A04C6002B002
+                A854D80860082807B063D00280056005D005187C6005D00380076009A04C
+                280BB002A854D80428018003A04C6003B002A854D804A04C6007B002A854
+                D8078006006200006009A04C6008B0022801B002280AB0022809B002A854
+                D80680066009280C8004A04C6004B002A854D804D001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -234,8 +245,12 @@
                 $toPeg
                 $withPeg
             ]
-            $variables: [$$result, $target]($type: $Set)
-            $procedures: [$moveDisk, $moveTower]($type: $Set)
+            $variables: [$$result, $target](
+                $type: /bali/collections/Set/v1
+            )
+            $procedures: [$moveDisk, $moveTower](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: [
                 "1.IfStatement": 1
                 "1.1.ConditionClause": 2
@@ -304,9 +319,9 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                00003801182B6002A04C38012806B019B0023802B0023804B0023803B002
+                00003801182B6002A04C38012807B019B0023802B0023804B0023803B002
                 A854D80280016002A04C3802B0023803B002A854D80180016002A04C3801
-                2806B019B0023804B0023803B0023802B002A854D80280016001E000
+                2807B019B0023804B0023803B0023802B002A854D80280016001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -321,13 +336,17 @@
                 $$result
                 $disk
                 $target
-            ]($type: $Set)
+            ](
+                $type: /bali/collections/Set/v1
+            )
             $procedures: [
                 $append
                 $getSubcomponent
                 $pop
                 $push
-            ]($type: $Set)
+            ](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: [
                 "1.EvaluateStatement": 1
                 "2.EvaluateStatement": 16
@@ -393,9 +412,9 @@
                 $mediatype: "application/basm"
             )
             $bytecode: '
-                6006A04C280AB002A854D80238018001A04C6001B002A854D802D0038005
-                6006A04C280AB002A854D80238028002A04C6002B002A854D802A04C6005
-                B002A854D80480046006280B8003A04C6003B002A854D802A04C280CB002
+                6006A04C280BB002A854D80238018001A04C6001B002A854D802D0038005
+                6006A04C280BB002A854D80238028002A04C6002B002A854D802A04C6005
+                B002A854D80480046006280C8003A04C6003B002A854D802A04C280DB002
                 A854D80180046004E000
             '(
                 $encoding: $base16
@@ -404,10 +423,10 @@
         ]
     ]
 ](
-    $name: $TowerOfHanoi
-    $type: $Class
+    $type: /bali/abstractions/Class/v1
+    $name: /bali/examples/TowerOfHanoi
     $tag: #1M9WB8VXAWP8A0T1K3MHWD4ZFBM3MG7T
     $version: v1
-    $permissions: $Public
+    $permissions: /bali/permissions/public/v1
     $previous: none
 )

@@ -9,22 +9,24 @@
         $version: v1
     ]
     $parameters: [
-        $ItemType: [
+        $itemType: [
             $description: "
                 The type of the subcomponents managed by this composite component.
             "($mediatype: "application/bsmd")
-            $type: $Reference($referencedType: $Type)
+            $type: /bali/elements/Reference/v1(
+                $referencedType: /bali/abstractions/Type/v1
+            )
         ]
     ]
     $interfaces: [
-        $sequential: $Sequential($ItemType: ItemType)
+        $sequential: /bali/interfaces/Sequential/v1($itemType: itemType)
     ]
     $attributes: [
         $description: [
             $description: "
                 A brief description of the component type including it's purpose.
             "($mediatype: "application/bsmd")
-            $type: $Text($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: "application/bsmd")
         ]
     ]
     $procedures: [
@@ -32,7 +34,7 @@
             $description: "
                 This procedure returns the boolean value equivalent of this composite component.
             "($mediatype: "application/bsmd")
-            $type: $Probability($granularity: $boolean)
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
                 return target.asNumeric() > 0
             }
@@ -41,7 +43,7 @@
             $description: "
                 This procedure returns the numeric value equivalent of this composite component.
             "($mediatype: "application/bsmd")
-            $type: $Number(0..infinity)
+            $type: /bali/elements/Number/v1(0..infinity)
             $source: {
                 return target.getSize()
             }
@@ -51,7 +53,7 @@
                 This procedure returns an iterator component that can be used to iterate over
                 the subcomponents that make up this composite component.
             "($mediatype: "application/bsmd")
-            $type: $Iterator($ItemType: ItemType)
+            $type: /bali/utilities/Iterator/v1($itemType: itemType)
             $source: {
                 return getIterator(target)
             }
@@ -60,7 +62,7 @@
             $description: "
                 This procedure returns the number of subcomponents that make up this component.
             "($mediatype: "application/bsmd")
-            $type: $Number(0..infinity)
+            $type: /bali/elements/Number/v1(0..infinity)
             $source: {
                 return getSize(target)
             }
@@ -69,17 +71,17 @@
             $description: "
                 This procedure returns whether or not this component has any subcomponents.
             "($mediatype: "application/bsmd")
-            $type: $Probability($granularity: $boolean)
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
                 return not target.getSize() > 0
             }
         ]
     ]
 ](
-    $name: $Composite
-    $type: $Class($existence: $abstract)
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $name: /bali/abstractions/Composite
     $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
     $version: v1
-    $permissions: $Public
+    $permissions: /bali/permissions/public/v1
     $previous: none
 )

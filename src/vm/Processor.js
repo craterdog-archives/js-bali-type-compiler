@@ -75,8 +75,8 @@ Processor.prototype.step = async function() {
         }
     } catch (cause) {
         const exception = bali.exception({
-            $module: '$Processor',
-            $function: '$step',
+            $module: '/bali/utilities/Processor',
+            $procedure: '$step',
             $exception: '$unexpected',
             $task: captureState(this),
             $text: bali.text('An unexpected error occurred while attempting to execute a single step of a task.')
@@ -105,8 +105,8 @@ Processor.prototype.run = async function() {
         await finalizeProcessing(this);
     } catch (cause) {
         const exception = bali.exception({
-            $module: '$Processor',
-            $function: '$run',
+            $module: '/bali/utilities/Processor',
+            $procedure: '$run',
             $exception: '$unexpected',
             $task: captureState(this),
             $text: bali.text('An unexpected error occurred while attempting to run a task.')
@@ -263,7 +263,7 @@ const handleException = async function(processor, exception) {
             stack[index] = line;
         });
         exception = bali.catalog({
-            $module: '$Processor',
+            $module: '/bali/utilities/Processor',
             $procedure: '$executeInstruction',
             $exception: '$processorBug',
             $type: bali.text(exception.constructor.name),
@@ -273,7 +273,7 @@ const handleException = async function(processor, exception) {
         });
         console.error('FOUND BUG IN PROCESSOR: ' + exception);
     }
-    processor.task.stack.addItem(exception);
+    processor.task.stack.addItem(exception.attributes);
     await instructionHandlers[29](processor);  // HANDLE EXCEPTION instruction
 };
 
@@ -315,7 +315,7 @@ const publishCompletionEvent = async function(processor) {
     }, bali.parameters({
         $tag: bali.tag(),
         $version: bali.version(),
-        $permissions: '$Public',
+        $permissions: '/bali/permissions/public/v1',
         $previous: bali.NONE
     }));
     if (task.result) {
@@ -339,7 +339,7 @@ const publishSuspensionEvent = async function(processor) {
     }, bali.parameters({
         $tag: bali.tag(),
         $version: bali.version(),
-        $permissions: '$Public',
+        $permissions: '/bali/permissions/public/v1',
         $previous: bali.NONE
     }));
     await processor.nebula.publishEvent(event);
@@ -536,7 +536,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED POP OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '$Processor',
+            $module: '/bali/utilities/Processor',
             $procedure: '$pop3',
             $exception: '$notImplemented',
             $operand: operand,
@@ -548,7 +548,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED POP OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '$Processor',
+            $module: '/bali/utilities/Processor',
             $procedure: '$pop4',
             $exception: '$notImplemented',
             $operand: operand,
@@ -790,7 +790,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED HANDLE OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '$Processor',
+            $module: '/bali/utilities/Processor',
             $procedure: '$handle3',
             $exception: '$notImplemented',
             $operand: operand,
@@ -802,7 +802,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED HANDLE OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '$Processor',
+            $module: '/bali/utilities/Processor',
             $procedure: '$handle4',
             $exception: '$notImplemented',
             $operand: operand,

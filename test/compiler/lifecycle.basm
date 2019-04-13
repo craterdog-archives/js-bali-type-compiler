@@ -16,11 +16,15 @@
         $documents
         $index
         $target
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $procedures: [
         $getSubcomponent
         $setSubcomponent
-    ]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 6

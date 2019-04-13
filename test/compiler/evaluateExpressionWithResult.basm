@@ -6,8 +6,12 @@
         $bar
         $foo
         $target
-    ]($type: $Set)
-    $procedures: [$setSubcomponent]($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
+    $procedures: [$setSubcomponent](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3

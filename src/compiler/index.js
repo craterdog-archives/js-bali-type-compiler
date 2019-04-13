@@ -64,8 +64,8 @@ exports.compile = async function(nebula, citation, debug) {
 
     // create the compilation type context
     const type = bali.catalog([], bali.parameters({
-        $name: parameters.getParameter('$name'),
         $type: parameters.getParameter('$type'),
+        $name: parameters.getParameter('$name'),
         $tag: parameters.getParameter('$tag'),
         $version: parameters.getParameter('$version'),
         $permissions: parameters.getParameter('$permissions'),

@@ -34,7 +34,7 @@ function Formatter(indentation) {
     indentation = indentation || 0;
     if (typeof indentation !== 'number') {
         throw bali.exception({
-            $module: '$Formatter',
+            $module: '/bali/utilities/Formatter',
             $procedure: '$Formatter',
             $exception: '$invalidParameter',
             $parameter: indentation,
@@ -131,7 +131,7 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
             break;
         default:
             throw bali.exception({
-                $module: '$Formatter',
+                $module: '/bali/utilities/Formatter',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
                 $expected: bali.range(0, 7),

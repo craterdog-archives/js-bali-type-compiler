@@ -9,8 +9,12 @@
     $procedures: [
         $function1: [
             $parameters: []
-            $variables: [$target]($type: $Set)
-            $procedures: []($type: $Set)
+            $variables: [$target](
+                $type: /bali/collections/Set/v1
+            )
+            $procedures: [](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
@@ -26,8 +30,12 @@
         ]
         $function2: [
             $parameters: [$first]
-            $variables: [$exception, $target]($type: $Set)
-            $procedures: []($type: $Set)
+            $variables: [$exception, $target](
+                $type: /bali/collections/Set/v1
+            )
+            $procedures: [](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: [
                 "1.ThrowStatement": 1
                 "1.ThrowStatementDone": 4
@@ -90,8 +98,12 @@
         ]
         $message1: [
             $parameters: []
-            $variables: [$target]($type: $Set)
-            $procedures: []($type: $Set)
+            $variables: [$target](
+                $type: /bali/collections/Set/v1
+            )
+            $procedures: [](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: ["1.ReturnStatement": 1]
             $instructions: "
                 1.ReturnStatement:
@@ -107,8 +119,12 @@
         ]
         $message2: [
             $parameters: [$first, $second]
-            $variables: [$exception, $target]($type: $Set)
-            $procedures: []($type: $Set)
+            $variables: [$exception, $target](
+                $type: /bali/collections/Set/v1
+            )
+            $procedures: [](
+                $type: /bali/collections/Set/v1
+            )
             $addresses: [
                 "1.ThrowStatement": 1
                 "1.ThrowStatementDone": 4
@@ -171,10 +187,10 @@
         ]
     ]
 ](
-    $name: $Test
-    $type: $Class
+    $type: /bali/abstractions/Class/v1
+    $name: /bali/examples/Test
     $tag: #M8G7XJH640RR4YBCLGNDYABD6328741S
     $version: v1
-    $permissions: $Public
+    $permissions: /bali/permissions/public/v1
     $previous: none
 )

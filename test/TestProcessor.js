@@ -15,9 +15,9 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const account = bali.parse('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').api(account, testDirectory, false);
+const notary = require('bali-digital-notary').api(account, testDirectory, debug);
 const nebula = require('bali-nebula-api');
-const repository = nebula.local(testDirectory, debug);
+const repository = nebula.local(testDirectory);
 const api = nebula.api(notary, repository, debug);
 const utilities = require('../src/utilities');
 const vm = require('../');
@@ -33,7 +33,7 @@ const TASK_TEMPLATE =
         '    $balance: 1000\n' +
         '    $status: $active\n' +
         '    $clock: 0\n' +
-        '    $stack: []($type: $Stack)\n' +
+        '    $stack: []($type: /bali/collections/Stack/v1)\n' +
         '    $contexts: [\n' +
         '        [\n' +
         '            $type: none\n' +
@@ -46,15 +46,15 @@ const TASK_TEMPLATE =
         '            $parameters: %parameters\n' +
         '            $variables: %variables\n' +
         '            $procedures: %procedures\n' +
-        '            $handlers: []($type: $Stack)\n' +
+        '            $handlers: []($type: /bali/collections/Stack/v1)\n' +
         '        ]\n' +
-        '    ]($type: $Stack)\n' +
+        '    ]($type: /bali/collections/Stack/v1)\n' +
         ']';
 
 const DOCUMENT = '[$foo: "bar"](\n' +
         '    $tag: #B11TDWH3C5F8J8Q87XKRAD8BM7L5VYSS\n' +
         '    $version: v1\n' +
-        '    $permissions: $Public\n' +
+        '    $permissions: /bali/permissions/public/v1\n' +
         '    $previous: none\n' +
         ')';
 
@@ -503,7 +503,7 @@ describe('Bali Virtual Machine™', function() {
 
     });
 
-    describe('Test the EXECUTE instructions.', function() {
+    describe('Test the EXECUTE and HANDLE instructions.', function() {
 
         it('should create the initial task context', function() {
             const testFile = 'test/processor/EXECUTE-HANDLE.basm';

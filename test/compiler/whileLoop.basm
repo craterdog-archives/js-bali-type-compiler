@@ -7,8 +7,12 @@
         $c
         $condition
         $target
-    ]($type: $Set)
-    $procedures: []($type: $Set)
+    ](
+        $type: /bali/collections/Set/v1
+    )
+    $procedures: [](
+        $type: /bali/collections/Set/v1
+    )
     $addresses: [
         "1.WhileStatement": 1
         "1.1.ConditionClause": 2
