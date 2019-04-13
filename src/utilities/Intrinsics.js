@@ -1072,7 +1072,7 @@ function getType(component) {
 function constructElement(procedure, value, parameters) {
     if (value.getTypeId() !== bali.types.TEXT) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$Text',
@@ -1082,7 +1082,7 @@ function constructElement(procedure, value, parameters) {
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$Parameters',
@@ -1098,7 +1098,7 @@ function constructElement(procedure, value, parameters) {
 function constructSource(procedure, parameters) {
     if (procedure.getTypeId() !== bali.types.TREE) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$Tree',
@@ -1108,7 +1108,7 @@ function constructSource(procedure, parameters) {
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$Parameters',
@@ -1124,7 +1124,7 @@ function constructSource(procedure, parameters) {
 function constructRange(first, last, parameters) {
     if (!(first instanceof bali.Element)) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: '$range',
             $exception: '$parameterType',
             $expected: '$Element',
@@ -1134,7 +1134,7 @@ function constructRange(first, last, parameters) {
     }
     if (first.getTypeId() !== last.getTypeId()) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: '$range',
             $exception: '$parameterType',
             $expected: bali.types.symbolForType(first.getTypeId()),
@@ -1144,7 +1144,7 @@ function constructRange(first, last, parameters) {
     }
     if (parameters.getTypeId() !== bali.types.PARAMETERS && parameters !== bali.NONE) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: '$range',
             $exception: '$parameterType',
             $expected: '$Parameters',
@@ -1160,7 +1160,7 @@ function constructRange(first, last, parameters) {
 function constructTree(symbol, complexity) {
     if (symbol.getTypeId() !== bali.types.SYMBOL) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: '$tree',
             $exception: '$parameterType',
             $expected: '$Symbol',
@@ -1170,7 +1170,7 @@ function constructTree(symbol, complexity) {
     }
     if (complexity.getTypeId() !== bali.types.NUMBER) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: '$tree',
             $exception: '$parameterType',
             $expected: '$Number',
@@ -1186,7 +1186,7 @@ function constructTree(symbol, complexity) {
 function constructCollection(procedure, parameters) {
     if (parameters && parameters.getTypeId() !== bali.types.PARAMETERS && !parameters.isEqualTo(bali.NONE)) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$Parameters',
@@ -1202,7 +1202,7 @@ function constructCollection(procedure, parameters) {
 function validateParameterType(procedure, type, parameter) {
     if (parameter.getTypeId() !== type) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: bali.types.symbolForType(type),
@@ -1216,7 +1216,7 @@ function validateParameterType(procedure, type, parameter) {
 function validateParameterAbstraction(procedure, abstraction, parameter) {
     if (!(parameter instanceof abstraction)) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: '$' + abstraction.name,
@@ -1231,7 +1231,7 @@ function validateParameterAspect(procedure, aspect, parameter) {
     const type = parameter.getTypeId();
     if (!bali.types['is' + aspect.slice(1)](type)) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterType',
             $expected: aspect,
@@ -1246,7 +1246,7 @@ function validateIndex(procedure, size, index) {
     index = Math.abs(index);
     if (index === 0 || index > size) {
         throw bali.exception({
-            $module: '/bali/utilities/Intrinsics',
+            $module: '/bali/vm/Intrinsics',
             $procedure: procedure,
             $exception: '$parameterValue',
             $expected: bali.range(1, size),

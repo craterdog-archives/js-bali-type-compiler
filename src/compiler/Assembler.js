@@ -122,7 +122,7 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
             break;
         default:
             throw bali.exception({
-                $module: '/bali/utilities/Assembler',
+                $module: '/bali/vm/Assembler',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
                 $expected: bali.range(0, 7),

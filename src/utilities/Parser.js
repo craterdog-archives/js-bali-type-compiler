@@ -310,7 +310,7 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
         context = context.parentCtx;
     }
     throw bali.exception({
-        $module: '/bali/utilities/Parser',
+        $module: '/bali/vm/Parser',
         $procedure: '$parseDocument',
         $exception: '$syntaxError',
         $message: '"' + e.message + '"'
@@ -360,7 +360,7 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
 
     // stop the processing
     throw bali.exception({
-        $module: '/bali/utilities/Parser',
+        $module: '/bali/vm/Parser',
         $procedure: '$parseDocument',
         $exception: '$syntaxError',
         $message: '"' + message + '"'

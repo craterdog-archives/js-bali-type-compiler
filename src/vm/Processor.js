@@ -75,7 +75,7 @@ Processor.prototype.step = async function() {
         }
     } catch (cause) {
         const exception = bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$step',
             $exception: '$unexpected',
             $task: captureState(this),
@@ -105,7 +105,7 @@ Processor.prototype.run = async function() {
         await finalizeProcessing(this);
     } catch (cause) {
         const exception = bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$run',
             $exception: '$unexpected',
             $task: captureState(this),
@@ -263,7 +263,7 @@ const handleException = async function(processor, exception) {
             stack[index] = line;
         });
         exception = bali.catalog({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$executeInstruction',
             $exception: '$processorBug',
             $type: bali.text(exception.constructor.name),
@@ -536,7 +536,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED POP OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$pop3',
             $exception: '$notImplemented',
             $operand: operand,
@@ -548,7 +548,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED POP OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$pop4',
             $exception: '$notImplemented',
             $operand: operand,
@@ -790,7 +790,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED HANDLE OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$handle3',
             $exception: '$notImplemented',
             $operand: operand,
@@ -802,7 +802,7 @@ const instructionHandlers = [
     // UNIMPLEMENTED HANDLE OPERATION
     async function(processor, operand) {
         throw bali.exception({
-            $module: '/bali/utilities/Processor',
+            $module: '/bali/vm/Processor',
             $procedure: '$handle4',
             $exception: '$notImplemented',
             $operand: operand,
