@@ -29,7 +29,7 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Class($existence: $abstract)
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $name: /bali/abstractions/Element
     $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
     $version: v1

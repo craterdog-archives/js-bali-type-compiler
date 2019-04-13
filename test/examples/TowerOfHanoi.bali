@@ -52,9 +52,9 @@
     $procedures: [
         $play: [
             $description: "This procedure causes the game to (re)initialize itself and play the game."
-            $result: $Catalog(
-                $Number($range: [1..infinity])
-                $Text
+            $result: /bali/collections/Catalog/v1(
+                $keyType: /bali/elements/Number/v1($range: [1..infinity])
+                $valueType: /bali/elements/Text/v1
             )
             $source: {
                 target[$pegs] := [

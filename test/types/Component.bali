@@ -89,7 +89,7 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Class($existence: $abstract)
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $name: /bali/abstractions/Component
     $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
     $version: v1
