@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "antlr4": "^4.7.1",
-    "bali-component-framework": "file:../js-bali-component-framework",
-    "bali-digital-notary": "file:../js-bali-digital-notary",
-    "bali-nebula-api": "file:../js-bali-nebula-api"
+    "bali-component-framework": "^1.11.1",
+    "bali-digital-notary": "^1.8.1",
+    "bali-nebula-api": "^1.1.1"
   }
 }
