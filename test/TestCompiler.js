@@ -9,15 +9,18 @@
  ************************************************************************/
 
 const debug = true;  // set to true for error logging
-const testDirectory = 'test/config/';
+const directory = 'test/config/';
 const fs = require('fs');
+const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
+const secret = crypto.randomBytes(32);
 const account = bali.tag('GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').api(account, testDirectory, false);
+const securityModule = require('bali-digital-notary').ssm(secret, directory + account);
+const notary = require('bali-digital-notary').api(securityModule, account, directory);
 const nebula = require('bali-nebula-api');
-const repository = nebula.local(testDirectory, debug);
+const repository = nebula.local(directory);
 const api = nebula.api(notary, repository, debug);
 const vm = require('../');
 const compiler = new vm.Compiler();
