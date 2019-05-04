@@ -1,13 +1,8 @@
 [
+    $parent: /bali/abstractions/Composite/v1
     $description: "
         This abstract class defines the attributes and messages that all types support.
     "($mediatype: "application/bsmd")
-    $parent: [
-        $protocol: v1
-        $name: $Composite
-        $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
-        $version: v1
-    ]
     $parameters: [
         $existence: [
             $description: "

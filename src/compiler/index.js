@@ -52,7 +52,7 @@ exports.compile = async function(nebula, citation, debug) {
         citation.setValue('$digest', bali.NONE);
 
         // retrieve the compiled parent type
-        const parent = await nebula.retrieveType(citation);
+        const parent = await nebula.retrieveDocument(citation);
         literals.addItems(parent.getValue('$literals'));
         constants.addItems(parent.getValue('$constants'));
         procedures.addItems(parent.getValue('$procedures'));
@@ -112,7 +112,7 @@ exports.compile = async function(nebula, citation, debug) {
     }
 
     // checkin the newly compiled type
-    citation = await nebula.commitType(type);
+    citation = await nebula.commitDocument(type);
 
     return citation;
 };

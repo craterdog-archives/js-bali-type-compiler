@@ -163,8 +163,8 @@ describe('Bali Virtual Machine™', function() {
 
         it('should initialize the nebula API', async function() {
             const certificate = await notary.generateKey();
-            const citation = await notary.getCitation();
-            const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
+            const parameters = certificate.getParameters();
+            const certificateId = '' + parameters.getParameter('$tag').getValue() + parameters.getParameter('$version');
             await repository.createCertificate(certificateId, certificate);
         });
 

@@ -33,9 +33,9 @@ describe('Bali Virtual Macine™', function() {
 
         it('should generate a new key pair and store the certificate in the repository', async function() {
             const certificate = await notary.generateKey();
-            const citation = await notary.getCitation();
-            const certificateId = '' + citation.getValue('$tag').getValue() + citation.getValue('$version');
-            await repository.createCertificate(certificateId, certificate);
+            const parameters = certificate.getValue('$component').getParameters();
+            const certificateId = '' + parameters.getParameter('$tag').getValue() + parameters.getParameter('$version');
+            await repository.createDocument(certificateId, certificate);
         });
 
     });
@@ -104,7 +104,7 @@ describe('Bali Virtual Macine™', function() {
                 typeCitation = await api.commitDocument(draft);
                 typeCitation = await vm.compile(api, typeCitation);
                 expect(typeCitation).to.exist;  // jshint ignore:line
-                var procedures = await api.retrieveType(typeCitation);
+                var procedures = await api.retrieveDocument(typeCitation);
                 source = procedures.toString() + '\n';  // POSIX compliant <EOL>
                 //fs.writeFileSync(proceduresFile, source, 'utf8');
                 var expected = fs.readFileSync(proceduresFile, 'utf8');

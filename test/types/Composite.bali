@@ -1,13 +1,8 @@
 [
+    $parent: /bali/abstractions/Component/v1
     $description: "
         This abstract class defines the messages that all composite components support.
     "($mediatype: "application/bsmd")
-    $parent: [
-        $protocol: v1
-        $name: $Component
-        $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
-        $version: v1
-    ]
     $parameters: [
         $itemType: [
             $description: "

@@ -366,7 +366,7 @@ const pushContext = async function(processor, target, citation, passedParameters
 
     // retrieve the type and procedure to be executed
     const name = currentContext.procedures.getItem(index);
-    const type = await processor.nebula.retrieveType(citation);
+    const type = await processor.nebula.retrieveDocument(citation);
 
     // retrieve the procedures for this type
     var procedures = type.getValue('$procedures');
