@@ -13,7 +13,6 @@
  * This class implements the virtual machine for The Bali Nebula™.
  */
 const bali = require('bali-component-framework');
-const formatter = bali.Formatter(1);
 const utilities = require('../utilities');
 
 const ACTIVE = '$active';
