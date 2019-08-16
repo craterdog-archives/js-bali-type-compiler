@@ -1,7 +1,7 @@
 ![Logo](https://raw.githubusercontent.com/craterdog-bali/bali-project-documentation/master/images/CraterDogLogo.png)
 
 ### Bali Procedure Compiler
-This project provides a JavaScript version of the compiler for the Bali Nebula Virtual Processor.
+This project provides a JavaScript version of the compiler for the Bali Nebula™ Virtual Processor.
 
 ![Pyramid](https://raw.githubusercontent.com/craterdog-bali/js-bali-procedure-compiler/master/docs/images/BaliPyramid.png)
 

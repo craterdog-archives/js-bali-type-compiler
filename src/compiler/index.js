@@ -26,7 +26,7 @@ exports.Compiler = require('./Compiler').Compiler;
  * a document citation to the newly compiled type.  The type definition must be a
  * committed document in the Bali Nebula™.
  * 
- * @param {Object} nebula A JavaScript object that implements the Bali Nebula API™.
+ * @param {Object} nebula A JavaScript object that implements the Bali Nebula™ API.
  * @param {Catalog} citation A Bali document citation to the type definition.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
