@@ -14,7 +14,7 @@ const expect = require('chai').expect;
 const bali = require('bali-component-framework');
 const utilities = require('../src/utilities');
 
-describe('Bali Virtual Machine™', function() {
+describe('Bali Procedure Compiler', function() {
 
     describe('Test bytecode utilities on words', function() {
 

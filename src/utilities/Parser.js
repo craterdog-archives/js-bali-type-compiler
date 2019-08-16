@@ -11,7 +11,8 @@
 
 /**
  * This module provides a class that parses a document containing instructions
- * for the Bali Virtual Machine™ and produce the corresponding list of instructions.
+ * for the Nebula Virtual Processor and produce the corresponding list of
+ * instructions.
  */
 const antlr = require('antlr4');
 const ErrorStrategy = require('antlr4/error/ErrorStrategy');
@@ -25,7 +26,7 @@ const EOL = '\n';  // POSIX end of line character
 
 /**
  * This class implements a parser that parses strings containing instructions for the
- * Bali Virtual Machine™ and generates the corresponding parse tree structures.
+ * Nebula Virtual Processor and generates the corresponding parse tree structures.
  * 
  * @constructor
  * @param {Boolean} debug Whether of not the parser should be run in debug mode, the
@@ -43,7 +44,7 @@ exports.parser = new Parser();
 
 
 /**
- * This function takes a string containing instructions for the Bali Virtual Machine™
+ * This function takes a string containing instructions for the Nebula Virtual Processor
  * and parses it into a list of instructions.
  * 
  * @param {String} document The document defining the instructions.

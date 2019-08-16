@@ -9,90 +9,37 @@
  ************************************************************************/
 'use strict';
 
-const bali = require('bali-component-framework');
+const Compiler = require('./src/compiler/Compiler').Compiler;
+const Assembler = require('./src/compiler/Assembler').Assembler;
 
-
-// EXPORTS
-
-const utilities = require('./src/utilities');
-Object.keys(utilities).forEach(function(key) {
-    exports[key] = utilities[key];
-});
-
-const compiler = require('./src/compiler');
-Object.keys(compiler).forEach(function(key) {
-    exports[key] = compiler[key];
-});
-
-const vm = require('./src/vm');
-Object.keys(vm).forEach(function(key) {
-    exports[key] = vm[key];
-});
-
-
-// FUNCTIONS
 
 /**
- * This function parses a JavaScript string containing Bali Assembly Language™ and
- * returns the corresponding list of Bali Virtual Machine™ instructions. If the
- * <code>debug</code> flag is set, the parser will report possible ambiguities in
- * the input string.
+ * This function compiles the source code for a procedure into a compilation context
+ * containing the corresponding assembly instructions for the Nebula Virtual Processor.
  * 
- * @param {String} document A string containing Bali Assembly Language™ to be parsed.
- * @param {Boolean} debug An optional flag that when set will cause the parser to
- * report possible ambiguities in the input string.
- * @returns {List} The corresponding list of Bali Virtual Machine™ instructions.
- */
-const parse = function(document, debug) {
-    const parser = new utilities.Parser(debug);
-    return parser.parseDocument(document);
-};
-exports.parse = parse;
-
-/**
- * This function formats a list of Bali Virtual Machine™ instructions into a
- * JavaScript string containing Bali Assembly Language™. An optional indentation
- * level may be specified that causes the formatter to indent each line by that
- * many additional levels.  Each level is four spaces.
- * 
- * @param {List} instructions The list of Bali Virtual Machine™ instructions to be
- * formatted.
- * @param {Number} indentation An optional number of levels to indent the output.
- * @returns {String} The resulting string containing Bali Assembly Language™.
- */
-const format = function(instructions, indentation) {
-    const formatter = new utilities.Formatter(indentation);
-    return formatter.formatInstructions(instructions);
-};
-exports.format = format;
-
-/**
- * This function compiles a type definition residing in the Bali Nebula™ and returns
- * a document citation to the newly compiled type.  The type definition must be a
- * committed document in the Bali Nebula™.
- * 
- * @param {Object} nebula A JavaScript object that implements the Bali Nebula API™.
- * @param {Catalog} citation A Bali document citation to the type definition.
+ * @param {Catalog} type The type context for the document being compiled.
+ * @param {Source} procedure The source code for the procedure.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
- * @returns {Catalog} A Bali document citation to the newly compiled type.
+ * @returns {Catalog} The compiled context for the procedure.
  */
-const compile = function(nebula, citation, debug) {
-    return compiler.compile(nebula, citation, debug);
+exports.compile = function(type, procedure, debug) {
+    const compiler = new Compiler(debug);
+    const context = compiler.compileProcedure(type, procedure);
+    return context;
 };
-exports.compile = compile;
+
 
 /**
- * This function creates a new Bali Virtual Machine™ processor to handle the specified
- * task.
+ * This function assembles the instructions in a compiled procedure into the corresponding
+ * bytecode to be run on the Nebula Virual Processor.
  * 
- * @param {Object} nebula A JavaScript object that implements the Bali Nebula API™.
- * @param {Catalog} task A Bali catalog defining the attributes of the task.
+ * @param {Catalog} type The type context for the document being compiled and assembled.
+ * @param {Catalog} context The compilation context for the procedure being assembled.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
- * @returns {Processor} The resulting Bali Virtual Machine™ processor.
  */
-const processor = function(nebula, task, debug) {
-    return new vm.Processor(nebula, task, debug);
+exports.assemble = function(type, context, debug) {
+    const assembler = new Assembler(debug);
+    assembler.assembleProcedure(type, context);
 };
-exports.processor = processor;

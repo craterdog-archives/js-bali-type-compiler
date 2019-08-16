@@ -11,7 +11,7 @@
 
 /**
  * This module defines a class that assembles compiled procedures into bytecode that
- * can run on the Bali Virtual Machine™.
+ * can run on the Nebula Virtual Processor.
  */
 const bali = require('bali-component-framework');
 const utilities = require('../utilities');
@@ -22,7 +22,7 @@ const EOL = '\n';  // POSIX end of line character
 
 /**
  * This class implements an assembler that assembles a compiled procedure into the corresponding
- * bytecode to be run on the Bali Virtual Machine™.
+ * bytecode to be run on the Nebula Virtual Processor.
  * 
  * @constructor
  * @returns {Assembler} The new instruction assembler.
@@ -37,7 +37,7 @@ exports.assembler = new Assembler();
 
 /**
  * This method assembles the instructions in a compiled procedure into the corresponding
- * bytecode to be run on the Bali Virtual Machine™.
+ * bytecode to be run on the Nebula Virtual Processor.
  * 
  * @param {Catalog} type The type context for the document being compiled and assembled.
  * @param {Catalog} context The compilation context for the procedure being assembled.

@@ -13,7 +13,7 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const utilities = require('../src/utilities');
 
-describe('Bali Virtual Machine™', function() {
+describe('Bali Procedure Compiler', function() {
 
     describe('Test Parser and Formatter', function() {
         const parser = new utilities.Parser(true);

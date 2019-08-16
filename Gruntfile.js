@@ -65,15 +65,10 @@ module.exports = function(grunt) {
       test: {
         options: {
           reporter: 'spec',
-          timeout: 10000 
+          timeout: 20000 
         },
         src: [
-          'test/TestBytecode.js',
-          'test/TestAssembler.js',
-          'test/TestCompiler.js',
-          'test/TestTransformers.js',
-          'test/TestProcessor.js',
-          'test/TestIndex.js',
+          'test/*.js'
         ]
       }
     },
@@ -114,7 +109,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('generate', 'Generate the parser code.', ['clean:generate', 'antlr4']);
   grunt.registerTask('build', 'Build the module.', ['clean:build', 'eslint', 'mochaTest']);
-  grunt.registerTask('package', 'Package the libraries.', ['clean:build', 'eslint', 'mochaTest', 'webpack']);
+  grunt.registerTask('package', 'Package the libraries.', ['clean:build', 'eslint', 'webpack']);
   grunt.registerTask('default', 'Default targets.', ['generate', 'build']);
 
   grunt.registerMultiTask('antlr4', 'Task for antlr4 parser/lexer generation in JS', function () {

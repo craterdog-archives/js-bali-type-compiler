@@ -181,8 +181,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
             operand = operand.getValue();
             break;
         case types.LITERAL:
-            const formatter = new bali.Formatter(this.indentation);
-            operand = '`' + formatter.formatComponent(operand) + '`';
+            operand = '`' + bali.format(operand, this.indentation) + '`';
             break;
         case types.CONSTANT:
         case types.PARAMETER:

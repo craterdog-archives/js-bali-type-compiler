@@ -10,8 +10,8 @@
 'use strict';
 
 /**
- * This library encapsulates the intrinsic functions supported by the Bali
- * Virtual Machine™.
+ * This library encapsulates the intrinsic functions supported by the Nebula
+ * Virtual Processor.
  */
 const bali = require('bali-component-framework');
 

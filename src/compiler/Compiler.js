@@ -13,7 +13,7 @@
  * This module defines a class that analyzes and compiles a document written using
  * Bali Document Notation™ into a type document that contains the bytecode for each
  * procedure defined in the document. The bytecode can then be executed on the
- * Bali Virtual Machine™.
+ * Nebula Virtual Processor.
  */
 const bali = require('bali-component-framework');
 const utilities = require('../utilities');
@@ -39,7 +39,7 @@ exports.compiler = new Compiler();
 
 /**
  * This method compiles the source code for a procedure into a compilation context
- * containing the corresponding assembly instructions for the Bali Virtual Machine™.
+ * containing the corresponding assembly instructions for the Nebula Virtual Processor.
  * 
  * @param {Catalog} type The type context for the document being compiled.
  * @param {Source} source The source code for the procedure.
@@ -87,16 +87,16 @@ Compiler.prototype.compileProcedure = function(type, source) {
 /*
  * This private class uses the Visitor Pattern to traverse the syntax tree generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
- * to construct the corresponding Bali Virtual Machine™ instructions for the syntax
+ * to construct the corresponding Nebula Virtual Processor instructions for the syntax
  * tree is it traversing.
  */
 function CompilingVisitor(type, context) {
-    bali.Visitor.call(this);
+    bali.visitor.call(this);
     this.builder = new InstructionBuilder(type, context);
     this.temporaryVariableCount = 1;
     return this;
 }
-CompilingVisitor.prototype = Object.create(bali.Visitor.prototype);
+CompilingVisitor.prototype = Object.create(bali.visitor.prototype);
 CompilingVisitor.prototype.constructor = CompilingVisitor;
 
 
@@ -499,8 +499,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    const formatter = new bali.Formatter();
-    const literal = formatter.formatLiteral(element);
+    const literal = bali.literal(element);
     this.builder.insertPushInstruction('LITERAL', literal);
 
     const parameters = element.getParameters();
@@ -942,7 +941,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
  * entering a procedure a new context is pushed onto the compilation stack and when
  * the procedure is done being compiled, that context is popped back off the stack.
  * NOTE: This stack is different than the runtime component stack that is
- * maintained by the Bali Virtual Machine™.
+ * maintained by the Nebula Virtual Processor.
  */
 // procedure:
 //     statement (';' statement)*   |
