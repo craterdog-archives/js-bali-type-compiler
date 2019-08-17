@@ -3,7 +3,7 @@
 ### Bali Procedure Compiler
 This project provides a JavaScript version of the compiler for the Bali Nebula™ Virtual Processor.
 
-![Pyramid](https://raw.githubusercontent.com/craterdog-bali/js-bali-procedure-compiler/master/docs/images/BaliPyramid.png)
+![Pyramid](docs/images/BaliPyramid.png)
 
 _**WARNING**_
 _This project is still in its early stages and the classes and interfaces to the classes are likely to change._
