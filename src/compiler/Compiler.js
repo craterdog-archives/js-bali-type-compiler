@@ -190,7 +190,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
     }
     // there was no matching enclosing loop with that label
     throw bali.exception({
-        $module: '/bali/vm/Compiler',
+        $module: '/bali/compiler/Compiler',
         $procedure: '$visitBreakClause',
         $exception: '$noEnclosingLoop',
         $parent: tree.getParent(),
@@ -402,7 +402,7 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
     }
     // there was no matching enclosing loop with that label
     throw bali.exception({
-        $module: '/bali/vm/Compiler',
+        $module: '/bali/compiler/Compiler',
         $procedure: '$visitContinueClause',
         $exception: '$noEnclosingLoop',
         $parent: tree.getParent(),
@@ -598,7 +598,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     const numberOfParameters = parameters.getSize();
     if (numberOfParameters > 3) {
         throw bali.exception({
-            $module: '/bali/vm/Compiler',
+            $module: '/bali/compiler/Compiler',
             $procedure: '$visitFunctionExpression',
             $exception: '$tooManyParameters',
             $function: tree,

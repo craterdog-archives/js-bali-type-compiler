@@ -19,11 +19,11 @@ const repository = require('bali-document-repository').local(directory, debug);
 const compiler = require('../index');
 
 
-describe('Bali Virtual Macine™', function() {
+describe('Bali Nebula™ Procedure Compiler', function() {
 
-    describe('Test the compiler.', function() {
+    describe('Test the compiler and assembler.', function() {
 
-        it('should compile source documents into assembly instructions', function() {
+        it('should compile procedures into assembly instructions and bytecodes', function() {
             const testFolder = 'test/compiler/';
             const files = fs.readdirSync(testFolder);
             for (var i = 0; i < files.length; i++) {
