@@ -9,8 +9,11 @@
  ************************************************************************/
 'use strict';
 
-const Compiler = require('./src/compiler/Compiler').Compiler;
-const Assembler = require('./src/compiler/Assembler').Assembler;
+const Compiler = require('./src/Compiler').Compiler;
+const Assembler = require('./src/Assembler').Assembler;
+
+exports.bytecode = require('./src/utilities').bytecode;
+exports.intrinsics = require('./src/utilities').intrinsics;
 
 
 /**

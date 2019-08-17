@@ -14,7 +14,7 @@
  * can run on the Nebula Virtual Processor.
  */
 const bali = require('bali-component-framework');
-const utilities = require('../utilities');
+const utilities = require('./utilities');
 const EOL = '\n';  // POSIX end of line character
 
 
