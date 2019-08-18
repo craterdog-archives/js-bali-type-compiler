@@ -11,38 +11,85 @@
 
 const Compiler = require('./src/Compiler').Compiler;
 const Assembler = require('./src/Assembler').Assembler;
-
-exports.bytecode = require('./src/utilities').bytecode;
-exports.intrinsics = require('./src/utilities').intrinsics;
+const bytecode = require('./src/utilities').bytecode;
 
 
 /**
- * This function compiles the source code for a procedure into a compilation context
- * containing the corresponding assembly instructions for the Nebula Virtual Processor.
+ * This function returns an object that implements the Bali Nebula™ compiler interface.
  * 
- * @param {Catalog} type The type context for the document being compiled.
- * @param {Source} procedure The source code for the procedure.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
- * @returns {Catalog} The compiled context for the procedure.
+ * @returns {Object} An object that implements the Bali Nebula™ compiler interface.
  */
-exports.compile = function(type, procedure, debug) {
-    const compiler = new Compiler(debug);
-    const context = compiler.compileProcedure(type, procedure);
-    return context;
-};
+exports.api = function(debug) {
+    // validate the parameters
+    debug = debug || false;
 
+    return {
 
-/**
- * This function assembles the instructions in a compiled procedure into the corresponding
- * bytecode to be run on the Nebula Virual Processor.
- * 
- * @param {Catalog} type The type context for the document being compiled and assembled.
- * @param {Catalog} context The compilation context for the procedure being assembled.
- * @param {Boolean} debug An optional flag that determines whether or not exceptions
- * will be logged to the error console.
- */
-exports.assemble = function(type, context, debug) {
-    const assembler = new Assembler(debug);
-    assembler.assembleProcedure(type, context);
+        /**
+         * This function compiles the source code for a procedure into a compilation context
+         * containing the corresponding assembly instructions for the Nebula Virtual Processor.
+         * 
+         * @param {Catalog} type The type context for the document being compiled.
+         * @param {Source} procedure The source code for the procedure.
+         * @returns {Catalog} The compiled context for the procedure.
+         */
+        compile: function(type, procedure) {
+            const compiler = new Compiler(debug);
+            const context = compiler.compileProcedure(type, procedure);
+            return context;
+        },
+
+        /**
+         * This function assembles the instructions in a compiled procedure into the corresponding
+         * bytecode to be run on the Nebula Virual Processor.
+         * 
+         * @param {Catalog} type The type context for the document being compiled and assembled.
+         * @param {Catalog} context The compilation context for the procedure being assembled.
+         */
+        assemble: function(type, context) {
+            const assembler = new Assembler(debug);
+            assembler.assembleProcedure(type, context);
+        },
+
+        bytecode: function(bytes) {
+            return bytecode.bytesToBytecode(bytes);
+        },
+
+        bytes: function(bytecode) {
+            return bytecode.bytecodeToBytes(bytecode);
+        },
+
+        /**
+         * This function decodes the operation for an instruction.
+         *
+         * @param {Number} instruction The instruction to be decoded.
+         * @return {Number} The decoded operation.
+         */
+        operation: function(instruction) {
+            return bytecode.decodeOperation(instruction);
+        },
+
+        /**
+         * This function decodes the modifier for an instruction.
+         *
+         * @param {Number} instruction The instruction to be decoded.
+         * @return {Number} The decoded modifier.
+         */
+        modifier: function(instruction) {
+            return bytecode.decodeModifier(instruction);
+        },
+
+        /**
+         * This function decodes the operand for an instruction.
+         *
+         * @param {Number} instruction The instruction to be decoded.
+         * @return {Number} The decoded operand.
+         */
+        operand: function(instruction) {
+            return bytecode.decodeOperand(instruction);
+        }
+
+    };
 };

@@ -33,10 +33,10 @@ const types = require('./Types');
  * This function takes an operation, a modifier and an operand and
  * encodes them into the corresponding instruction as a two byte number.
  *
- * @param {number} operation The operation for the bytecode.
- * @param {number} modifier The modifier for the bytecode.
- * @param {number} optionalOperand The optional operand associated with the operation.
- * @return {number} The bytecode for the instruction.
+ * @param {Number} operation The operation for the bytecode.
+ * @param {Number} modifier The modifier for the bytecode.
+ * @param {Number} optionalOperand The optional operand associated with the operation.
+ * @return {Number} The bytecode for the instruction.
  */
 exports.encodeInstruction = function(operation, modifier, optionalOperand) {
     const opcode = (operation << 13) & OPCODE_MASK;
@@ -50,8 +50,8 @@ exports.encodeInstruction = function(operation, modifier, optionalOperand) {
 /**
  * This function decodes the operation for an instruction.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {number} The decoded operation.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Number} The decoded operation.
  */
 exports.decodeOperation = function(instruction) {
     const operation = (instruction & OPCODE_MASK) >>> 13;
@@ -62,8 +62,8 @@ exports.decodeOperation = function(instruction) {
 /**
  * This function decodes the modifier for an instruction.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {number} The decoded modifier.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Number} The decoded modifier.
  */
 exports.decodeModifier = function(instruction) {
     const modifier = (instruction & MODCODE_MASK) >>> 11;
@@ -74,8 +74,8 @@ exports.decodeModifier = function(instruction) {
 /**
  * This function decodes the operand for an instruction.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {number} The decoded operand.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Number} The decoded operand.
  */
 exports.decodeOperand = function(instruction) {
     const operand = instruction & OPERAND_MASK;
@@ -87,8 +87,8 @@ exports.decodeOperand = function(instruction) {
  * This function determines whether or not the operand of an instruction
  * is an address.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {boolean} Whether or not the operand is an address.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Boolean} Whether or not the operand is an address.
  */
 exports.operandIsAddress = function(instruction) {
     const operation = exports.decodeOperation(instruction);
@@ -109,8 +109,8 @@ exports.operandIsAddress = function(instruction) {
  * This function determines whether or not the operand of an instruction
  * is an index.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {boolean} Whether or not the operand is an index.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Boolean} Whether or not the operand is an index.
  */
 exports.operandIsIndex = function(instruction) {
     const operation = exports.decodeOperation(instruction);
@@ -133,8 +133,8 @@ exports.operandIsIndex = function(instruction) {
  * This function determines whether or not an instruction
  * is valid.
  *
- * @param {number} instruction The instruction to be decoded.
- * @return {boolean} Whether or not the instruction is valid.
+ * @param {Number} instruction The instruction to be decoded.
+ * @return {Boolean} Whether or not the instruction is valid.
  */
 exports.instructionIsValid = function(instruction) {
     const operation = exports.decodeOperation(instruction);
@@ -185,6 +185,12 @@ exports.instructionIsValid = function(instruction) {
 };
 
 
+/**
+ * This function encodes an instruction into base 16.
+ * 
+ * @param {Number} instruction The instruction to be encoded.
+ * @returns {String} The base 16 encoded instruction.
+ */
 exports.instructionToBase16 = function(instruction) {
     const bytes = bali.codex.shortToBytes(instruction);
     const base16 = bali.codex.base16Encode(bytes);
@@ -248,8 +254,8 @@ exports.bytecodeToString = function(bytecode) {
  * This function returns the canonical string format for an index to a
  * literal value or symbol.
  * 
- * @param {number} index The index to be formatted.
- * @returns {string} The canonical string representation of the index.
+ * @param {Number} index The index to be formatted.
+ * @returns {String} The canonical string representation of the index.
  */
 function indexToString(index) {
     const string = index.toString();
@@ -261,8 +267,8 @@ function indexToString(index) {
  * This function returns the canonical string format for a Bali virtual
  * machine address in hexidecimal [000..3FF].
  * 
- * @param {number} address The virtual machine address.
- * @returns {string} The canonical string representation of the address.
+ * @param {Number} address The virtual machine address.
+ * @returns {String} The canonical string representation of the address.
  */
 function addressAsString(address) {
     var string = address.toString(16).toUpperCase();
@@ -276,9 +282,9 @@ function addressAsString(address) {
  * This function returns a human readable version of a Bali virtual machine
  * 16 bit (word) bytecode instruction.
  * 
- * @param {number} address The address of the instruction.
- * @param {number} instruction The 16 bit bytecode instruction to be formatted.
- * @returns {string} The human readable form of the bytecode instruction.
+ * @param {Number} address The address of the instruction.
+ * @param {Number} instruction The 16 bit bytecode instruction to be formatted.
+ * @returns {String} The human readable form of the bytecode instruction.
  */
 function wordToString(address, instruction) {
     address = addressAsString(address);
