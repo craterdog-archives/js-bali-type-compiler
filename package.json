@@ -1,6 +1,6 @@
 {
   "name": "bali-procedure-compiler",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "This library provides a JavaScript based implementation for the compiler for the Bali Virtual Processor.",
   "repository": {
     "type": "git",
