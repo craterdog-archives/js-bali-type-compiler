@@ -15,7 +15,6 @@ const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework');
-const repository = require('bali-document-repository').local(directory, debug);
 const compiler = require('../index').api(debug);
 
 
