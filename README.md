@@ -27,3 +27,5 @@ const compiler = require('bali-procedure-compiler');
 
 Check out the example code [here](https://github.com/craterdog-bali/js-bali-procedure-compiler/wiki/code-examples).
 
+### Contributing
+Project contributors are always welcome. Create a [fork](https://github.com/craterdog-bali/js-bali-procedure-compiler) of the project and add cool new things to the framework. When you are ready to contribute the changes create a subsequent ["pull request"](https://help.github.com/articles/about-pull-requests/). Any questions and comments can be sent to craterdog@gmail.com.
