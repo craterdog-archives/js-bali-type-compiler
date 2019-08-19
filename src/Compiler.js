@@ -73,7 +73,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
     // format the instructions and add to the procedure context
     var instructions = visitor.getInstructions();
     const parser = new utilities.Parser(true);
-    instructions = parser.parseDocument(instructions);
+    instructions = parser.parseAssembly(instructions);
     const formatter = new utilities.Formatter(1);
     instructions = bali.parse('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
     context.setValue('$instructions', instructions);

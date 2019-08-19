@@ -47,7 +47,7 @@ Assembler.prototype.assembleProcedure = function(type, context) {
     // assemble the instructions into bytecode
     var instructions = context.getValue('$instructions');
     const parser = new utilities.Parser();
-    instructions = parser.parseDocument(instructions.getValue());
+    instructions = parser.parseAssembly(instructions.getValue());
     const visitor = new AssemblingVisitor(type, context);
     instructions.acceptVisitor(visitor);
 

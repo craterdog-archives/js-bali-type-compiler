@@ -50,7 +50,7 @@ exports.parser = new Parser();
  * @param {String} document The document defining the instructions.
  * @returns {List} The resulting list of instructions.
  */
-Parser.prototype.parseDocument = function(document) {
+Parser.prototype.parseAssembly = function(document) {
     const parser = initializeParser(document, this.debug);
     const antlrTree = parser.document();
     const list = convertParseTree(antlrTree);
@@ -312,7 +312,7 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
     }
     throw bali.exception({
         $module: '/bali/compiler/Parser',
-        $procedure: '$parseDocument',
+        $procedure: '$parseAssembly',
         $exception: '$syntaxError',
         $message: '"' + e.message + '"'
     });
@@ -362,7 +362,7 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
     // stop the processing
     throw bali.exception({
         $module: '/bali/compiler/Parser',
-        $procedure: '$parseDocument',
+        $procedure: '$parseAssembly',
         $exception: '$syntaxError',
         $message: '"' + message + '"'
     });
