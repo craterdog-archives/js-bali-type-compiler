@@ -55,7 +55,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
         const iterator = source.getParameters().getIterator();
         while (iterator.hasNext()) {
             var parameter = iterator.getNext();
-            if (parameter.getTypeId() === bali.types.ASSOCIATION) {
+            if (parameter.isType('$Association')) {
                 parameter = parameter.getKey();
             }
             parameters.addItem(parameter);
@@ -526,7 +526,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         const recipient = tree.getChild(1);
-        if (recipient.getTypeId() === bali.types.SUBCOMPONENT_EXPRESSION) {
+        if (recipient.isType('$SubcomponentExpression')) {
             recipient.acceptVisitor(this);
         }
 
@@ -611,7 +611,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     const iterator = parameters.getIterator();
     while (iterator.hasNext()) {
         var parameter = iterator.getNext();
-        if (parameter.getTypeId() === bali.types.ASSOCIATION) {
+        if (parameter.isType('$Association')) {
             parameter = parameter.getValue();  // don't place the 'key' on the component stack
         }
         parameter.acceptVisitor(this);
@@ -1497,7 +1497,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  * component stack.
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
-    if (recipient.getTypeId() === bali.types.SYMBOL) {
+    if (recipient.isType('$Symbol')) {
         // the VM stores the value that is on top of the component stack in the variable
         const symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
@@ -1544,7 +1544,7 @@ function getSubclauses(statement) {
     const iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
-        if (item.getTypeId() === bali.types.BLOCK) {
+        if (item.isType('$Block')) {
             subClauses.push(item);
         }
     }
@@ -1630,7 +1630,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     const statement = procedure.statement;
-    const type = bali.types.symbolForType(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const type = statement.mainClause.getType().slice(1, -6);  // remove '$' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1722,7 +1722,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = bali.types.symbolForType(statement.mainClause.getTypeId()).slice(1, -6);  // remove '$' and 'Clause'
+    const type = statement.mainClause.getType().slice(1, -6);  // remove '$' and 'Clause'
     return type;
 };
 
