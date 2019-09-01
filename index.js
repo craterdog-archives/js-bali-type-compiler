@@ -17,15 +17,31 @@ const utilities = require('./src/utilities');
 /**
  * This function returns an object that implements the Bali Nebula™ compiler interface.
  * 
+ * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
+ * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
  * @returns {Object} An object that implements the Bali Nebula™ compiler interface.
  */
-exports.api = function(debug) {
+exports.api = function(notary, repository, debug) {
     // validate the parameters
     debug = debug || false;
 
     return {
+
+        /**
+         * This function compiles a type definition residing in the Bali Nebula™ and returns
+         * a document citation to the newly compiled type.  The type definition must be a
+         * committed document in the Bali Nebula™.
+         * 
+         * @param {Catalog} document A document containing the type definition to be compiled.
+         * @returns {Catalog} A catalog containing the newly compiled type.
+         */
+        compileType: function(document) {
+            const compiler = new Compiler(notary, repository, debug);
+            const context = compiler.compileType(document);
+            return context;
+        },
 
         /**
          * This function compiles the Bali Nebula™ source code for a procedure into a compilation
@@ -36,8 +52,8 @@ exports.api = function(debug) {
          * @param {Source} procedure The source code for the procedure being compiled.
          * @returns {Catalog} A catalog containing the compiled procedure context.
          */
-        compile: function(type, procedure) {
-            const compiler = new Compiler(debug);
+        compileProcedure: function(type, procedure) {
+            const compiler = new Compiler(notary, repository, debug);
             const context = compiler.compileProcedure(type, procedure);
             return context;
         },
@@ -51,7 +67,7 @@ exports.api = function(debug) {
          * assembled.
          * @param {Catalog} procedure A catalog containing the compiled procedure context.
          */
-        assemble: function(type, procedure) {
+        assembleProcedure: function(type, procedure) {
             const assembler = new Assembler(debug);
             assembler.assembleProcedure(type, procedure);
         },
@@ -66,8 +82,8 @@ exports.api = function(debug) {
          * @param {Number} indentation An optional number of levels to indent the output.
          * @returns {String} A string containing the corresponding assembly code.
          */
-        format: function(instructions, indentation) {
-            const formatter = new utilities.Formatter(indentation);
+        formatInstructions: function(instructions, indentation) {
+            const formatter = new utilities.Formatter(indentation, debug);
             return formatter.formatInstructions(instructions);
         },
 
@@ -78,9 +94,9 @@ exports.api = function(debug) {
          * @param {String} assembly A string containing Bali Nebula™ assembly code.
          * @returns {List} A list containing the corresponding Bali Nebula™ machine instructions.
          */
-        parse: function(assembly) {
+        parseInstructions: function(assembly) {
             const parser = new utilities.Parser(debug);
-            return parser.parseAssembly(assembly);
+            return parser.parseInstructions(assembly);
         },
 
         /**

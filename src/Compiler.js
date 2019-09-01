@@ -12,11 +12,12 @@
 /**
  * This module defines a class that analyzes and compiles a document written using
  * Bali Document Notation™ into a type document that contains the bytecode for each
- * procedure defined in the document. The bytecode can then be executed on the
- * Nebula Virtual Processor.
+ * procedure defined in the document. The bytecode can then be executed on a
+ * Bali Nebula™ virtual processor.
  */
 const bali = require('bali-component-framework');
 const utilities = require('./utilities');
+const Assembler = require('./Assembler').Assembler;
 const EOL = '\n';  // POSIX end of line character
 
 
@@ -26,28 +27,118 @@ const EOL = '\n';  // POSIX end of line character
  * This class implements a compiler that analyzes and compiles a document into a
  * type document containing the bytecode for each of its procedures.
  * 
- * @constructor
+ * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
+ * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
+ * @param {Boolean} debug An optional flag that determines whether or not exceptions
+ * will be logged to the error console.
  * @returns {Compiler} The new document compiler.
  */
-function Compiler() {
+function Compiler(notary, repository, debug) {
+    this.notary = notary;
+    this.repository = repository;
+    this.debug = debug || false;
     return this;
 }
 Compiler.prototype.constructor = Compiler;
 exports.Compiler = Compiler;
-exports.compiler = new Compiler();
 
 
 /**
- * This method compiles the source code for a procedure into a compilation context
- * containing the corresponding assembly instructions for the Nebula Virtual Processor.
+ * This function compiles a type definition an returns a compiled type that may be run
+ * in the Bali Nebula™.
  * 
- * @param {Catalog} type The type context for the document being compiled.
- * @param {Source} source The source code for the procedure.
+ * @param {Catalog} document The document containing the type definition to be compiled.
+ * @returns {Catalog} The compiled type.
+ */
+Compiler.prototype.compileType = async function(document) {
+
+    // extract the new type parameters
+    const citation = await this.notary.citeDocument(document);
+    const tag = citation.getValue('$tag');
+    const version = citation.getValue('$version');
+    const permissions = citation.getValue('$permissions');
+    var previous = citation.getValue('$previous');
+    if (previous && previous !== bali.pattern.NONE) {
+        const previousVersion = previous.getValue('$version');
+        const typeId = tag.getValue() + previousVersion;
+        const previousType = await this.repository.fetchType(typeId);
+        previous = await this.notary.citeDocument(previousType);
+    }
+
+    // create the compiled type catalog
+    const literals = bali.list();
+    const constants = bali.catalog();
+    const procedures = bali.catalog();
+    const type = bali.catalog({
+        $source: citation,
+        $literals: literals,
+        $constants: constants,
+        $procedures: procedures
+    }, bali.parameters({
+        $tag: tag,
+        $version: version,
+        $permissions: permissions,
+        $previous: previous
+    }));
+
+    // extract the literals, constants and procedures from the parent type
+    const definition = document.getValue('$component');
+    const parentName = definition.getValue('$parent');
+    if (parentName && parentName !== bali.pattern.NONE) {
+
+        // retrieve the parent type
+        const parentCitation = bali.parse(await this.repository.fetchCitation(parentName.toString()));
+        const parentId = parentCitation.getValue('$tag').getValue() + parentCitation.getValue('$version');
+        const parentType = bali.parse(await this.repository.fetchType(parentId));
+
+        // extract the parent context
+        literals.addItems(parentType.getValue('$literals') || []);
+        constants.addItems(parentType.getValue('$constants') || []);
+        procedures.addItems(parentType.getValue('$procedures') || []);
+    }
+
+    // add in the constants from the child type definition
+    constants.addItems(definition.getValue('$constants') || []);
+
+    // compile each procedure defined in the child type definition
+    const sources = definition.getValue('$procedures');
+    if (sources && sources !== bali.pattern.NONE) {
+
+        // iterate through procedure definitions
+        const assembler = new Assembler(this.debug);
+        const iterator = sources.getIterator();
+        while (iterator.hasNext()) {
+
+            // retrieve the source code for the procedure
+            const association = iterator.getNext();
+            const name = association.getKey();
+            const source = association.getValue().getValue('$source');
+
+            // compile the source code
+            const procedure = this.compileProcedure(type, source);
+
+            // assemble the instructions in the procedure into bytecode
+            assembler.assembleProcedure(type, procedure);
+
+            // add the assembled procedure to the type context
+            procedures.setValue(name, procedure);
+        }
+
+    }
+
+    return type;
+};
+
+
+/**
+ * This method compiles source code into a procedure containing the corresponding
+ * assembly instructions for the Bali Nebula™ virtual processor.
+ * 
+ * @param {Catalog} context The type context for the document being compiled.
+ * @param {Source} source The source code component for the procedure.
  * @returns {Catalog} The compiled context for the procedure.
  */
-Compiler.prototype.compileProcedure = function(type, source) {
-    const context = bali.catalog();
-    const procedure = source.getProcedure();
+Compiler.prototype.compileProcedure = function(context, source) {
 
     // extract the parameter names for the procedure
     const parameters = bali.list();
@@ -61,24 +152,25 @@ Compiler.prototype.compileProcedure = function(type, source) {
             parameters.addItem(parameter);
         }
     }
-    context.setValue('$parameters', parameters);
-    context.setValue('$variables', bali.set(['$target']));
-    context.setValue('$procedures', bali.set());
-    context.setValue('$addresses', bali.catalog());
+    const procedure = bali.catalog();
+    procedure.setValue('$parameters', parameters);
+    procedure.setValue('$variables', bali.set(['$target']));
+    procedure.setValue('$procedures', bali.set());
+    procedure.setValue('$addresses', bali.catalog());
 
     // compile the procedure into assembly instructions
-    const visitor = new CompilingVisitor(type, context);
-    procedure.acceptVisitor(visitor);
+    const visitor = new CompilingVisitor(context, procedure, this.debug);
+    source.getProcedure().acceptVisitor(visitor);
 
     // format the instructions and add to the procedure context
     var instructions = visitor.getInstructions();
-    const parser = new utilities.Parser(true);
-    instructions = parser.parseAssembly(instructions);
-    const formatter = new utilities.Formatter(1);
+    const parser = new utilities.Parser(this.debug);
+    instructions = parser.parseInstructions(instructions);
+    const formatter = new utilities.Formatter(1, this.debug);
     instructions = bali.parse('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
-    context.setValue('$instructions', instructions);
+    procedure.setValue('$instructions', instructions);
 
-    return context;
+    return procedure;
 };
 
 
@@ -90,9 +182,10 @@ Compiler.prototype.compileProcedure = function(type, source) {
  * to construct the corresponding Nebula Virtual Processor instructions for the syntax
  * tree is it traversing.
  */
-function CompilingVisitor(type, context) {
+function CompilingVisitor(context, procedure, debug) {
     bali.visitor.call(this);
-    this.builder = new InstructionBuilder(type, context);
+    this.debug = debug || false;
+    this.builder = new InstructionBuilder(context, procedure);
     this.temporaryVariableCount = 1;
     return this;
 }
@@ -189,13 +282,15 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
         }
     }
     // there was no matching enclosing loop with that label
-    throw bali.exception({
+    const exception = bali.exception({
         $module: '/bali/compiler/Compiler',
         $procedure: '$visitBreakClause',
         $exception: '$noEnclosingLoop',
         $parent: tree.getParent(),
         $message: 'A break statement was found with no enclosing loop.'
     });
+    if (this.debug) console.error(exception.toString());
+    throw exception;
 };
 
 
@@ -401,13 +496,15 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
         }
     }
     // there was no matching enclosing loop with that label
-    throw bali.exception({
+    const exception = bali.exception({
         $module: '/bali/compiler/Compiler',
         $procedure: '$visitContinueClause',
         $exception: '$noEnclosingLoop',
         $parent: tree.getParent(),
         $message: 'A continue statement was found with no enclosing loop.'
     });
+    if (this.debug) console.error(exception.toString());
+    throw exception;
 };
 
 
@@ -597,13 +694,15 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     // make sure the number of parameters is less than 4
     const numberOfParameters = parameters.getSize();
     if (numberOfParameters > 3) {
-        throw bali.exception({
+        const exception = bali.exception({
             $module: '/bali/compiler/Compiler',
             $procedure: '$visitFunctionExpression',
             $exception: '$tooManyParameters',
             $function: tree,
             $message: 'The number of function parameters must be less than 4.'
         });
+        if (this.debug) console.error(exception.toString());
+        throw exception;
     }
 
     // the VM places each parameter on top of the component stack
@@ -1562,13 +1661,14 @@ function getSubclauses(statement) {
  * clause number.  For example, a prefix of '2.3.4.' would correspond to the
  * fourth statement in the third clause of the second statement in the main procedure.
  */
-function InstructionBuilder(type, context) {
-    this.literals = type.getValue('$literals');
-    this.constants = type.getValue('$constants');
-    this.parameters = context.getValue('$parameters');
-    this.variables = context.getValue('$variables');
-    this.procedures = context.getValue('$procedures');
-    this.addresses = context.getValue('$addresses');
+function InstructionBuilder(context, procedure, debug) {
+    this.debug = debug || false;
+    this.literals = context.getValue('$literals');
+    this.constants = context.getValue('$constants');
+    this.parameters = procedure.getValue('$parameters');
+    this.variables = procedure.getValue('$variables');
+    this.procedures = procedure.getValue('$procedures');
+    this.addresses = procedure.getValue('$addresses');
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
     this.asmcode = '';

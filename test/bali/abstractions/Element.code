@@ -1,0 +1,87 @@
+[
+    $component: [
+        $source: [
+            $protocol: v1
+            $timestamp: <2019-09-01T04:18:06.404>
+            $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
+            $version: v1
+            $digest: '
+                2NN811ZPY1L88HKK5VC3YRZNNGCB07918JPX3AHMP2GT38AVMX2190B96BXV
+                XPAYFSD9PDALA64J79QWKCRJDQ0ASP3M3FYFFRT1X50
+            '
+        ](
+            $type: /bali/notary/Citation/v1
+        )
+        $literals: [false]
+        $constants: [:]
+        $procedures: [
+            $asBoolean: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    PUSH LITERAL `false`
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '2801E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+            $asNumeric: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    PUSH LITERAL `0`
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '2801E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+        ]
+    ](
+        $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
+        $version: v1
+        $permissions: none
+        $previous: none
+    )
+    $protocol: v1
+    $timestamp: <2019-09-01T04:18:06.431>
+    $certificate: [
+        $protocol: v1
+        $timestamp: <2019-09-01T04:18:05.306>
+        $tag: #XWFWTG93MYFSBCA4F6GRTM40YSRCD014
+        $version: v1
+        $digest: '
+            MZSCA01SAK2Z80SFC839AAMNW82HAH1TTV9PWR8LMPCPCNZZSNRKWT7KKN2R
+            26FNM5FLRXRKPVG927TL97WHWZDL31DD84G3RLJM660
+        '
+    ](
+        $type: /bali/notary/Citation/v1
+    )
+    $signature: '
+        PWTM9DVDX4VZZ58DY3W60L7KDTV04PGZVNX75355BMNNK8NVA3MMZWD7ASR0
+        8XJC48P2FKYW0RANB9J5XNJS4NFT55KH6ZLLS3MCR0H
+    '
+](
+    $type: /bali/notary/Document/v1
+)

@@ -1,0 +1,160 @@
+[
+    $component: [
+        $source: [
+            $protocol: v1
+            $timestamp: <2019-09-01T04:18:06.460>
+            $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
+            $version: v1
+            $digest: '
+                J1Q8187R3TA4YA3V7V01X3YYNB9N9GM91JL5RDF555LNZ8R0DKSATMLMJV2L
+                Z0RYQXQP3NTG4MJSRQPTQ61Z4NLYTLZTX2WQKD93W4H
+            '
+        ](
+            $type: /bali/notary/Citation/v1
+        )
+        $literals: [0]
+        $constants: [:]
+        $procedures: [
+            $asBoolean: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [$asNumeric](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    EXECUTE $asNumeric ON TARGET
+                    PUSH LITERAL `0`
+                    INVOKE $isMoreThan WITH 2 PARAMETERS
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '6001D0012801B046E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+            $asNumeric: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [$getSize](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    EXECUTE $getSize ON TARGET
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '6001D001E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+            $getIterator: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $getIterator WITH PARAMETER
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '6001FFFFE000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+            $getSize: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $getSize WITH PARAMETER
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '6001A838E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+            $isEmpty: [
+                $parameters: []
+                $variables: [$target](
+                    $type: /bali/collections/Set/v1
+                )
+                $procedures: [$getSize](
+                    $type: /bali/collections/Set/v1
+                )
+                $addresses: ["1.ReturnStatement": 1]
+                $instructions: "
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    EXECUTE $getSize ON TARGET
+                    PUSH LITERAL `0`
+                    INVOKE $isMoreThan WITH 2 PARAMETERS
+                    INVOKE $complement WITH PARAMETER
+                    HANDLE RESULT
+                "(
+                    $mediatype: "application/basm"
+                )
+                $bytecode: '6001D0012801B046A810E000'(
+                    $encoding: $base16
+                    $mediatype: "application/bcod"
+                )
+            ]
+        ]
+    ](
+        $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
+        $version: v1
+        $permissions: none
+        $previous: none
+    )
+    $protocol: v1
+    $timestamp: <2019-09-01T04:18:06.479>
+    $certificate: [
+        $protocol: v1
+        $timestamp: <2019-09-01T04:18:05.306>
+        $tag: #XWFWTG93MYFSBCA4F6GRTM40YSRCD014
+        $version: v1
+        $digest: '
+            MZSCA01SAK2Z80SFC839AAMNW82HAH1TTV9PWR8LMPCPCNZZSNRKWT7KKN2R
+            26FNM5FLRXRKPVG927TL97WHWZDL31DD84G3RLJM660
+        '
+    ](
+        $type: /bali/notary/Citation/v1
+    )
+    $signature: '
+        6GC7QRC7TK0DP2QA682W5ZNN3J5XYG9BKP1PCQ3TT02YVH1RC3SK9K7TP3A3
+        YXNHPHVNRL2Q28YA7877ZF9P281CT4K7K53ZA08LM00
+    '
+](
+    $type: /bali/notary/Document/v1
+)

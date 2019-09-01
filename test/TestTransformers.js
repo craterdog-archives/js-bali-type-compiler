@@ -22,7 +22,7 @@ describe('Bali Procedure Compiler', function() {
             const file = 'test/utilities/instructions.basm';
             const source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            const procedure = parser.parseAssembly(source);
+            const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new utilities.Formatter();
             const formatted = formatter.formatInstructions(procedure);
@@ -33,7 +33,7 @@ describe('Bali Procedure Compiler', function() {
             const file = 'test/utilities/instructions.basm';
             const source = fs.readFileSync(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
-            const procedure = parser.parseAssembly(source);
+            const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new utilities.Formatter(1);
             const formatted = formatter.formatInstructions(procedure);

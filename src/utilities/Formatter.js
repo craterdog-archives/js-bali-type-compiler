@@ -23,27 +23,31 @@ const types = require('./Types');
  * This class implements a formatter that formats an instruction list into its
  * corresponding source code in a canonical way.
  * 
- * @constructor
  * @param {Number} indentation The number of levels of indentation that should be inserted
  * to each formatted line. The default is zero.
+ * @param {Boolean} debug An optional flag that determines whether or not exceptions
+ * will be logged to the error console.
  * @returns {Formatter} The new component formatter.
  */
-function Formatter(indentation) {
+function Formatter(indentation, debug) {
+    debug = debug || false;
 
     // the indentation is a private attribute so methods that use it are defined in the constructor
     indentation = indentation || 0;
     if (typeof indentation !== 'number') {
-        throw bali.exception({
+        const exception = bali.exception({
             $module: '/bali/compiler/Formatter',
             $procedure: '$Formatter',
             $exception: '$invalidParameter',
             $parameter: indentation,
             $message: '"The indentation parameter should be the number of levels to indent."'
         });
+        if (debug) console.error(exception.toString());
+        throw exception;
     }
 
     this.formatInstructions = function(instructions) {
-        const visitor = new FormattingVisitor(indentation);
+        const visitor = new FormattingVisitor(indentation, debug);
         instructions.acceptVisitor(visitor);
         return visitor.source;
     };
@@ -60,7 +64,8 @@ exports.formatter = new Formatter();
 const EOL = '\n';  // POSIX end of line character
 
 
-function FormattingVisitor(indentation) {
+function FormattingVisitor(indentation, debug) {
+    this.debug = debug || false;
     this.indentation = indentation;
     this.source = '';
     for (var i = 0; i < this.indentation; i++) {
@@ -130,7 +135,7 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
             this.visitHandleInstruction(step);
             break;
         default:
-            throw bali.exception({
+            const exception = bali.exception({
                 $module: '/bali/compiler/Formatter',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
@@ -139,6 +144,8 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
                 $step: step,
                 $message: 'An invalid operation was found in a procedure step.'
             });
+            if (debug) console.error(exception.toString());
+            throw exception;
     }
 };
 

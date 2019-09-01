@@ -24,10 +24,12 @@ const EOL = '\n';  // POSIX end of line character
  * This class implements an assembler that assembles a compiled procedure into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
  * 
- * @constructor
+ * @param {Boolean} debug An optional flag that determines whether or not exceptions
+ * will be logged to the error console.
  * @returns {Assembler} The new instruction assembler.
  */
-function Assembler() {
+function Assembler(debug) {
+    this.debug = debug || false;
     return this;
 }
 Assembler.prototype.constructor = Assembler;
@@ -39,35 +41,35 @@ exports.assembler = new Assembler();
  * This method assembles the instructions in a compiled procedure into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
  * 
- * @param {Catalog} type The type context for the document being compiled and assembled.
- * @param {Catalog} context The compilation context for the procedure being assembled.
+ * @param {Catalog} context The type context for the document being compiled and assembled.
+ * @param {Catalog} compilation The compilation context for the procedure being assembled.
  */
-Assembler.prototype.assembleProcedure = function(type, context) {
+Assembler.prototype.assembleProcedure = function(context, compilation) {
 
     // assemble the instructions into bytecode
-    var instructions = context.getValue('$instructions');
+    var instructions = compilation.getValue('$instructions');
     const parser = new utilities.Parser();
-    instructions = parser.parseAssembly(instructions.getValue());
-    const visitor = new AssemblingVisitor(type, context);
+    instructions = parser.parseInstructions(instructions.getValue());
+    const visitor = new AssemblingVisitor(context, compilation);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
     const base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
     bytecode = bali.parse("'" + base16 + EOL + "            '" + '($encoding: $base16, $mediatype: "application/bcod")');
-    context.setValue('$bytecode', bytecode);
+    compilation.setValue('$bytecode', bytecode);
 };
 
 
 // PRIVATE CLASSES
 
-function AssemblingVisitor(type, context) {
-    this.literals = type.getValue('$literals');
-    this.constants = type.getValue('$constants');
-    this.parameters = context.getValue('$parameters');
-    this.variables = context.getValue('$variables');
-    this.procedures = context.getValue('$procedures');
-    this.addresses = context.getValue('$addresses');
+function AssemblingVisitor(context, compilation) {
+    this.literals = context.getValue('$literals');
+    this.constants = context.getValue('$constants');
+    this.parameters = compilation.getValue('$parameters');
+    this.variables = compilation.getValue('$variables');
+    this.procedures = compilation.getValue('$procedures');
+    this.addresses = compilation.getValue('$addresses');
     this.bytecode = [];
     return this;
 }
@@ -121,7 +123,7 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
             this.visitHandleInstruction(step);
             break;
         default:
-            throw bali.exception({
+            const exception = bali.exception({
                 $module: '/bali/compiler/Assembler',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
@@ -130,6 +132,8 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
                 $step: step,
                 $message: 'An invalid operation was found in a procedure step.'
             });
+            if (this.debug) console.error(exception.toString());
+            throw exception;
     }
 };
 

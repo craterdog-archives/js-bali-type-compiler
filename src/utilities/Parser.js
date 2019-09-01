@@ -11,7 +11,7 @@
 
 /**
  * This module provides a class that parses a document containing instructions
- * for the Nebula Virtual Processor and produce the corresponding list of
+ * for the Bali Nebula™ virtual processor and produce the corresponding list of
  * instructions.
  */
 const antlr = require('antlr4');
@@ -26,7 +26,7 @@ const EOL = '\n';  // POSIX end of line character
 
 /**
  * This class implements a parser that parses strings containing instructions for the
- * Nebula Virtual Processor and generates the corresponding parse tree structures.
+ * Bali Nebula™ virtual processor and generates the corresponding parse tree structures.
  * 
  * @constructor
  * @param {Boolean} debug Whether of not the parser should be run in debug mode, the
@@ -44,14 +44,14 @@ exports.parser = new Parser();
 
 
 /**
- * This function takes a string containing instructions for the Nebula Virtual Processor
+ * This function takes a string containing instructions for the Bali Nebula™ virtual processor
  * and parses it into a list of instructions.
  * 
- * @param {String} document The document defining the instructions.
+ * @param {String} assembly The assembly code defining the instructions.
  * @returns {List} The resulting list of instructions.
  */
-Parser.prototype.parseAssembly = function(document) {
-    const parser = initializeParser(document, this.debug);
+Parser.prototype.parseInstructions = function(assembly) {
+    const parser = initializeParser(assembly, this.debug);
     const antlrTree = parser.document();
     const list = convertParseTree(antlrTree);
     return list;
@@ -61,6 +61,7 @@ Parser.prototype.parseAssembly = function(document) {
 // PRIVATE FUNCTIONS
 
 function initializeParser(document, debug) {
+    debug = debug || false;
     const chars = new antlr.InputStream(document);
     const lexer = new grammar.InstructionSetLexer(chars);
     const listener = new CustomErrorListener(debug);
@@ -71,7 +72,7 @@ function initializeParser(document, debug) {
     parser.buildParseTrees = true;
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
-    parser._errHandler = new CustomErrorStrategy();
+    parser._errHandler = new CustomErrorStrategy(debug);
     return parser;
 }
 
@@ -291,7 +292,8 @@ grammar.InstructionSetLexer.prototype.recover = function(e) {
 };
 
 
-function CustomErrorStrategy() {
+function CustomErrorStrategy(debug) {
+    this.debug = debug || false;
     ErrorStrategy.DefaultErrorStrategy.call(this);
     return this;
 }
@@ -310,12 +312,14 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
         context.exception = e;
         context = context.parentCtx;
     }
-    throw bali.exception({
+    const exception = bali.exception({
         $module: '/bali/compiler/Parser',
         $procedure: '$parseAssembly',
         $exception: '$syntaxError',
         $message: '"' + e.message + '"'
     });
+    if (debug) console.error(exception.toString());
+    throw exception;
 };
 
 
@@ -333,8 +337,8 @@ CustomErrorStrategy.prototype.sync = function(recognizer) {
 
 function CustomErrorListener(debug) {
     antlr.error.ErrorListener.call(this);
+    this.debug = debug || false;
     this.exactOnly = false;  // 'true' results in uninteresting ambiguities so leave 'false'
-    this.debug = debug;
     return this;
 }
 CustomErrorListener.prototype = Object.create(antlr.error.ErrorListener.prototype);
@@ -360,12 +364,14 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
     }
 
     // stop the processing
-    throw bali.exception({
+    const exception = bali.exception({
         $module: '/bali/compiler/Parser',
         $procedure: '$parseAssembly',
         $exception: '$syntaxError',
         $message: '"' + message + '"'
     });
+    if (debug) console.error(exception.toString());
+    throw exception;
 };
 
 
