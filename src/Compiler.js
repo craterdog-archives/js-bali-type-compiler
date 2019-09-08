@@ -1225,7 +1225,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 
 // sequence: range | list | catalog
 CompilingVisitor.prototype.visitSequence = function(sequence) {
-    const numberOfArguments = sequence.isParameterized() ? 1 : 0;
+    var numberOfArguments = sequence.isParameterized() ? 1 : 0;
     if (sequence.isType('$Range')) {
         var parameters;
         if (numberOfArguments) {
