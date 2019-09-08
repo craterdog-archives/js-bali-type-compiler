@@ -6,12 +6,8 @@
         $error
         $message
         $target
-    ](
-        $type: /bali/collections/Set/v1
-    )
-    $procedures: [](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
+    $procedures: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.QueueStatement": 1
         "1.QueueStatementDone": 6
@@ -47,9 +43,9 @@
         INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `"bad"`
-        INVOKE $association WITH 2 PARAMETERS
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $isMatchedBy WITH 2 PARAMETERS
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $isMatchedBy WITH 2 ARGUMENTS
         JUMP TO 1.2.HandleClause ON FALSE
         POP COMPONENT
         
@@ -67,9 +63,9 @@
         INVOKE $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `"horrid"`
-        INVOKE $association WITH 2 PARAMETERS
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $isMatchedBy WITH 2 PARAMETERS
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $isMatchedBy WITH 2 ARGUMENTS
         JUMP TO 1.QueueStatementFailed ON FALSE
         POP COMPONENT
         
@@ -86,9 +82,7 @@
         1.QueueStatementSucceeded:
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '
         20082801800160048801400000260000800360036003A00F28022803B009
         B002B04518174800280480020026800360036003A00F28022805B009B002

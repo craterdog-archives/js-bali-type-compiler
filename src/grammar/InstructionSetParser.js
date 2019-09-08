@@ -7,7 +7,7 @@ var InstructionSetVisitor = require('./InstructionSetVisitor').InstructionSetVis
 var grammarFileName = "InstructionSet.g4";
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003&\u00bc\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+    "\u0003\'\u00bc\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
     "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0003",
@@ -35,28 +35,28 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0005\u000f\u00b4\n\u000f\u0003\u0010\u0003\u0010\u0003\u0010\u0003",
     "\u0010\u0005\u0010\u00ba\n\u0010\u0003\u0010\u0002\u0002\u0011\u0002",
     "\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e",
-    "\u0002\u0003\u0003\u0002#$\u0002\u00cc\u0002#\u0003\u0002\u0002\u0002",
+    "\u0002\u0003\u0003\u0002$%\u0002\u00cc\u0002#\u0003\u0002\u0002\u0002",
     "\u0004/\u0003\u0002\u0002\u0002\u00068\u0003\u0002\u0002\u0002\b=\u0003",
     "\u0002\u0002\u0002\nC\u0003\u0002\u0002\u0002\fN\u0003\u0002\u0002\u0002",
     "\u000eP\u0003\u0002\u0002\u0002\u0010d\u0003\u0002\u0002\u0002\u0012",
     "r\u0003\u0002\u0002\u0002\u0014x\u0003\u0002\u0002\u0002\u0016\u0086",
     "\u0003\u0002\u0002\u0002\u0018\u0094\u0003\u0002\u0002\u0002\u001a\u00a1",
     "\u0003\u0002\u0002\u0002\u001c\u00b3\u0003\u0002\u0002\u0002\u001e\u00b9",
-    "\u0003\u0002\u0002\u0002 \"\u0007%\u0002\u0002! \u0003\u0002\u0002\u0002",
+    "\u0003\u0002\u0002\u0002 \"\u0007&\u0002\u0002! \u0003\u0002\u0002\u0002",
     "\"%\u0003\u0002\u0002\u0002#!\u0003\u0002\u0002\u0002#$\u0003\u0002",
     "\u0002\u0002$&\u0003\u0002\u0002\u0002%#\u0003\u0002\u0002\u0002&*\u0005",
-    "\u0004\u0003\u0002\')\u0007%\u0002\u0002(\'\u0003\u0002\u0002\u0002",
+    "\u0004\u0003\u0002\')\u0007&\u0002\u0002(\'\u0003\u0002\u0002\u0002",
     "),\u0003\u0002\u0002\u0002*(\u0003\u0002\u0002\u0002*+\u0003\u0002\u0002",
     "\u0002+-\u0003\u0002\u0002\u0002,*\u0003\u0002\u0002\u0002-.\u0007\u0002",
     "\u0002\u0003.\u0003\u0003\u0002\u0002\u0002/4\u0005\u0006\u0004\u0002",
-    "01\u0007%\u0002\u000213\u0005\u0006\u0004\u000220\u0003\u0002\u0002",
+    "01\u0007&\u0002\u000213\u0005\u0006\u0004\u000220\u0003\u0002\u0002",
     "\u000236\u0003\u0002\u0002\u000242\u0003\u0002\u0002\u000245\u0003\u0002",
     "\u0002\u00025\u0005\u0003\u0002\u0002\u000264\u0003\u0002\u0002\u0002",
     "79\u0005\b\u0005\u000287\u0003\u0002\u0002\u000289\u0003\u0002\u0002",
     "\u00029:\u0003\u0002\u0002\u0002:;\u0005\f\u0007\u0002;\u0007\u0003",
-    "\u0002\u0002\u0002<>\u0007%\u0002\u0002=<\u0003\u0002\u0002\u0002=>",
-    "\u0003\u0002\u0002\u0002>?\u0003\u0002\u0002\u0002?@\u0007 \u0002\u0002",
-    "@A\u0007\u0003\u0002\u0002AB\u0007%\u0002\u0002B\t\u0003\u0002\u0002",
+    "\u0002\u0002\u0002<>\u0007&\u0002\u0002=<\u0003\u0002\u0002\u0002=>",
+    "\u0003\u0002\u0002\u0002>?\u0003\u0002\u0002\u0002?@\u0007!\u0002\u0002",
+    "@A\u0007\u0003\u0002\u0002AB\u0007&\u0002\u0002B\t\u0003\u0002\u0002",
     "\u0002CD\t\u0002\u0002\u0002D\u000b\u0003\u0002\u0002\u0002EO\u0005",
     "\u000e\b\u0002FO\u0005\u0010\t\u0002GO\u0005\u0012\n\u0002HO\u0005\u0014",
     "\u000b\u0002IO\u0005\u0016\f\u0002JO\u0005\u0018\r\u0002KO\u0005\u001a",
@@ -66,18 +66,18 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0002NK\u0003\u0002\u0002\u0002NL\u0003\u0002\u0002\u0002NM\u0003\u0002",
     "\u0002\u0002O\r\u0003\u0002\u0002\u0002PQ\u0007\u0004\u0002\u0002Q\u000f",
     "\u0003\u0002\u0002\u0002RS\u0007\u0005\u0002\u0002ST\u0007\u0006\u0002",
-    "\u0002Te\u0007 \u0002\u0002UV\u0007\u0005\u0002\u0002VW\u0007\u0006",
-    "\u0002\u0002WX\u0007 \u0002\u0002XY\u0007\u0007\u0002\u0002Ye\u0007",
+    "\u0002Te\u0007!\u0002\u0002UV\u0007\u0005\u0002\u0002VW\u0007\u0006",
+    "\u0002\u0002WX\u0007!\u0002\u0002XY\u0007\u0007\u0002\u0002Ye\u0007",
     "\b\u0002\u0002Z[\u0007\u0005\u0002\u0002[\\\u0007\u0006\u0002\u0002",
-    "\\]\u0007 \u0002\u0002]^\u0007\u0007\u0002\u0002^e\u0007\t\u0002\u0002",
-    "_`\u0007\u0005\u0002\u0002`a\u0007\u0006\u0002\u0002ab\u0007 \u0002",
+    "\\]\u0007!\u0002\u0002]^\u0007\u0007\u0002\u0002^e\u0007\t\u0002\u0002",
+    "_`\u0007\u0005\u0002\u0002`a\u0007\u0006\u0002\u0002ab\u0007!\u0002",
     "\u0002bc\u0007\u0007\u0002\u0002ce\u0007\n\u0002\u0002dR\u0003\u0002",
     "\u0002\u0002dU\u0003\u0002\u0002\u0002dZ\u0003\u0002\u0002\u0002d_\u0003",
     "\u0002\u0002\u0002e\u0011\u0003\u0002\u0002\u0002fg\u0007\u000b\u0002",
-    "\u0002gh\u0007\f\u0002\u0002hs\u0007 \u0002\u0002ij\u0007\u000b\u0002",
-    "\u0002jk\u0007\r\u0002\u0002ks\u0007\"\u0002\u0002lm\u0007\u000b\u0002",
-    "\u0002mn\u0007\u000e\u0002\u0002ns\u0007#\u0002\u0002op\u0007\u000b",
-    "\u0002\u0002pq\u0007\u000f\u0002\u0002qs\u0007#\u0002\u0002rf\u0003",
+    "\u0002gh\u0007\f\u0002\u0002hs\u0007!\u0002\u0002ij\u0007\u000b\u0002",
+    "\u0002jk\u0007\r\u0002\u0002ks\u0007#\u0002\u0002lm\u0007\u000b\u0002",
+    "\u0002mn\u0007\u000e\u0002\u0002ns\u0007$\u0002\u0002op\u0007\u000b",
+    "\u0002\u0002pq\u0007\u000f\u0002\u0002qs\u0007$\u0002\u0002rf\u0003",
     "\u0002\u0002\u0002ri\u0003\u0002\u0002\u0002rl\u0003\u0002\u0002\u0002",
     "ro\u0003\u0002\u0002\u0002s\u0013\u0003\u0002\u0002\u0002tu\u0007\u0010",
     "\u0002\u0002uy\u0007\f\u0002\u0002vw\u0007\u0010\u0002\u0002wy\u0007",
@@ -99,26 +99,26 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\n\u0006\u0002\u0094\u0088\u0003\u0002\u0002\u0002\u0094\u008b\u0003",
     "\u0002\u0002\u0002\u0094\u008e\u0003\u0002\u0002\u0002\u0094\u0091\u0003",
     "\u0002\u0002\u0002\u0095\u0019\u0003\u0002\u0002\u0002\u0096\u0097\u0007",
-    "\u0018\u0002\u0002\u0097\u00a2\u0007#\u0002\u0002\u0098\u0099\u0007",
-    "\u0018\u0002\u0002\u0099\u009a\u0007#\u0002\u0002\u009a\u009b\u0007",
-    "\u0019\u0002\u0002\u009b\u00a2\u0007\u000f\u0002\u0002\u009c\u009d\u0007",
-    "\u0018\u0002\u0002\u009d\u009e\u0007#\u0002\u0002\u009e\u009f\u0007",
-    "\u0019\u0002\u0002\u009f\u00a0\u0007!\u0002\u0002\u00a0\u00a2\u0007",
-    "\u001a\u0002\u0002\u00a1\u0096\u0003\u0002\u0002\u0002\u00a1\u0098\u0003",
+    "\u0018\u0002\u0002\u0097\u00a2\u0007$\u0002\u0002\u0098\u0099\u0007",
+    "\u0018\u0002\u0002\u0099\u009a\u0007$\u0002\u0002\u009a\u009b\u0007",
+    "\u0019\u0002\u0002\u009b\u00a2\u0007\u001a\u0002\u0002\u009c\u009d\u0007",
+    "\u0018\u0002\u0002\u009d\u009e\u0007$\u0002\u0002\u009e\u009f\u0007",
+    "\u0019\u0002\u0002\u009f\u00a0\u0007\"\u0002\u0002\u00a0\u00a2\u0007",
+    "\u001b\u0002\u0002\u00a1\u0096\u0003\u0002\u0002\u0002\u00a1\u0098\u0003",
     "\u0002\u0002\u0002\u00a1\u009c\u0003\u0002\u0002\u0002\u00a2\u001b\u0003",
-    "\u0002\u0002\u0002\u00a3\u00a4\u0007\u001b\u0002\u0002\u00a4\u00b4\u0007",
-    "#\u0002\u0002\u00a5\u00a6\u0007\u001b\u0002\u0002\u00a6\u00a7\u0007",
-    "#\u0002\u0002\u00a7\u00a8\u0007\u0019\u0002\u0002\u00a8\u00b4\u0007",
-    "\u001a\u0002\u0002\u00a9\u00aa\u0007\u001b\u0002\u0002\u00aa\u00ab\u0007",
-    "#\u0002\u0002\u00ab\u00ac\u0007\u0007\u0002\u0002\u00ac\u00b4\u0007",
-    "\u001c\u0002\u0002\u00ad\u00ae\u0007\u001b\u0002\u0002\u00ae\u00af\u0007",
-    "#\u0002\u0002\u00af\u00b0\u0007\u0007\u0002\u0002\u00b0\u00b1\u0007",
-    "\u001c\u0002\u0002\u00b1\u00b2\u0007\u0019\u0002\u0002\u00b2\u00b4\u0007",
-    "\u001a\u0002\u0002\u00b3\u00a3\u0003\u0002\u0002\u0002\u00b3\u00a5\u0003",
+    "\u0002\u0002\u0002\u00a3\u00a4\u0007\u001c\u0002\u0002\u00a4\u00b4\u0007",
+    "$\u0002\u0002\u00a5\u00a6\u0007\u001c\u0002\u0002\u00a6\u00a7\u0007",
+    "$\u0002\u0002\u00a7\u00a8\u0007\u0019\u0002\u0002\u00a8\u00b4\u0007",
+    "\u001b\u0002\u0002\u00a9\u00aa\u0007\u001c\u0002\u0002\u00aa\u00ab\u0007",
+    "$\u0002\u0002\u00ab\u00ac\u0007\u0007\u0002\u0002\u00ac\u00b4\u0007",
+    "\u001d\u0002\u0002\u00ad\u00ae\u0007\u001c\u0002\u0002\u00ae\u00af\u0007",
+    "$\u0002\u0002\u00af\u00b0\u0007\u0007\u0002\u0002\u00b0\u00b1\u0007",
+    "\u001d\u0002\u0002\u00b1\u00b2\u0007\u0019\u0002\u0002\u00b2\u00b4\u0007",
+    "\u001b\u0002\u0002\u00b3\u00a3\u0003\u0002\u0002\u0002\u00b3\u00a5\u0003",
     "\u0002\u0002\u0002\u00b3\u00a9\u0003\u0002\u0002\u0002\u00b3\u00ad\u0003",
     "\u0002\u0002\u0002\u00b4\u001d\u0003\u0002\u0002\u0002\u00b5\u00b6\u0007",
-    "\u001d\u0002\u0002\u00b6\u00ba\u0007\u001e\u0002\u0002\u00b7\u00b8\u0007",
-    "\u001d\u0002\u0002\u00b8\u00ba\u0007\u001f\u0002\u0002\u00b9\u00b5\u0003",
+    "\u001e\u0002\u0002\u00b6\u00ba\u0007\u001f\u0002\u0002\u00b7\u00b8\u0007",
+    "\u001e\u0002\u0002\u00b8\u00ba\u0007 \u0002\u0002\u00b9\u00b5\u0003",
     "\u0002\u0002\u0002\u00b9\u00b7\u0003\u0002\u0002\u0002\u00ba\u001f\u0003",
     "\u0002\u0002\u0002\u0010#*48=Ndrx\u0086\u0094\u00a1\u00b3\u00b9"].join("");
 
@@ -134,14 +134,14 @@ var literalNames = [ null, "':'", "'SKIP INSTRUCTION'", "'JUMP'", "'TO'",
                      "'LITERAL'", "'CONSTANT'", "'PARAMETER'", "'POP'", 
                      "'COMPONENT'", "'LOAD'", "'VARIABLE'", "'MESSAGE'", 
                      "'DRAFT'", "'DOCUMENT'", "'STORE'", "'INVOKE'", "'WITH'", 
-                     "'PARAMETERS'", "'EXECUTE'", "'TARGET'", "'HANDLE'", 
-                     "'EXCEPTION'", "'RESULT'" ];
+                     "'ARGUMENT'", "'ARGUMENTS'", "'EXECUTE'", "'TARGET'", 
+                     "'HANDLE'", "'EXCEPTION'", "'RESULT'" ];
 
 var symbolicNames = [ null, null, null, null, null, null, null, null, null, 
                       null, null, null, null, null, null, null, null, null, 
                       null, null, null, null, null, null, null, null, null, 
-                      null, null, null, "LABEL", "NUMBER", "LITERAL", "SYMBOL", 
-                      "RESERVED", "EOL", "SPACE" ];
+                      null, null, null, null, "LABEL", "NUMBER", "LITERAL", 
+                      "SYMBOL", "RESERVED", "EOL", "SPACE" ];
 
 var ruleNames =  [ "document", "instructions", "step", "label", "variable", 
                    "instruction", "skipInstruction", "jumpInstruction", 
@@ -197,13 +197,14 @@ InstructionSetParser.T__25 = 26;
 InstructionSetParser.T__26 = 27;
 InstructionSetParser.T__27 = 28;
 InstructionSetParser.T__28 = 29;
-InstructionSetParser.LABEL = 30;
-InstructionSetParser.NUMBER = 31;
-InstructionSetParser.LITERAL = 32;
-InstructionSetParser.SYMBOL = 33;
-InstructionSetParser.RESERVED = 34;
-InstructionSetParser.EOL = 35;
-InstructionSetParser.SPACE = 36;
+InstructionSetParser.T__29 = 30;
+InstructionSetParser.LABEL = 31;
+InstructionSetParser.NUMBER = 32;
+InstructionSetParser.LITERAL = 33;
+InstructionSetParser.SYMBOL = 34;
+InstructionSetParser.RESERVED = 35;
+InstructionSetParser.EOL = 36;
+InstructionSetParser.SPACE = 37;
 
 InstructionSetParser.RULE_document = 0;
 InstructionSetParser.RULE_instructions = 1;
@@ -802,12 +803,12 @@ InstructionSetParser.prototype.instruction = function() {
             this.state = 73;
             this.invokeInstruction();
             break;
-        case InstructionSetParser.T__24:
+        case InstructionSetParser.T__25:
             this.enterOuterAlt(localctx, 8);
             this.state = 74;
             this.executeInstruction();
             break;
-        case InstructionSetParser.T__26:
+        case InstructionSetParser.T__27:
             this.enterOuterAlt(localctx, 9);
             this.state = 75;
             this.handleInstruction();
@@ -1506,7 +1507,7 @@ InstructionSetParser.prototype.invokeInstruction = function() {
             this.state = 152;
             this.match(InstructionSetParser.T__22);
             this.state = 153;
-            this.match(InstructionSetParser.T__12);
+            this.match(InstructionSetParser.T__23);
             break;
 
         case 3:
@@ -1520,7 +1521,7 @@ InstructionSetParser.prototype.invokeInstruction = function() {
             this.state = 157;
             this.match(InstructionSetParser.NUMBER);
             this.state = 158;
-            this.match(InstructionSetParser.T__23);
+            this.match(InstructionSetParser.T__24);
             break;
 
         }
@@ -1595,7 +1596,7 @@ InstructionSetParser.prototype.executeInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 161;
-            this.match(InstructionSetParser.T__24);
+            this.match(InstructionSetParser.T__25);
             this.state = 162;
             this.match(InstructionSetParser.SYMBOL);
             break;
@@ -1603,41 +1604,41 @@ InstructionSetParser.prototype.executeInstruction = function() {
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 163;
-            this.match(InstructionSetParser.T__24);
+            this.match(InstructionSetParser.T__25);
             this.state = 164;
             this.match(InstructionSetParser.SYMBOL);
             this.state = 165;
             this.match(InstructionSetParser.T__22);
             this.state = 166;
-            this.match(InstructionSetParser.T__23);
+            this.match(InstructionSetParser.T__24);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 167;
-            this.match(InstructionSetParser.T__24);
+            this.match(InstructionSetParser.T__25);
             this.state = 168;
             this.match(InstructionSetParser.SYMBOL);
             this.state = 169;
             this.match(InstructionSetParser.T__4);
             this.state = 170;
-            this.match(InstructionSetParser.T__25);
+            this.match(InstructionSetParser.T__26);
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 171;
-            this.match(InstructionSetParser.T__24);
+            this.match(InstructionSetParser.T__25);
             this.state = 172;
             this.match(InstructionSetParser.SYMBOL);
             this.state = 173;
             this.match(InstructionSetParser.T__4);
             this.state = 174;
-            this.match(InstructionSetParser.T__25);
+            this.match(InstructionSetParser.T__26);
             this.state = 175;
             this.match(InstructionSetParser.T__22);
             this.state = 176;
-            this.match(InstructionSetParser.T__23);
+            this.match(InstructionSetParser.T__24);
             break;
 
         }
@@ -1709,17 +1710,17 @@ InstructionSetParser.prototype.handleInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 179;
-            this.match(InstructionSetParser.T__26);
-            this.state = 180;
             this.match(InstructionSetParser.T__27);
+            this.state = 180;
+            this.match(InstructionSetParser.T__28);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 181;
-            this.match(InstructionSetParser.T__26);
+            this.match(InstructionSetParser.T__27);
             this.state = 182;
-            this.match(InstructionSetParser.T__28);
+            this.match(InstructionSetParser.T__29);
             break;
 
         }

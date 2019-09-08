@@ -38,7 +38,7 @@
             $description: "
                 This procedure returns the numeric value equivalent of this composite component.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Number/v1(0..infinity)
+            $type: /bali/elements/Number/v1($range: [0..infinity])
             $source: {
                 return target.getSize()
             }
@@ -57,7 +57,7 @@
             $description: "
                 This procedure returns the number of subcomponents that make up this component.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Number/v1(0..infinity)
+            $type: /bali/elements/Number/v1($range: [0..infinity])
             $source: {
                 return getSize(target)
             }
@@ -73,8 +73,8 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $name: /bali/abstractions/Composite/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
     $version: v1
     $permissions: /bali/permissions/public/v1

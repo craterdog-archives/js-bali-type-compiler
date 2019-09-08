@@ -143,13 +143,10 @@ Compiler.prototype.compileProcedure = function(context, source) {
     // extract the parameter names for the procedure
     const parameters = bali.list();
     if (source.isParameterized()) {
-        const iterator = source.getParameters().getIterator();
+        const iterator = source.getParameters().getKeys().getIterator();
         while (iterator.hasNext()) {
-            var parameter = iterator.getNext();
-            if (parameter.isType('$Association')) {
-                parameter = parameter.getKey();
-            }
-            parameters.addItem(parameter);
+            var key = iterator.getNext();
+            parameters.addItem(key);
         }
     }
     const procedure = bali.catalog();
@@ -160,7 +157,7 @@ Compiler.prototype.compileProcedure = function(context, source) {
 
     // compile the procedure into assembly instructions
     const visitor = new CompilingVisitor(context, procedure, this.debug);
-    source.getProcedure().acceptVisitor(visitor);
+    source.getStatements().acceptVisitor(visitor);
 
     // format the instructions and add to the procedure context
     var instructions = visitor.getInstructions();
@@ -179,8 +176,8 @@ Compiler.prototype.compileProcedure = function(context, source) {
 /*
  * This private class uses the Visitor Pattern to traverse the syntax tree generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
- * to construct the corresponding Nebula Virtual Processor instructions for the syntax
- * tree is it traversing.
+ * to construct the corresponding Bali Nebula™ virtual processor instructions for the
+ * syntax tree is it traversing.
  */
 function CompilingVisitor(context, procedure, debug) {
     bali.visitor.call(this);
@@ -200,7 +197,13 @@ CompilingVisitor.prototype.constructor = CompilingVisitor;
  */
 CompilingVisitor.prototype.getInstructions = function() {
     if (this.builder.requiresFinalization) this.builder.finalize();
-    return this.builder.asmcode;
+    return this.builder.instructions;
+};
+
+
+// angle: ANGLE
+CompilingVisitor.prototype.visitAngle = function(angle) {
+    this.visitElement(angle);
 };
 
 
@@ -224,23 +227,23 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
     switch (operator) {
         case '*':
             // the VM places the product of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$product', 2);
+            this.builder.insertInvokeInstruction('$product', 2);  // product(x, y)
             break;
         case '/':
             // the VM places the quotient of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$quotient', 2);
+            this.builder.insertInvokeInstruction('$quotient', 2);  // quotient(x, y)
             break;
         case '//':
             // the VM places the remainder of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$remainder', 2);
+            this.builder.insertInvokeInstruction('$remainder', 2);  // remainder(x, y)
             break;
         case '+':
             // the VM places the sum of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$sum', 2);
+            this.builder.insertInvokeInstruction('$sum', 2);  // sum(x, y)
             break;
         case '-':
             // the VM places the difference of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$difference', 2);
+            this.builder.insertInvokeInstruction('$difference', 2);  // difference(x,y)
             break;
     }
 
@@ -257,7 +260,13 @@ CompilingVisitor.prototype.visitAssociation = function(association) {
     association.getValue().acceptVisitor(this);
 
     // the VM replaces the parameters on the component stack with a new association
-    this.builder.insertInvokeInstruction('$association', 2);
+    this.builder.insertInvokeInstruction('$association', 2);  // association(key, value)
+};
+
+
+// binary: BINARY
+CompilingVisitor.prototype.visitBinary = function(binary) {
+    this.visitElement(binary);
 };
 
 
@@ -295,21 +304,6 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 
 
 /*
- * This method constructs a new catalog component and places it on top of the
- * component stack. The catalog contains a sequence of key-value associations.
- * The order in which the associations are listed is maintained by the catalog.
- */
-// catalog:
-//     association (',' association)* |
-//     EOL (association EOL)* |
-//     ':' /*empty catalog*/
-CompilingVisitor.prototype.visitCatalog = function(catalog) {
-    // delegate to the abstract type
-    this.visitCollection(catalog);
-};
-
-
-/*
  * This method compiles the instructions needed to checkout from the Bali Nebula™
  * a persistent document and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a collection component.
@@ -335,35 +329,6 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
     // the VM sets the value of the recipient to the value on the top of the component stack
     this.setRecipient(recipient);
-};
-
-
-// collection: range | list | catalog
-CompilingVisitor.prototype.visitCollection = function(collection) {
-    // the VM places the parameters (if any) for this collection on the component stack
-    const parameters = collection.getParameters();
-    var numberOfParameters = 0;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 1;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized collection
-    var type = collection.constructor.name;
-    type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-    this.builder.insertInvokeInstruction(type, numberOfParameters);
-
-    // the VM adds each expression to the collection
-    this.depth++;
-    const iterator = collection.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-    }
-    this.depth--;
-
-    // the parameterized collection remains on the component stack
 };
 
 
@@ -414,23 +379,23 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
-            this.builder.insertInvokeInstruction('$isLessThan', 2);
+            this.builder.insertInvokeInstruction('$isLessThan', 2);  // isLessThan(x, y)
             break;
         case '=':
             // determine whether or not the first value is equal to the second value
-            this.builder.insertInvokeInstruction('$isEqualTo', 2);
+            this.builder.insertInvokeInstruction('$isEqualTo', 2);  // isEqualTo(x, y)
             break;
         case '>':
             // determine whether or not the first value is more than the second value
-            this.builder.insertInvokeInstruction('$isMoreThan', 2);
+            this.builder.insertInvokeInstruction('$isMoreThan', 2);  // isMoreThan(x, y)
             break;
         case 'is':
             // determine whether or not the first value is the same value as the second value
-            this.builder.insertInvokeInstruction('$isSameAs', 2);
+            this.builder.insertInvokeInstruction('$isSameAs', 2);  // isSameAs(this, that)
             break;
         case 'matches':
             // determine whether or not the first value matches the second value
-            this.builder.insertInvokeInstruction('$isMatchedBy', 2);
+            this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(component, pattern)
             break;
     }
 };
@@ -449,7 +414,7 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM finds the logical complement of the top value on the component stack
-    this.builder.insertInvokeInstruction('$complement', 1);
+    this.builder.insertInvokeInstruction('$complement', 1);  // complement(p)
 };
 
 
@@ -470,7 +435,7 @@ CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM places the product of the two values on top of the component stack
-    this.builder.insertInvokeInstruction('$concatenation', 2);
+    this.builder.insertInvokeInstruction('$concatenation', 2);  // concatenation(a, b)
 
     // the resulting value remains on the top of the component stack
 };
@@ -525,7 +490,7 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
     defaultValue.acceptVisitor(this);
 
     // the VM leaves the actual value on the top of the component stack
-    this.builder.insertInvokeInstruction('$default', 2);
+    this.builder.insertInvokeInstruction('$default', 2);  // default(value, defaultValue)
 };
 
 
@@ -574,6 +539,12 @@ CompilingVisitor.prototype.visitDiscardClause = function(tree) {
 };
 
 
+// duration: DURATION
+CompilingVisitor.prototype.visitDuration = function(duration) {
+    this.visitElement(duration);
+};
+
+
 /*
  * This method tells the VM to place an element on the component stack
  * as a literal value.
@@ -596,17 +567,8 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    const literal = bali.literal(element);
+    const literal = bali.format(element);
     this.builder.insertPushInstruction('LITERAL', literal);
-
-    const parameters = element.getParameters();
-    if (parameters) {
-        // the VM loads the parameters associated with the element onto the top of the component stack
-        parameters.acceptVisitor(this);
-
-        // the VM sets the parameters for the element
-        this.builder.insertInvokeInstruction('$setParameters', 2);
-    }
 };
 
 
@@ -659,7 +621,7 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM leaves the result of raising the base to the exponent on top of the component stack
-    this.builder.insertInvokeInstruction('$exponential', 2);
+    this.builder.insertInvokeInstruction('$exponential', 2);  // exponential(x, power)
 };
 
 
@@ -676,49 +638,46 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM leaves the result of the factorial of the value on top of the component stack
-    this.builder.insertInvokeInstruction('$factorial', 1);
+    this.builder.insertInvokeInstruction('$factorial', 1);  // factorial(x)
 };
 
 
 /*
  * This method inserts instructions that cause the VM to execute the
- * procedure associated with the named function, first placing the parameters
- * on the component stack in a list. The resulting value of the procedure
- * remains on the component stack.
+ * procedure associated with the named function, first placing any arguments
+ * on the component stack. The resulting value of the procedure remains on
+ * the component stack.
  */
-// functionExpression: function parameters
+// functionExpression: function arguments
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     const functionName = '$' + tree.getChild(1).toString();
-    const parameters = tree.getChild(2);
+    const list = tree.getChild(2).getChild(1);
 
-    // make sure the number of parameters is less than 4
-    const numberOfParameters = parameters.getSize();
-    if (numberOfParameters > 3) {
+    // make sure the number of arguments is less than 4
+    const numberOfArguments = list.getSize();
+    if (numberOfArguments > 3) {
         const exception = bali.exception({
             $module: '/bali/compiler/Compiler',
             $procedure: '$visitFunctionExpression',
-            $exception: '$tooManyParameters',
+            $exception: '$argumentCount',
             $function: tree,
-            $message: 'The number of function parameters must be less than 4.'
+            $message: 'The number of arguments to a function must be less than 4.'
         });
         if (this.debug) console.error(exception.toString());
         throw exception;
     }
 
-    // the VM places each parameter on top of the component stack
+    // the VM places each argument on top of the component stack (not the list of arguments)
     this.depth++;
-    const iterator = parameters.getIterator();
+    const iterator = list.getIterator();
     while (iterator.hasNext()) {
-        var parameter = iterator.getNext();
-        if (parameter.isType('$Association')) {
-            parameter = parameter.getValue();  // don't place the 'key' on the component stack
-        }
-        parameter.acceptVisitor(this);
+        const argument = iterator.getNext();
+        argument.acceptVisitor(this);
     }
     this.depth--;
 
-    // the VM replaces the parameters on the component stack with the result of the function
-    this.builder.insertInvokeInstruction(functionName, numberOfParameters);
+    // the VM replaces the arguments on the component stack with the result of the function
+    this.builder.insertInvokeInstruction(functionName, numberOfArguments);  // <function>(arguments...)
 
     // the result of the executed function remains on top of the component stack
 };
@@ -752,7 +711,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     // the VM compares the template expression with the actual exception
     this.builder.insertLoadInstruction('VARIABLE', exception);
     template.acceptVisitor(this);
-    this.builder.insertInvokeInstruction('$isMatchedBy', 2);
+    this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(symbol, pattern)
 
     // if the template and exception did not match the VM jumps past this exception handler
     var nextLabel = this.builder.getNextClausePrefix() + 'HandleClause';
@@ -859,20 +818,17 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
     // traverse all but the last index
     for (var i = 1; i < size; i++) {
 
-        // the VM places a new empty list on the component stack
-        this.builder.insertInvokeInstruction('$list', 0);
+        // the VM places a new empty arguments list on the component stack
+        this.builder.insertInvokeInstruction('$list', 0);  // list()
 
         // the VM places the value of the next index onto the top of the component stack
         list.getItem(i).acceptVisitor(this);
 
-        // the VM adds the index to the list as its only item
-        this.builder.insertInvokeInstruction('$addItem', 2);
-
-        // the VM replaces the list that is on top of the component stack with a new parameters component
-        this.builder.insertInvokeInstruction('$parameters', 1);
+        // the VM adds the index to the arguments list as its only item
+        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH PARAMETERS');
+        this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH ARGUMENTS');
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -900,32 +856,17 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
     switch (operator) {
         case '-':
             // take the additive inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$inverse', 1);
+            this.builder.insertInvokeInstruction('$inverse', 1);  // inverse(x)
             break;
         case '/':
             // take the multiplicative inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$reciprocal', 1);
+            this.builder.insertInvokeInstruction('$reciprocal', 1);  // reciprocal(x)
             break;
         case '*':
             // take the complex conjugate of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$conjugate', 1);
+            this.builder.insertInvokeInstruction('$conjugate', 1);  // conjugate(x)
             break;
     }
-};
-
-
-/*
- * This method constructs a new list component and places it on top of the
- * component stack. The list contains a sequence of values. The order in
- * which the values are listed is maintained by the list.
- */
-// list:
-//     expression (',' expression)* |
-//     EOL (expression EOL)* |
-//     /*empty list*/
-CompilingVisitor.prototype.visitList = function(list) {
-    // delegate to the abstract type
-    this.visitCollection(list);
 };
 
 
@@ -950,19 +891,19 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
     switch (operator) {
         case 'and':
             // find the logical AND of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$and', 2);
+            this.builder.insertInvokeInstruction('$and', 2);  // and(p, q)
             break;
         case 'sans':
             // find the logical SANS of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$sans', 2);
-            break;
-        case 'xor':
-            // find the logical XOR of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$xor', 2);
+            this.builder.insertInvokeInstruction('$sans', 2);  // sans(p, q)
             break;
         case 'or':
             // find the logical OR of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$or', 2);
+            this.builder.insertInvokeInstruction('$or', 2);  // or(p, q)
+            break;
+        case 'xor':
+            // find the logical XOR of the two values on top of the component stack
+            this.builder.insertInvokeInstruction('$xor', 2);  // xor(p, q)
             break;
     }
 };
@@ -981,23 +922,23 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM leaves the result of the magnitude of the value on top of the component stack
-    this.builder.insertInvokeInstruction('$magnitude', 1);
+    this.builder.insertInvokeInstruction('$magnitude', 1);  // magnitude(z)
 };
 
 
 /*
  * This method inserts instructions that cause the VM to execute the
  * procedure associated with the named message on the value of an
- * expression, first placing the parameters on the component stack in
+ * expression, first placing the arguments on the component stack in
  * a list. The resulting value of the procedure remains on the component
  * stack.
  */
-// messageExpression: expression '.' message parameters
+// messageExpression: expression '.' message arguments
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     const target = tree.getChild(1);
     const message = tree.getChild(2);
-    const parameters = tree.getChild(3);
-    const numberOfParameters = parameters.getSize();
+    const args = tree.getChild(3);
+    const numberOfArguments = args.getSize();
 
     // the VM places the value of the target expression onto the top of the component stack
     target.acceptVisitor(this);
@@ -1005,13 +946,13 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     // extract the procedure name
     const procedureName = '$' + message.toString();
 
-    // if there are parameters then compile accordingly
-    if (numberOfParameters > 0) {
+    // if there are arguments then compile accordingly
+    if (numberOfArguments > 0) {
         // the VM places each parameter on top of the component stack
-        parameters.acceptVisitor(this);
+        args.acceptVisitor(this);
 
-        // the VM executes the target.<procedure name>(<parameters>) method
-        this.builder.insertExecuteInstruction(procedureName, 'ON TARGET WITH PARAMETERS');
+        // the VM executes the target.<procedure name>(<args>) method
+        this.builder.insertExecuteInstruction(procedureName, 'ON TARGET WITH ARGUMENTS');
     } else {
         // the VM executes the target.<procedure name>() method
         this.builder.insertExecuteInstruction(procedureName, 'ON TARGET');
@@ -1021,48 +962,83 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 };
 
 
-// parameters: '(' collection ')'
+// moment: MOMENT
+CompilingVisitor.prototype.visitMoment = function(moment) {
+    this.visitElement(moment);
+};
+
+
+// name: NAME
+CompilingVisitor.prototype.visitName = function(name) {
+    this.visitElement(name);
+};
+
+
+// number:
+//    'undefined' |
+//    'infinity' |
+//    real |
+//    imaginary |
+//    '(' real (',' imaginary | 'e^' angle 'i') ')' 
+CompilingVisitor.prototype.visitNumber = function(number) {
+    this.visitElement(number);
+};
+
+
+// parameters: '(' catalog ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
-    // the VM places the collection on the top of the component stack
-    parameters.getCollection().acceptVisitor(this);
+    // the VM creates a new catalog on the component stack to hold the parameters
+    this.builder.insertInvokeInstruction('$catalog', 0);  // catalog()
+
+    // the VM places each parameter on the component stack and then adds them to the catalog
+    this.depth++;
+    const keys = parameters.getKeys();
+    const iterator = keys.getIterator();
+    while (iterator.hasNext()) {
+        const key = iterator.getNext();
+        key.acceptVisitor(this);
+        const value = parameters.getValue(key);
+        value.acceptVisitor(this);
+        this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
+    }
+    this.depth--;
 
     // the VM places a new parameters component containing the collection on the top of the component stack
-    this.builder.insertInvokeInstruction('$parameters', 1);
+    this.builder.insertInvokeInstruction('$parameters', 1);  // parameters(catalog)
 
     // the parameter list remains on the component stack
 };
 
 
+// pattern: 'none' | REGEX | 'any'
+CompilingVisitor.prototype.visitPattern = function(pattern) {
+    this.visitElement(pattern);
+};
+
+
+// percent: PERCENT
+CompilingVisitor.prototype.visitPercent = function(percent) {
+    this.visitElement(percent);
+};
+
+
+// probability: 'false' | FRACTION | 'true'
+CompilingVisitor.prototype.visitProbability = function(probability) {
+    this.visitElement(probability);
+};
+
+
 /*
- * This method compiles a sequence of statements by inserting instructions for
- * the VM to follow for each statement. Since procedure blocks can be nested
- * within statement clauses each procedure needs its own compilation context. When
- * entering a procedure a new context is pushed onto the compilation stack and when
- * the procedure is done being compiled, that context is popped back off the stack.
- * NOTE: This stack is different than the runtime component stack that is
- * maintained by the Nebula Virtual Processor.
+ * This method compiles a procedure as a component rather than part of a code block.
+ * NOTE: the 'procedure' and 'block' rules have the same syntax but different symantics.
+ * A code block gets compiled into the corresponding assembly instructions, but a
+ * procedure gets treated as a component on the component stack.
  */
-// procedure:
-//     statement (';' statement)*   |
-//     EOL (statement EOL)* |
-//     /*empty statements*/
+// procedure: '{' statements '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
-    // create a new compiler procedure context in the instruction builder
-    this.builder.pushProcedureContext(procedure);
-
-    // the VM executes each statement
-    this.depth++;
-    const iterator = procedure.getIterator();
-    while (iterator.hasNext()) {
-        this.builder.requiresFinalization = true;
-        var statement = iterator.getNext();
-        statement.acceptVisitor(this);
-        this.builder.incrementStatementCount();
-    }
-    this.depth--;
-
-    // throw away the current compiler procedure context in the instruction builder
-    this.builder.popProcedureContext();
+    // the VM places the procedure on top of the component stack
+    const literal = bali.format(procedure);
+    this.builder.insertPushInstruction('LITERAL', literal);
 };
 
 
@@ -1080,21 +1056,6 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 
     // the VM stores the event on the event queue
     this.builder.insertStoreInstruction('MESSAGE', '$$eventQueue');
-};
-
-
-/*
- * This method constructs a new queue component and places it on top of the
- * component stack. The queue contains a sequence of values. The order in
- * which the values are listed is maintained by the queue.
- */
-// queue:
-//     expression (',' expression)* |
-//     EOL (expression EOL)* |
-//     /*empty queue*/
-CompilingVisitor.prototype.visitQueue = function(queue) {
-    // delegate to the abstract type
-    this.visitCollection(queue);
 };
 
 
@@ -1120,35 +1081,15 @@ CompilingVisitor.prototype.visitQueueClause = function(tree) {
 };
 
 
-/*
- * This method inserts the instructions that cause the VM to evaluate two
- * expressions and then replace the resulting values that are on the
- * component stack with a range component that has the two values as its
- * starting and ending values.
- */
-// range: expression '..' expression
-CompilingVisitor.prototype.visitRange = function(range) {
-    const first = range.getFirst();
-    const last = range.getLast();
+// reference: RESOURCE
+CompilingVisitor.prototype.visitReference = function(reference) {
+    this.visitElement(reference);
+};
 
-    // the VM places the value of the starting expression on the component stack
-    first.acceptVisitor(this);  // first value in the range
 
-    // the VM places the value of the ending expression on the component stack
-    last.acceptVisitor(this);  // last value in the range
-
-    // the VM places the parameters (if any) for this component on the component stack
-    const parameters = range.getParameters();
-    var numberOfParameters = 2;
-    if (parameters) {
-        parameters.acceptVisitor(this);
-        numberOfParameters = 3;
-    }
-
-    // the VM replaces the parameters on the component stack with a new parameterized range
-    this.builder.insertInvokeInstruction('$range', numberOfParameters);
-
-    // the parameterized range remains on the component stack
+// reserved: RESERVED
+CompilingVisitor.prototype.visitReserved = function(reserved) {
+    this.visitElement(reserved);
 };
 
 
@@ -1241,7 +1182,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         option.acceptVisitor(this);
 
         // the VM checks to see if the selector and option match and places the result on the component stack
-        this.builder.insertInvokeInstruction('$isMatchedBy', 2);
+        this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(selector, option)
 
         // determine what the next label will be
         var nextLabel = this.builder.getNextClausePrefix();
@@ -1282,58 +1223,85 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 };
 
 
-/*
- * This method constructs a new set component and places it on top of the
- * component stack. The set contains a sequence of values. The order in
- * which the values are listed is maintained by the set.
- */
-// set:
-//     expression (',' expression)* |
-//     EOL (expression EOL)* |
-//     /*empty list*/
-CompilingVisitor.prototype.visitSet = function(set) {
-    // delegate to the abstract type
-    this.visitCollection(set);
-};
+// sequence: range | list | catalog
+CompilingVisitor.prototype.visitSequence = function(sequence) {
+    const numberOfArguments = sequence.isParameterized() ? 1 : 0;
+    if (sequence.isType('$Range')) {
+        var parameters;
+        if (numberOfArguments) {
+            // the VM saves off the parameters for after the indices are loaded
+            parameters = this.createTemporaryVariable('parameters');
+            this.builder.insertStoreInstruction('VARIABLE', parameters);
+        }
 
+        // the VM places the value of the starting expression on the component stack
+        const first = sequence.getFirst();
+        first.acceptVisitor(this);  // first value in the range
 
-/*
- * This method compiles a procedure as a component rather than part of a code block.
- * NOTE: the 'source' and 'block' rules have the same syntax but different symantics.
- * A code block gets compiled into the corresponding assembly instructions, but a
- * source code component gets treated as a component on the component stack.
- */
-// source: '{' procedure '}'
-CompilingVisitor.prototype.visitSource = function(source) {
-    // the VM places the source code on top of the component stack
-    const literal = '{' + source.getProcedure().toString() + '}';  // must include curly braces to be parsed correctly
-    this.builder.insertPushInstruction('LITERAL', literal);
+        // the VM places the value of the ending expression on the component stack
+        const last = sequence.getLast();
+        last.acceptVisitor(this);  // last value in the range
 
-    const parameters = source.getParameters();
-    if (parameters) {
-        // the VM loads the parameters associated with the source code onto the top of the component stack
-        parameters.acceptVisitor(this);
+        if (numberOfArguments) {
+            // load the parameters back onto the component stack
+            this.builder.insertLoadInstruction('VARIABLE', parameters);
+        }
 
-        // the VM sets the parameters for the source code
-        this.builder.insertInvokeInstruction('$setParameters', 2);
+        // the VM replaces the arguments on the component stack with a new parameterized range
+        numberOfArguments += 2;  // for the first and last values
+        this.builder.insertInvokeInstruction('$range', numberOfArguments);  // range(first, last, parameters)
+
+    } else {
+        // the VM replaces any parameters on the component stack with a new parameterized sequence
+        var type = sequence.getType();
+        type = '$' + type.charAt(1).toLowerCase() + type.slice(2);
+        this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
+
+        // the VM adds each expression to the sequence
+        this.depth++;
+        const iterator = sequence.getIterator();
+        while (iterator.hasNext()) {
+            var item = iterator.getNext();
+            item.acceptVisitor(this);
+            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(sequence, item)
+        }
+        this.depth--;
     }
 
-    // the parameterized source code remains on the component stack
+    // the parameterized sequence remains on the component stack
 };
 
 
 /*
- * This method constructs a new stack component and places it on top of the
- * component stack. The stack contains a sequence of values. The order in
- * which the values are listed is maintained by the stack.
+ * This method compiles a sequence of statements by inserting instructions for
+ * the VM to follow for each statement. Since procedure blocks can be nested
+ * within statement clauses each procedure needs its own compilation context. When
+ * entering a procedure a new context is pushed onto the compilation stack and when
+ * the procedure is done being compiled, that context is popped back off the stack.
+ * NOTE: This stack is different than the runtime component stack that is
+ * maintained by the Nebula Virtual Processor.
  */
-// stack:
-//     expression (',' expression)* |
-//     EOL (expression EOL)* |
-//     /*empty list*/
-CompilingVisitor.prototype.visitStack = function(stack) {
-    // delegate to the abstract type
-    this.visitCollection(stack);
+// statements:
+//     statement (';' statement)*   |
+//     EOL (statement EOL)* |
+//     /*empty statements*/
+CompilingVisitor.prototype.visitStatements = function(statements) {
+    // create a new compiler procedure context in the instruction builder
+    this.builder.pushProcedureContext(statements);
+
+    // the VM executes each statement
+    this.depth++;
+    const iterator = statements.getIterator();
+    while (iterator.hasNext()) {
+        this.builder.requiresFinalization = true;
+        var statement = iterator.getNext();
+        statement.acceptVisitor(this);
+        this.builder.incrementStatementCount();
+    }
+    this.depth--;
+
+    // throw away the current compiler procedure context in the instruction builder
+    this.builder.popProcedureContext();
 };
 
 
@@ -1411,19 +1379,34 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     const index = this.createTemporaryVariable('index');
     this.builder.insertStoreInstruction('VARIABLE', index);
 
-    // the VM places a new empty list on the component stack
-    this.builder.insertInvokeInstruction('$list', 0);
+    // the VM places a new empty arguments list on the component stack
+    this.builder.insertInvokeInstruction('$list', 0);  // list()
 
-    // the VM adds the index to the list as its only item
+    // the VM adds the index to the arguments list as its only item
     this.builder.insertLoadInstruction('VARIABLE', index);
-    this.builder.insertInvokeInstruction('$addItem', 2);
-
-    // the VM replaces the list that is on top of the component stack with a new parameters component
-    this.builder.insertInvokeInstruction('$parameters', 1);
+    this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH PARAMETERS');
+    this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH ARGUMENTS');
     // the parent and index have been replaced by the value of the subcomponent
+};
+
+
+// symbol: SYMBOL
+CompilingVisitor.prototype.visitSymbol = function(symbol) {
+    this.visitElement(symbol);
+};
+
+
+// tag: TAG
+CompilingVisitor.prototype.visitTag = function(tag) {
+    this.visitElement(tag);
+};
+
+
+// text: TEXT | TEXT_BLOCK
+CompilingVisitor.prototype.visitText = function(text) {
+    this.visitElement(text);
 };
 
 
@@ -1461,6 +1444,12 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
         this.builder.insertLoadInstruction('VARIABLE', variable);
         this.builder.variables.addItem(variable);
     }
+};
+
+
+// version: VERSION
+CompilingVisitor.prototype.visitVersion = function(version) {
+    this.visitElement(version);
 };
 
 
@@ -1601,22 +1590,19 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         const symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
-        // the VM saves off the index for after the list is created
+        // the VM saves off the index for after the arguments list is created
         const index = this.createTemporaryVariable('index');
         this.builder.insertStoreInstruction('VARIABLE', index);
 
-        // the VM places a new empty list on the component stack
-        this.builder.insertInvokeInstruction('$list', 0);
+        // the VM places a new empty arguments list on the component stack
+        this.builder.insertInvokeInstruction('$list', 0);  // list()
 
-        // the VM adds the index to the list as its only item
+        // the VM adds the index to the arguments list as its only item
         this.builder.insertLoadInstruction('VARIABLE', index);
-        this.builder.insertInvokeInstruction('$addItem', 2);
-
-        // the VM replaces the list that is on top of the component stack with a new parameters component
-        this.builder.insertInvokeInstruction('$parameters', 1);
+        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
         // the VM sets the value of the subcomponent at the given index of the parent component
-        this.builder.insertExecuteInstruction('$setSubcomponent', 'ON TARGET WITH PARAMETERS');
+        this.builder.insertExecuteInstruction('$setSubcomponent', 'ON TARGET WITH ARGUMENTS');
     }
 };
 
@@ -1654,7 +1640,7 @@ function getSubclauses(statement) {
 // PRIVATE BUILDER CLASS
 
 /*
- * This helper class is used to construct the Bali assembly source code. It
+ * This helper class is used to construct the Bali assembly code. It
  * maintains a stack of procedure context objects that track the current statement
  * number and clause number within each procedure.  A prefix is a dot separated
  * sequence of positive numbers defining alternately the statement number and
@@ -1671,7 +1657,7 @@ function InstructionBuilder(context, procedure, debug) {
     this.addresses = procedure.getValue('$addresses');
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
-    this.asmcode = '';
+    this.instructions = '';
     return this;
 }
 InstructionBuilder.prototype.constructor = InstructionBuilder;
@@ -1875,23 +1861,23 @@ InstructionBuilder.prototype.insertLabel = function(label) {
 
 
 /*
- * This method inserts into the assembly source code the specified instruction. If
+ * This method inserts into the assembly code the specified instruction. If
  * a label is pending it is prepended to the instruction.
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
         this.addresses.setValue(bali.text(this.nextLabel), this.address);
-        if (this.asmcode !== '') this.asmcode += EOL;  // not the first instruction
-        this.asmcode += this.nextLabel + ':' + EOL;
+        if (this.instructions !== '') this.instructions += EOL;  // not the first instruction
+        this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
     }
-    this.asmcode += instruction + EOL;
+    this.instructions += instruction + EOL;
     this.address++;
 };
 
 
 /*
- * This method inserts a 'skip' instruction into the assembly source code.
+ * This method inserts a 'skip' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertSkipInstruction = function() {
     const instruction = 'SKIP INSTRUCTION';
@@ -1900,7 +1886,7 @@ InstructionBuilder.prototype.insertSkipInstruction = function() {
 
 
 /*
- * This method inserts a 'jump' instruction into the assembly source code.
+ * This method inserts a 'jump' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertJumpInstruction = function(label, context) {
     var instruction = 'JUMP TO ' + label;
@@ -1910,7 +1896,7 @@ InstructionBuilder.prototype.insertJumpInstruction = function(label, context) {
 
 
 /*
- * This method inserts a 'push' instruction into the assembly source code.
+ * This method inserts a 'push' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
     var instruction = 'PUSH ' + type + ' ';
@@ -1936,7 +1922,7 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
 
 
 /*
- * This method inserts a 'pop' instruction into the assembly source code.
+ * This method inserts a 'pop' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertPopInstruction = function(type) {
     const instruction = 'POP ' + type;
@@ -1945,7 +1931,7 @@ InstructionBuilder.prototype.insertPopInstruction = function(type) {
 
 
 /*
- * This method inserts a 'load' instruction into the assembly source code.
+ * This method inserts a 'load' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
     const instruction = 'LOAD ' + type + ' ' + symbol;
@@ -1956,7 +1942,7 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
 
 
 /*
- * This method inserts a 'store' instruction into the assembly source code.
+ * This method inserts a 'store' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
     const instruction = 'STORE ' + type + ' ' + symbol;
@@ -1967,7 +1953,7 @@ InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
 
 
 /*
- * This method inserts an 'invoke' instruction into the assembly source code.
+ * This method inserts an 'invoke' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numberOfParameters) {
     var instruction = 'INVOKE ' + intrinsic;
@@ -1976,17 +1962,17 @@ InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numbe
         case 0:
             break;
         case 1:
-            instruction += ' WITH PARAMETER';
+            instruction += ' WITH ARGUMENT';
             break;
         default:
-            instruction += ' WITH ' + numberOfParameters + ' PARAMETERS';
+            instruction += ' WITH ' + numberOfParameters + ' ARGUMENTS';
     }
     this.insertInstruction(instruction);
 };
 
 
 /*
- * This method inserts an 'execute' instruction into the assembly source code.
+ * This method inserts an 'execute' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertExecuteInstruction = function(procedure, context) {
     var instruction = 'EXECUTE ' + procedure;
@@ -1997,7 +1983,7 @@ InstructionBuilder.prototype.insertExecuteInstruction = function(procedure, cont
 
 
 /*
- * This method inserts a 'handle' instruction into the assembly source code.
+ * This method inserts a 'handle' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertHandleInstruction = function(context) {
     const instruction = 'HANDLE ' + context;

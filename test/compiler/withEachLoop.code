@@ -8,16 +8,12 @@
         $x
         $y
         $z
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $procedures: [
         $getIterator
         $getNext
         $hasNext
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $addresses: [
         "1.WithStatement": 1
         "1.1.ConditionClause": 4
@@ -76,9 +72,7 @@
         1.WithStatementDone:
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '
         2801D00180016001D00318166001D0028003280280050000600518122803
         8006000400002804800700046002E000

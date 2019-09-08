@@ -2,16 +2,14 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-01T15:13:08.940>
+            $timestamp: <2019-09-08T02:13:22.686>
             $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
             $version: v1
             $digest: '
-                0C6JQH7FW4Q6CJQ8PZGL35PXKC4LLGGM47LB7MFN6RFJMH8K5FJY3WDN8NFR
-                LNJXJDWAM19C4DNV22C2FWZZN0THMTFBLQ2QBDC4S78
+                849X7NTP5H9FBW3S0KW3XF4YX8YGD5LTP99XBCCF2GCVA14D7PV34FCBXWF8
+                KW607202562LL212V8KTCRAL0BQLAJF098C5FY60080
             '
-        ](
-            $type: /bali/notary/Citation/v1
-        )
+        ]($type: /bali/notary/Citation/v1)
         $literals: []
         $constants: [:]
         $procedures: [
@@ -25,31 +23,27 @@
                     $ancestors
                     $parent
                     $target
-                ](
-                    $type: /bali/collections/Set/v1
-                )
+                ]($type: /bali/collections/Set/v1)
                 $procedures: [
                     $addItem
                     $getSubcomponent
-                ](
-                    $type: /bali/collections/Set/v1
-                )
+                ]($type: /bali/collections/Set/v1)
                 $addresses: [
                     "1.EvaluateStatement": 1
                     "2.EvaluateStatement": 5
                     "3.WhileStatement": 7
                     "3.1.ConditionClause": 8
                     "3.1.1.EvaluateStatement": 10
-                    "3.1.2.EvaluateStatement": 17
-                    "3.ConditionRepeat": 30
-                    "3.WhileStatementDone": 31
-                    "4.ReturnStatement": 32
+                    "3.1.2.EvaluateStatement": 16
+                    "3.ConditionRepeat": 28
+                    "3.WhileStatementDone": 29
+                    "4.ReturnStatement": 30
                 ]
                 $instructions: "
                     1.EvaluateStatement:
                     INVOKE $list
                     LOAD VARIABLE $target
-                    INVOKE $addItem WITH 2 PARAMETERS
+                    INVOKE $addItem WITH 2 ARGUMENTS
                     STORE VARIABLE $ancestors
                     
                     2.EvaluateStatement:
@@ -67,9 +61,8 @@
                     LOAD VARIABLE $ancestors
                     INVOKE $list
                     LOAD VARIABLE $ancestor
-                    INVOKE $addItem WITH 2 PARAMETERS
-                    INVOKE $parameters WITH PARAMETER
-                    EXECUTE $addItem ON TARGET WITH PARAMETERS
+                    INVOKE $addItem WITH 2 ARGUMENTS
+                    EXECUTE $addItem ON TARGET WITH ARGUMENTS
                     STORE VARIABLE $$result
                     
                     3.1.2.EvaluateStatement:
@@ -81,10 +74,9 @@
                     STORE VARIABLE $$index-2
                     INVOKE $list
                     LOAD VARIABLE $$index-2
-                    INVOKE $addItem WITH 2 PARAMETERS
-                    INVOKE $parameters WITH PARAMETER
-                    EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
-                    INVOKE $isEqualTo WITH 2 PARAMETERS
+                    INVOKE $addItem WITH 2 ARGUMENTS
+                    EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+                    INVOKE $isEqualTo WITH 2 ARGUMENTS
                     STORE VARIABLE $$result
                     
                     3.ConditionRepeat:
@@ -96,13 +88,11 @@
                     4.ReturnStatement:
                     LOAD VARIABLE $ancestors
                     HANDLE RESULT
-                "(
-                    $mediatype: "application/basm"
-                )
+                "($mediatype: "application/basm")
                 $bytecode: '
-                    A04C6007B00280056006800400006004181F6005A04C6004B002A854D801
-                    8003600460048002780260068001A04C6001B002A854D802B04180030008
-                    00006005E000
+                    A04C6007B00280056006800400006004181D6005A04C6004B002D8018003
+                    600460048002780260068001A04C6001B002D802B0418003000800006005
+                    E000
                 '(
                     $encoding: $base16
                     $mediatype: "application/bcod"
@@ -116,23 +106,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-01T15:13:08.961>
+    $timestamp: <2019-09-08T02:13:22.708>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-01T15:13:07.816>
-        $tag: #2DY26GCFSQ3CLMZLTCN6FFWZX0A9FB2B
+        $timestamp: <2019-09-08T02:13:21.388>
+        $tag: #F35Y9NWRGV79KY5LBCDCSX9FDQK6M9X8
         $version: v1
         $digest: '
-            4YLQ3XNZAW02HK8QA7AXMVVPHHAPF04QSTR0WB1KY18VNBS3B0XC3S2DDLT2
-            T3R9S4T65QZQFGGK12VD1JVJYSGH4KPK5LK3D1J2WPR
+            F8CHP0R8R9YVRPVMDSVDT1X3DLVH4B5HTCBGH66QLWSG6A2M2VT5CQFMQD1C
+            BLRL8AD7B8S664QTTQVPADBWFT5PDD9CDTX94QMJ7GR
         '
-    ](
-        $type: /bali/notary/Citation/v1
-    )
+    ]($type: /bali/notary/Citation/v1)
     $signature: '
-        AJM8P8ZDR4XBCJAQR3PXLN8VW49LQA1KK8S6WZHVZ6J9JH1XXGND4RF5R64X
-        TNMW2K64SX17CA72LWZK07BGVAABJ7A31BT20SDVY2R
+        S624LVXTH0QCAQ3PLRKCTNRPRZCPS11MNXJHCKV8J0Z4NVV8CDZ59K0313G1
+        9DW0S5RRG7G6MFSJQ3TF07MK07MDWH2K1JZPL743W18
     '
-](
-    $type: /bali/notary/Document/v1
-)
+]($type: /bali/notary/Document/v1)

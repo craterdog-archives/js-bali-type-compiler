@@ -360,8 +360,8 @@ function instructionToString(instruction, optionalOperand) {
             break;
         case types.INVOKE:
             string += operand;
-            if (modifier === 1) string += ' WITH PARAMETER';
-            if (modifier > 1) string += ' WITH ' + modifier + ' PARAMETERS';
+            if (modifier === 1) string += ' WITH ARGUMENT';
+            if (modifier > 1) string += ' WITH ' + modifier + ' ARGUMENTS';
             break;
         case types.EXECUTE:
             string += operand;

@@ -7,12 +7,8 @@
         $c
         $condition
         $target
-    ](
-        $type: /bali/collections/Set/v1
-    )
-    $procedures: [](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
+    $procedures: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.WhileStatement": 1
         "1.1.ConditionClause": 2
@@ -60,9 +56,7 @@
         1.WhileStatementDone:
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '00006005180E6003800200006002180A000E00006004800200026001E000'(
         $encoding: $base16
         $mediatype: "application/bcod"

@@ -52,7 +52,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
-                var basmFile = testFolder + prefix + '.basm';
+                var codeFile = testFolder + prefix + '.code';
                 var source = fs.readFileSync(baliFile, 'utf8');
                 var procedure = bali.parse(source);
                 expect(procedure).to.exist;
@@ -74,8 +74,8 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 compiler.assembleProcedure(type, compiled);
 
                 source = compiled.toString() + '\n';  // POSIX compliant <EOL>
-                //fs.writeFileSync(basmFile, source, 'utf8');
-                var expected = fs.readFileSync(basmFile, 'utf8');
+                fs.writeFileSync(codeFile, source, 'utf8');
+                var expected = fs.readFileSync(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
             }
@@ -101,10 +101,8 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 document = await notary.notarizeDocument(type);
                 expect(document).to.exist;
                 await repository.createType(documentId, document);
-                fs.writeFileSync(testFolder + file + '.code', document, 'utf8');
-                const expected = bali.parse(fs.readFileSync(testFolder + file + '.code', 'utf8'));
-                expect(expected).to.exist;
-                expect(document.isEqualTo(expected)).to.equal(true);
+                const source = document.toString() + '\n';  // POSIX compliant <EOL>
+                fs.writeFileSync(testFolder + file + '.type', source, 'utf8');
             }
         });
 

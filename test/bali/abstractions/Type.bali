@@ -19,7 +19,7 @@
                 A reference to the parent type from which this type inherits its behavior.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Reference/v1(
-                $referencedType: /bali/abstractions/Type/v1($abstract)
+                $referencedType: /bali/abstractions/Type/v1($existence: $abstract)
             )
         ]
         $parameters: [
@@ -64,8 +64,8 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $name: /bali/abstractions/Type/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
     $permissions: /bali/permissions/public/v1

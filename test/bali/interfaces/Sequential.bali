@@ -28,7 +28,7 @@
                 This message causes the target component to return the number of
                 subcomponents that make up this component.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Number/v1(0..infinity)
+            $type: /bali/elements/Number/v1($range: [0..infinity])
         ]
         $isEmpty: [
             $description: "
@@ -39,8 +39,8 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Interface/v1
     $name: /bali/interfaces/Sequential/v1
+    $type: /bali/abstractions/Interface/v1
     $tag: #7ZG69N9QGDQSS66RVWYN7P8TYVV3FAM3
     $version: v1
     $permissions: /bali/permissions/public/v1

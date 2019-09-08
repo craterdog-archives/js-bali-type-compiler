@@ -44,9 +44,9 @@ exports.DRAFT = 2;
 exports.DOCUMENT = 3;
 
 exports.WITH_NOTHING = 0;
-exports.WITH_PARAMETERS = 1;
+exports.WITH_ARGUMENTS = 1;
 exports.ON_TARGET = 2;
-exports.ON_TARGET_WITH_PARAMETERS = 3;
+exports.ON_TARGET_WITH_ARGUMENTS = 3;
 
 exports.RESULT = 0;
 exports.EXCEPTION = 1;
@@ -174,9 +174,9 @@ const STORE_MODIFIERS = [
 
 const EXECUTE_MODIFIERS = [
     '',
-    'WITH PARAMETERS',
+    'WITH ARGUMENTS',
     'ON TARGET',
-    'ON TARGET WITH PARAMETERS'
+    'ON TARGET WITH ARGUMENTS'
 ];
 
 const HANDLE_MODIFIERS = [

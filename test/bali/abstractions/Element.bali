@@ -24,8 +24,8 @@
         ]
     ]
 ](
-    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $name: /bali/abstractions/Element/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
     $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
     $version: v1
     $permissions: /bali/permissions/public/v1

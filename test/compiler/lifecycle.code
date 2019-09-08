@@ -16,23 +16,19 @@
         $documents
         $index
         $target
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $procedures: [
         $getSubcomponent
         $setSubcomponent
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 6
         "3.CommitStatement": 10
         "4.CheckoutStatement": 14
-        "5.SaveStatement": 25
-        "6.CommitStatement": 36
-        "7.DiscardStatement": 47
+        "5.SaveStatement": 24
+        "6.CommitStatement": 34
+        "7.DiscardStatement": 44
     ]
     $instructions: "
         1.CheckoutStatement:
@@ -63,9 +59,8 @@
         STORE VARIABLE $$index-5
         INVOKE $list
         LOAD VARIABLE $$index-5
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $parameters WITH PARAMETER
-        EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
         
         5.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
@@ -75,9 +70,8 @@
         STORE VARIABLE $$index-7
         INVOKE $list
         LOAD VARIABLE $$index-7
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $parameters WITH PARAMETER
-        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
         STORE DRAFT $$location-6
         
         6.CommitStatement:
@@ -88,9 +82,8 @@
         STORE VARIABLE $$index-9
         INVOKE $list
         LOAD VARIABLE $$index-9
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $parameters WITH PARAMETER
-        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
         STORE DOCUMENT $$location-8
         
         7.DiscardStatement:
@@ -100,14 +93,12 @@
         STORE DRAFT $$location-10
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '
         2801280280047804800C28028006600C900628028007600C9807600D600E
-        2802800878088001A04C6001B002A854D80228028009600D600E8002A04C
-        6002B002A854D80190092802800A600D600E8003A04C6003B002A854D801
-        980A2802800528039005600BE000
+        2802800878088001A04C6001B002D80228028009600D600E8002A04C6002
+        B002D80190092802800A600D600E8003A04C6003B002D801980A28028005
+        28039005600BE000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

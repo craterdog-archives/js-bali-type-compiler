@@ -230,8 +230,8 @@ ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
-//     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
+//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.INVOKE);
@@ -255,9 +255,9 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
 
 // executeInstruction:
 //     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'PARAMETERS' |
+//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
+//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
 ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.EXECUTE);

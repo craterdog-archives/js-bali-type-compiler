@@ -81,6 +81,15 @@ AssemblingVisitor.prototype.getBytecode = function() {
 };
 
 
+AssemblingVisitor.prototype.visitCollection = function(collection) {
+    if (collection.isType('$List')) {
+        this.visitList(collection);
+    } else {
+        this.visitCatalog(collection);
+    }
+};
+
+
 // document: EOL* instructions EOL* EOF
 // instructions: step (EOL step)*
 AssemblingVisitor.prototype.visitList = function(instructions) {
@@ -225,8 +234,8 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
-//     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
+//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
@@ -238,9 +247,9 @@ AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 
 // executeInstruction:
 //     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'PARAMETERS' |
+//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
+//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
 AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
@@ -346,7 +355,6 @@ const SYMBOLS = [
     '$isZero',
     '$later',
     '$list',
-    '$literal',
     '$logarithm',
     '$moment',
     '$nextVersion',
@@ -388,7 +396,6 @@ const SYMBOLS = [
     '$set',
     '$setAssociationValue',
     '$setItem',
-    '$setParameters',
     '$setValue',
     '$setValues',
     '$shuffleItems',
@@ -403,7 +410,6 @@ const SYMBOLS = [
     '$tag',
     '$tangent',
     '$text',
-    '$tree',
     '$validNextVersion',
     '$version',
     '$xor'

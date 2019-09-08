@@ -5,12 +5,8 @@
         $no
         $target
         $yes
-    ](
-        $type: /bali/collections/Set/v1
-    )
-    $procedures: [](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
+    $procedures: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
@@ -63,9 +59,7 @@
         1.IfStatementDone:
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '
         0000280118076004800100102802180C6002800100100000280380010000
         6001E000

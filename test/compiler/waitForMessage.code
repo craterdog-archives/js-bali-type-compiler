@@ -8,15 +8,11 @@
         $message
         $messages
         $target
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $procedures: [
         $getSubcomponent
         $setSubcomponent
-    ](
-        $type: /bali/collections/Set/v1
-    )
+    ]($type: /bali/collections/Set/v1)
     $addresses: [
         "1.WaitStatement": 1
         "2.WaitStatement": 6
@@ -33,9 +29,8 @@
         LOAD VARIABLE $messages
         INVOKE $list
         PUSH LITERAL `$foo`
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $parameters WITH PARAMETER
-        EXECUTE $getSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
         PUSH LITERAL `5`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$queue-2
@@ -43,17 +38,14 @@
         STORE VARIABLE $$index-3
         INVOKE $list
         LOAD VARIABLE $$index-3
-        INVOKE $addItem WITH 2 PARAMETERS
-        INVOKE $parameters WITH PARAMETER
-        EXECUTE $setSubcomponent ON TARGET WITH PARAMETERS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
         LOAD VARIABLE $$result
         HANDLE RESULT
-    "(
-        $mediatype: "application/basm"
-    )
+    "($mediatype: "application/basm")
     $bytecode: '
-        280128028002680280056006A04C2803B002A854D8012804280280036803
-        8001A04C6001B002A854D8026004E000
+        280128028002680280056006A04C2803B002D80128042802800368038001
+        A04C6001B002D8026004E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

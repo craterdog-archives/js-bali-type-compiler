@@ -77,8 +77,8 @@ storeInstruction:
 // replaces the parameters that were on the top of the component stack.
 invokeInstruction:
     'INVOKE' SYMBOL |
-    'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
-    'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
+    'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+    'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 ;
 
 // Load the bytecode for the specified procedure into a new component context
@@ -88,9 +88,9 @@ invokeInstruction:
 // and array of parameters that were on the top of the component stack.
 executeInstruction:
     'EXECUTE' SYMBOL |
-    'EXECUTE' SYMBOL 'WITH' 'PARAMETERS' |
+    'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-    'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
+    'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
 ;
 
 // Pop the result that is currently on top of the component stack off

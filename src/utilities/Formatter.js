@@ -84,6 +84,15 @@ FormattingVisitor.prototype.appendNewline = function() {
 };
 
 
+FormattingVisitor.prototype.visitCollection = function(collection) {
+    if (collection.isType('$List')) {
+        this.visitList(collection);
+    } else {
+        this.visitCatalog(collection);
+    }
+};
+
+
 // document: EOL* instructions EOL* EOF
 // instructions: step (EOL step)*
 FormattingVisitor.prototype.visitList = function(procedure) {
@@ -241,8 +250,8 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'PARAMETER' |
-//     'INVOKE' SYMBOL 'WITH' NUMBER 'PARAMETERS'
+//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     this.source += 'INVOKE ';
     this.source += instruction.getValue('$operand');
@@ -251,9 +260,9 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
         this.source += ' WITH ';
         if (modifier > 1) {
             this.source += modifier;
-            this.source += ' PARAMETERS';
+            this.source += ' ARGUMENTS';
         } else {
-            this.source += 'PARAMETER';
+            this.source += 'ARGUMENT';
         }
     }
 };
@@ -261,9 +270,9 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 
 // executeInstruction:
 //     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'PARAMETERS' |
+//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
 //     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'PARAMETERS'
+//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
 FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     this.source += 'EXECUTE ';
     this.source += instruction.getValue('$operand');
