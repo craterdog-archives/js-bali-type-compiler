@@ -1,7 +1,7 @@
-![Logo](https://raw.githubusercontent.com/craterdog-bali/bali-project-documentation/master/images/CraterDogLogo.png)
+![Logo](docs/images/CraterDogLogo.png)
 
 ### Bali Nebula™ Type Compiler
-This project provides a JavaScript version of the compiler for the Bali Nebula™ Type Compiler.
+This project provides a JavaScript version of the compiler for the Bali Nebula™ type compiler.
 
 ![Pyramid](docs/images/BaliPyramid.png)
 
