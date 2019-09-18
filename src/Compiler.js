@@ -260,7 +260,7 @@ CompilingVisitor.prototype.visitAssociation = function(association) {
     // the VM places the association value on top of the component stack
     association.getValue().acceptVisitor(this);
 
-    // the VM replaces the parameters on the component stack with a new association
+    // the VM replaces the arguments on the component stack with a new association
     this.builder.insertInvokeInstruction('$association', 2);  // association(key, value)
 };
 
@@ -1004,7 +1004,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
     }
     this.depth--;
 
-    // the VM places a new parameters component containing the collection on the top of the component stack
+    // the VM places a new parameters component containing the catalog on the top of the component stack
     this.builder.insertInvokeInstruction('$parameters', 1);  // parameters(catalog)
 
     // the parameter list remains on the component stack
