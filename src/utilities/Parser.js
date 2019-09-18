@@ -16,7 +16,7 @@
  */
 const antlr = require('antlr4');
 const ErrorStrategy = require('antlr4/error/ErrorStrategy');
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
 const grammar = require('../grammar');
 const types = require('./Types');
 const EOL = '\n';  // POSIX end of line character
@@ -175,11 +175,11 @@ ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
             value = bali.text(operand);  // treat the label as text
             break;
         case types.LITERAL:
-            value = bali.parse(operand.slice(1, -1));  // remove the back tick delimeters
+            value = bali.component(operand.slice(1, -1));  // remove the back tick delimeters
             break;
         case types.CONSTANT:
         case types.PARAMETER:
-            value = bali.parse(operand);
+            value = bali.component(operand);
             break;
     }
     instruction.setValue('$operand', value);
@@ -208,7 +208,7 @@ ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     instruction.setValue('$operation', types.LOAD);
     instruction.setValue('$modifier', types.loadModifierValue(ctx.children[1].getText()));
     const variable = ctx.children[2].getText();
-    instruction.setValue('$operand', bali.parse(variable));
+    instruction.setValue('$operand', bali.component(variable));
     this.result = instruction;
 };
 
@@ -223,7 +223,7 @@ ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
     instruction.setValue('$operation', types.STORE);
     instruction.setValue('$modifier', types.storeModifierValue(ctx.children[1].getText()));
     const variable = ctx.children[2].getText();
-    instruction.setValue('$operand', bali.parse(variable));
+    instruction.setValue('$operand', bali.component(variable));
     this.result = instruction;
 };
 
@@ -248,7 +248,7 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
             break;
     }
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', bali.parse(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', bali.component(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 
@@ -268,7 +268,7 @@ ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
     string = string.slice(0, -1);  // strip off last space
     const modifier = types.executeModifierValue(string);
     instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', bali.parse(ctx.SYMBOL().getText()));
+    instruction.setValue('$operand', bali.component(ctx.SYMBOL().getText()));
     this.result = instruction;
 };
 

@@ -13,7 +13,7 @@
  * This module defines a class that assembles compiled procedures into bytecode that
  * can run on the Nebula Virtual Processor.
  */
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
 const utilities = require('./utilities');
 const EOL = '\n';  // POSIX end of line character
 
@@ -55,8 +55,9 @@ Assembler.prototype.assembleProcedure = function(context, compilation) {
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
-    const base16 = bali.codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode), '            ');
-    bytecode = bali.parse("'" + base16 + EOL + "            '" + '($encoding: $base16, $mediatype: "application/bcod")');
+    const codex = bali.codex('            ');
+    const base16 = codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode));
+    bytecode = bali.component("'" + base16 + EOL + "            '" + '($encoding: $base16, $mediatype: "application/bcod")');
     compilation.setValue('$bytecode', bytecode);
 };
 

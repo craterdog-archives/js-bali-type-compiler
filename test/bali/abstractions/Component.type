@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-08T12:53:15.839>
+            $timestamp: <2019-09-18T21:51:13.097>
             $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
             $version: v1
             $digest: '
-                ZLBRAS9W5NCPA1BY6F2FVBM66N3LZ4VJLHC5W3NLFFQGZ1K3Z3VFAZ1V8AB2
-                HPGWB06QQTLWY1PJBJN7YD4HKQZ4TYDAZPTZPGB1V2R
+                33NDHTMHSKCWYAZJW2FYJXBB9V6CLVT53JBRFQRVN57QY4L02KK88FCHZ15S
+                TNACPXDH6H9M34F30YCXAMVF3N4K0B7C21SNN96TX4R
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: [
@@ -27,10 +27,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                    1.ReturnStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $format WITH ARGUMENT
-                    HANDLE RESULT
+                        1.ReturnStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $format WITH ARGUMENT
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A81FE000'(
                     $encoding: $base16
@@ -67,53 +67,53 @@
                     "3.ReturnStatement": 27
                 ]
                 $instructions: "
-                    1.EvaluateStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $getType WITH ARGUMENT
-                    STORE VARIABLE $$location-1
-                    LOAD DOCUMENT $$location-1
-                    INVOKE $list
-                    EXECUTE $getAncestors ON TARGET WITH ARGUMENTS
-                    STORE VARIABLE $ancestors
-                    
-                    2.WithStatement:
-                    LOAD VARIABLE $ancestors
-                    EXECUTE $getIterator ON TARGET
-                    STORE VARIABLE $$iterator-2
-                    
-                    2.1.ConditionClause:
-                    LOAD VARIABLE $$iterator-2
-                    EXECUTE $hasNext ON TARGET
-                    JUMP TO 2.WithStatementDone ON FALSE
-                    LOAD VARIABLE $$iterator-2
-                    EXECUTE $getNext ON TARGET
-                    STORE VARIABLE $ancestor
-                    
-                    2.1.1.IfStatement:
-                    SKIP INSTRUCTION
-                    
-                    2.1.1.1.ConditionClause:
-                    LOAD VARIABLE $ancestor
-                    PUSH PARAMETER $type
-                    INVOKE $isEqualTo WITH 2 ARGUMENTS
-                    JUMP TO 2.1.1.IfStatementDone ON FALSE
-                    
-                    2.1.1.1.1.ReturnStatement:
-                    PUSH LITERAL `true`
-                    HANDLE RESULT
-                    
-                    2.1.1.IfStatementDone:
-                    SKIP INSTRUCTION
-                    
-                    2.ConditionRepeat:
-                    JUMP TO 2.1.ConditionClause
-                    
-                    2.WithStatementDone:
-                    SKIP INSTRUCTION
-                    
-                    3.ReturnStatement:
-                    PUSH LITERAL `false`
-                    HANDLE RESULT
+                        1.EvaluateStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $getType WITH ARGUMENT
+                        STORE VARIABLE $$location-1
+                        LOAD DOCUMENT $$location-1
+                        INVOKE $list
+                        EXECUTE $getAncestors ON TARGET WITH ARGUMENTS
+                        STORE VARIABLE $ancestors
+                        
+                        2.WithStatement:
+                        LOAD VARIABLE $ancestors
+                        EXECUTE $getIterator ON TARGET
+                        STORE VARIABLE $$iterator-2
+                        
+                        2.1.ConditionClause:
+                        LOAD VARIABLE $$iterator-2
+                        EXECUTE $hasNext ON TARGET
+                        JUMP TO 2.WithStatementDone ON FALSE
+                        LOAD VARIABLE $$iterator-2
+                        EXECUTE $getNext ON TARGET
+                        STORE VARIABLE $ancestor
+                        
+                        2.1.1.IfStatement:
+                        SKIP INSTRUCTION
+                        
+                        2.1.1.1.ConditionClause:
+                        LOAD VARIABLE $ancestor
+                        PUSH PARAMETER $type
+                        INVOKE $isEqualTo WITH 2 ARGUMENTS
+                        JUMP TO 2.1.1.IfStatementDone ON FALSE
+                        
+                        2.1.1.1.1.ReturnStatement:
+                        PUSH LITERAL `true`
+                        HANDLE RESULT
+                        
+                        2.1.1.IfStatementDone:
+                        SKIP INSTRUCTION
+                        
+                        2.ConditionRepeat:
+                        JUMP TO 2.1.ConditionClause
+                        
+                        2.WithStatementDone:
+                        SKIP INSTRUCTION
+                        
+                        3.ReturnStatement:
+                        PUSH LITERAL `false`
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '
                     6005A83A80027802A04CD80180046004D00280016001D004181A6001D003
@@ -144,36 +144,36 @@
                     "4.ReturnStatement": 22
                 ]
                 $instructions: "
-                    1.EvaluateStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $getType WITH ARGUMENT
-                    STORE VARIABLE $type
-                    
-                    2.EvaluateStatement:
-                    INVOKE $list
-                    LOAD VARIABLE $type
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    STORE VARIABLE $ancestors
-                    
-                    3.EvaluateStatement:
-                    LOAD VARIABLE $ancestors
-                    INVOKE $list
-                    LOAD VARIABLE $type
-                    STORE VARIABLE $$location-1
-                    LOAD DOCUMENT $$location-1
-                    PUSH LITERAL `$ancestors`
-                    STORE VARIABLE $$index-2
-                    INVOKE $list
-                    LOAD VARIABLE $$index-2
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    EXECUTE $addItems ON TARGET WITH ARGUMENTS
-                    STORE VARIABLE $$result
-                    
-                    4.ReturnStatement:
-                    LOAD VARIABLE $ancestors
-                    HANDLE RESULT
+                        1.EvaluateStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $getType WITH ARGUMENT
+                        STORE VARIABLE $type
+                        
+                        2.EvaluateStatement:
+                        INVOKE $list
+                        LOAD VARIABLE $type
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        STORE VARIABLE $ancestors
+                        
+                        3.EvaluateStatement:
+                        LOAD VARIABLE $ancestors
+                        INVOKE $list
+                        LOAD VARIABLE $type
+                        STORE VARIABLE $$location-1
+                        LOAD DOCUMENT $$location-1
+                        PUSH LITERAL `$ancestors`
+                        STORE VARIABLE $$index-2
+                        INVOKE $list
+                        LOAD VARIABLE $$index-2
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        EXECUTE $addItems ON TARGET WITH ARGUMENTS
+                        STORE VARIABLE $$result
+                        
+                        4.ReturnStatement:
+                        LOAD VARIABLE $ancestors
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '
                     6005A83A8006A04C6006B00280046004A04C60068002780228038001A04C
@@ -193,10 +193,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                    1.ReturnStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $getArguments WITH ARGUMENT
-                    HANDLE RESULT
+                        1.ReturnStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $getArguments WITH ARGUMENT
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001FFFFE000'(
                     $encoding: $base16
@@ -213,10 +213,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                    1.ReturnStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $getHash WITH ARGUMENT
-                    HANDLE RESULT
+                        1.ReturnStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $getHash WITH ARGUMENT
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A827E000'(
                     $encoding: $base16
@@ -233,10 +233,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                    1.ReturnStatement:
-                    LOAD VARIABLE $target
-                    INVOKE $getType WITH ARGUMENT
-                    HANDLE RESULT
+                        1.ReturnStatement:
+                        LOAD VARIABLE $target
+                        INVOKE $getType WITH ARGUMENT
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A83AE000'(
                     $encoding: $base16
@@ -251,19 +251,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-08T12:53:15.871>
+    $timestamp: <2019-09-18T21:51:13.145>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-08T12:53:15.031>
-        $tag: #3CWVZQVKXMS8V55T5AF4RMRG4D7LYW9P
+        $timestamp: <2019-09-18T21:51:12.090>
+        $tag: #ZK0S1QKGZ3N3MNTWBWY7N8VPZFG5FJ08
         $version: v1
         $digest: '
-            PSMVSYATDKNNS3WZB3842DAZ63MX1WP4LMN9976WYQ6TDB654SR2608BKVGA
-            WM2VKV0RGN4NWXQHF5XD7ANLJSR02ZDNX1QLWA2B04R
+            B5P1RMRHDQ90SDMHHHYBFLAJZ7RP85P13M9K5V45S3838V2P0S492N693YVD
+            5BZ59R3BQBLTVK92DZNX2FBRNCA6Z633X8MTVC784Z8
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        PR0QBPW54PZ6NDM9ARPT1D3ZQ2V2WHV01V6KYTM98VFHQRW0Y30ZM47JVQCJ
-        H98DX2STMAD6LSCMHF8TWC000R25FY3MWG6NYJXQR0H
+        44Y1BL0AF7XACQ8ZPGVA75HVPKYRZFK9C0MWF51BSDMMB24BC05MFGH91QM7
+        9BJD20K5GCNM9NCL1SB80F3WGN485SZFXN0NRAS3K20
     '
 ]($type: /bali/notary/Document/v1)

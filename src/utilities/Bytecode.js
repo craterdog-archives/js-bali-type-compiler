@@ -23,7 +23,7 @@
  * based index or address. The value zero is reserved for specifying an
  * invalid index or address.
  */
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
 const types = require('./Types');
 
 

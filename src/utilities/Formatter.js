@@ -13,7 +13,7 @@
  * This module defines a class that formats a list of instructions into a
  * into the canonical source code string representing the instructions.
  */
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
 const types = require('./Types');
 
 
@@ -197,7 +197,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
             operand = operand.getValue();
             break;
         case types.LITERAL:
-            operand = '`' + bali.format(operand, this.indentation) + '`';
+            operand = '`' + operand.format(this.indentation) + '`';
             break;
         case types.CONSTANT:
         case types.PARAMETER:

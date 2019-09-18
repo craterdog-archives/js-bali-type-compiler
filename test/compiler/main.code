@@ -9,11 +9,11 @@
         "1.EvaluateStatement": 1
     ]
     $instructions: "
-        1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $$result
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.EvaluateStatement:
+            PUSH LITERAL `none`
+            STORE VARIABLE $$result
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '280180016001E000'(
         $encoding: $base16

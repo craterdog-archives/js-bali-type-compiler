@@ -11,17 +11,17 @@
         "1.QueueStatement": 1
     ]
     $instructions: "
-        1.QueueStatement:
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$queue-1
-        INVOKE $catalog
-        PUSH LITERAL `$foo`
-        LOAD VARIABLE $bar
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        STORE MESSAGE $$queue-1
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.QueueStatement:
+            PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+            STORE VARIABLE $$queue-1
+            INVOKE $catalog
+            PUSH LITERAL `$foo`
+            LOAD VARIABLE $bar
+            INVOKE $association WITH 2 ARGUMENTS
+            INVOKE $addItem WITH 2 ARGUMENTS
+            STORE MESSAGE $$queue-1
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '28018001A00F28026003B009B00288016002E000'(
         $encoding: $base16

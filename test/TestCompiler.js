@@ -10,14 +10,15 @@
 
 const debug = true;  // set to true for error logging
 const directory = 'test/config/';
-const fs = require('fs');
+const pfs = require('fs').promises;
 const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework');
-const account = bali.parse('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const securityModule = require('bali-digital-notary').ssm(directory + account.getValue() + '.keys', debug);
-const notary = require('bali-digital-notary').api(securityModule, account, directory, debug);
+const bali = require('bali-component-framework').api();
+const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
+const api = require('bali-digital-notary');
+const securityModule = api.ssm(directory);
+const notary = api.notary(securityModule, account, directory);
 const repository = require('bali-document-repository').local(directory, debug);
 const compiler = require('../index').api(notary, repository, debug);
 
@@ -41,9 +42,9 @@ describe('Bali Nebula™ Procedure Compiler', function() {
 
     describe('Test the compiler and assembler.', function() {
 
-        it('should compile procedures into assembly instructions and bytecodes', function() {
+        it('should compile procedures into assembly instructions and bytecodes', async function() {
             const testFolder = 'test/compiler/';
-            const files = fs.readdirSync(testFolder);
+            const files = await pfs.readdir(testFolder);
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;
@@ -53,8 +54,8 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
                 var codeFile = testFolder + prefix + '.code';
-                var source = fs.readFileSync(baliFile, 'utf8');
-                var procedure = bali.parse(source);
+                var source = await pfs.readFile(baliFile, 'utf8');
+                var procedure = bali.component(source);
                 expect(procedure).to.exist;
 
                 // create the compilation type context
@@ -74,8 +75,8 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 compiler.assembleProcedure(type, compiled);
 
                 source = compiled.toString() + '\n';  // POSIX compliant <EOL>
-                fs.writeFileSync(codeFile, source, 'utf8');
-                var expected = fs.readFileSync(codeFile, 'utf8');
+                await pfs.writeFile(codeFile, source, 'utf8');
+                var expected = await pfs.readFile(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
             }
@@ -86,7 +87,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
             for (var i = 0; i < sources.length; i++) {
                 const file = sources[i];
                 console.log('      ' + file);
-                var document = bali.parse(fs.readFileSync(testFolder + file + '.bali', 'utf8'));
+                var document = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
                 expect(document).to.exist;
                 document = await notary.notarizeDocument(document);
                 expect(document).to.exist;
@@ -102,7 +103,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 expect(document).to.exist;
                 await repository.createType(documentId, document);
                 const source = document.toString() + '\n';  // POSIX compliant <EOL>
-                fs.writeFileSync(testFolder + file + '.type', source, 'utf8');
+                await pfs.writeFile(testFolder + file + '.type', source, 'utf8');
             }
         });
 

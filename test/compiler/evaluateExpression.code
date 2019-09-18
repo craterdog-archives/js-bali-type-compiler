@@ -63,189 +63,189 @@
         "28.EvaluateStatement": 123
     ]
     $instructions: "
-        1.EvaluateStatement:
-        INVOKE $catalog
-        PUSH LITERAL `$foo`
-        LOAD VARIABLE $bar
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        PUSH LITERAL `$baz`
-        PUSH LITERAL `5`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        2.EvaluateStatement:
-        LOAD VARIABLE $variable
-        STORE VARIABLE $$result
-        
-        3.EvaluateStatement:
-        PUSH LITERAL `13`
-        INVOKE $isPrime WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        4.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        INVOKE $sum WITH 2 ARGUMENTS
-        LOAD VARIABLE $c
-        INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        5.EvaluateStatement:
-        LOAD VARIABLE $reference
-        STORE VARIABLE $$location-1
-        LOAD DOCUMENT $$location-1
-        STORE VARIABLE $$result
-        
-        6.EvaluateStatement:
-        LOAD VARIABLE $customer
-        INVOKE $list
-        PUSH LITERAL `$order`
-        INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-        INVOKE $list
-        PUSH LITERAL `$item`
-        INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-        PUSH LITERAL `5`
-        STORE VARIABLE $$index-2
-        INVOKE $list
-        LOAD VARIABLE $$index-2
-        INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-        STORE VARIABLE $$result
-        
-        7.EvaluateStatement:
-        LOAD VARIABLE $list
-        INVOKE $list
-        LOAD VARIABLE $item
-        INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $addItem ON TARGET WITH ARGUMENTS
-        STORE VARIABLE $$result
-        
-        8.EvaluateStatement:
-        PUSH LITERAL `23`
-        INVOKE $factorial WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        9.EvaluateStatement:
-        PUSH LITERAL `2`
-        PUSH LITERAL `8`
-        INVOKE $exponential WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        10.EvaluateStatement:
-        PUSH LITERAL `pi`
-        INVOKE $inverse WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        11.EvaluateStatement:
-        PUSH LITERAL `(3, 4i)`
-        INVOKE $conjugate WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        12.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
-        INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        13.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        INVOKE $quotient WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        14.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        INVOKE $remainder WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        15.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
-        INVOKE $sum WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        16.EvaluateStatement:
-        LOAD VARIABLE $w
-        LOAD VARIABLE $z
-        INVOKE $difference WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        17.EvaluateStatement:
-        PUSH LITERAL `(3, 4i)`
-        INVOKE $magnitude WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        18.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        INVOKE $isLessThan WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        19.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        INVOKE $isEqualTo WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        20.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
-        INVOKE $isMoreThan WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        21.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
-        INVOKE $isSameAs WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        22.EvaluateStatement:
-        LOAD VARIABLE $k
-        LOAD VARIABLE $m
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        23.EvaluateStatement:
-        LOAD VARIABLE $p
-        INVOKE $complement WITH ARGUMENT
-        STORE VARIABLE $$result
-        
-        24.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        INVOKE $and WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        25.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        INVOKE $sans WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        26.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
-        INVOKE $xor WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        27.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
-        INVOKE $or WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        
-        28.EvaluateStatement:
-        LOAD VARIABLE $foo
-        PUSH LITERAL `5`
-        INVOKE $default WITH 2 ARGUMENTS
-        STORE VARIABLE $$result
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.EvaluateStatement:
+            INVOKE $catalog
+            PUSH LITERAL `$foo`
+            LOAD VARIABLE $bar
+            INVOKE $association WITH 2 ARGUMENTS
+            INVOKE $addItem WITH 2 ARGUMENTS
+            PUSH LITERAL `$baz`
+            PUSH LITERAL `5`
+            INVOKE $association WITH 2 ARGUMENTS
+            INVOKE $addItem WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            2.EvaluateStatement:
+            LOAD VARIABLE $variable
+            STORE VARIABLE $$result
+            
+            3.EvaluateStatement:
+            PUSH LITERAL `13`
+            INVOKE $isPrime WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            4.EvaluateStatement:
+            LOAD VARIABLE $a
+            LOAD VARIABLE $b
+            INVOKE $sum WITH 2 ARGUMENTS
+            LOAD VARIABLE $c
+            INVOKE $product WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            5.EvaluateStatement:
+            LOAD VARIABLE $reference
+            STORE VARIABLE $$location-1
+            LOAD DOCUMENT $$location-1
+            STORE VARIABLE $$result
+            
+            6.EvaluateStatement:
+            LOAD VARIABLE $customer
+            INVOKE $list
+            PUSH LITERAL `$order`
+            INVOKE $addItem WITH 2 ARGUMENTS
+            EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+            INVOKE $list
+            PUSH LITERAL `$item`
+            INVOKE $addItem WITH 2 ARGUMENTS
+            EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+            PUSH LITERAL `5`
+            STORE VARIABLE $$index-2
+            INVOKE $list
+            LOAD VARIABLE $$index-2
+            INVOKE $addItem WITH 2 ARGUMENTS
+            EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+            STORE VARIABLE $$result
+            
+            7.EvaluateStatement:
+            LOAD VARIABLE $list
+            INVOKE $list
+            LOAD VARIABLE $item
+            INVOKE $addItem WITH 2 ARGUMENTS
+            EXECUTE $addItem ON TARGET WITH ARGUMENTS
+            STORE VARIABLE $$result
+            
+            8.EvaluateStatement:
+            PUSH LITERAL `23`
+            INVOKE $factorial WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            9.EvaluateStatement:
+            PUSH LITERAL `2`
+            PUSH LITERAL `8`
+            INVOKE $exponential WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            10.EvaluateStatement:
+            PUSH LITERAL `pi`
+            INVOKE $inverse WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            11.EvaluateStatement:
+            PUSH LITERAL `(3, 4i)`
+            INVOKE $conjugate WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            12.EvaluateStatement:
+            LOAD VARIABLE $x
+            LOAD VARIABLE $y
+            INVOKE $product WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            13.EvaluateStatement:
+            LOAD VARIABLE $a
+            LOAD VARIABLE $b
+            INVOKE $quotient WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            14.EvaluateStatement:
+            LOAD VARIABLE $c
+            LOAD VARIABLE $d
+            INVOKE $remainder WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            15.EvaluateStatement:
+            LOAD VARIABLE $x
+            LOAD VARIABLE $y
+            INVOKE $sum WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            16.EvaluateStatement:
+            LOAD VARIABLE $w
+            LOAD VARIABLE $z
+            INVOKE $difference WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            17.EvaluateStatement:
+            PUSH LITERAL `(3, 4i)`
+            INVOKE $magnitude WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            18.EvaluateStatement:
+            LOAD VARIABLE $a
+            LOAD VARIABLE $b
+            INVOKE $isLessThan WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            19.EvaluateStatement:
+            LOAD VARIABLE $c
+            LOAD VARIABLE $d
+            INVOKE $isEqualTo WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            20.EvaluateStatement:
+            LOAD VARIABLE $f
+            LOAD VARIABLE $g
+            INVOKE $isMoreThan WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            21.EvaluateStatement:
+            LOAD VARIABLE $h
+            LOAD VARIABLE $j
+            INVOKE $isSameAs WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            22.EvaluateStatement:
+            LOAD VARIABLE $k
+            LOAD VARIABLE $m
+            INVOKE $isMatchedBy WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            23.EvaluateStatement:
+            LOAD VARIABLE $p
+            INVOKE $complement WITH ARGUMENT
+            STORE VARIABLE $$result
+            
+            24.EvaluateStatement:
+            LOAD VARIABLE $a
+            LOAD VARIABLE $b
+            INVOKE $and WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            25.EvaluateStatement:
+            LOAD VARIABLE $c
+            LOAD VARIABLE $d
+            INVOKE $sans WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            26.EvaluateStatement:
+            LOAD VARIABLE $f
+            LOAD VARIABLE $g
+            INVOKE $xor WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            27.EvaluateStatement:
+            LOAD VARIABLE $h
+            LOAD VARIABLE $j
+            INVOKE $or WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            
+            28.EvaluateStatement:
+            LOAD VARIABLE $foo
+            PUSH LITERAL `5`
+            INVOKE $default WITH 2 ARGUMENTS
+            STORE VARIABLE $$result
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         A00F28016006B009B00228022803B009B0028003601680032804FFFF8003

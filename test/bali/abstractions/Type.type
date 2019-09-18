@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-08T12:53:16.126>
+            $timestamp: <2019-09-18T21:51:13.384>
             $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
             $version: v1
             $digest: '
-                RYDSH4FWBKASAC67GN22HLM1LK30903TZH0HYP2046XP92GB8Z5SDXHXP9G4
-                NQ7DMNTPYDQ7ZCFCDW6LXHRSQ2C9SXDZPV5PXCBLJ8H
+                5H3L1YZ2A4V9DX4G5WRB2SMBSRK8J193AMNSPTGHC24QCLAWHQX1ZJ746364
+                8Z23B15DZVJ8230T6NZDG1ZTQW4F554K8LQ2K1CR280
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: []
@@ -40,54 +40,54 @@
                     "4.ReturnStatement": 30
                 ]
                 $instructions: "
-                    1.EvaluateStatement:
-                    INVOKE $list
-                    LOAD VARIABLE $target
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    STORE VARIABLE $ancestors
-                    
-                    2.EvaluateStatement:
-                    LOAD VARIABLE $parent
-                    STORE VARIABLE $ancestor
-                    
-                    3.WhileStatement:
-                    SKIP INSTRUCTION
-                    
-                    3.1.ConditionClause:
-                    LOAD VARIABLE $ancestor
-                    JUMP TO 3.WhileStatementDone ON FALSE
-                    
-                    3.1.1.EvaluateStatement:
-                    LOAD VARIABLE $ancestors
-                    INVOKE $list
-                    LOAD VARIABLE $ancestor
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    EXECUTE $addItem ON TARGET WITH ARGUMENTS
-                    STORE VARIABLE $$result
-                    
-                    3.1.2.EvaluateStatement:
-                    LOAD VARIABLE $ancestor
-                    LOAD VARIABLE $ancestor
-                    STORE VARIABLE $$location-1
-                    LOAD DOCUMENT $$location-1
-                    LOAD VARIABLE $parent
-                    STORE VARIABLE $$index-2
-                    INVOKE $list
-                    LOAD VARIABLE $$index-2
-                    INVOKE $addItem WITH 2 ARGUMENTS
-                    EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-                    INVOKE $isEqualTo WITH 2 ARGUMENTS
-                    STORE VARIABLE $$result
-                    
-                    3.ConditionRepeat:
-                    JUMP TO 3.1.ConditionClause
-                    
-                    3.WhileStatementDone:
-                    SKIP INSTRUCTION
-                    
-                    4.ReturnStatement:
-                    LOAD VARIABLE $ancestors
-                    HANDLE RESULT
+                        1.EvaluateStatement:
+                        INVOKE $list
+                        LOAD VARIABLE $target
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        STORE VARIABLE $ancestors
+                        
+                        2.EvaluateStatement:
+                        LOAD VARIABLE $parent
+                        STORE VARIABLE $ancestor
+                        
+                        3.WhileStatement:
+                        SKIP INSTRUCTION
+                        
+                        3.1.ConditionClause:
+                        LOAD VARIABLE $ancestor
+                        JUMP TO 3.WhileStatementDone ON FALSE
+                        
+                        3.1.1.EvaluateStatement:
+                        LOAD VARIABLE $ancestors
+                        INVOKE $list
+                        LOAD VARIABLE $ancestor
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        EXECUTE $addItem ON TARGET WITH ARGUMENTS
+                        STORE VARIABLE $$result
+                        
+                        3.1.2.EvaluateStatement:
+                        LOAD VARIABLE $ancestor
+                        LOAD VARIABLE $ancestor
+                        STORE VARIABLE $$location-1
+                        LOAD DOCUMENT $$location-1
+                        LOAD VARIABLE $parent
+                        STORE VARIABLE $$index-2
+                        INVOKE $list
+                        LOAD VARIABLE $$index-2
+                        INVOKE $addItem WITH 2 ARGUMENTS
+                        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+                        INVOKE $isEqualTo WITH 2 ARGUMENTS
+                        STORE VARIABLE $$result
+                        
+                        3.ConditionRepeat:
+                        JUMP TO 3.1.ConditionClause
+                        
+                        3.WhileStatementDone:
+                        SKIP INSTRUCTION
+                        
+                        4.ReturnStatement:
+                        LOAD VARIABLE $ancestors
+                        HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '
                     A04C6007B00280056006800400006004181D6005A04C6004B002D8018003
@@ -106,19 +106,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-08T12:53:16.146>
+    $timestamp: <2019-09-18T21:51:13.417>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-08T12:53:15.031>
-        $tag: #3CWVZQVKXMS8V55T5AF4RMRG4D7LYW9P
+        $timestamp: <2019-09-18T21:51:12.090>
+        $tag: #ZK0S1QKGZ3N3MNTWBWY7N8VPZFG5FJ08
         $version: v1
         $digest: '
-            PSMVSYATDKNNS3WZB3842DAZ63MX1WP4LMN9976WYQ6TDB654SR2608BKVGA
-            WM2VKV0RGN4NWXQHF5XD7ANLJSR02ZDNX1QLWA2B04R
+            B5P1RMRHDQ90SDMHHHYBFLAJZ7RP85P13M9K5V45S3838V2P0S492N693YVD
+            5BZ59R3BQBLTVK92DZNX2FBRNCA6Z633X8MTVC784Z8
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        V4AAYB7RP4WA4Y3FB4065N92ZX2RYBAFC8JNAQ2VFC6FMN8Y8FSRRS0DLSLB
-        SCZ0L783LSPB9AGTLDNY3D9D6CGYS9FDFF83KHTNY38
+        4KW79DQGD595QYVW7X94VV0W8PSGFRJ53D1NH0AAMZ6XN12B3N41S8H1T4LL
+        GQRRGPRQDM3H8NH1QFQX9P08TSDVS2VPMQ5GYJJ6820
     '
 ]($type: /bali/notary/Document/v1)

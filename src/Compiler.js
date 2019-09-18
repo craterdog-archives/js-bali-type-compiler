@@ -15,7 +15,8 @@
  * procedure defined in the document. The bytecode can then be executed on a
  * Bali Nebula™ virtual processor.
  */
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
+const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
 const utilities = require('./utilities');
 const Assembler = require('./Assembler').Assembler;
 const EOL = '\n';  // POSIX end of line character
@@ -87,9 +88,9 @@ Compiler.prototype.compileType = async function(document) {
     if (parentName && parentName !== bali.pattern.NONE) {
 
         // retrieve the parent type
-        const parentCitation = bali.parse(await this.repository.fetchCitation(parentName.toString()));
+        const parentCitation = await this.repository.fetchCitation(parentName.toString());
         const parentId = parentCitation.getValue('$tag').getValue() + parentCitation.getValue('$version');
-        const parentType = bali.parse(await this.repository.fetchType(parentId));
+        const parentType = await this.repository.fetchType(parentId);
 
         // extract the parent context
         literals.addItems(parentType.getValue('$literals') || []);
@@ -164,7 +165,7 @@ Compiler.prototype.compileProcedure = function(context, source) {
     const parser = new utilities.Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new utilities.Formatter(1, this.debug);
-    instructions = bali.parse('"' + EOL + formatter.formatInstructions(instructions) + EOL + '"($mediatype: "application/basm")');
+    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, bali.parameters({$mediatype: 'application/basm'}));
     procedure.setValue('$instructions', instructions);
 
     return procedure;
@@ -180,13 +181,13 @@ Compiler.prototype.compileProcedure = function(context, source) {
  * syntax tree is it traversing.
  */
 function CompilingVisitor(context, procedure, debug) {
-    bali.visitor.call(this);
+    Visitor.call(this);
     this.debug = debug || false;
     this.builder = new InstructionBuilder(context, procedure);
     this.temporaryVariableCount = 1;
     return this;
 }
-CompilingVisitor.prototype = Object.create(bali.visitor.prototype);
+CompilingVisitor.prototype = Object.create(Visitor.prototype);
 CompilingVisitor.prototype.constructor = CompilingVisitor;
 
 
@@ -567,7 +568,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    const literal = bali.format(element);
+    const literal = element.format();
     this.builder.insertPushInstruction('LITERAL', literal);
 };
 
@@ -1037,7 +1038,7 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
 // procedure: '{' statements '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     // the VM places the procedure on top of the component stack
-    const literal = bali.format(procedure);
+    const literal = procedure.format();
     this.builder.insertPushInstruction('LITERAL', literal);
 };
 
@@ -1866,7 +1867,7 @@ InstructionBuilder.prototype.insertLabel = function(label) {
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
-        this.addresses.setValue(bali.text(this.nextLabel), this.address);
+        this.addresses.setValue(this.nextLabel, this.address);
         if (this.instructions !== '') this.instructions += EOL;  // not the first instruction
         this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
@@ -1907,7 +1908,7 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
         case 'LITERAL':
             var literal = '`' + value + '`';
             instruction += literal;
-            literal = bali.parse(value);
+            literal = bali.component(value);
             if (!this.literals.containsItem(literal)) this.literals.addItem(literal);
             break;
         case 'CONSTANT':
@@ -1936,7 +1937,6 @@ InstructionBuilder.prototype.insertPopInstruction = function(type) {
 InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
     const instruction = 'LOAD ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
-    symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
 };
 
@@ -1947,7 +1947,6 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
 InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
     const instruction = 'STORE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
-    symbol = bali.parse(symbol);
     this.variables.addItem(symbol);
 };
 

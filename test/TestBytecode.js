@@ -11,7 +11,7 @@
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework');
+const bali = require('bali-component-framework').api();
 const utilities = require('../src/utilities');
 
 describe('Bali Procedure Compiler', function() {
@@ -19,7 +19,8 @@ describe('Bali Procedure Compiler', function() {
     describe('Test bytecode utilities on words', function() {
 
         it('should round trip conversions from bytes to bytecodes', function() {
-            const bytes = bali.random.bytes(16);
+            const generator = bali.generator();
+            const bytes = generator.generateBytes(16);
             const bytecode = utilities.bytecode.bytesToBytecode(bytes);
             const bytes2 = utilities.bytecode.bytecodeToBytes(bytecode);
             expect(bytes2.toString('hex')).to.equal(bytes.toString('hex'));

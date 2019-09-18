@@ -15,19 +15,19 @@
         "2.EvaluateStatement": 3
     ]
     $instructions: "
-        1.EvaluateStatement:
-        LOAD VARIABLE $bar
-        STORE VARIABLE $foo
-        
-        2.EvaluateStatement:
-        PUSH LITERAL `5`
-        STORE VARIABLE $$index-1
-        INVOKE $list
-        LOAD VARIABLE $$index-1
-        INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.EvaluateStatement:
+            LOAD VARIABLE $bar
+            STORE VARIABLE $foo
+            
+            2.EvaluateStatement:
+            PUSH LITERAL `5`
+            STORE VARIABLE $$index-1
+            INVOKE $list
+            LOAD VARIABLE $$index-1
+            INVOKE $addItem WITH 2 ARGUMENTS
+            EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '6003800428018001A04C6001B002D8016002E000'(
         $encoding: $base16

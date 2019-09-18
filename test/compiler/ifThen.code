@@ -13,20 +13,20 @@
         "1.IfStatementDone": 6
     ]
     $instructions: "
-        1.IfStatement:
-        SKIP INSTRUCTION
-        
-        1.1.ConditionClause:
-        PUSH LITERAL `true`
-        JUMP TO 1.IfStatementDone ON FALSE
-        
-        1.1.1.EvaluateStatement:
-        LOAD VARIABLE $yes
-        STORE VARIABLE $$result
-        
-        1.IfStatementDone:
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.IfStatement:
+            SKIP INSTRUCTION
+            
+            1.1.ConditionClause:
+            PUSH LITERAL `true`
+            JUMP TO 1.IfStatementDone ON FALSE
+            
+            1.1.1.EvaluateStatement:
+            LOAD VARIABLE $yes
+            STORE VARIABLE $$result
+            
+            1.IfStatementDone:
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '000028011806600380016001E000'(
         $encoding: $base16

@@ -19,49 +19,49 @@
         "1.SelectStatementDone": 23
     ]
     $instructions: "
-        1.SelectStatement:
-        PUSH LITERAL `$selection`
-        STORE VARIABLE $$selector-1
-        
-        1.1.OptionClause:
-        LOAD VARIABLE $$selector-1
-        PUSH LITERAL `"alpha"`
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
-        JUMP TO 1.2.OptionClause ON FALSE
-        
-        1.1.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $$result
-        
-        1.1.OptionClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.2.OptionClause:
-        LOAD VARIABLE $$selector-1
-        PUSH LITERAL `"beta"`
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
-        JUMP TO 1.3.OptionClause ON FALSE
-        
-        1.2.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $$result
-        
-        1.2.OptionClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.3.OptionClause:
-        LOAD VARIABLE $$selector-1
-        PUSH LITERAL `"gamma"`
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
-        JUMP TO 1.SelectStatementDone ON FALSE
-        
-        1.3.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $$result
-        
-        1.SelectStatementDone:
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.SelectStatement:
+            PUSH LITERAL `$selection`
+            STORE VARIABLE $$selector-1
+            
+            1.1.OptionClause:
+            LOAD VARIABLE $$selector-1
+            PUSH LITERAL `"alpha"`
+            INVOKE $isMatchedBy WITH 2 ARGUMENTS
+            JUMP TO 1.2.OptionClause ON FALSE
+            
+            1.1.1.EvaluateStatement:
+            PUSH LITERAL `none`
+            STORE VARIABLE $$result
+            
+            1.1.OptionClauseDone:
+            JUMP TO 1.SelectStatementDone
+            
+            1.2.OptionClause:
+            LOAD VARIABLE $$selector-1
+            PUSH LITERAL `"beta"`
+            INVOKE $isMatchedBy WITH 2 ARGUMENTS
+            JUMP TO 1.3.OptionClause ON FALSE
+            
+            1.2.1.EvaluateStatement:
+            PUSH LITERAL `none`
+            STORE VARIABLE $$result
+            
+            1.2.OptionClauseDone:
+            JUMP TO 1.SelectStatementDone
+            
+            1.3.OptionClause:
+            LOAD VARIABLE $$selector-1
+            PUSH LITERAL `"gamma"`
+            INVOKE $isMatchedBy WITH 2 ARGUMENTS
+            JUMP TO 1.SelectStatementDone ON FALSE
+            
+            1.3.1.EvaluateStatement:
+            PUSH LITERAL `none`
+            STORE VARIABLE $$result
+            
+            1.SelectStatementDone:
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         2801800260022802B045180A28038001001760022804B045181128038001

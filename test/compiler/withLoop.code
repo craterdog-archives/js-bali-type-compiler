@@ -28,50 +28,50 @@
         "1.WithStatementDone": 22
     ]
     $instructions: "
-        1.WithStatement:
-        PUSH LITERAL `$sequence`
-        EXECUTE $getIterator ON TARGET
-        STORE VARIABLE $$iterator-2
-        
-        1.1.ConditionClause:
-        LOAD VARIABLE $$iterator-2
-        EXECUTE $hasNext ON TARGET
-        JUMP TO 1.WithStatementDone ON FALSE
-        LOAD VARIABLE $$iterator-2
-        EXECUTE $getNext ON TARGET
-        STORE VARIABLE $$item-1
-        
-        1.1.1.EvaluateStatement:
-        PUSH LITERAL `true`
-        STORE VARIABLE $x
-        
-        1.1.2.IfStatement:
-        SKIP INSTRUCTION
-        
-        1.1.2.1.ConditionClause:
-        LOAD VARIABLE $x
-        JUMP TO 1.1.2.IfStatementDone ON FALSE
-        
-        1.1.2.1.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $y
-        
-        1.1.2.1.2.BreakStatement:
-        JUMP TO 1.WithStatementDone
-        
-        1.1.2.IfStatementDone:
-        SKIP INSTRUCTION
-        
-        1.1.3.EvaluateStatement:
-        PUSH LITERAL `any`
-        STORE VARIABLE $z
-        
-        1.ConditionRepeat:
-        JUMP TO 1.1.ConditionClause
-        
-        1.WithStatementDone:
-        LOAD VARIABLE $$result
-        HANDLE RESULT
+            1.WithStatement:
+            PUSH LITERAL `$sequence`
+            EXECUTE $getIterator ON TARGET
+            STORE VARIABLE $$iterator-2
+            
+            1.1.ConditionClause:
+            LOAD VARIABLE $$iterator-2
+            EXECUTE $hasNext ON TARGET
+            JUMP TO 1.WithStatementDone ON FALSE
+            LOAD VARIABLE $$iterator-2
+            EXECUTE $getNext ON TARGET
+            STORE VARIABLE $$item-1
+            
+            1.1.1.EvaluateStatement:
+            PUSH LITERAL `true`
+            STORE VARIABLE $x
+            
+            1.1.2.IfStatement:
+            SKIP INSTRUCTION
+            
+            1.1.2.1.ConditionClause:
+            LOAD VARIABLE $x
+            JUMP TO 1.1.2.IfStatementDone ON FALSE
+            
+            1.1.2.1.1.EvaluateStatement:
+            PUSH LITERAL `none`
+            STORE VARIABLE $y
+            
+            1.1.2.1.2.BreakStatement:
+            JUMP TO 1.WithStatementDone
+            
+            1.1.2.IfStatementDone:
+            SKIP INSTRUCTION
+            
+            1.1.3.EvaluateStatement:
+            PUSH LITERAL `any`
+            STORE VARIABLE $z
+            
+            1.ConditionRepeat:
+            JUMP TO 1.1.ConditionClause
+            
+            1.WithStatementDone:
+            LOAD VARIABLE $$result
+            HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         2801D00180026002D00318166002D0028001280280050000600518122803
