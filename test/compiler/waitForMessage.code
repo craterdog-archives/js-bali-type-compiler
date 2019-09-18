@@ -18,30 +18,30 @@
         "2.WaitStatement": 6
     ]
     $instructions: "
-            1.WaitStatement:
-            PUSH LITERAL `$message`
-            PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-            STORE VARIABLE $$queue-1
-            LOAD MESSAGE $$queue-1
-            STORE VARIABLE $message
-            
-            2.WaitStatement:
-            LOAD VARIABLE $messages
-            INVOKE $list
-            PUSH LITERAL `$foo`
-            INVOKE $addItem WITH 2 ARGUMENTS
-            EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
-            PUSH LITERAL `5`
-            PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-            STORE VARIABLE $$queue-2
-            LOAD MESSAGE $$queue-2
-            STORE VARIABLE $$index-3
-            INVOKE $list
-            LOAD VARIABLE $$index-3
-            INVOKE $addItem WITH 2 ARGUMENTS
-            EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
-            LOAD VARIABLE $$result
-            HANDLE RESULT
+        1.WaitStatement:
+        PUSH LITERAL `$message`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$queue-1
+        LOAD MESSAGE $$queue-1
+        STORE VARIABLE $message
+        
+        2.WaitStatement:
+        LOAD VARIABLE $messages
+        INVOKE $list
+        PUSH LITERAL `$foo`
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+        PUSH LITERAL `5`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$queue-2
+        LOAD MESSAGE $$queue-2
+        STORE VARIABLE $$index-3
+        INVOKE $list
+        LOAD VARIABLE $$index-3
+        INVOKE $addItem WITH 2 ARGUMENTS
+        EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
+        LOAD VARIABLE $$result
+        HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         280128028002680280056006A04C2803B002D80128042802800368038001

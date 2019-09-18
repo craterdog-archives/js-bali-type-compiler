@@ -21,44 +21,44 @@
         "1.IfStatementDone": 16
     ]
     $instructions: "
-            1.IfStatement:
-            SKIP INSTRUCTION
-            
-            1.1.ConditionClause:
-            PUSH LITERAL `true`
-            JUMP TO 1.2.ConditionClause ON FALSE
-            
-            1.1.1.EvaluateStatement:
-            LOAD VARIABLE $yes
-            STORE VARIABLE $$result
-            
-            1.1.ConditionClauseDone:
-            JUMP TO 1.IfStatementDone
-            
-            1.2.ConditionClause:
-            PUSH LITERAL `false`
-            JUMP TO 1.3.ElseClause ON FALSE
-            
-            1.2.1.EvaluateStatement:
-            LOAD VARIABLE $no
-            STORE VARIABLE $$result
-            
-            1.2.ConditionClauseDone:
-            JUMP TO 1.IfStatementDone
-            
-            1.3.ElseClause:
-            SKIP INSTRUCTION
-            
-            1.3.1.EvaluateStatement:
-            PUSH LITERAL `none`
-            STORE VARIABLE $$result
-            
-            1.3.ElseClauseDone:
-            SKIP INSTRUCTION
-            
-            1.IfStatementDone:
-            LOAD VARIABLE $$result
-            HANDLE RESULT
+        1.IfStatement:
+        SKIP INSTRUCTION
+        
+        1.1.ConditionClause:
+        PUSH LITERAL `true`
+        JUMP TO 1.2.ConditionClause ON FALSE
+        
+        1.1.1.EvaluateStatement:
+        LOAD VARIABLE $yes
+        STORE VARIABLE $$result
+        
+        1.1.ConditionClauseDone:
+        JUMP TO 1.IfStatementDone
+        
+        1.2.ConditionClause:
+        PUSH LITERAL `false`
+        JUMP TO 1.3.ElseClause ON FALSE
+        
+        1.2.1.EvaluateStatement:
+        LOAD VARIABLE $no
+        STORE VARIABLE $$result
+        
+        1.2.ConditionClauseDone:
+        JUMP TO 1.IfStatementDone
+        
+        1.3.ElseClause:
+        SKIP INSTRUCTION
+        
+        1.3.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.3.ElseClauseDone:
+        SKIP INSTRUCTION
+        
+        1.IfStatementDone:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         0000280118076004800100102802180C6002800100100000280380010000

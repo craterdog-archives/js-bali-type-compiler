@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-18T21:51:13.305>
+            $timestamp: <2019-09-18T22:23:52.691>
             $tag: #BT3X4BYV3JAJ6BMH1J71NAMW1RKRSC4K
             $version: v1
             $digest: '
-                1B2TVLJ083TYDFVY671LYVD7Y40N90WWVFX6CG7MPMYKF23YSVB4Z8VW7DDW
-                1S34506BJH91QCGWXWY3DTD8Q3JWC272TQJ4CYAS1H8
+                RQTCC7MYMA2J2T1ZK8D8W1AYS35P7DMQX8HB8F4034JD0AV2S9CYHKJGP64M
+                98ZT2FF0YC9YKM7B4ZJDJXS5DGR5CN54YX4A00QVL1R
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: [
@@ -27,13 +27,13 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        LOAD VARIABLE $target
-                        INVOKE $list
-                        EXECUTE $asNumeric ON TARGET WITH ARGUMENTS
-                        PUSH LITERAL `0`
-                        INVOKE $isMoreThan WITH 2 ARGUMENTS
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $list
+                    EXECUTE $asNumeric ON TARGET WITH ARGUMENTS
+                    PUSH LITERAL `0`
+                    INVOKE $isMoreThan WITH 2 ARGUMENTS
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A04CD8012801B046E000'(
                     $encoding: $base16
@@ -52,11 +52,11 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        LOAD VARIABLE $target
-                        INVOKE $list
-                        EXECUTE $getSize ON TARGET WITH ARGUMENTS
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $list
+                    EXECUTE $getSize ON TARGET WITH ARGUMENTS
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A04CD801E000'(
                     $encoding: $base16
@@ -73,10 +73,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        LOAD VARIABLE $target
-                        INVOKE $getIterator WITH ARGUMENT
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $getIterator WITH ARGUMENT
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001FFFFE000'(
                     $encoding: $base16
@@ -93,10 +93,10 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        LOAD VARIABLE $target
-                        INVOKE $getSize WITH ARGUMENT
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $getSize WITH ARGUMENT
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A838E000'(
                     $encoding: $base16
@@ -115,14 +115,14 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        LOAD VARIABLE $target
-                        INVOKE $list
-                        EXECUTE $getSize ON TARGET WITH ARGUMENTS
-                        PUSH LITERAL `0`
-                        INVOKE $isMoreThan WITH 2 ARGUMENTS
-                        INVOKE $complement WITH ARGUMENT
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    LOAD VARIABLE $target
+                    INVOKE $list
+                    EXECUTE $getSize ON TARGET WITH ARGUMENTS
+                    PUSH LITERAL `0`
+                    INVOKE $isMoreThan WITH 2 ARGUMENTS
+                    INVOKE $complement WITH ARGUMENT
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '6001A04CD8012801B046A810E000'(
                     $encoding: $base16
@@ -137,19 +137,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-18T21:51:13.363>
+    $timestamp: <2019-09-18T22:23:52.748>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-18T21:51:12.090>
-        $tag: #ZK0S1QKGZ3N3MNTWBWY7N8VPZFG5FJ08
+        $timestamp: <2019-09-18T22:23:51.455>
+        $tag: #P0NZ594ADZPXMTQGJGJH8SLCTRK0SN37
         $version: v1
         $digest: '
-            B5P1RMRHDQ90SDMHHHYBFLAJZ7RP85P13M9K5V45S3838V2P0S492N693YVD
-            5BZ59R3BQBLTVK92DZNX2FBRNCA6Z633X8MTVC784Z8
+            1GKAWKYSP1C13LBG4QYDKXSCV9WLVGMPSQ6ZNSGCPW4N3LNWX1W625K6CPZT
+            C3ZYDA7H7R0APQ52Q825P4TCTM3160HB5PZKFCTGP1R
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        P0YHJF46LQGT3P2D64WQT2XT7X7CDJ20LABYH0AVY2H8TS8RDZA7L0H480X2
-        VSNS1MRNT0WT1VZ5L12LN08S9R3X6BYGDX055N0LK3R
+        72TZVBHH5TPYAXCG5T1PMNVXTJPTD4VSQ6CCQGZNXNHD45TNLJA2BKPN4SYZ
+        G3T9HM28X1T7A1D60C7XCHV97VKSC2STWN051KDT83H
     '
 ]($type: /bali/notary/Document/v1)

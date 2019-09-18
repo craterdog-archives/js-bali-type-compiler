@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-18T21:51:13.246>
+            $timestamp: <2019-09-18T22:23:52.607>
             $tag: #3HX8AFPGP3N98J875TV7NNDFSBF7XRJH
             $version: v1
             $digest: '
-                Y2KMQVDW14ZQK15RNC1ARA59WGF8JJ7RXX22TJ1S9C4PN6QRL8XNS436FXYK
-                4NF9FVDTW0NA730TWJL21V84YHNTHQPPD7KY8MVN6TR
+                2LZDY06STR46FMSJWS756SNH169H76NANA38DPKPDRN6MA9RMKYQSGVH0RAM
+                1Y93C8ZS65VFY67MN504ANAY9L0HXRS3ZV94L5B9KX8
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: [
@@ -25,9 +25,9 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        PUSH LITERAL `false`
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    PUSH LITERAL `false`
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '2801E000'(
                     $encoding: $base16
@@ -44,9 +44,9 @@
                     "1.ReturnStatement": 1
                 ]
                 $instructions: "
-                        1.ReturnStatement:
-                        PUSH LITERAL `0`
-                        HANDLE RESULT
+                    1.ReturnStatement:
+                    PUSH LITERAL `0`
+                    HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '2801E000'(
                     $encoding: $base16
@@ -61,19 +61,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-18T21:51:13.265>
+    $timestamp: <2019-09-18T22:23:52.637>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-18T21:51:12.090>
-        $tag: #ZK0S1QKGZ3N3MNTWBWY7N8VPZFG5FJ08
+        $timestamp: <2019-09-18T22:23:51.455>
+        $tag: #P0NZ594ADZPXMTQGJGJH8SLCTRK0SN37
         $version: v1
         $digest: '
-            B5P1RMRHDQ90SDMHHHYBFLAJZ7RP85P13M9K5V45S3838V2P0S492N693YVD
-            5BZ59R3BQBLTVK92DZNX2FBRNCA6Z633X8MTVC784Z8
+            1GKAWKYSP1C13LBG4QYDKXSCV9WLVGMPSQ6ZNSGCPW4N3LNWX1W625K6CPZT
+            C3ZYDA7H7R0APQ52Q825P4TCTM3160HB5PZKFCTGP1R
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        RCWJASJMLSDFYNHHL7Q4JC9K70FSNJWW91B7W1N5B88L0G6JVJ4RTH1SDXC3
-        5WQHB6H6L30Y0Q170XY9D4Y2J6A1MP86X4LM4VCC01H
+        17L01ZG5GRLYZ01ZQHAD3F21Q0MXXAWHYAPBJB2DRZ6GRZ5D46913DAP85ZW
+        L4MYFW8DVNGY1ZKRHLXC245TFY64161ZG9PK96SAW00
     '
 ]($type: /bali/notary/Document/v1)

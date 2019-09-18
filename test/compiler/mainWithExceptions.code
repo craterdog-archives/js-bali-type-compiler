@@ -22,66 +22,66 @@
         "1.QueueStatementSucceeded": 38
     ]
     $instructions: "
-            1.QueueStatement:
-            PUSH HANDLER 1.QueueStatementHandlers
-            PUSH LITERAL `<bali:/queues/myqueue>`
-            STORE VARIABLE $$queue-1
-            LOAD VARIABLE $message
-            STORE MESSAGE $$queue-1
-            
-            1.QueueStatementDone:
-            POP HANDLER
-            JUMP TO 1.QueueStatementSucceeded
-            
-            1.QueueStatementHandlers:
-            SKIP INSTRUCTION
-            
-            1.1.HandleClause:
-            STORE VARIABLE $error
-            LOAD VARIABLE $error
-            LOAD VARIABLE $error
-            INVOKE $catalog
-            PUSH LITERAL `$type`
-            PUSH LITERAL `"bad"`
-            INVOKE $association WITH 2 ARGUMENTS
-            INVOKE $addItem WITH 2 ARGUMENTS
-            INVOKE $isMatchedBy WITH 2 ARGUMENTS
-            JUMP TO 1.2.HandleClause ON FALSE
-            POP COMPONENT
-            
-            1.1.1.EvaluateStatement:
-            PUSH LITERAL `any`
-            STORE VARIABLE $$result
-            
-            1.1.HandleClauseDone:
-            JUMP TO 1.QueueStatementSucceeded
-            
-            1.2.HandleClause:
-            STORE VARIABLE $error
-            LOAD VARIABLE $error
-            LOAD VARIABLE $error
-            INVOKE $catalog
-            PUSH LITERAL `$type`
-            PUSH LITERAL `"horrid"`
-            INVOKE $association WITH 2 ARGUMENTS
-            INVOKE $addItem WITH 2 ARGUMENTS
-            INVOKE $isMatchedBy WITH 2 ARGUMENTS
-            JUMP TO 1.QueueStatementFailed ON FALSE
-            POP COMPONENT
-            
-            1.2.1.EvaluateStatement:
-            PUSH LITERAL `none`
-            STORE VARIABLE $$result
-            
-            1.2.HandleClauseDone:
-            JUMP TO 1.QueueStatementSucceeded
-            
-            1.QueueStatementFailed:
-            HANDLE EXCEPTION
-            
-            1.QueueStatementSucceeded:
-            LOAD VARIABLE $$result
-            HANDLE RESULT
+        1.QueueStatement:
+        PUSH HANDLER 1.QueueStatementHandlers
+        PUSH LITERAL `<bali:/queues/myqueue>`
+        STORE VARIABLE $$queue-1
+        LOAD VARIABLE $message
+        STORE MESSAGE $$queue-1
+        
+        1.QueueStatementDone:
+        POP HANDLER
+        JUMP TO 1.QueueStatementSucceeded
+        
+        1.QueueStatementHandlers:
+        SKIP INSTRUCTION
+        
+        1.1.HandleClause:
+        STORE VARIABLE $error
+        LOAD VARIABLE $error
+        LOAD VARIABLE $error
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `"bad"`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $isMatchedBy WITH 2 ARGUMENTS
+        JUMP TO 1.2.HandleClause ON FALSE
+        POP COMPONENT
+        
+        1.1.1.EvaluateStatement:
+        PUSH LITERAL `any`
+        STORE VARIABLE $$result
+        
+        1.1.HandleClauseDone:
+        JUMP TO 1.QueueStatementSucceeded
+        
+        1.2.HandleClause:
+        STORE VARIABLE $error
+        LOAD VARIABLE $error
+        LOAD VARIABLE $error
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `"horrid"`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $isMatchedBy WITH 2 ARGUMENTS
+        JUMP TO 1.QueueStatementFailed ON FALSE
+        POP COMPONENT
+        
+        1.2.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.2.HandleClauseDone:
+        JUMP TO 1.QueueStatementSucceeded
+        
+        1.QueueStatementFailed:
+        HANDLE EXCEPTION
+        
+        1.QueueStatementSucceeded:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         20082801800160048801400000260000800360036003A00F28022803B009

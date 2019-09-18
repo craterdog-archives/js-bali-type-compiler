@@ -164,7 +164,7 @@ Compiler.prototype.compileProcedure = function(context, source) {
     var instructions = visitor.getInstructions();
     const parser = new utilities.Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
-    const formatter = new utilities.Formatter(1, this.debug);
+    const formatter = new utilities.Formatter(0, this.debug);
     instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, bali.parameters({$mediatype: 'application/basm'}));
     procedure.setValue('$instructions', instructions);
 

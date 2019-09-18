@@ -10,23 +10,23 @@
         "1.PublishStatement": 1
     ]
     $instructions: "
-            1.PublishStatement:
-            INVOKE $catalog
-            PUSH LITERAL `$type`
-            PUSH LITERAL `$changeEvent`
-            INVOKE $association WITH 2 ARGUMENTS
-            INVOKE $addItem WITH 2 ARGUMENTS
-            PUSH LITERAL `$key`
-            PUSH LITERAL `$foo`
-            INVOKE $association WITH 2 ARGUMENTS
-            INVOKE $addItem WITH 2 ARGUMENTS
-            PUSH LITERAL `$value`
-            PUSH LITERAL `5`
-            INVOKE $association WITH 2 ARGUMENTS
-            INVOKE $addItem WITH 2 ARGUMENTS
-            STORE MESSAGE $$eventQueue
-            LOAD VARIABLE $$result
-            HANDLE RESULT
+        1.PublishStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `$changeEvent`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        PUSH LITERAL `$key`
+        PUSH LITERAL `$foo`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        PUSH LITERAL `$value`
+        PUSH LITERAL `5`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        STORE MESSAGE $$eventQueue
+        LOAD VARIABLE $$result
+        HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         A00F28012802B009B00228032804B009B00228052806B009B00288016002
