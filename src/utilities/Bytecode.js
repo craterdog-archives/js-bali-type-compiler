@@ -192,8 +192,8 @@ exports.instructionIsValid = function(instruction) {
  * @returns {String} The base 16 encoded instruction.
  */
 exports.instructionToBase16 = function(instruction) {
-    const bytes = bali.codex.shortToBytes(instruction);
-    const base16 = bali.codex.base16Encode(bytes);
+    const bytes = bali.decoder.shortToBytes(instruction);
+    const base16 = bali.decoder.base16Encode(bytes);
     return base16;
 };
 

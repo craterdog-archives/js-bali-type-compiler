@@ -55,8 +55,8 @@ Assembler.prototype.assembleProcedure = function(context, compilation) {
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
-    const codex = bali.codex('        ');
-    const base16 = codex.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode));
+    const decoder = bali.decoder('        ');
+    const base16 = decoder.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode));
     bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediatype: "application/bcod")');
     compilation.setValue('$bytecode', bytecode);
 };

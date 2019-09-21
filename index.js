@@ -45,7 +45,7 @@ exports.api = function(notary, repository, debug) {
 
         /**
          * This function compiles the Bali Nebula™ source code for a procedure into a compilation
-         * context containing the corresponding Bali Nebula™ machines instructions.
+         * context containing the corresponding Bali Nebula™ virtual machine instructions.
          * 
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * compiled.
@@ -59,9 +59,9 @@ exports.api = function(notary, repository, debug) {
         },
 
         /**
-         * This function assembles the Bali Nebula™ machine instructions contained in a compiled
-         * procedure context into the corresponding bytecode which is added to the compiled
-         * procedure context.
+         * This function assembles the Bali Nebula™ virtual machine instructions contained in
+         * a compiled procedure context into the corresponding bytecode which is added to the
+         * compiled procedure context.
          * 
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * assembled.
@@ -73,12 +73,12 @@ exports.api = function(notary, repository, debug) {
         },
 
         /**
-         * This function formats a list of Bali Nebula™ machine instructions into a JavaScript
-         * string containing the corresponding Bali Nebula™ assembly code. An optional
+         * This function formats a list of Bali Nebula™ virtual machine instructions into a
+         * JavaScript string containing the corresponding Bali Nebula™ assembly code. An optional
          * indentation level may be specified that causes the formatter to indent each line by
          * that many additional levels.  Each level is four spaces and the default is zero levels.
          * 
-         * @param {List} instructions The list of machine instructions to be formatted.
+         * @param {List} instructions The list of virtual machine instructions to be formatted.
          * @param {Number} indentation An optional number of levels to indent the output.
          * @returns {String} A string containing the corresponding assembly code.
          */
@@ -89,10 +89,11 @@ exports.api = function(notary, repository, debug) {
 
         /**
          * This function parses a string containing Bali Nebula™ assembly code. It generates
-         * the corresponding list of Bali Nebula™ machine instructions.
+         * the corresponding list of Bali Nebula™ virtual machine instructions.
          * 
          * @param {String} assembly A string containing Bali Nebula™ assembly code.
-         * @returns {List} A list containing the corresponding Bali Nebula™ machine instructions.
+         * @returns {List} A list containing the corresponding Bali Nebula™ virtual machine
+         * instructions.
          */
         parseInstructions: function(assembly) {
             const parser = new utilities.Parser(debug);
@@ -120,7 +121,7 @@ exports.api = function(notary, repository, debug) {
         },
 
         /**
-         * This function decodes the operation for a Bali Nebula™ machine instruction.
+         * This function decodes the operation for a Bali Nebula™ virtual machine instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded operation.
@@ -130,7 +131,7 @@ exports.api = function(notary, repository, debug) {
         },
 
         /**
-         * This function decodes the modifier for a Bali Nebula™ machine instruction.
+         * This function decodes the modifier for a Bali Nebula™ virtual machine instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded modifier.
@@ -140,7 +141,7 @@ exports.api = function(notary, repository, debug) {
         },
 
         /**
-         * This function decodes the operand for a Bali Nebula™ machine instruction.
+         * This function decodes the operand for a Bali Nebula™ virtual machine instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded operand.
