@@ -1,10 +1,10 @@
 [
     $parameters: []
     $variables: [
-        $$index-1
-        $$result
         $bar
         $foo
+        $$index-1
+        $$result
         $target
     ]($type: /bali/collections/Set/v1)
     $procedures: [
@@ -29,7 +29,7 @@
         LOAD VARIABLE $$result
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '6003800428018001A04C6001B002D8016002E000'(
+    $bytecode: '6001800228018003A04C6003B002D8016004E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

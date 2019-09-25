@@ -27,7 +27,7 @@ const EOL = '\n';  // POSIX end of line character
 /**
  * This class implements a compiler that analyzes and compiles a document into a
  * type document containing the bytecode for each of its procedures.
- * 
+ *
  * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
  * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
@@ -47,7 +47,7 @@ exports.Compiler = Compiler;
 /**
  * This function compiles a type definition an returns a compiled type that may be run
  * in the Bali Nebula™.
- * 
+ *
  * @param {Catalog} document The document containing the type definition to be compiled.
  * @returns {Catalog} The compiled type.
  */
@@ -134,7 +134,7 @@ Compiler.prototype.compileType = async function(document) {
 /**
  * This method compiles source code into a procedure containing the corresponding
  * assembly instructions for the Bali Nebula™ virtual processor.
- * 
+ *
  * @param {Catalog} context The type context for the document being compiled.
  * @param {Source} source The source code component for the procedure.
  * @returns {Catalog} The compiled context for the procedure.
@@ -193,7 +193,7 @@ CompilingVisitor.prototype.constructor = CompilingVisitor;
 
 /**
  * This method returns the resulting assembly instructions for the compiled procedure.
- * 
+ *
  * @returns {String}
  */
 CompilingVisitor.prototype.getInstructions = function() {
@@ -586,7 +586,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         const recipient = tree.getChild(1);
-        if (recipient.isType('$SubcomponentExpression')) {
+        if (recipient.isType('/bali/composites/SubcomponentExpression')) {
             recipient.acceptVisitor(this);
         }
 
@@ -598,7 +598,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
     } else {
         // the VM places the value of the expression on top of the component stack
         expression.acceptVisitor(this);
-        
+
         // the VM stores the value of the expression in the temporary result variable
         this.builder.insertStoreInstruction('VARIABLE', '$$result');
     }
@@ -980,7 +980,7 @@ CompilingVisitor.prototype.visitName = function(name) {
 //    'infinity' |
 //    real |
 //    imaginary |
-//    '(' real (',' imaginary | 'e^' angle 'i') ')' 
+//    '(' real (',' imaginary | 'e^' angle 'i') ')'
 CompilingVisitor.prototype.visitNumber = function(number) {
     this.visitElement(number);
 };
@@ -1227,7 +1227,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 // sequence: range | list | catalog
 CompilingVisitor.prototype.visitSequence = function(sequence) {
     var numberOfArguments = sequence.isParameterized() ? 1 : 0;
-    if (sequence.isType('$Range')) {
+    if (sequence.isType('/bali/collections/Range')) {
         var parameters;
         if (numberOfArguments) {
             // the VM saves off the parameters for after the indices are loaded
@@ -1254,8 +1254,8 @@ CompilingVisitor.prototype.visitSequence = function(sequence) {
 
     } else {
         // the VM replaces any parameters on the component stack with a new parameterized sequence
-        var type = sequence.getType();
-        type = '$' + type.charAt(1).toLowerCase() + type.slice(2);
+        var type = sequence.getType().split('/')[3];
+        type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
         this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
 
         // the VM adds each expression to the sequence
@@ -1586,7 +1586,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  * component stack.
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
-    if (recipient.isType('$Symbol')) {
+    if (recipient.isType('/bali/elements/Symbol')) {
         // the VM stores the value that is on top of the component stack in the variable
         const symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
@@ -1621,7 +1621,7 @@ Array.prototype.peek = function() {
 
 /*
  * This function returns the subclauses of a statement in an array.
- * 
+ *
  * @param {Object} statement The statement containing zero or more subclauses.
  * @returns {Array} An array containing the subclauses for the statement.
  */
@@ -1630,7 +1630,7 @@ function getSubclauses(statement) {
     const iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
-        if (item.isType('$Block')) {
+        if (item.isType('/bali/composites/Block')) {
             subClauses.push(item);
         }
     }
@@ -1717,7 +1717,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     const statement = procedure.statement;
-    const type = statement.mainClause.getType().slice(1, -6);  // remove '$' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1809,7 +1809,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = statement.mainClause.getType().slice(1, -6);  // remove '$' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
     return type;
 };
 

@@ -83,7 +83,7 @@ AssemblingVisitor.prototype.getBytecode = function() {
 
 
 AssemblingVisitor.prototype.visitCollection = function(collection) {
-    if (collection.isType('$List')) {
+    if (collection.isType('/bali/collections/List')) {
         this.visitList(collection);
     } else {
         this.visitCatalog(collection);

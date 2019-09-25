@@ -1,10 +1,10 @@
 [
     $parameters: []
     $variables: [
-        $$queue-1
-        $$result
         $error
         $message
+        $$queue-1
+        $$result
         $target
     ]($type: /bali/collections/Set/v1)
     $procedures: []($type: /bali/collections/Set/v1)
@@ -84,9 +84,9 @@
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        20082801800160048801400000260000800360036003A00F28022803B009
-        B002B04518174800280480020026800360036003A00F28022805B009B002
-        B04518254800280680020026E8006002E000
+        20082801800360028803400000260000800160016001A00F28022803B009
+        B002B04518174800280480040026800160016001A00F28022805B009B002
+        B04518254800280680040026E8006004E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

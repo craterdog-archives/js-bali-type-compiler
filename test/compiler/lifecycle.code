@@ -1,6 +1,9 @@
 [
     $parameters: []
     $variables: [
+        $document
+        $documents
+        $index
         $$index-5
         $$index-7
         $$index-9
@@ -12,9 +15,6 @@
         $$location-6
         $$location-8
         $$result
-        $document
-        $documents
-        $index
         $target
     ]($type: /bali/collections/Set/v1)
     $procedures: [
@@ -95,10 +95,10 @@
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        2801280280047804800C28028006600C900628028007600C9807600D600E
-        2802800878088001A04C6001B002D80228028009600D600E8002A04C6002
-        B002D80190092802800A600D600E8003A04C6003B002D801980A28028005
-        28039005600BE000
+        2801280280077807800128028009600190092802800A6001980A60026003
+        2802800B780B8004A04C6004B002D8022802800C600260038005A04C6005
+        B002D801900C2802800D600260038006A04C6006B002D801980D28028008
+        28039008600EE000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

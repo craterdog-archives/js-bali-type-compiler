@@ -1,11 +1,11 @@
 [
     $parameters: []
     $variables: [
-        $$result
         $a
         $b
         $c
         $condition
+        $$result
         $target
     ]($type: /bali/collections/Set/v1)
     $procedures: []($type: /bali/collections/Set/v1)
@@ -57,7 +57,7 @@
         LOAD VARIABLE $$result
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '00006005180E6003800200006002180A000E00006004800200026001E000'(
+    $bytecode: '00006004180E6002800100006001180A000E00006003800100026005E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

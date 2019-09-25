@@ -27,7 +27,7 @@ const EOL = '\n';  // POSIX end of line character
 /**
  * This class implements a parser that parses strings containing instructions for the
  * Bali Nebula™ virtual processor and generates the corresponding parse tree structures.
- * 
+ *
  * @constructor
  * @param {Boolean} debug Whether of not the parser should be run in debug mode, the
  * default is false. Debug mode is only useful for debugging the language grammar and
@@ -46,7 +46,7 @@ exports.parser = new Parser();
 /**
  * This function takes a string containing instructions for the Bali Nebula™ virtual processor
  * and parses it into a list of instructions.
- * 
+ *
  * @param {String} assembly The assembly code defining the instructions.
  * @returns {List} The resulting list of instructions.
  */
@@ -318,7 +318,7 @@ CustomErrorStrategy.prototype.recover = function(recognizer, e) {
         $exception: '$syntaxError',
         $message: '"' + e.message + '"'
     });
-    if (debug) console.error(exception.toString());
+    if (this.debug) console.error(exception.toString());
     throw exception;
 };
 
@@ -370,7 +370,7 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
         $exception: '$syntaxError',
         $message: '"' + message + '"'
     });
-    if (debug) console.error(exception.toString());
+    if (this.debug) console.error(exception.toString());
     throw exception;
 };
 
