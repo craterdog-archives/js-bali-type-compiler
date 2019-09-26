@@ -75,12 +75,12 @@ Compiler.prototype.compileType = async function(document) {
         $literals: literals,
         $constants: constants,
         $procedures: procedures
-    }, bali.parameters({
+    }, {
         $tag: tag,
         $version: version,
         $permissions: permissions,
         $previous: previous
-    }));
+    });
 
     // extract the literals, constants and procedures from the parent type
     const definition = document.getValue('$component');
@@ -165,7 +165,7 @@ Compiler.prototype.compileProcedure = function(context, source) {
     const parser = new utilities.Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new utilities.Formatter(0, this.debug);
-    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, bali.parameters({$mediatype: 'application/basm'}));
+    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediatype: 'application/basm'});
     procedure.setValue('$instructions', instructions);
 
     return procedure;
