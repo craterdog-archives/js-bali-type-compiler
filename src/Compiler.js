@@ -144,11 +144,10 @@ Compiler.prototype.compileProcedure = function(context, source) {
     // extract the parameter names for the procedure
     const parameters = bali.list();
     if (source.isParameterized()) {
-        const iterator = source.getParameters().getKeys().getIterator();
-        while (iterator.hasNext()) {
-            var key = iterator.getNext();
+        const keys = Object.keys(source.getParameters());
+        keys.forEach(function(key) {
             parameters.addItem(key);
-        }
+        });
     }
     const procedure = bali.catalog();
     procedure.setValue('$parameters', parameters);
@@ -988,26 +987,26 @@ CompilingVisitor.prototype.visitNumber = function(number) {
 
 // parameters: '(' catalog ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
-    // the VM creates a new catalog on the component stack to hold the parameters
-    this.builder.insertInvokeInstruction('$catalog', 0);  // catalog()
+    if (parameters) {
+        // the VM creates a new catalog on the component stack to hold the parameters
+        this.builder.insertInvokeInstruction('$catalog', 0);  // catalog()
 
-    // the VM places each parameter on the component stack and then adds them to the catalog
-    this.depth++;
-    const keys = parameters.getKeys();
-    const iterator = keys.getIterator();
-    while (iterator.hasNext()) {
-        const key = iterator.getNext();
-        key.acceptVisitor(this);
-        const value = parameters.getValue(key);
-        value.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
+        // the VM places each parameter on the component stack and then adds them to the catalog
+        this.depth++;
+        const keys = Object.keys(parameters);
+        keys.forEach(function(key) {
+            this.builder.insertPushInstruction('LITERAL', key);
+            const value = parameters[key];
+            value.acceptVisitor(this);
+            this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
+        }, this);
+        this.depth--;
+
+        // the VM places a new parameters component containing the catalog on the top of the component stack
+        this.builder.insertInvokeInstruction('$parameters', 1);  // parameters(catalog)
+
+        // the parameter list remains on the component stack
     }
-    this.depth--;
-
-    // the VM places a new parameters component containing the catalog on the top of the component stack
-    this.builder.insertInvokeInstruction('$parameters', 1);  // parameters(catalog)
-
-    // the parameter list remains on the component stack
 };
 
 
