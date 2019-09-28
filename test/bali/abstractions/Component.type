@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-28T00:39:00.063>
+            $timestamp: <2019-09-28T20:38:06.805>
             $tag: #GC5TG7QPT80BM6243Z15SKR0NB59KD94
             $version: v1
             $digest: '
-                8VD7TZBSZT6KSGR2A5NAVM0D7YS1BR4XJFLYW5LZY80CK51WQKK65FZP42WH
-                C0JVCZBWG40QWYHVQK7GLSCTTGH59ASWZLHFXHFG0RH
+                LTF6ZG3CYPMJS11MVPNFF26Q5FRVBX4RR11B1ASWXZ3YYR83TSRXTNJFMQNG
+                4VAM2P67DQ2FHSGZYHJQ9T2PH378CXQL8RC2KMHXG8H
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: [
@@ -32,7 +32,7 @@
                     INVOKE $format WITH ARGUMENT
                     HANDLE RESULT
                 "($mediatype: "application/basm")
-                $bytecode: '6001A81FE000'(
+                $bytecode: '6001A81EE000'(
                     $encoding: $base16
                     $mediatype: "application/bcod"
                 )
@@ -116,8 +116,8 @@
                     HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '
-                    6005A83A80047804A04CD80180026002D00280036003D004181A6003D003
-                    8001000060013801B04118182801E0000000000B00002802E000
+                    6005A83680047804A049D80180026002D00280036003D004181A6003D003
+                    8001000060013801B03E18182801E0000000000B00002802E000
                 '(
                     $encoding: $base16
                     $mediatype: "application/bcod"
@@ -176,8 +176,8 @@
                     HANDLE RESULT
                 "($mediatype: "application/basm")
                 $bytecode: '
-                    6005A83A8006A04C6006B00280016001A04C60068003780328038002A04C
-                    6002B002D802B002D80180046001E000
+                    6005A8368006A0496006B00180016001A04960068003780328038002A049
+                    6002B001D802B001D80180046001E000
                 '(
                     $encoding: $base16
                     $mediatype: "application/bcod"
@@ -218,7 +218,7 @@
                     INVOKE $getHash WITH ARGUMENT
                     HANDLE RESULT
                 "($mediatype: "application/basm")
-                $bytecode: '6001A827E000'(
+                $bytecode: '6001A825E000'(
                     $encoding: $base16
                     $mediatype: "application/bcod"
                 )
@@ -238,7 +238,7 @@
                     INVOKE $getType WITH ARGUMENT
                     HANDLE RESULT
                 "($mediatype: "application/basm")
-                $bytecode: '6001A83AE000'(
+                $bytecode: '6001A836E000'(
                     $encoding: $base16
                     $mediatype: "application/bcod"
                 )
@@ -251,19 +251,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-28T00:39:00.123>
+    $timestamp: <2019-09-28T20:38:06.871>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-28T00:38:59.056>
-        $tag: #X504ZXP4ZNV7CHRXCS668ZHKBL23V4CQ
+        $timestamp: <2019-09-28T20:38:05.342>
+        $tag: #SJ73RX87485D5JV2KL2RY7Y07TTR6ATV
         $version: v1
         $digest: '
-            G530LDL3HZZ82MC0TWJ7799QYP94DGQBMNF58TB03CCKGNAKPYX1FMRQR2XM
-            WFPRHNHJG9G3BT5LL1N21S99B3YJSKNCF6MG9X6STD8
+            QDRY5TZ61X4N54GB4B6G6MLHMSG9JQRFNGY5BYV5JSTSS6K0Q45ZFB2WZ0XT
+            LL3NWTBTX1K6B6GHV27YPFDHLW84FY7W5ZGVK3HY600
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        R6SQZ2XY2DQT1QYX10M5P1VJ2CCWM9NXB5HKFLP9A8HJ74WSM39TR4L7XF2Z
-        5W8C3K2WZHFLBDV9VHX4KHZ9TPS93YHSTYQ3KPDX828
+        41XDCD3MAZ25QNHGN5M5QXHHBR8SNQMHRFSRZ4LZ8Z6KPN5BMND9SL9KA5B9
+        YT9AQCLZYWSCMD8SL3ZYWPJALXKJDM71C27JLFX7R1H
     '
 ]($type: /bali/notary/Document/v1)

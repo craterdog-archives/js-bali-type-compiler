@@ -2,12 +2,12 @@
     $component: [
         $source: [
             $protocol: v1
-            $timestamp: <2019-09-28T00:39:00.177>
+            $timestamp: <2019-09-28T20:38:06.918>
             $tag: #7ZG69N9QGDQSS66RVWYN7P8TYVV3FAM3
             $version: v1
             $digest: '
-                3BR2F30HRT9SCXFKMRGA57N0FFC627QYKW026KCXKJCL3NAKQ2XXKRRA1VWJ
-                7YTGQYBWY6AV6C04LZCFGVFGF8FXR931GKQ8L0M6NHH
+                63XHFBR15V3BKWLNG3HAG066P5DM9BMN5CYJRG1Q27CGW2TSG8K0RHM3X7CL
+                G280GX1WDRRGRXB7A4L16164SM1RWKFLT6ARGGFPCVR
             '
         ]($type: /bali/notary/Citation/v1)
         $literals: []
@@ -20,19 +20,19 @@
         $previous: none
     )
     $protocol: v1
-    $timestamp: <2019-09-28T00:39:00.210>
+    $timestamp: <2019-09-28T20:38:06.945>
     $certificate: [
         $protocol: v1
-        $timestamp: <2019-09-28T00:38:59.056>
-        $tag: #X504ZXP4ZNV7CHRXCS668ZHKBL23V4CQ
+        $timestamp: <2019-09-28T20:38:05.342>
+        $tag: #SJ73RX87485D5JV2KL2RY7Y07TTR6ATV
         $version: v1
         $digest: '
-            G530LDL3HZZ82MC0TWJ7799QYP94DGQBMNF58TB03CCKGNAKPYX1FMRQR2XM
-            WFPRHNHJG9G3BT5LL1N21S99B3YJSKNCF6MG9X6STD8
+            QDRY5TZ61X4N54GB4B6G6MLHMSG9JQRFNGY5BYV5JSTSS6K0Q45ZFB2WZ0XT
+            LL3NWTBTX1K6B6GHV27YPFDHLW84FY7W5ZGVK3HY600
         '
     ]($type: /bali/notary/Citation/v1)
     $signature: '
-        343VLH5A211KL1XQCXQCFVVL64J27ZMD386KNYHWWC7Q9AFK1YX8RZ47B6CB
-        0QQ46RBF5VL3PRL32BYN0FTZ6FAMW0FBV4HAY4QWT0R
+        1NXYH9XXPQ3Z8TYTLFGP0QLB91MMCRK95YBGB74AXCF31CB33BTST9148LS1
+        GZ9TRPKFMQGZRF67D6SBT6YDAMHKACNYVBCN74KDR20
     '
 ]($type: /bali/notary/Document/v1)

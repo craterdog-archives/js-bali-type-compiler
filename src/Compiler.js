@@ -214,8 +214,8 @@ CompilingVisitor.prototype.visitAngle = function(angle) {
  */
 // arithmeticExpression: expression ('*' | '/' | '//' | '+' | '-') expression
 CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
-    const firstOperand = tree.getChild(1);
-    const secondOperand = tree.getChild(2);
+    const firstOperand = tree.getItem(1);
+    const secondOperand = tree.getItem(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -310,8 +310,8 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
  */
 // checkoutClause: 'checkout' recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
-    const recipient = tree.getChild(1);
-    const reference = tree.getChild(2);
+    const recipient = tree.getItem(1);
+    const reference = tree.getItem(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
@@ -339,8 +339,8 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
  */
 // commitClause: 'commit' expression 'to' expression
 CompilingVisitor.prototype.visitCommitClause = function(tree) {
-    const document = tree.getChild(1);
-    const reference = tree.getChild(2);
+    const document = tree.getItem(1);
+    const reference = tree.getItem(2);
 
     // the VM loads the value of the reference to the location of the persistent
     // document onto the top of the component stack
@@ -365,8 +365,8 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
  */
 // comparisonExpression: expression ('<' | '=' | '>' | 'is' | 'matches') expression
 CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
-    const firstOperand = tree.getChild(1);
-    const secondOperand = tree.getChild(2);
+    const firstOperand = tree.getItem(1);
+    const secondOperand = tree.getItem(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -408,7 +408,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
  */
 // complementExpression: 'not' expression
 CompilingVisitor.prototype.visitComplementExpression = function(tree) {
-    const operand = tree.getChild(1);
+    const operand = tree.getItem(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -425,8 +425,8 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
  */
 // concatenationExpression: expression '&' expression
 CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
-    const firstOperand = tree.getChild(1);
-    const secondOperand = tree.getChild(2);
+    const firstOperand = tree.getItem(1);
+    const secondOperand = tree.getItem(2);
 
     // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -480,8 +480,8 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
  */
 // defaultExpression: expression '?' expression
 CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
-    const proposedValue = tree.getChild(1);
-    const defaultValue = tree.getChild(2);
+    const proposedValue = tree.getItem(1);
+    const defaultValue = tree.getItem(2);
 
     // the VM places the value of the proposed expression on top of the component stack
     proposedValue.acceptVisitor(this);
@@ -501,7 +501,7 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
  */
 // dereferenceExpression: '@' expression
 CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
-    const reference = tree.getChild(1);
+    const reference = tree.getItem(1);
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);
@@ -524,7 +524,7 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    const reference = tree.getChild(1);
+    const reference = tree.getItem(1);
 
     // the VM loads the value of the reference to the location onto the top of the component stack
     reference.acceptVisitor(this);  // reference expression
@@ -579,12 +579,12 @@ CompilingVisitor.prototype.visitElement = function(element) {
  */
 // evaluateClause: (recipient ':=')? expression
 CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
-    const expression = tree.getChild(-1);
+    const expression = tree.getItem(-1);
 
     if (tree.getSize() > 1) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
-        const recipient = tree.getChild(1);
+        const recipient = tree.getItem(1);
         if (recipient.isType('/bali/composites/SubcomponentExpression')) {
             recipient.acceptVisitor(this);
         }
@@ -611,8 +611,8 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
  */
 // exponentialExpression: <assoc=right> expression '^' expression
 CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
-    const firstOperand = tree.getChild(1);
-    const secondOperand = tree.getChild(2);
+    const firstOperand = tree.getItem(1);
+    const secondOperand = tree.getItem(2);
 
     // the VM places the result of the base expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -632,7 +632,7 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
  */
 // factorialExpression: expression '!'
 CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
-    const operand = tree.getChild(1);
+    const operand = tree.getItem(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -650,8 +650,8 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
  */
 // functionExpression: function arguments
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
-    const functionName = '$' + tree.getChild(1).toString();
-    const list = tree.getChild(2).getChild(1);
+    const functionName = '$' + tree.getItem(1).toString();
+    const list = tree.getItem(2).getItem(1);
 
     // make sure the number of arguments is less than 4
     const numberOfArguments = list.getSize();
@@ -691,9 +691,9 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
  */
 // handleClause: 'handle' symbol 'matching' expression 'with' block
 CompilingVisitor.prototype.visitHandleClause = function(tree) {
-    const symbol = tree.getChild(1);
-    const template = tree.getChild(2);
-    const block = tree.getChild(3);
+    const symbol = tree.getItem(1);
+    const template = tree.getItem(2);
+    const block = tree.getItem(3);
 
     // setup the labels
     const statement = this.builder.getStatementContext();
@@ -812,7 +812,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
 // indices: '[' list ']'
 CompilingVisitor.prototype.visitIndices = function(tree) {
     // the VM has the component to be indexed on top of the component stack
-    const list = tree.getChild(1);
+    const list = tree.getItem(1);
     const size = list.getSize();
 
     // traverse all but the last index
@@ -846,7 +846,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
  */
 // inversionExpression: ('-' | '/' | '*') expression
 CompilingVisitor.prototype.visitInversionExpression = function(tree) {
-    const operand = tree.getChild(1);
+    const operand = tree.getItem(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -877,8 +877,8 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
  */
 // logicalExpression: expression ('and' | 'sans' | 'xor' | 'or') expression
 CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
-    const firstOperand = tree.getChild(1);
-    const secondOperand = tree.getChild(2);
+    const firstOperand = tree.getItem(1);
+    const secondOperand = tree.getItem(2);
 
     // the VM places the value of the first expression on top of the component stack
     firstOperand.acceptVisitor(this);
@@ -916,7 +916,7 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
  */
 // magnitudeExpression: '|' expression '|'
 CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
-    const operand = tree.getChild(1);
+    const operand = tree.getItem(1);
 
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
@@ -935,9 +935,9 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
  */
 // messageExpression: expression '.' message arguments
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
-    const target = tree.getChild(1);
-    const message = tree.getChild(2);
-    const args = tree.getChild(3);
+    const target = tree.getItem(1);
+    const message = tree.getItem(2);
+    const args = tree.getItem(3);
     const numberOfArguments = args.getSize();
 
     // the VM places the value of the target expression onto the top of the component stack
@@ -1049,7 +1049,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
  */
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
-    const event = tree.getChild(1);
+    const event = tree.getItem(1);
 
     // the VM places the value of the event expression onto the top of the component stack
     event.acceptVisitor(this);
@@ -1067,8 +1067,8 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
  */
 // queueClause: 'queue' expression 'on' expression
 CompilingVisitor.prototype.visitQueueClause = function(tree) {
-    const message = tree.getChild(1);
-    const reference = tree.getChild(2);
+    const message = tree.getItem(1);
+    const reference = tree.getItem(2);
 
     // the VM stores the reference to the queue in a temporary variable
     reference.acceptVisitor(this);
@@ -1102,7 +1102,7 @@ CompilingVisitor.prototype.visitReserved = function(reserved) {
 // returnClause: 'return' expression?
 CompilingVisitor.prototype.visitReturnClause = function(tree) {
     if (tree.getSize() > 0) {
-        const result = tree.getChild(1);
+        const result = tree.getItem(1);
 
         // the VM places the value of the result expression on top of the component stack
         result.acceptVisitor(this);
@@ -1126,8 +1126,8 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
  */
 // saveClause: 'save' expression 'to' expression
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
-    const draft = tree.getChild(1);
-    const reference = tree.getChild(2);
+    const draft = tree.getItem(1);
+    const reference = tree.getItem(2);
 
     // the VM stores the value of the reference to the location into a temporary variable
     reference.acceptVisitor(this);
@@ -1366,8 +1366,8 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
  */
 // subcomponentExpression: expression indices
 CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
-    const component = tree.getChild(1);
-    const indices = tree.getChild(2);
+    const component = tree.getItem(1);
+    const indices = tree.getItem(2);
 
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
@@ -1417,7 +1417,7 @@ CompilingVisitor.prototype.visitText = function(text) {
  */
 // throwClause: 'throw' expression
 CompilingVisitor.prototype.visitThrowClause = function(tree) {
-    const exception = tree.getChild(1);
+    const exception = tree.getItem(1);
 
     // the VM places the value of the exception expression on top of the component stack
     exception.acceptVisitor(this);
@@ -1461,8 +1461,8 @@ CompilingVisitor.prototype.visitVersion = function(version) {
  */
 // waitClause: 'wait' 'for' recipient 'from' expression
 CompilingVisitor.prototype.visitWaitClause = function(tree) {
-    const recipient = tree.getChild(1);
-    const reference = tree.getChild(2);
+    const recipient = tree.getItem(1);
+    const reference = tree.getItem(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
@@ -1490,8 +1490,8 @@ CompilingVisitor.prototype.visitWaitClause = function(tree) {
  */
 // whileClause: 'while' expression 'do' block
 CompilingVisitor.prototype.visitWhileClause = function(tree) {
-    const condition = tree.getChild(1);
-    const block = tree.getChild(2);
+    const condition = tree.getItem(1);
+    const block = tree.getItem(2);
     const clausePrefix = this.builder.getClausePrefix();
 
     // construct the loop and done labels
@@ -1522,9 +1522,9 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
 CompilingVisitor.prototype.visitWithClause = function(tree) {
-    const variable = tree.getSize() > 2 ? tree.getChild(1).toString() : this.createTemporaryVariable('item');
-    const sequence = tree.getChild(-2);
-    const block = tree.getChild(-1);
+    const variable = tree.getSize() > 2 ? tree.getItem(1).toString() : this.createTemporaryVariable('item');
+    const sequence = tree.getItem(-2);
+    const block = tree.getItem(-1);
     const clausePrefix = this.builder.getClausePrefix();
 
     // construct the loop and done labels
@@ -1701,7 +1701,7 @@ InstructionBuilder.prototype.popProcedureContext = function() {
  * it.
  */
 InstructionBuilder.prototype.pushStatementContext = function(tree) {
-    const mainClause = tree.getChild(1);
+    const mainClause = tree.getItem(1);
     const subClauses = getSubclauses(mainClause);
     const handleClauses = tree.toArray().slice(1);
     const clauseCount = subClauses.length + handleClauses.length;
