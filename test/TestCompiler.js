@@ -30,7 +30,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
         it('should generate the notary key and publish its certificate', async function() {
             const certificate = await notary.generateKey();
             expect(certificate).to.exist;
-            const document = await notary.notarizeDocument(certificate);
+            const document = await notary.notarizeComponent(certificate);
             expect(document).to.exist;
             const citation = await notary.activateKey(document);
             expect(citation).to.exist;
@@ -87,9 +87,9 @@ describe('Bali Nebula™ Procedure Compiler', function() {
             for (var i = 0; i < sources.length; i++) {
                 const file = sources[i];
                 console.log('      ' + file);
-                var document = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
-                expect(document).to.exist;
-                document = await notary.notarizeDocument(document);
+                const component = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
+                expect(component).to.exist;
+                var document = await notary.notarizeComponent(component);
                 expect(document).to.exist;
                 const citation = await notary.citeDocument(document);
                 expect(citation).to.exist;
@@ -99,7 +99,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 await repository.createDocument(documentId, document);
                 const type = await compiler.compileType(document);
                 expect(type).to.exist;
-                document = await notary.notarizeDocument(type);
+                document = await notary.notarizeComponent(type);
                 expect(document).to.exist;
                 await repository.createType(documentId, document);
                 const source = document.toString() + '\n';  // POSIX compliant <EOL>
