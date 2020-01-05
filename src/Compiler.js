@@ -208,6 +208,24 @@ CompilingVisitor.prototype.visitAngle = function(angle) {
 
 
 /*
+ * This method inserts the instructions that cause the VM to place the values
+ * of each argument on top of the component stack.
+ */
+// arguments:
+//     expression (',' expression)* |
+//     /* no arguments */
+CompilingVisitor.prototype.visitArguments = function(tree) {
+    if (!tree.isEmpty()) {
+        const iterator = tree.getIterator();
+        while (iterator.hasNext()) {
+            const argument = iterator.getNext();
+            argument.acceptVisitor(this);
+        }
+    }
+};
+
+
+/*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
  * value of an arithmetic operation on them.
@@ -329,6 +347,59 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
     // the VM sets the value of the recipient to the value on the top of the component stack
     this.setRecipient(recipient);
+};
+
+
+/*
+ * This method inserts the instructions that cause the VM to place the collection
+ * on top of the component stack.
+ */
+// collection: range | list | catalog
+CompilingVisitor.prototype.visitCollection = function(collection) {
+    var numberOfArguments = collection.isParameterized() ? 1 : 0;
+    if (collection.isType('/bali/collections/Range')) {
+        var parameters;
+        if (numberOfArguments) {
+            // the VM saves off the parameters for after the indices are loaded
+            parameters = this.createTemporaryVariable('parameters');
+            this.builder.insertStoreInstruction('VARIABLE', parameters);
+        }
+
+        // the VM places the value of the starting expression on the component stack
+        const first = collection.getFirst();
+        first.acceptVisitor(this);  // first value in the range
+
+        // the VM places the value of the ending expression on the component stack
+        const last = collection.getLast();
+        last.acceptVisitor(this);  // last value in the range
+
+        if (numberOfArguments) {
+            // load the parameters back onto the component stack
+            this.builder.insertLoadInstruction('VARIABLE', parameters);
+        }
+
+        // the VM replaces the arguments on the component stack with a new parameterized range
+        numberOfArguments += 2;  // for the first and last values
+        this.builder.insertInvokeInstruction('$range', numberOfArguments);  // range(first, last, parameters)
+
+    } else {
+        // the VM replaces any parameters on the component stack with a new parameterized collection
+        var type = collection.getType().split('/')[3];
+        type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
+        this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
+
+        // the VM adds each expression to the collection
+        this.depth++;
+        const iterator = collection.getIterator();
+        while (iterator.hasNext()) {
+            var item = iterator.getNext();
+            item.acceptVisitor(this);
+            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(collection, item)
+        }
+        this.depth--;
+    }
+
+    // the parameterized collection remains on the component stack
 };
 
 
@@ -567,7 +638,7 @@ CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
     // the VM loads the element value onto the top of the component stack
-    const literal = element.format();
+    const literal = element.toBDN();
     this.builder.insertPushInstruction('LITERAL', literal);
 };
 
@@ -648,7 +719,7 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
  * on the component stack. The resulting value of the procedure remains on
  * the component stack.
  */
-// functionExpression: function arguments
+// functionExpression: function '(' arguments ')'
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     const functionName = '$' + tree.getItem(1).toString();
     const list = tree.getItem(2).getItem(1);
@@ -809,20 +880,16 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
  * either use them to get the final subcomponent value or set it depending on
  * the context.
  */
-// indices: '[' list ']'
+// indices: expression (',' expression)*
 CompilingVisitor.prototype.visitIndices = function(tree) {
-    // the VM has the component to be indexed on top of the component stack
-    const list = tree.getItem(1);
-    const size = list.getSize();
-
-    // traverse all but the last index
-    for (var i = 1; i < size; i++) {
-
+    var count = tree.getSize() - 1;  // skip the last index
+    const iterator = tree.getIterator();
+    while (count--) {
         // the VM places a new empty arguments list on the component stack
         this.builder.insertInvokeInstruction('$list', 0);  // list()
 
         // the VM places the value of the next index onto the top of the component stack
-        list.getItem(i).acceptVisitor(this);
+        iterator.getNext().acceptVisitor(this);
 
         // the VM adds the index to the arguments list as its only item
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
@@ -833,7 +900,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
     }
 
     // the VM places the value of the last index onto the top of the component stack
-    list.getItem(size).acceptVisitor(this);
+    iterator.getNext().acceptVisitor(this);
 
     // the parent component and index of the last subcomponent are on top of the component stack
 };
@@ -933,7 +1000,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
  * a list. The resulting value of the procedure remains on the component
  * stack.
  */
-// messageExpression: expression '.' message arguments
+// messageExpression: expression '.' message '(' arguments ')'
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     const target = tree.getItem(1);
     const message = tree.getItem(2);
@@ -1037,7 +1104,7 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
 // procedure: '{' statements '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     // the VM places the procedure on top of the component stack
-    const literal = procedure.format();
+    const literal = procedure.toBDN();
     this.builder.insertPushInstruction('LITERAL', literal);
 };
 
@@ -1223,55 +1290,6 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 };
 
 
-// sequence: range | list | catalog
-CompilingVisitor.prototype.visitSequence = function(sequence) {
-    var numberOfArguments = sequence.isParameterized() ? 1 : 0;
-    if (sequence.isType('/bali/collections/Range')) {
-        var parameters;
-        if (numberOfArguments) {
-            // the VM saves off the parameters for after the indices are loaded
-            parameters = this.createTemporaryVariable('parameters');
-            this.builder.insertStoreInstruction('VARIABLE', parameters);
-        }
-
-        // the VM places the value of the starting expression on the component stack
-        const first = sequence.getFirst();
-        first.acceptVisitor(this);  // first value in the range
-
-        // the VM places the value of the ending expression on the component stack
-        const last = sequence.getLast();
-        last.acceptVisitor(this);  // last value in the range
-
-        if (numberOfArguments) {
-            // load the parameters back onto the component stack
-            this.builder.insertLoadInstruction('VARIABLE', parameters);
-        }
-
-        // the VM replaces the arguments on the component stack with a new parameterized range
-        numberOfArguments += 2;  // for the first and last values
-        this.builder.insertInvokeInstruction('$range', numberOfArguments);  // range(first, last, parameters)
-
-    } else {
-        // the VM replaces any parameters on the component stack with a new parameterized sequence
-        var type = sequence.getType().split('/')[3];
-        type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-        this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
-
-        // the VM adds each expression to the sequence
-        this.depth++;
-        const iterator = sequence.getIterator();
-        while (iterator.hasNext()) {
-            var item = iterator.getNext();
-            item.acceptVisitor(this);
-            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(sequence, item)
-        }
-        this.depth--;
-    }
-
-    // the parameterized sequence remains on the component stack
-};
-
-
 /*
  * This method compiles a sequence of statements by inserting instructions for
  * the VM to follow for each statement. Since procedure blocks can be nested
@@ -1359,12 +1377,22 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
 };
 
 
+// TODO: added this from FormattingVisitor do we need it?
+// subcomponent: variable '[' indices ']'
+CompilingVisitor.prototype.visitSubcomponent = function(tree) {
+    const variable = tree.getItem(1);
+    variable.acceptVisitor(this);
+    const indices = tree.getItem(2);
+    indices.acceptVisitor(this);
+};
+
+
 /*
  * This method inserts the instructions that cause the VM to replace
  * the value of an expression that is on top of the component stack
  * with its subcomponent referred to by the indices.
  */
-// subcomponentExpression: expression indices
+// subcomponentExpression: expression '[' indices ']'
 CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     const component = tree.getItem(1);
     const indices = tree.getItem(2);

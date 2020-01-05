@@ -197,7 +197,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
             operand = operand.getValue();
             break;
         case types.LITERAL:
-            operand = '`' + operand.format(this.indentation) + '`';
+            operand = '`' + operand.toBDN(this.indentation) + '`';
             break;
         case types.CONSTANT:
         case types.PARAMETER:
