@@ -187,7 +187,7 @@ exports.instructionIsValid = function(instruction) {
 
 /**
  * This function encodes an instruction into base 16.
- * 
+ *
  * @param {Number} instruction The instruction to be encoded.
  * @returns {String} The base 16 encoded instruction.
  */
@@ -200,7 +200,7 @@ exports.instructionToBase16 = function(instruction) {
 
 /**
  * This function converts a base 16 encoded byte string into a bytecode array.
- * 
+ *
  * @param {Buffer} bytes The byte byffer containing the bytecode to be converted.
  * @returns {Array} The corresponding bytecode array.
  */
@@ -217,7 +217,7 @@ exports.bytesToBytecode = function(bytes) {
 
 /**
  * This function converts a bytecode array into a buffer containing a byte string.
- * 
+ *
  * @param {Array} bytecode The bytecode array to be converted.
  * @returns {Buffer} A buffer containing the byte string for the bytecode.
  */
@@ -233,7 +233,7 @@ exports.bytecodeToBytes = function(bytecode) {
 
 /**
  * This function returns a human readable version of Bali virtual machine bytecode.
- * 
+ *
  * @param {Array} bytecode An array of the bytecode instructions.
  * @returns {String} The human readable form of the bytecode.
  */
@@ -253,7 +253,7 @@ exports.bytecodeToString = function(bytecode) {
 /**
  * This function returns the canonical string format for an index to a
  * literal value or symbol.
- * 
+ *
  * @param {Number} index The index to be formatted.
  * @returns {String} The canonical string representation of the index.
  */
@@ -266,7 +266,7 @@ function indexToString(index) {
 /**
  * This function returns the canonical string format for a Bali virtual
  * machine address in hexidecimal [000..3FF].
- * 
+ *
  * @param {Number} address The virtual machine address.
  * @returns {String} The canonical string representation of the address.
  */
@@ -281,7 +281,7 @@ function addressAsString(address) {
 /**
  * This function returns a human readable version of a Bali virtual machine
  * 16 bit (word) bytecode instruction.
- * 
+ *
  * @param {Number} address The address of the instruction.
  * @param {Number} instruction The 16 bit bytecode instruction to be formatted.
  * @returns {String} The human readable form of the bytecode instruction.

@@ -23,7 +23,7 @@ const EOL = '\n';  // POSIX end of line character
 /**
  * This class implements an assembler that assembles a compiled procedure into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
- * 
+ *
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
  * @returns {Assembler} The new instruction assembler.
@@ -40,7 +40,7 @@ exports.assembler = new Assembler();
 /**
  * This method assembles the instructions in a compiled procedure into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
- * 
+ *
  * @param {Catalog} context The type context for the document being compiled and assembled.
  * @param {Catalog} compilation The compilation context for the procedure being assembled.
  */

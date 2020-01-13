@@ -22,7 +22,7 @@ const types = require('./Types');
 /**
  * This class implements a formatter that formats an instruction list into its
  * corresponding source code in a canonical way.
- * 
+ *
  * @param {Number} indentation The number of levels of indentation that should be inserted
  * to each formatted line. The default is zero.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions

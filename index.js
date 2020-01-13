@@ -16,7 +16,7 @@ const utilities = require('./src/utilities');
 
 /**
  * This function returns an object that implements the Bali Nebula™ compiler interface.
- * 
+ *
  * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
  * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
@@ -33,7 +33,7 @@ exports.api = function(notary, repository, debug) {
          * This function compiles a type definition residing in the Bali Nebula™ and returns
          * a document citation to the newly compiled type.  The type definition must be a
          * committed document in the Bali Nebula™.
-         * 
+         *
          * @param {Catalog} document A document containing the type definition to be compiled.
          * @returns {Catalog} A catalog containing the newly compiled type.
          */
@@ -46,7 +46,7 @@ exports.api = function(notary, repository, debug) {
         /**
          * This function compiles the Bali Nebula™ source code for a procedure into a compilation
          * context containing the corresponding Bali Nebula™ virtual machine instructions.
-         * 
+         *
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * compiled.
          * @param {Source} procedure The source code for the procedure being compiled.
@@ -62,7 +62,7 @@ exports.api = function(notary, repository, debug) {
          * This function assembles the Bali Nebula™ virtual machine instructions contained in
          * a compiled procedure context into the corresponding bytecode which is added to the
          * compiled procedure context.
-         * 
+         *
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * assembled.
          * @param {Catalog} procedure A catalog containing the compiled procedure context.
@@ -77,7 +77,7 @@ exports.api = function(notary, repository, debug) {
          * JavaScript string containing the corresponding Bali Nebula™ assembly code. An optional
          * indentation level may be specified that causes the formatter to indent each line by
          * that many additional levels.  Each level is four spaces and the default is zero levels.
-         * 
+         *
          * @param {List} instructions The list of virtual machine instructions to be formatted.
          * @param {Number} indentation An optional number of levels to indent the output.
          * @returns {String} A string containing the corresponding assembly code.
@@ -90,7 +90,7 @@ exports.api = function(notary, repository, debug) {
         /**
          * This function parses a string containing Bali Nebula™ assembly code. It generates
          * the corresponding list of Bali Nebula™ virtual machine instructions.
-         * 
+         *
          * @param {String} assembly A string containing Bali Nebula™ assembly code.
          * @returns {List} A list containing the corresponding Bali Nebula™ virtual machine
          * instructions.
@@ -102,7 +102,7 @@ exports.api = function(notary, repository, debug) {
 
         /**
          * This function converts a buffer of bytes into a bytecode array.
-         * 
+         *
          * @param {Buffer} bytes A buffer of bytes.
          * @returns {Array} An array containing the corresponding bytecode.
          */
@@ -112,7 +112,7 @@ exports.api = function(notary, repository, debug) {
 
         /**
          * This function converts a bytecode array into a buffer of bytes.
-         * 
+         *
          * @param {Array} bytecode An array containing the bytecode.
          * @returns {Buffer} A buffer containing the corresponding bytes.
          */
