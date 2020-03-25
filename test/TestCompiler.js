@@ -14,12 +14,10 @@ const pfs = require('fs').promises;
 const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework').api();
+const bali = require('bali-component-framework').api(1);
 const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const api = require('bali-digital-notary');
-const securityModule = api.ssm(directory);
-const notary = api.notary(securityModule, account, directory);
-const repository = require('bali-document-repository').local(directory, debug);
+const notary = require('bali-digital-notary').test(account, directory);
+const repository = require('bali-document-repository').test(notary, directory, debug);
 const compiler = require('../index').api(notary, repository, debug);
 
 
@@ -30,12 +28,11 @@ describe('Bali Nebula™ Procedure Compiler', function() {
         it('should generate the notary key and publish its certificate', async function() {
             const certificate = await notary.generateKey();
             expect(certificate).to.exist;
-            const document = await notary.notarizeComponent(certificate);
+            const document = await notary.notarizeDocument(certificate);
             expect(document).to.exist;
             const citation = await notary.activateKey(document);
             expect(citation).to.exist;
-            const documentId = citation.getValue('$tag').getValue() + citation.getValue('$version');
-            await repository.createDocument(documentId, document);
+            await repository.writeDocument(document);
         });
 
     });
@@ -75,7 +72,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 compiler.assembleProcedure(type, compiled);
 
                 source = compiled.toString() + '\n';  // POSIX compliant <EOL>
-                //await pfs.writeFile(codeFile, source, 'utf8');
+                await pfs.writeFile(codeFile, source, 'utf8');
                 var expected = await pfs.readFile(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
@@ -89,17 +86,17 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 console.log('      ' + file);
                 const component = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
                 expect(component).to.exist;
-                var document = await notary.notarizeComponent(component);
+                var document = await notary.notarizeDocument(component);
                 expect(document).to.exist;
                 const citation = await notary.citeDocument(document);
                 expect(citation).to.exist;
                 await repository.createCitation(file + '/v1', citation);
                 const documentId = citation.getValue('$tag').getValue() + citation.getValue('$version');
                 expect(documentId).to.exist;
-                await repository.createDocument(documentId, document);
-                const type = await compiler.compileType(document);
+                await repository.writeDocument(document);
+                const type = await compiler.compileDocument(document);
                 expect(type).to.exist;
-                document = await notary.notarizeComponent(type);
+                document = await notary.notarizeDocument(type);
                 expect(document).to.exist;
                 await repository.createType(documentId, document);
                 const source = document.toString() + '\n';  // POSIX compliant <EOL>

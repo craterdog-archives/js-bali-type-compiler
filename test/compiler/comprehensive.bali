@@ -18,12 +18,12 @@
         $count := count + 1
         [
             $message: "Something not too serious happened."
-            $exception: exception
+            $exception: $oops
         ]
     } handle $exception matching [$type: $moderate] with {
         $exception := [
             $message: "Something serious happened."
-            $exception: exception
+            $exception: $bigOops
         ]
         throw exception
     }
@@ -43,4 +43,4 @@
             }
         }
     }
-}($foo: "bar")
+}($string: /bali/elements/Text/v1)

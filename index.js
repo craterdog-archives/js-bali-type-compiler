@@ -37,9 +37,9 @@ exports.api = function(notary, repository, debug) {
          * @param {Catalog} document A document containing the type definition to be compiled.
          * @returns {Catalog} A catalog containing the newly compiled type.
          */
-        compileType: function(document) {
+        compileDocument: function(document) {
             const compiler = new Compiler(notary, repository, debug);
-            const context = compiler.compileType(document);
+            const context = compiler.compileDocument(document);
             return context;
         },
 
@@ -49,7 +49,7 @@ exports.api = function(notary, repository, debug) {
          *
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * compiled.
-         * @param {Source} procedure The source code for the procedure being compiled.
+         * @param {Procedure} procedure The source code for the procedure being compiled.
          * @returns {Catalog} A catalog containing the compiled procedure context.
          */
         compileProcedure: function(type, procedure) {

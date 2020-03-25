@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const childProcess = require('child_process');
 
 // wrapper function for grunt configuration
 module.exports = function(grunt) {
@@ -9,6 +10,24 @@ module.exports = function(grunt) {
 
     // read in the package information
     pkg: grunt.file.readJSON('package.json'),
+
+    // grunt-antlr4 plugin configuration (generate parser)
+    antlr4: {
+      generate: {
+        grammar: 'src/grammar/InstructionSet.g4',
+        options: {
+          grammarLevel: {
+            language: 'JavaScript'
+          },
+          flags: [
+            'Werror',
+            'Xlog',
+            'listener',
+            'visitor'
+          ]
+        }
+      }
+    },
 
     // grunt-eslint plugin configuration (lint for JS)
     eslint: {
@@ -41,24 +60,6 @@ module.exports = function(grunt) {
       }
     },
 
-    // grunt-antlr4 plugin configuration (generate parser)
-    antlr4: {
-      generate: {
-        grammar: 'src/grammar/InstructionSet.g4',
-        options: {
-          grammarLevel: {
-            language: 'JavaScript'
-          },
-          flags: [
-            'Werror',
-            'Xlog',
-            'listener',
-            'visitor'
-          ]
-        }
-      }
-    },
-
     // grunt-mocha-test plugin configuration (unit testing)
     mochaTest: {
       test: {
@@ -67,7 +68,7 @@ module.exports = function(grunt) {
           timeout: 20000
         },
         src: [
-          'test/*.js'
+          'test/**/*.js'
         ]
       }
     },

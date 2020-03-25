@@ -50,7 +50,8 @@
             )
             $source: {
                 $type := getType(target)
-                $ancestors := [type]
+                $ancestors := []
+                ancestors.addItem(type)
                 ancestors.addItems(@type[$ancestors])
                 return ancestors
             }

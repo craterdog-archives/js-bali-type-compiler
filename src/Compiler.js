@@ -51,20 +51,14 @@ exports.Compiler = Compiler;
  * @param {Catalog} document The document containing the type definition to be compiled.
  * @returns {Catalog} The compiled type.
  */
-Compiler.prototype.compileType = async function(document) {
+Compiler.prototype.compileDocument = async function(document) {
 
     // extract the new type parameters
     const citation = await this.notary.citeDocument(document);
     const tag = citation.getValue('$tag');
     const version = citation.getValue('$version');
-    const permissions = citation.getValue('$permissions');
-    var previous = citation.getValue('$previous');
-    if (previous && previous !== bali.pattern.NONE) {
-        const previousVersion = previous.getValue('$version');
-        const typeId = tag.getValue() + previousVersion;
-        const previousType = await this.repository.fetchType(typeId);
-        previous = await this.notary.citeDocument(previousType);
-    }
+    const content = document.getValue('$content');
+    const permissions = content.getParameter('$permissions');
 
     // create the compiled type catalog
     const literals = bali.list();
@@ -76,38 +70,33 @@ Compiler.prototype.compileType = async function(document) {
         $constants: constants,
         $procedures: procedures
     }, {
-        $tag: tag,
-        $version: version,
+        // TODO: if version > v1, should retrieve the previous version to match tag and set previous
+        $type: bali.component('/bali/types/Bytecode/v1'),
+        $tag: bali.tag(),  // new random tag
+        $version: bali.version(),  // v1
         $permissions: permissions,
-        $previous: previous
+        $previous: bali.pattern.NONE
     });
 
-    // extract the literals, constants and procedures from the parent type
-    const definition = document.getValue('$component');
-    const parentName = definition.getValue('$parent');
+    // extract the literals, constants and compiled procedures from the parent type
+    const parentName = content.getValue('$parent');
     if (parentName && parentName !== bali.pattern.NONE) {
-
-        // retrieve the parent type
-        const parentCitation = await this.repository.fetchCitation(parentName.toString());
-        const parentId = parentCitation.getValue('$tag').getValue() + parentCitation.getValue('$version');
-        const parentType = await this.repository.fetchType(parentId);
-
-        // extract the parent context
+        const parentType = await this.repository.readName(parentName);
         literals.addItems(parentType.getValue('$literals') || []);
         constants.addItems(parentType.getValue('$constants') || []);
         procedures.addItems(parentType.getValue('$procedures') || []);
     }
 
     // add in the constants from the child type definition
-    constants.addItems(definition.getValue('$constants') || []);
+    constants.addItems(content.getValue('$constants') || []);
 
     // compile each procedure defined in the child type definition
-    const sources = definition.getValue('$procedures');
-    if (sources && sources !== bali.pattern.NONE) {
+    const catalog = content.getValue('$procedures');
+    if (catalog && catalog !== bali.pattern.NONE) {
 
         // iterate through procedure definitions
         const assembler = new Assembler(this.debug);
-        const iterator = sources.getIterator();
+        const iterator = catalog.getIterator();
         while (iterator.hasNext()) {
 
             // retrieve the source code for the procedure
@@ -135,11 +124,11 @@ Compiler.prototype.compileType = async function(document) {
  * This method compiles source code into a procedure containing the corresponding
  * assembly instructions for the Bali Nebula™ virtual processor.
  *
- * @param {Catalog} context The type context for the document being compiled.
- * @param {Source} source The source code component for the procedure.
- * @returns {Catalog} The compiled context for the procedure.
+ * @param {Catalog} type The type context for the document being compiled.
+ * @param {Procedure} source The source code component for the procedure.
+ * @returns {Catalog} The compiled procedure.
  */
-Compiler.prototype.compileProcedure = function(context, source) {
+Compiler.prototype.compileProcedure = function(type, source) {
 
     // extract the parameter names for the procedure
     const parameters = bali.list();
@@ -149,17 +138,20 @@ Compiler.prototype.compileProcedure = function(context, source) {
             parameters.addItem(key);
         });
     }
-    const procedure = bali.catalog();
-    procedure.setValue('$parameters', parameters);
-    procedure.setValue('$variables', bali.set(['$target']));
-    procedure.setValue('$procedures', bali.set());
-    procedure.setValue('$addresses', bali.catalog());
+
+    // construct the procedure catalog
+    const procedure = bali.catalog({
+        $parameters: parameters,
+        $variables: bali.set(['$target']),
+        $procedures: bali.set(),
+        $addresses: bali.catalog()
+    });
 
     // compile the procedure into assembly instructions
-    const visitor = new CompilingVisitor(context, procedure, this.debug);
+    const visitor = new CompilingVisitor(type, procedure, this.debug);
     source.getStatements().acceptVisitor(visitor);
 
-    // format the instructions and add to the procedure context
+    // format the instructions and add to the compiled procedure
     var instructions = visitor.getInstructions();
     const parser = new utilities.Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
@@ -722,10 +714,10 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
 // functionExpression: function '(' arguments ')'
 CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     const functionName = '$' + tree.getItem(1).toString();
-    const list = tree.getItem(2).getItem(1);
+    const args = tree.getItem(2);
 
     // make sure the number of arguments is less than 4
-    const numberOfArguments = list.getSize();
+    const numberOfArguments = args.getSize();
     if (numberOfArguments > 3) {
         const exception = bali.exception({
             $module: '/bali/compiler/Compiler',
@@ -738,9 +730,9 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
         throw exception;
     }
 
-    // the VM places each argument on top of the component stack (not the list of arguments)
+    // the VM places each argument on top of the component stack (not a list of the arguments)
     this.depth++;
-    const iterator = list.getIterator();
+    const iterator = args.getIterator();
     while (iterator.hasNext()) {
         const argument = iterator.getNext();
         argument.acceptVisitor(this);
@@ -1015,8 +1007,16 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 
     // if there are arguments then compile accordingly
     if (numberOfArguments > 0) {
-        // the VM places each parameter on top of the component stack
-        args.acceptVisitor(this);
+        // the VM places an empty list on top of the component stack
+        this.builder.insertInvokeInstruction('$list', 0);  // list()
+
+        // the VM places adds each argument to the list on top of the component stack
+        const iterator = args.getIterator();
+        while (iterator.hasNext()) {
+            var argument = iterator.getNext();
+            argument.acceptVisitor(this);
+            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(list, argument)
+        }
 
         // the VM executes the target.<procedure name>(<args>) method
         this.builder.insertExecuteInstruction(procedureName, 'ON TARGET WITH ARGUMENTS');
