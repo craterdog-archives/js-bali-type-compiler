@@ -989,8 +989,9 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
     // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
 
-    // the VM leaves the result of the magnitude of the value on top of the component stack
-    this.builder.insertInvokeInstruction('$magnitude', 1);  // magnitude(z)
+    // the VM replaces the value on top of the component stack with its magnitude
+    this.builder.insertExecuteInstruction('$getMagnitude', 'ON TARGET');
+    // the value has been replaced by its magnitude
 };
 
 
