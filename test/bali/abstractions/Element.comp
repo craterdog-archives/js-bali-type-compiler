@@ -1,0 +1,52 @@
+[
+    $literals: [
+        false
+    ]
+    $constants: [:]
+    $procedures: [
+        $asBoolean: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '2801E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $asNumeric: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH LITERAL `0`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '2801E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+    ]
+](
+    $type: /bali/types/Compilation/v1
+    $tag: #0F410JSKPM6ABT758J80JSQNMFJMKFT4
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

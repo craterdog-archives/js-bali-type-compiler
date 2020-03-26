@@ -1,5 +1,6 @@
 [
     $parent: /bali/abstractions/Component/v1
+    $compilation: /bali/compilations/0F410JSKPM6ABT758J80JSQNMFJMKFT4/v1
     $description: "
         This abstract class defines the messages that all elemental components support.
     "($mediatype: "application/bsmd")

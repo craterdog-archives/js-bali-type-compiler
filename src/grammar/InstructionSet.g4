@@ -72,9 +72,9 @@ storeInstruction:
     'STORE' 'DOCUMENT' variable
 ;
 
-// Invoke the specified intrinsic function using the [0..3] parameters that
+// Invoke the specified intrinsic function using the [0..3] arguments that
 // are on the component stack. The resulting value of the invocation
-// replaces the parameters that were on the top of the component stack.
+// replaces the arguments that were on the top of the component stack.
 invokeInstruction:
     'INVOKE' SYMBOL |
     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
@@ -82,10 +82,10 @@ invokeInstruction:
 ;
 
 // Load the bytecode for the specified procedure into a new component context
-// and begin executing it with the target component and array of parameters
+// and begin executing it with the target component and array of arguments
 // that are on the top of the component stack. When the new component context
 // completes its execution, the resulting value replaces the target component
-// and array of parameters that were on the top of the component stack.
+// and array of arguments that were on the top of the component stack.
 executeInstruction:
     'EXECUTE' SYMBOL |
     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |

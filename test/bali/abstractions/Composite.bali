@@ -1,5 +1,6 @@
 [
     $parent: /bali/abstractions/Component/v1
+    $compilation: /bali/compilations/H9ABCGAL6K9YQX5GDJZSQF0AYVL1LK23/v1
     $description: "
         This abstract class defines the messages that all composite components support.
     "($mediatype: "application/bsmd")
@@ -14,7 +15,7 @@
         ]
     ]
     $interfaces: [
-        $sequential: /bali/interfaces/Sequential/v1($itemType: itemType)
+        $sequential: /bali/interfaces/Sequential/v1($itemType: $itemType)
     ]
     $attributes: [
         $description: [
@@ -48,7 +49,7 @@
                 This procedure returns an iterator component that can be used to iterate over
                 the subcomponents that make up this composite component.
             "($mediatype: "application/bsmd")
-            $type: /bali/utilities/Iterator/v1($itemType: itemType)
+            $type: /bali/utilities/Iterator/v1($itemType: $itemType)
             $source: {
                 return getIterator(target)
             }

@@ -37,9 +37,9 @@ exports.api = function(notary, repository, debug) {
          * @param {Catalog} document A document containing the type definition to be compiled.
          * @returns {Catalog} A catalog containing the newly compiled type.
          */
-        compileDocument: function(document) {
+        compileType: function(document) {
             const compiler = new Compiler(notary, repository, debug);
-            const context = compiler.compileDocument(document);
+            const context = compiler.compileType(document);
             return context;
         },
 

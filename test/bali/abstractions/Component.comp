@@ -1,0 +1,249 @@
+[
+    $literals: [
+        true
+        false
+        $ancestors
+    ]
+    $constants: [:]
+    $procedures: [
+        $asSource: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $format WITH ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A81EE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $isA: [
+            $parameters: [
+                $type
+            ]
+            $variables: [
+                $ancestor
+                $ancestors
+                $$iterator-2
+                $$location-1
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: [
+                $getAncestors
+                $getIterator
+                $getNext
+                $hasNext
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WithStatement": 7
+                "2.1.ConditionClause": 10
+                "2.1.1.IfStatement": 16
+                "2.1.1.1.ConditionClause": 17
+                "2.1.1.1.1.ReturnStatement": 21
+                "2.1.1.IfStatementDone": 23
+                "2.ConditionRepeat": 24
+                "2.WithStatementDone": 25
+                "3.ReturnStatement": 26
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                LOAD VARIABLE $target
+                INVOKE $getType WITH ARGUMENT
+                STORE VARIABLE $$location-1
+                LOAD DOCUMENT $$location-1
+                EXECUTE $getAncestors ON TARGET
+                STORE VARIABLE $ancestors
+                
+                2.WithStatement:
+                LOAD VARIABLE $ancestors
+                EXECUTE $getIterator ON TARGET
+                STORE VARIABLE $$iterator-2
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $$iterator-2
+                EXECUTE $hasNext ON TARGET
+                JUMP TO 2.WithStatementDone ON FALSE
+                LOAD VARIABLE $$iterator-2
+                EXECUTE $getNext ON TARGET
+                STORE VARIABLE $ancestor
+                
+                2.1.1.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.1.1.ConditionClause:
+                LOAD VARIABLE $ancestor
+                PUSH PARAMETER $type
+                INVOKE $isEqualTo WITH 2 ARGUMENTS
+                JUMP TO 2.1.1.IfStatementDone ON FALSE
+                
+                2.1.1.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.1.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WithStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                6005A83680047804D00180026002D00280036003D00418196003D0038001
+                000060013801B03E18172801E0000000000A00002802E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $getAncestry: [
+            $parameters: []
+            $variables: [
+                $ancestors
+                $$index-2
+                $$location-1
+                $$result
+                $target
+                $type
+            ]($type: /bali/collections/Set/v1)
+            $procedures: [
+                $addItem
+                $addItems
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 4
+                "3.EvaluateStatement": 6
+                "4.EvaluateStatement": 12
+                "5.ReturnStatement": 26
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                LOAD VARIABLE $target
+                INVOKE $getType WITH ARGUMENT
+                STORE VARIABLE $type
+                
+                2.EvaluateStatement:
+                INVOKE $list
+                STORE VARIABLE $ancestors
+                
+                3.EvaluateStatement:
+                LOAD VARIABLE $ancestors
+                INVOKE $list
+                LOAD VARIABLE $type
+                INVOKE $addItem WITH 2 ARGUMENTS
+                EXECUTE $addItem ON TARGET WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                4.EvaluateStatement:
+                LOAD VARIABLE $ancestors
+                INVOKE $list
+                LOAD VARIABLE $type
+                STORE VARIABLE $$location-1
+                LOAD DOCUMENT $$location-1
+                PUSH LITERAL `$ancestors`
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                EXECUTE $addItems ON TARGET WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                5.ReturnStatement:
+                LOAD VARIABLE $ancestors
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                6005A8368006A04980016001A0496006B001D80180046001A04960068003
+                780328038002A0496002B001D803B001D80280046001E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $getArguments: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $getArguments WITH ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001FFFFE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $getHash: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $getHash WITH ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A825E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $getType: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $procedures: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $getType WITH ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A836E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+    ]
+](
+    $type: /bali/types/Compilation/v1
+    $tag: #MYS8S7RGS8GXGYZP8S8DW96ALJSP8KKR
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

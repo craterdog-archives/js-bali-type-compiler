@@ -1,5 +1,6 @@
 [
     $parent: /bali/abstractions/Composite/v1
+    $compilation: /bali/compilations/890V6V443DJHKRF30CXRKVJYHNDX3VWH/v1
     $description: "
         This abstract class defines the attributes and messages that all types support.
     "($mediatype: "application/bsmd")
@@ -53,7 +54,8 @@
                 )
             )
             $source: {
-                $ancestors := [target]
+                $ancestors := []
+                $ancestors.addItem(target)
                 $ancestor := parent
                 while ancestor do {
                     ancestors.addItem(ancestor)

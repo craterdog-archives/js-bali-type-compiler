@@ -1,0 +1,11 @@
+[
+    $literals: []
+    $constants: [:]
+    $procedures: [:]
+](
+    $type: /bali/types/Compilation/v1
+    $tag: #Z0PNWNTXXQM89RLLADQBRSVAH9KX1Y03
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

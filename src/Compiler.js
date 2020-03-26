@@ -48,39 +48,47 @@ exports.Compiler = Compiler;
  * This function compiles a type definition an returns a compiled type that may be run
  * in the Bali Nebula™.
  *
- * @param {Catalog} document The document containing the type definition to be compiled.
+ * @param {Catalog} type The type definition to be compiled.
  * @returns {Catalog} The compiled type.
  */
-Compiler.prototype.compileDocument = async function(document) {
+Compiler.prototype.compileType = async function(type) {
 
-    // extract the new type parameters
-    const citation = await this.notary.citeDocument(document);
-    const tag = citation.getValue('$tag');
-    const version = citation.getValue('$version');
-    const content = document.getValue('$content');
-    const permissions = content.getParameter('$permissions');
+    // calculate compilation catalog parameters
+    const tokens = type.getValue('$compilation').getValue();
+    const tag = bali.tag(tokens[tokens.length - 2]);
+    const version = type.getParameter('$version');
+    const permissions = type.getParameter('$permissions');
+    var previous = type.getParameter('$previous');
 
-    // create the compiled type catalog
+    // check for a previous version of the type
+    if (previous && !previous.isEqualTo(bali.pattern.NONE)) {
+        const previousType = await this.repository.readDocument(previous);
+        const previousContent = previousType.getValue('$content');
+        const previousName = previousContent.getValue('$compilation');
+        const previousCompilation = await this.repository.readName(previousName);
+        previous = await this.notary.citeDocument(previousCompilation);
+
+    }
+
+    // create the compilation catalog
     const literals = bali.list();
     const constants = bali.catalog();
     const procedures = bali.catalog();
-    const type = bali.catalog({
-        $source: citation,
+    const compilation = bali.catalog({
         $literals: literals,
         $constants: constants,
         $procedures: procedures
     }, {
-        // TODO: if version > v1, should retrieve the previous version to match tag and set previous
-        $type: bali.component('/bali/types/Bytecode/v1'),
-        $tag: bali.tag(),  // new random tag
-        $version: bali.version(),  // v1
+        $type: bali.component('/bali/types/Compilation/v1'),
+        $tag: tag,
+        $version: version,
         $permissions: permissions,
-        $previous: bali.pattern.NONE
+        $previous: previous
     });
 
     // extract the literals, constants and compiled procedures from the parent type
-    const parentName = content.getValue('$parent');
-    if (parentName && parentName !== bali.pattern.NONE) {
+    const parentName = type.getValue('$parent');
+    if (parentName && !parentName.isEqualTo(bali.pattern.NONE)) {
         const parentType = await this.repository.readName(parentName);
         literals.addItems(parentType.getValue('$literals') || []);
         constants.addItems(parentType.getValue('$constants') || []);
@@ -88,11 +96,12 @@ Compiler.prototype.compileDocument = async function(document) {
     }
 
     // add in the constants from the child type definition
-    constants.addItems(content.getValue('$constants') || []);
+    // TODO: what if the child overrides the value of a parent constant?
+    constants.addItems(type.getValue('$constants') || []);
 
     // compile each procedure defined in the child type definition
-    const catalog = content.getValue('$procedures');
-    if (catalog && catalog !== bali.pattern.NONE) {
+    const catalog = type.getValue('$procedures');
+    if (catalog && !catalog.isEqualTo(bali.pattern.NONE)) {
 
         // iterate through procedure definitions
         const assembler = new Assembler(this.debug);
@@ -105,18 +114,18 @@ Compiler.prototype.compileDocument = async function(document) {
             const source = association.getValue().getValue('$source');
 
             // compile the source code
-            const procedure = this.compileProcedure(type, source);
+            const procedure = this.compileProcedure(compilation, source);
 
             // assemble the instructions in the procedure into bytecode
-            assembler.assembleProcedure(type, procedure);
+            assembler.assembleProcedure(compilation, procedure);
 
-            // add the assembled procedure to the type context
+            // add the assembled procedure to the compilation
             procedures.setValue(name, procedure);
         }
 
     }
 
-    return type;
+    return compilation;
 };
 
 

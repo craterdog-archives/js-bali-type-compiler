@@ -50,7 +50,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
-                var codeFile = testFolder + prefix + '.code';
+                var codeFile = testFolder + prefix + '.proc';
                 var source = await pfs.readFile(baliFile, 'utf8');
                 var procedure = bali.component(source);
                 expect(procedure).to.exist;
@@ -83,25 +83,24 @@ describe('Bali Nebula™ Procedure Compiler', function() {
             const testFolder = 'test';
             for (var i = 0; i < sources.length; i++) {
                 const file = sources[i];
-                console.log('      ' + file);
-                const component = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
-                expect(component).to.exist;
-                var document = await notary.notarizeDocument(component);
-                expect(document).to.exist;
-                const citation = await notary.citeDocument(document);
-                expect(citation).to.exist;
-                await repository.createCitation(file + '/v1', citation);
-                const documentId = citation.getValue('$tag').getValue() + citation.getValue('$version');
-                expect(documentId).to.exist;
-                await repository.writeDocument(document);
-                const type = await compiler.compileDocument(document);
+                console.log('      ' + file + '.bali');
+                const type = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
                 expect(type).to.exist;
-                document = await notary.notarizeDocument(type);
-                expect(document).to.exist;
-                await repository.createType(documentId, document);
-                const source = document.toString() + '\n';  // POSIX compliant <EOL>
-                const filename = testFolder + file + '.type';
+                const compilation = await compiler.compileType(type);
+                expect(compilation).to.exist;
+                const source = compilation.toString() + '\n';  // POSIX compliant <EOL>
+                const filename = testFolder + file + '.comp';
                 await pfs.writeFile(filename, source, 'utf8');
+                var document = await notary.notarizeDocument(type);
+                expect(document).to.exist;
+                var citation = await repository.writeDocument(document);
+                expect(citation).to.exist;
+                const name = bali.component(file + '/v1');
+                await repository.writeName(name, citation);
+                document = await notary.notarizeDocument(compilation);
+                expect(document).to.exist;
+                citation = await repository.writeDocument(document);
+                expect(citation).to.exist;
             }
         });
 

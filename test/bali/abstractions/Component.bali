@@ -1,4 +1,5 @@
 [
+    $compilation: /bali/compilations/MYS8S7RGS8GXGYZP8S8DW96ALJSP8KKR/v1
     $description: "
         This abstract class defines the messages that all components support.
     "($mediatype: "application/bsmd")

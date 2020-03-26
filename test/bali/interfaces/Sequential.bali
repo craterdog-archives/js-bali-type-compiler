@@ -1,5 +1,6 @@
 [
     $parent: /bali/abstractions/Component/v1
+    $compilation: /bali/compilations/Z0PNWNTXXQM89RLLADQBRSVAH9KX1Y03/v1
     $description: "
         This interface defines the messages that all composite components that maintain
         a sequence of subcomponents support.
@@ -21,7 +22,7 @@
                 that can be used to iterate over the subcomponents that make up this
                 composite component.
             "($mediatype: "application/bsmd")
-            $type: /bali/utilities/Iterator/v1($itemType: itemType)
+            $type: /bali/utilities/Iterator/v1($itemType: $itemType)
         ]
         $getSize: [
             $description: "
