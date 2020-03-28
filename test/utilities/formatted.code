@@ -1,5 +1,5 @@
- Addr     Bytes   Bytecode                Instruction
-------------------------------------------------------------------
+ Addr     Bytes   Bytecode                 Instruction
+-------------------------------------------------------------------
 [001]:    0000    00    0     SKIP INSTRUCTION
 [002]:    0001    00 [001]    JUMP TO [001]
 [003]:    0802    01 [002]    JUMP TO [002] ON NONE
