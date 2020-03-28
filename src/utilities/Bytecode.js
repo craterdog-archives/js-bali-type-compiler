@@ -238,8 +238,8 @@ exports.bytecodeToBytes = function(bytecode) {
  * @returns {String} The human readable form of the bytecode.
  */
 exports.bytecodeToString = function(bytecode) {
-    var string = ' Addr     Bytes   Bytecode                  Instruction\n';
-    string += '----------------------------------------------------------------------\n';
+    var string = ' Addr     Bytes   Bytecode                 Instruction\n';
+    string += '--------------------------------------------------------------------\n';
     bytecode.forEach(function(word, index) {
         var address = index + 1;  // Bali ordinal based indexing
         string += wordToString(address, word) + '\n';
@@ -305,7 +305,8 @@ function wordToString(address, instruction) {
     const description = instructionToString(instruction);
 
     // format the bytecode
-    while (operand.length < 5) operand = ' ' + operand;  // pad operand string with spaces
+    while (operand.length < 4) operand = ' ' + operand;  // pad an index operand with leading spaces
+    if (operand.length < 5) operand += ' ';  // pad an index operand with a single trailing space
     const bytecode = '' + operation + modifier + ' ' + operand;
 
     // put them all together

@@ -1,31 +1,31 @@
- Addr     Bytes   Bytecode                  Instruction
-----------------------------------------------------------------------
-[001]:    0000    00     0    SKIP INSTRUCTION
+ Addr     Bytes   Bytecode                 Instruction
+--------------------------------------------------------------------
+[001]:    0000    00    0     SKIP INSTRUCTION
 [002]:    0001    00 [001]    JUMP TO [001]
 [003]:    0802    01 [002]    JUMP TO [002] ON NONE
 [004]:    1003    02 [003]    JUMP TO [003] ON TRUE
 [005]:    1804    03 [004]    JUMP TO [004] ON FALSE
 [006]:    2005    10 [005]    PUSH HANDLER [005]
-[007]:    2806    11     6    PUSH LITERAL 6
-[008]:    3007    12     7    PUSH CONSTANT 7
-[009]:    3808    13     8    PUSH PARAMETER 8
-[00A]:    4000    20     0    POP HANDLER
-[00B]:    4800    21     0    POP COMPONENT
-[00C]:    600D    30    13    LOAD VARIABLE 13
-[00D]:    680E    31    14    LOAD MESSAGE 14
-[00E]:    700F    32    15    LOAD DRAFT 15
-[00F]:    7810    33    16    LOAD DOCUMENT 16
-[010]:    8011    40    17    STORE VARIABLE 17
-[011]:    8812    41    18    STORE MESSAGE 18
-[012]:    9013    42    19    STORE DRAFT 19
-[013]:    9814    43    20    STORE DOCUMENT 20
-[014]:    A015    50    21    INVOKE 21
-[015]:    A816    51    22    INVOKE 22 WITH 1 ARGUMENT
-[016]:    B017    52    23    INVOKE 23 WITH 2 ARGUMENTS
-[017]:    B818    53    24    INVOKE 24 WITH 3 ARGUMENTS
-[018]:    C019    60    25    EXECUTE 25
-[019]:    C81A    61    26    EXECUTE 26 WITH ARGUMENTS
-[01A]:    D01B    62    27    EXECUTE 27 ON TARGET
-[01B]:    D81C    63    28    EXECUTE 28 ON TARGET WITH ARGUMENTS
-[01C]:    E000    70     0    HANDLE RESULT
-[01D]:    E800    71     0    HANDLE EXCEPTION
+[007]:    2806    11    6     PUSH LITERAL 6
+[008]:    3007    12    7     PUSH CONSTANT 7
+[009]:    3808    13    8     PUSH PARAMETER 8
+[00A]:    4000    20    0     POP HANDLER
+[00B]:    4800    21    0     POP COMPONENT
+[00C]:    600D    30   13     LOAD VARIABLE 13
+[00D]:    680E    31   14     LOAD MESSAGE 14
+[00E]:    700F    32   15     LOAD DRAFT 15
+[00F]:    7810    33   16     LOAD DOCUMENT 16
+[010]:    8011    40   17     STORE VARIABLE 17
+[011]:    8812    41   18     STORE MESSAGE 18
+[012]:    9013    42   19     STORE DRAFT 19
+[013]:    9814    43   20     STORE DOCUMENT 20
+[014]:    A015    50   21     INVOKE 21
+[015]:    A816    51   22     INVOKE 22 WITH 1 ARGUMENT
+[016]:    B017    52   23     INVOKE 23 WITH 2 ARGUMENTS
+[017]:    B818    53   24     INVOKE 24 WITH 3 ARGUMENTS
+[018]:    C019    60   25     EXECUTE 25
+[019]:    C81A    61   26     EXECUTE 26 WITH ARGUMENTS
+[01A]:    D01B    62   27     EXECUTE 27 ON TARGET
+[01B]:    D81C    63   28     EXECUTE 28 ON TARGET WITH ARGUMENTS
+[01C]:    E000    70    0     HANDLE RESULT
+[01D]:    E800    71    0     HANDLE EXCEPTION

@@ -823,7 +823,8 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
     }
 
     // compile each condition
-    const iterator = bali.iterator(array);
+    const list = bali.list(array);
+    const iterator = list.getIterator();
     while (iterator.hasNext()) {
         var condition = iterator.getNext();
         var block = iterator.getNext();
@@ -1244,7 +1245,8 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     this.builder.insertStoreInstruction('VARIABLE', selectorVariable);
 
     // check each option
-    const iterator = bali.iterator(array);
+    const list = bali.list(array);
+    const iterator = list.getIterator();
     while (iterator.hasNext()) {
         var option = iterator.getNext();
         var block = iterator.getNext();
