@@ -37,7 +37,7 @@ jumpInstruction:
     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 ;
 
-// Push a literal component, contant or parameter onto the component stack,
+// Push a literal component, constant or parameter onto the component stack,
 // or push the handler address for the current exception handlers onto the
 // handler stack.
 pushInstruction:
@@ -77,7 +77,7 @@ storeInstruction:
 // replaces the arguments that were on the top of the component stack.
 invokeInstruction:
     'INVOKE' SYMBOL |
-    'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+    'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 ;
 

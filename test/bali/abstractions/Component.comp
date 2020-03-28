@@ -18,7 +18,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $format WITH ARGUMENT
+                INVOKE $format WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001A81EE000'(
@@ -58,7 +58,7 @@
             $instructions: "
                 1.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $getType WITH ARGUMENT
+                INVOKE $getType WITH 1 ARGUMENT
                 STORE VARIABLE $$location-1
                 LOAD DOCUMENT $$location-1
                 EXECUTE $getAncestors ON TARGET
@@ -136,7 +136,7 @@
             $instructions: "
                 1.EvaluateStatement:
                 LOAD VARIABLE $target
-                INVOKE $getType WITH ARGUMENT
+                INVOKE $getType WITH 1 ARGUMENT
                 STORE VARIABLE $type
                 
                 2.EvaluateStatement:
@@ -191,7 +191,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getArguments WITH ARGUMENT
+                INVOKE $getArguments WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001FFFFE000'(
@@ -211,7 +211,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getHash WITH ARGUMENT
+                INVOKE $getHash WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001A825E000'(
@@ -231,7 +231,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getType WITH ARGUMENT
+                INVOKE $getType WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001A836E000'(

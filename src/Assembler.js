@@ -235,7 +235,7 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();

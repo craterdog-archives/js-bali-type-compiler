@@ -1991,17 +1991,17 @@ InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
 /*
  * This method inserts an 'invoke' instruction into the assembly code.
  */
-InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numberOfParameters) {
+InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numberOfArguments) {
     var instruction = 'INVOKE ' + intrinsic;
-    switch (numberOfParameters) {
+    switch (numberOfArguments) {
         case undefined:
         case 0:
             break;
         case 1:
-            instruction += ' WITH ARGUMENT';
+            instruction += ' WITH 1 ARGUMENT';
             break;
         default:
-            instruction += ' WITH ' + numberOfParameters + ' ARGUMENTS';
+            instruction += ' WITH ' + numberOfArguments + ' ARGUMENTS';
     }
     this.insertInstruction(instruction);
 };

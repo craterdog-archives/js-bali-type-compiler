@@ -123,7 +123,7 @@
         
         1.2.2.EvaluateStatement:
         LOAD VARIABLE $b
-        INVOKE $factorial WITH ARGUMENT
+        INVOKE $factorial WITH 1 ARGUMENT
         STORE VARIABLE $c
         
         1.2.3.ReturnStatement:

@@ -250,7 +250,7 @@ FormattingVisitor.prototype.visitStoreInstruction = function(instruction) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     this.source += 'INVOKE ';
@@ -258,12 +258,9 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     if (modifier > 0) {
         this.source += ' WITH ';
-        if (modifier > 1) {
-            this.source += modifier;
-            this.source += ' ARGUMENTS';
-        } else {
-            this.source += 'ARGUMENT';
-        }
+        this.source += modifier;
+        this.source += ' ARGUMENT';
+        if (modifier !== 1) this.source += 'S';
     }
 };
 

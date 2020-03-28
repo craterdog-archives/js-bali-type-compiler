@@ -230,23 +230,13 @@ ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
 
 // invokeInstruction:
 //     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' 'ARGUMENT' |
+//     'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.INVOKE);
-    var modifier;
-    switch (ctx.children.length) {
-        case 2:
-            modifier = 0;
-            break;
-        case 4:
-            modifier = 1;
-            break;
-        case 5:
-            modifier = Number(ctx.NUMBER().getText());
-            break;
-    }
+    var modifier = 0;
+    if (ctx.children.length === 5) modifier = Number(ctx.children[3].getText());
     instruction.setValue('$modifier', modifier);
     instruction.setValue('$operand', bali.component(ctx.SYMBOL().getText()));
     this.result = instruction;

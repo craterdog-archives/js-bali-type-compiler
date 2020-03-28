@@ -62,7 +62,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getIterator WITH ARGUMENT
+                INVOKE $getIterator WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001FFFFE000'(
@@ -82,7 +82,7 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getSize WITH ARGUMENT
+                INVOKE $getSize WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001A835E000'(
@@ -107,7 +107,7 @@
                 EXECUTE $getSize ON TARGET
                 PUSH LITERAL `0`
                 INVOKE $isMoreThan WITH 2 ARGUMENTS
-                INVOKE $complement WITH ARGUMENT
+                INVOKE $complement WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001D0012801B043A80FE000'(

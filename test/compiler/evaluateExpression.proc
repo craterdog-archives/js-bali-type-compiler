@@ -81,7 +81,7 @@
         
         3.EvaluateStatement:
         PUSH LITERAL `13`
-        INVOKE $isPrime WITH ARGUMENT
+        INVOKE $isPrime WITH 1 ARGUMENT
         STORE VARIABLE $$result
         
         4.EvaluateStatement:
@@ -126,7 +126,7 @@
         
         8.EvaluateStatement:
         PUSH LITERAL `23`
-        INVOKE $factorial WITH ARGUMENT
+        INVOKE $factorial WITH 1 ARGUMENT
         STORE VARIABLE $$result
         
         9.EvaluateStatement:
@@ -137,12 +137,12 @@
         
         10.EvaluateStatement:
         PUSH LITERAL `π`
-        INVOKE $inverse WITH ARGUMENT
+        INVOKE $inverse WITH 1 ARGUMENT
         STORE VARIABLE $$result
         
         11.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        INVOKE $conjugate WITH ARGUMENT
+        INVOKE $conjugate WITH 1 ARGUMENT
         STORE VARIABLE $$result
         
         12.EvaluateStatement:
@@ -212,7 +212,7 @@
         
         23.EvaluateStatement:
         LOAD VARIABLE $p
-        INVOKE $complement WITH ARGUMENT
+        INVOKE $complement WITH 1 ARGUMENT
         STORE VARIABLE $$result
         
         24.EvaluateStatement:
