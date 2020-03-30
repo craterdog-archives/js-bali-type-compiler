@@ -45,7 +45,7 @@
         PUSH LITERAL `"bad"`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
+        INVOKE $matches WITH 2 ARGUMENTS
         JUMP TO 1.2.HandleClause ON FALSE
         POP COMPONENT
         
@@ -65,7 +65,7 @@
         PUSH LITERAL `"horrid"`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        INVOKE $isMatchedBy WITH 2 ARGUMENTS
+        INVOKE $matches WITH 2 ARGUMENTS
         JUMP TO 1.QueueStatementFailed ON FALSE
         POP COMPONENT
         
@@ -85,8 +85,8 @@
     "($mediatype: "application/basm")
     $bytecode: '
         20082801800360028803400000260000800160016001A00E28022803B008
-        B001B04218174800280480040026800160016001A00E28022805B008B001
-        B04218254800280680040026E8006004E000
+        B001FFFF18174800280480040026800160016001A00E28022805B008B001
+        FFFF18254800280680040026E8006004E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

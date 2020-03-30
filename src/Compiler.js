@@ -451,23 +451,23 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
-            this.builder.insertInvokeInstruction('$isLessThan', 2);  // isLessThan(x, y)
+            this.builder.insertInvokeInstruction('$less', 2);  // less(x, y)
             break;
         case '=':
             // determine whether or not the first value is equal to the second value
-            this.builder.insertInvokeInstruction('$isEqualTo', 2);  // isEqualTo(x, y)
+            this.builder.insertInvokeInstruction('$equal', 2);  // equal(x, y)
             break;
         case '>':
             // determine whether or not the first value is more than the second value
-            this.builder.insertInvokeInstruction('$isMoreThan', 2);  // isMoreThan(x, y)
+            this.builder.insertInvokeInstruction('$more', 2);  // more(x, y)
             break;
         case 'is':
             // determine whether or not the first value is the same value as the second value
-            this.builder.insertInvokeInstruction('$isSameAs', 2);  // isSameAs(this, that)
+            this.builder.insertInvokeInstruction('$same', 2);  // same(this, that)
             break;
         case 'matches':
             // determine whether or not the first value matches the second value
-            this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(component, pattern)
+            this.builder.insertInvokeInstruction('$matches', 2);  // matches(component, pattern)
             break;
     }
 };
@@ -783,7 +783,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     // the VM compares the template expression with the actual exception
     this.builder.insertLoadInstruction('VARIABLE', exception);
     template.acceptVisitor(this);
-    this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(symbol, pattern)
+    this.builder.insertInvokeInstruction('$matches', 2);  // matches(symbol, pattern)
 
     // if the template and exception did not match the VM jumps past this exception handler
     var nextLabel = this.builder.getNextClausePrefix() + 'HandleClause';
@@ -1079,10 +1079,6 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
             this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
         }, this);
         this.depth--;
-
-        // the VM places a new parameters component containing the catalog on the top of the component stack
-        this.builder.insertInvokeInstruction('$parameters', 1);  // parameters(catalog)
-
         // the parameter list remains on the component stack
     }
 };
@@ -1261,7 +1257,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         option.acceptVisitor(this);
 
         // the VM checks to see if the selector and option match and places the result on the component stack
-        this.builder.insertInvokeInstruction('$isMatchedBy', 2);  // isMatchedBy(selector, option)
+        this.builder.insertInvokeInstruction('$matches', 2);  // matches(selector, option)
 
         // determine what the next label will be
         var nextLabel = this.builder.getNextClausePrefix();

@@ -83,7 +83,7 @@
                 2.1.1.1.ConditionClause:
                 LOAD VARIABLE $ancestor
                 PUSH PARAMETER $type
-                INVOKE $isEqualTo WITH 2 ARGUMENTS
+                INVOKE $equal WITH 2 ARGUMENTS
                 JUMP TO 2.1.1.IfStatementDone ON FALSE
                 
                 2.1.1.1.1.ReturnStatement:
@@ -105,7 +105,7 @@
             "($mediatype: "application/basm")
             $bytecode: '
                 6005A83680047804D00180026002D00280036003D00418196003D0038001
-                000060013801B03E18172801E0000000000A00002802E000
+                000060013801FFFF18172801E0000000000A00002802E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"

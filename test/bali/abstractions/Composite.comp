@@ -20,10 +20,10 @@
                 LOAD VARIABLE $target
                 EXECUTE $asNumeric ON TARGET
                 PUSH LITERAL `0`
-                INVOKE $isMoreThan WITH 2 ARGUMENTS
+                INVOKE $more WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001D0012801B043E000'(
+            $bytecode: '6001D0012801FFFFE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -106,11 +106,11 @@
                 LOAD VARIABLE $target
                 EXECUTE $getSize ON TARGET
                 PUSH LITERAL `0`
-                INVOKE $isMoreThan WITH 2 ARGUMENTS
+                INVOKE $more WITH 2 ARGUMENTS
                 INVOKE $complement WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001D0012801B043A80FE000'(
+            $bytecode: '6001D0012801FFFFA80FE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
