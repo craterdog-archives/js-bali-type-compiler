@@ -29,7 +29,7 @@
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        A00E28012802B008B00128032804B008B00128052806B008B00188016002
+        A01128012802B008B00128032804B008B00128052806B008B00188016002
         E000
     '(
         $encoding: $base16
