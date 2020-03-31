@@ -148,6 +148,18 @@ exports.api = function(notary, repository, debug) {
          */
         operand: function(instruction) {
             return utilities.bytecode.decodeOperand(instruction);
+        },
+
+        /**
+         * This function invokes the intrinsic function associated with the specified index using
+         * the specified arguments.
+         *
+         * @param {Number} index The index of the intrinsic function to invoke.
+         * @param {Array} args The arguments to be passed to the function invocation.
+         * @returns {Object} The result of the intrinsic function invocation.
+         */
+        invoke: function(index, ...args) {
+            return utilities.intrinsics.invoke(index, args);
         }
 
     };
