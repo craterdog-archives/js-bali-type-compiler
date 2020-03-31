@@ -10,7 +10,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Text/v1($mediatype: "application/bali")
             $source: {
-                return format(target)
+                return document(target)
             }
         ]
         $isA: [
@@ -30,7 +30,7 @@
             ]
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $ancestors := @getType(target).getAncestors()
+                $ancestors := @type(target).getAncestors()
                 with each $ancestor in ancestors do {
                     if ancestor = type then {
                         return true
@@ -50,23 +50,23 @@
                 )
             )
             $source: {
-                $type := getType(target)
+                $type := type(target)
                 $ancestors := []
                 ancestors.addItem(type)
                 ancestors.addItems(@type[$ancestors])
                 return ancestors
             }
         ]
-        $getArguments: [
+        $getParameters: [
             $description: "
-                This procedure returns a catalog of any arguments that were used to
+                This procedure returns a catalog of any parameters that were used to
                 parameterize this component.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/Catalog/v1(
                 $valueType: /bali/composites/Argument/v1
             )
             $source: {
-                return getArguments(target)
+                return parameters(target)
             }
         ]
         $getHash: [
@@ -75,7 +75,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Number/v1($range: [0..4294967295])
             $source: {
-                return getHash(target)
+                return hash(target)
             }
         ]
         $getType: [
@@ -86,7 +86,7 @@
                 $referencedType: /bali/abstractions/Type/v1
             )
             $source: {
-                return getType(target)
+                return type(target)
             }
         ]
     ]

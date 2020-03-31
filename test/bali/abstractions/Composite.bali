@@ -51,7 +51,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/utilities/Iterator/v1($itemType: $itemType)
             $source: {
-                return getIterator(target)
+                return iterator(target)
             }
         ]
         $getSize: [
@@ -60,7 +60,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Number/v1($range: [0..infinity])
             $source: {
-                return getSize(target)
+                return size(target)
             }
         ]
         $isEmpty: [
@@ -69,7 +69,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                return not target.getSize() > 0
+                return not size(target) > 0
             }
         ]
     ]

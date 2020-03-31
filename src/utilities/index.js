@@ -13,5 +13,6 @@ const grammar = require('../grammar');
 
 exports.types = require('./Types');
 exports.bytecode = require('./Bytecode');
+exports.intrinsics = require('./Intrinsics');
 exports.Formatter = require('./Formatter').Formatter;
 exports.Parser = require('./Parser').Parser;

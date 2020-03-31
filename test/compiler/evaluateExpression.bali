@@ -4,7 +4,7 @@
         $baz: 5
     ]
     variable
-    isPrime(13)
+    isZero(13)
     (a + b) * c
     @reference
     customer[$order, $item, 5]
