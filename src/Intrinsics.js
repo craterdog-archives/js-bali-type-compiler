@@ -15,6 +15,7 @@
  */
 const bali = require('bali-component-framework').api();
 const validator = bali.validator();
+const generator = bali.generator();
 
 // This private constant sets the POSIX end of line character
 const EOL = '\n';
@@ -94,7 +95,7 @@ exports.api = function(debug) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
                 $procedure: procedure,
-                $exception: '$parameterType',
+                $exception: '$argumentType',
                 $first: firstType,
                 $second: secondType,
                 $text: 'The arguments passed into the intrinsic function are not the same type.'
@@ -104,35 +105,35 @@ exports.api = function(debug) {
         }
     };
 
-    const validateTypeArgument = function(procedure, type, parameter) {
-        if (!parameter.isType(type)) {
+    const validateTypeArgument = function(procedure, type, argument) {
+        if (argument === undefined || argument === null || !argument.isComponent || !argument.isType(type)) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
                 $procedure: procedure,
-                $exception: '$parameterType',
+                $exception: '$argumentType',
                 $expected: type,
-                $actual: parameter.getAncestry(),
-                $text: 'An argument passed into an intrinsic function does not have the required ancestry.'
+                $actual: bali.type(argument),
+                $text: 'An argument passed into an intrinsic function does not have the required type.'
             });
             if (debug > 0) console.error(exception.toString());
             throw exception;
         }
     };
 
-    const validateOptionalTypeArgument = function(procedure, type, parameter) {
-        if (parameter && !parameter.isEqualTo(bali.pattern.NONE)) {
-            validateTypeArgument(procedure, type, parameter);
+    const validateOptionalTypeArgument = function(procedure, type, argument) {
+        if (argument !== undefined && argument !== null && !(argument.isComponent && argument.isEqualTo(bali.pattern.NONE))) {
+            validateTypeArgument(procedure, type, argument);
         }
     };
 
-    const validateInterfaceArgument = function(procedure, iface, parameter) {
-        if (!parameter.supportsInterface(iface)) {
+    const validateInterfaceArgument = function(procedure, iface, argument) {
+        if (argument === undefined || argument === null || !argument.isComponent || !argument.supportsInterface(iface)) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
                 $procedure: procedure,
-                $exception: '$parameterType',
+                $exception: '$argumentType',
                 $expected: iface,
-                $actual: parameter.getType(),
+                $actual: (argument && argument.isComponent) ? argument.getInterfaces() : bali.type(argument),
                 $text: 'An argument passed into an intrinsic function does not support a required interface.'
             });
             if (debug > 0) console.error(exception.toString());
@@ -140,9 +141,9 @@ exports.api = function(debug) {
         }
     };
 
-    const validateOptionalInterfaceArgument = function(procedure, iface, parameter) {
-        if (parameter && !parameter.isEqualTo(bali.pattern.NONE)) {
-            validateInterfaceArgument(procedure, iface, parameter);
+    const validateOptionalInterfaceArgument = function(procedure, iface, argument) {
+        if (argument !== undefined && argument !== null && !(argument.isComponent && argument.isEqualTo(bali.pattern.NONE))) {
+            validateInterfaceArgument(procedure, iface, argument);
         }
     };
 
@@ -152,7 +153,7 @@ exports.api = function(debug) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
                 $procedure: procedure,
-                $exception: '$parameterValue',
+                $exception: '$argumentValue',
                 $expected: bali.range(1, size),
                 $actual: index,
                 $text: 'An invalid index was passed into an intrinsic function.'
@@ -174,6 +175,7 @@ exports.api = function(debug) {
 
         $addItem: function(collection, item) {
             validateTypeArgument('$addItem', '/bali/abstractions/Collection', collection);
+            validateTypeArgument('$addItem', '/bali/abstractions/Component', item);
             collection.addItem(item);
             return collection;
         },
@@ -186,6 +188,7 @@ exports.api = function(debug) {
         },
 
         $ancestry: function(component) {
+            validateTypeArgument('$ancestry', '/bali/abstractions/Component', component);
             return bali.list(component.getAncestry());
         },
 
@@ -214,6 +217,7 @@ exports.api = function(debug) {
 
         $association: function(key, value) {
             validateTypeArgument('$association', '/bali/abstractions/Element', key);
+            validateTypeArgument('$association', '/bali/abstractions/Component', value);
             return bali.association(key, value);
         },
 
@@ -256,12 +260,14 @@ exports.api = function(debug) {
 
         $binary: function(number, parameters) {
             validateTypeArgument('$binary', '/bali/elements/Number', number);
-            validateTypeArgument('$binary', '/bali/collections/Catalog', parameters);
-            const bytes = bali.generator.generateBytes(number.toNumber());
-            return bali.binary(bytes, parameters.toObject());
+            validateOptionalTypeArgument('$binary', '/bali/collections/Catalog', parameters);
+            const bytes = generator.generateBytes(number.toNumber());
+            if (parameters) parameters = parameters.toObject();
+            return bali.binary(bytes, parameters);
         },
 
         $boolean: function(component) {
+            validateTypeArgument('$boolean', '/bali/abstractions/Component', component);
             return bali.probability(component.toBoolean());
         },
 
@@ -278,7 +284,7 @@ exports.api = function(debug) {
 
         $coinToss: function(probability) {
             validateTypeArgument('$coinToss', '/bali/elements/Probability', probability);
-            return bali.probability(bali.generator.flipCoin(probability.toNumber()));
+            return bali.probability(generator.flipCoin(probability.toNumber()));
         },
 
         $comparison: function(first, second) {
@@ -648,7 +654,7 @@ exports.api = function(debug) {
         },
 
         $procedure: function(statements, parameters) {
-            validateTypeArgument('$procedure', '/bali/collections/Tree', statements);
+            validateTypeArgument('$procedure', '/bali/composites/Statements', statements);
             validateTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(statements, parameters);
         },
@@ -886,7 +892,7 @@ exports.api = function(debug) {
         $tree: function(type, children) {
             validateTypeArgument('$tree', '/bali/elements/Name', type);
             validateOptionalTypeArgument('$tree', '/bali/abstractions/Collection', children);
-            return bali.tree(type, children);
+            return bali.tree(type.toString(), children);
         },
 
         $type: function(component) {

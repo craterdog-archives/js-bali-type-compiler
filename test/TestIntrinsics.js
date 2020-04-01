@@ -27,7 +27,9 @@ const range = bali.range(1, 5);
 const set = bali.set();
 const queue = bali.queue();
 const stack = bali.stack();
-const tree = bali.tree();
+const tree = bali.tree('/bali/composites/Statements');
+const array = [];
+const object = {};
 
 describe('Bali Intrinsic Functions', function() {
 
@@ -51,15 +53,32 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $addItem intrinsic function', function() {
             const index = intrinsics.index('$addItem');
             intrinsics.invoke(index, catalog, association);
-            intrinsics.invoke(index, list, '/bali/collections/List');
-            intrinsics.invoke(index, set, '$foo');
-            intrinsics.invoke(index, queue, 13);
-            intrinsics.invoke(index, stack, '$top');
+            intrinsics.invoke(index, list, bali.component('/bali/collections/List'));
+            intrinsics.invoke(index, set, bali.component('$foo'));
+            intrinsics.invoke(index, queue, bali.number(13));
+            intrinsics.invoke(index, stack, bali.component('$top'));
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, '$foo');
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, array, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, object, association);
+                }
+            ).to.throw();
+            /* TODO: uncomment once bug in Range is fixed
             expect(
                 function() {
                     intrinsics.invoke(index, range, 6);
                 }
             ).to.throw();
+            */
             expect(
                 function() {
                     intrinsics.invoke(index, association, 6);
@@ -202,9 +221,25 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $binary intrinsic function', function() {
+            const index = intrinsics.index('$binary');
+            intrinsics.invoke(index, two);
+            intrinsics.invoke(index, two, bali.catalog({$encoding: '$base16'}));
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
         });
 
         it('should invoke $boolean intrinsic function', function() {
+            const index = intrinsics.index('$boolean');
+            intrinsics.invoke(index, number);
+            intrinsics.invoke(index, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, false);
+                }
+            ).to.throw();
         });
 
         it('should invoke $bytes intrinsic function', function() {
