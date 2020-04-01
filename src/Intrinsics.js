@@ -87,6 +87,23 @@ exports.api = function(debug) {
 
     // PRIVATE FUNCTIONS
 
+    const validateSameType = function(procedure, first, second) {
+        const firstType = first.getType();
+        const secondType = second.getType();
+        if (firstType !== secondType) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Intrinsics',
+                $procedure: procedure,
+                $exception: '$parameterType',
+                $first: firstType,
+                $second: secondType,
+                $text: 'The arguments passed into the intrinsic function are not the same type.'
+            });
+            if (debug > 0) console.error(exception.toString());
+            throw exception;
+        }
+    };
+
     const validateTypeArgument = function(procedure, type, parameter) {
         if (!parameter.isType(type)) {
             const exception = bali.exception({
@@ -175,7 +192,7 @@ exports.api = function(debug) {
         $and: function(first, second) {
             validateInterfaceArgument('$and', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$and', '/bali/interfaces/Logical', second);
-            validateAreSameTypes('$and', first, second);
+            validateSameType('$and', first, second);
             return first.constructor.and(first, second);
         },
 
@@ -207,26 +224,34 @@ exports.api = function(debug) {
 
         $base2: function(binary, indentation) {
             validateTypeArgument('$base2', '/bali/elements/Binary', binary);
-            validateTypeArgument('$base2', '/bali/elements/Text', indentation);
-            return bali.text(binary.toBase2(indentation.getValue()));
+            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            if (indentation) indentation = indentation.getValue();
+            const decoder = bali.decoder(indentation);
+            return bali.text(decoder.base2Encode(binary.getValue()));
         },
 
         $base16: function(binary, indentation) {
             validateTypeArgument('$base16', '/bali/elements/Binary', binary);
-            validateTypeArgument('$base16', '/bali/elements/Text', indentation);
-            return bali.text(binary.toBase16(indentation.getValue()));
+            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            if (indentation) indentation = indentation.getValue();
+            const decoder = bali.decoder(indentation);
+            return bali.text(decoder.base16Encode(binary.getValue()));
         },
 
         $base32: function(binary, indentation) {
             validateTypeArgument('$base32', '/bali/elements/Binary', binary);
-            validateTypeArgument('$base32', '/bali/elements/Text', indentation);
-            return bali.text(binary.toBase32(indentation.getValue()));
+            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            if (indentation) indentation = indentation.getValue();
+            const decoder = bali.decoder(indentation);
+            return bali.text(decoder.base32Encode(binary.getValue()));
         },
 
         $base64: function(binary, indentation) {
             validateTypeArgument('$base64', '/bali/elements/Binary', binary);
-            validateTypeArgument('$base64', '/bali/elements/Text', indentation);
-            return bali.text(binary.toBase64(indentation.getValue()));
+            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            if (indentation) indentation = indentation.getValue();
+            const decoder = bali.decoder(indentation);
+            return bali.text(decoder.base64Encode(binary.getValue()));
         },
 
         $binary: function(number, parameters) {
@@ -257,7 +282,7 @@ exports.api = function(debug) {
         },
 
         $comparison: function(first, second) {
-            validateAreSameTypes('$comparison', first, second);
+            validateSameType('$comparison', first, second);
             return bali.number(first.comparedTo(second));
         },
 
@@ -274,7 +299,7 @@ exports.api = function(debug) {
         $concatenation: function(first, second) {
             validateInterfaceArgument('$concatenation', '/bali/interfaces/Chainable', first);
             validateInterfaceArgument('$concatenation', '/bali/interfaces/Chainable', second);
-            validateAreSameTypes('$concatenation', first, second);
+            validateSameType('$concatenation', first, second);
             return first.constructor.concatenation(first, second);
         },
 
@@ -317,7 +342,7 @@ exports.api = function(debug) {
         $difference: function(first, second) {
             validateInterfaceArgument('$difference', '/bali/interfaces/Scalable', first);
             validateInterfaceArgument('$difference', '/bali/interfaces/Scalable', second);
-            validateAreSameTypes('$difference', first, second);
+            validateSameType('$difference', first, second);
             return first.constructor.difference(first, second);
         },
 
@@ -595,7 +620,7 @@ exports.api = function(debug) {
         $or: function(first, second) {
             validateInterfaceArgument('$or', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$or', '/bali/interfaces/Logical', second);
-            validateAreSameTypes('$or', first, second);
+            validateSameType('$or', first, second);
             return first.constructor.or(first, second);
         },
 

@@ -12,6 +12,14 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(1);
 const intrinsics = require('../src/Intrinsics').api(1);
+const generator = bali.generator();
+const angle = bali.angle.PI;
+const binary = bali.binary(generator.generateBytes(10));
+const number = bali.number(0.5);
+const two = bali.number(2);
+const probability = bali.probability(0.5);
+const reference = bali.reference('https://google.com/advertizing?foo=bar');
+const text = bali.text('This is text...');
 const association = bali.association('$key', '"value"');
 const catalog = bali.catalog();
 const list = bali.list();
@@ -47,88 +55,236 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, set, '$foo');
             intrinsics.invoke(index, queue, 13);
             intrinsics.invoke(index, stack, '$top');
+            expect(
+                function() {
+                    intrinsics.invoke(index, range, 6);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, association, 6);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'foobar', 6);
+                }
+            ).to.throw();
         });
 
         it('should invoke $addItems intrinsic function', function() {
+            const index = intrinsics.index('$addItems');
+            intrinsics.invoke(index, list, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, association);
+                }
+            ).to.throw();
         });
+
         it('should invoke $ancestry intrinsic function', function() {
+            const index = intrinsics.index('$ancestry');
+            intrinsics.invoke(index, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 6);
+                }
+            ).to.throw();
         });
+
         it('should invoke $and intrinsic function', function() {
+            const index = intrinsics.index('$and');
+            intrinsics.invoke(index, set, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, association);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $arccosine intrinsic function', function() {
+            const index = intrinsics.index('$arccosine');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $arcsine intrinsic function', function() {
+            const index = intrinsics.index('$arcsine');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
+
         it('should invoke $arctangent intrinsic function', function() {
+            const index = intrinsics.index('$arctangent');
+            intrinsics.invoke(index, number, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $association intrinsic function', function() {
+            const index = intrinsics.index('$association');
+            intrinsics.invoke(index, number, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $authority intrinsic function', function() {
+            const index = intrinsics.index('$authority');
+            intrinsics.invoke(index, reference);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $base2 intrinsic function', function() {
+            const index = intrinsics.index('$base2');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, binary, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $base16 intrinsic function', function() {
+            const index = intrinsics.index('$base16');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, binary, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $base32 intrinsic function', function() {
+            const index = intrinsics.index('$base32');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, binary, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $base64 intrinsic function', function() {
+            const index = intrinsics.index('$base64');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, binary, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $binary intrinsic function', function() {
         });
+
         it('should invoke $boolean intrinsic function', function() {
         });
+
         it('should invoke $bytes intrinsic function', function() {
         });
+
         it('should invoke $catalog intrinsic function', function() {
         });
+
         it('should invoke $coinToss intrinsic function', function() {
         });
+
         it('should invoke $comparison intrinsic function', function() {
         });
+
         it('should invoke $complement intrinsic function', function() {
         });
+
         it('should invoke $component intrinsic function', function() {
         });
+
         it('should invoke $concatenation intrinsic function', function() {
         });
+
         it('should invoke $conjugate intrinsic function', function() {
         });
+
         it('should invoke $containsAll intrinsic function', function() {
         });
+
         it('should invoke $containsAny intrinsic function', function() {
         });
+
         it('should invoke $containsItem intrinsic function', function() {
         });
+
         it('should invoke $cosine intrinsic function', function() {
         });
+
         it('should invoke $default intrinsic function', function() {
         });
+
         it('should invoke $degrees intrinsic function', function() {
         });
+
         it('should invoke $difference intrinsic function', function() {
         });
+
         it('should invoke $document intrinsic function', function() {
         });
+
         it('should invoke $duplicate intrinsic function', function() {
         });
+
         it('should invoke $duration intrinsic function', function() {
         });
+
         it('should invoke $earlier intrinsic function', function() {
         });
+
         it('should invoke $equal intrinsic function', function() {
         });
+
         it('should invoke $exponential intrinsic function', function() {
         });
+
         it('should invoke $extraction intrinsic function', function() {
         });
+
         it('should invoke $factorial intrinsic function', function() {
         });
+
         it('should invoke $format intrinsic function', function() {
         });
+
         it('should invoke $fragment intrinsic function', function() {
         });
+
         it('should invoke $getFirst intrinsic function', function() {
         });
+
         it('should invoke $getHead intrinsic function', function() {
         });
         it('should invoke $getIndex intrinsic function', function() {
