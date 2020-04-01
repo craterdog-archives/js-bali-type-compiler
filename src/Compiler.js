@@ -17,8 +17,9 @@
  */
 const bali = require('bali-component-framework').api();
 const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
-const utilities = require('./utilities');
 const Assembler = require('./Assembler').Assembler;
+const Parser = require('./Parser').Parser;
+const Formatter = require('./Formatter').Formatter;
 const EOL = '\n';  // POSIX end of line character
 
 
@@ -162,9 +163,9 @@ Compiler.prototype.compileProcedure = function(type, source) {
 
     // format the instructions and add to the compiled procedure
     var instructions = visitor.getInstructions();
-    const parser = new utilities.Parser(this.debug);
+    const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
-    const formatter = new utilities.Formatter(0, this.debug);
+    const formatter = new Formatter(0, this.debug);
     instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediatype: 'application/basm'});
     procedure.setValue('$instructions', instructions);
 

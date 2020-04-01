@@ -17,7 +17,7 @@
 const antlr = require('antlr4');
 const ErrorStrategy = require('antlr4/error/ErrorStrategy');
 const bali = require('bali-component-framework').api();
-const grammar = require('../grammar');
+const grammar = require('./grammar');
 const types = require('./Types');
 const EOL = '\n';  // POSIX end of line character
 

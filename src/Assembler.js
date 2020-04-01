@@ -11,10 +11,13 @@
 
 /**
  * This module defines a class that assembles compiled procedures into bytecode that
- * can run on the Nebula Virtual Processor.
+ * can run on the Bali Nebula™ Virtual Processor.
  */
 const bali = require('bali-component-framework').api();
-const utilities = require('./utilities');
+const Decoder = require('./Decoder').Decoder;
+const types = require('./Types');
+const Parser = require('./Parser').Parser;
+const Formatter = require('./Formatter').Formatter;
 const EOL = '\n';  // POSIX end of line character
 
 
@@ -30,6 +33,7 @@ const EOL = '\n';  // POSIX end of line character
  */
 function Assembler(debug) {
     this.debug = debug || false;
+    this.decoder = new Decoder(this.debug);
     return this;
 }
 Assembler.prototype.constructor = Assembler;
@@ -48,15 +52,14 @@ Assembler.prototype.assembleProcedure = function(context, compilation) {
 
     // assemble the instructions into bytecode
     var instructions = compilation.getValue('$instructions');
-    const parser = new utilities.Parser();
+    const parser = new Parser();
     instructions = parser.parseInstructions(instructions.getValue());
-    const visitor = new AssemblingVisitor(context, compilation);
+    const visitor = new AssemblingVisitor(context, compilation, this.debug);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
-    const decoder = bali.decoder('        ');
-    const base16 = decoder.base16Encode(utilities.bytecode.bytecodeToBytes(bytecode));
+    const base16 = bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
     bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediatype: "application/bcod")');
     compilation.setValue('$bytecode', bytecode);
 };
@@ -64,7 +67,10 @@ Assembler.prototype.assembleProcedure = function(context, compilation) {
 
 // PRIVATE CLASSES
 
-function AssemblingVisitor(context, compilation) {
+function AssemblingVisitor(context, compilation, debug) {
+    this.debug = debug || 0;
+    this.decoder = new Decoder(this.debug);
+    this.intrinsics = require('./Intrinsics').api(this.debug);
     this.literals = context.getValue('$literals');
     this.constants = context.getValue('$constants');
     this.parameters = compilation.getValue('$parameters');
@@ -108,28 +114,28 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
     // can ignore the label at this stage since they don't show up in the bytecode
     const operation = step.getValue('$operation').toNumber();
     switch (operation) {
-        case utilities.types.JUMP:
+        case types.JUMP:
             this.visitJumpInstruction(step);
             break;
-        case utilities.types.PUSH:
+        case types.PUSH:
             this.visitPushInstruction(step);
             break;
-        case utilities.types.POP:
+        case types.POP:
             this.visitPopInstruction(step);
             break;
-        case utilities.types.LOAD:
+        case types.LOAD:
             this.visitLoadInstruction(step);
             break;
-        case utilities.types.STORE:
+        case types.STORE:
             this.visitStoreInstruction(step);
             break;
-        case utilities.types.INVOKE:
+        case types.INVOKE:
             this.visitInvokeInstruction(step);
             break;
-        case utilities.types.EXECUTE:
+        case types.EXECUTE:
             this.visitExecuteInstruction(step);
             break;
-        case utilities.types.HANDLE:
+        case types.HANDLE:
             this.visitHandleInstruction(step);
             break;
         default:
@@ -157,12 +163,12 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
     var word;
     var modifier = instruction.getValue('$modifier');
     if (!modifier) {
-        word = utilities.bytecode.encodeInstruction(utilities.types.SKIP, 0, 0);
+        word = this.decoder.encodeInstruction(types.SKIP, 0, 0);
     } else {
         modifier = modifier.toNumber();
         const label = instruction.getValue('$operand');
         const address = this.addresses.getValue(label);
-        word = utilities.bytecode.encodeInstruction(utilities.types.JUMP, modifier, address);
+        word = this.decoder.encodeInstruction(types.JUMP, modifier, address);
     }
     this.bytecode.push(word);
 };
@@ -177,20 +183,20 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     var value = instruction.getValue('$operand');
     switch(modifier) {
-        case utilities.types.HANDLER:
+        case types.HANDLER:
             value = this.addresses.getValue(value);
             break;
-        case utilities.types.LITERAL:
+        case types.LITERAL:
             value = this.literals.getIndex(value);
             break;
-        case utilities.types.CONSTANT:
+        case types.CONSTANT:
             value = this.constants.getKeys().getIndex(value);
             break;
-        case utilities.types.PARAMETER:
+        case types.PARAMETER:
             value = this.parameters.getIndex(value);
             break;
     }
-    const word = utilities.bytecode.encodeInstruction(utilities.types.PUSH, modifier, value);
+    const word = this.decoder.encodeInstruction(types.PUSH, modifier, value);
     this.bytecode.push(word);
 };
 
@@ -200,7 +206,7 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
 //     'POP' 'COMPONENT'
 AssemblingVisitor.prototype.visitPopInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
-    const word = utilities.bytecode.encodeInstruction(utilities.types.POP, modifier);
+    const word = this.decoder.encodeInstruction(types.POP, modifier);
     this.bytecode.push(word);
 };
 
@@ -214,7 +220,7 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
-    const word = utilities.bytecode.encodeInstruction(utilities.types.LOAD, modifier, index);
+    const word = this.decoder.encodeInstruction(types.LOAD, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -228,7 +234,7 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
-    const word = utilities.bytecode.encodeInstruction(utilities.types.STORE, modifier, index);
+    const word = this.decoder.encodeInstruction(types.STORE, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -240,8 +246,8 @@ AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
 AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
-    const index = utilities.intrinsics.index(symbol.toString());
-    const word = utilities.bytecode.encodeInstruction(utilities.types.INVOKE, count, index);
+    const index = this.intrinsics.index(symbol.toString());
+    const word = this.decoder.encodeInstruction(types.INVOKE, count, index);
     this.bytecode.push(word);
 };
 
@@ -255,7 +261,7 @@ AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.procedures.getIndex(symbol);
-    const word = utilities.bytecode.encodeInstruction(utilities.types.EXECUTE, modifier, index);
+    const word = this.decoder.encodeInstruction(types.EXECUTE, modifier, index);
     this.bytecode.push(word);
 };
 
@@ -265,6 +271,6 @@ AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
 //     'HANDLE' 'RESULT'
 AssemblingVisitor.prototype.visitHandleInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
-    const word = utilities.bytecode.encodeInstruction(utilities.types.HANDLE, modifier);
+    const word = this.decoder.encodeInstruction(types.HANDLE, modifier);
     this.bytecode.push(word);
 };

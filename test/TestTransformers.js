@@ -11,12 +11,13 @@
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const utilities = require('../src/utilities');
+const Parser = require('../src/Parser').Parser;
+const Formatter = require('../src/Formatter').Formatter;
 
 describe('Bali Procedure Compiler', function() {
 
     describe('Test Parser and Formatter', function() {
-        const parser = new utilities.Parser(true);
+        const parser = new Parser(true);
 
         it('should parse and format the same instructions', function() {
             const file = 'test/utilities/instructions.basm';
@@ -24,7 +25,7 @@ describe('Bali Procedure Compiler', function() {
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            const formatter = new utilities.Formatter();
+            const formatter = new Formatter();
             const formatted = formatter.formatInstructions(procedure);
             expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
         });
@@ -35,7 +36,7 @@ describe('Bali Procedure Compiler', function() {
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            const formatter = new utilities.Formatter(1);
+            const formatter = new Formatter(1);
             const formatted = formatter.formatInstructions(procedure);
             const expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
             expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>

@@ -9,9 +9,11 @@
  ************************************************************************/
 'use strict';
 
-const Compiler = require('./src/Compiler').Compiler;
+const Decoder = require('./src/Decoder').Decoder;
+const Parser = require('./src/Parser').Parser;
+const Formatter = require('./src/Formatter').Formatter;
 const Assembler = require('./src/Assembler').Assembler;
-const utilities = require('./src/utilities');
+const Compiler = require('./src/Compiler').Compiler;
 
 
 /**
@@ -26,6 +28,8 @@ const utilities = require('./src/utilities');
 exports.api = function(notary, repository, debug) {
     // validate the parameters
     debug = debug || false;
+    const intrinsics = require('./src/Intrinsics').api(debug);
+    const decoder = new Decoder(debug);
 
     return {
 
@@ -83,7 +87,7 @@ exports.api = function(notary, repository, debug) {
          * @returns {String} A string containing the corresponding assembly code.
          */
         formatInstructions: function(instructions, indentation) {
-            const formatter = new utilities.Formatter(indentation, debug);
+            const formatter = new Formatter(indentation, debug);
             return formatter.formatInstructions(instructions);
         },
 
@@ -96,7 +100,7 @@ exports.api = function(notary, repository, debug) {
          * instructions.
          */
         parseInstructions: function(assembly) {
-            const parser = new utilities.Parser(debug);
+            const parser = new Parser(debug);
             return parser.parseInstructions(assembly);
         },
 
@@ -107,7 +111,7 @@ exports.api = function(notary, repository, debug) {
          * @returns {Array} An array containing the corresponding bytecode.
          */
         bytecode: function(bytes) {
-            return utilities.bytecode.bytesToBytecode(bytes);
+            return decoder.bytesToBytecode(bytes);
         },
 
         /**
@@ -117,7 +121,7 @@ exports.api = function(notary, repository, debug) {
          * @returns {Buffer} A buffer containing the corresponding bytes.
          */
         bytes: function(bytecode) {
-            return utilities.bytecode.bytecodeToBytes(bytecode);
+            return decoder.bytecodeToBytes(bytecode);
         },
 
         /**
@@ -127,7 +131,7 @@ exports.api = function(notary, repository, debug) {
          * @return {Number} The decoded operation.
          */
         operation: function(instruction) {
-            return utilities.bytecode.decodeOperation(instruction);
+            return decoder.decodeOperation(instruction);
         },
 
         /**
@@ -137,7 +141,7 @@ exports.api = function(notary, repository, debug) {
          * @return {Number} The decoded modifier.
          */
         modifier: function(instruction) {
-            return utilities.bytecode.decodeModifier(instruction);
+            return decoder.decodeModifier(instruction);
         },
 
         /**
@@ -147,7 +151,18 @@ exports.api = function(notary, repository, debug) {
          * @return {Number} The decoded operand.
          */
         operand: function(instruction) {
-            return utilities.bytecode.decodeOperand(instruction);
+            return decoder.decodeOperand(instruction);
+        },
+
+        /**
+         * This function retrieves the index for the intrinsic function associated with the
+         * specified name.
+         *
+         * @param {String} name The name of the intrinsic function.
+         * @returns {Object} The index of the corresponding intrinsic function.
+         */
+        index: function(name) {
+            return intrinsics.index(name);
         },
 
         /**
@@ -159,7 +174,7 @@ exports.api = function(notary, repository, debug) {
          * @returns {Object} The result of the intrinsic function invocation.
          */
         invoke: function(index, ...args) {
-            return utilities.intrinsics.invoke(index, args);
+            return intrinsics.invoke(index, args);
         }
 
     };
