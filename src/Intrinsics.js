@@ -446,7 +446,7 @@ exports.api = function(debug) {
 
         $getLast: function(range) {
             validateTypeArgument('$getLast', '/bali/collections/Range', range);
-            return range.getLast();
+            return range.getLastItem();
         },
 
         $getNext: function(iterator) {
