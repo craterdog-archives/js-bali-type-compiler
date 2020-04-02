@@ -15,12 +15,14 @@ const intrinsics = require('../src/Intrinsics').api(1);
 const generator = bali.generator();
 const angle = bali.angle.PI;
 const binary = bali.binary(generator.generateBytes(10));
+const complex = bali.component('(3, 4i)');
 const number = bali.number(0.5);
 const tag = bali.tag();
 const two = bali.number(2);
 const probability = bali.probability(0.5);
 const reference = bali.reference('https://google.com/advertizing?foo=bar');
 const text = bali.text('This is text...');
+const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
 const catalog = bali.catalog();
 const list = bali.list();
@@ -297,33 +299,110 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $complement intrinsic function', function() {
+            const index = intrinsics.index('$complement');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $component intrinsic function', function() {
+            const index = intrinsics.index('$component');
+            intrinsics.invoke(index, source);
+            expect(
+                function() {
+                    intrinsics.invoke(index, '/bali/collections/List');
+                }
+            ).to.throw();
         });
 
         it('should invoke $concatenation intrinsic function', function() {
+            const index = intrinsics.index('$concatenation');
+            intrinsics.invoke(index, list, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, set);
+                }
+            ).to.throw();
         });
 
         it('should invoke $conjugate intrinsic function', function() {
+            const index = intrinsics.index('$conjugate');
+            intrinsics.invoke(index, complex);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
 
         it('should invoke $containsAll intrinsic function', function() {
+            const index = intrinsics.index('$containsAll');
+            intrinsics.invoke(index, list, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, association);
+                }
+            ).to.throw();
         });
 
         it('should invoke $containsAny intrinsic function', function() {
+            const index = intrinsics.index('$containsAny');
+            intrinsics.invoke(index, list, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, association);
+                }
+            ).to.throw();
         });
 
         it('should invoke $containsItem intrinsic function', function() {
+            const index = intrinsics.index('$containsItem');
+            intrinsics.invoke(index, list, number);
+            intrinsics.invoke(index, catalog, association);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, 5);
+                }
+            ).to.throw();
         });
 
         it('should invoke $cosine intrinsic function', function() {
+            const index = intrinsics.index('$cosine');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $default intrinsic function', function() {
+            const index = intrinsics.index('$default');
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, bali.pattern.NONE, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, undefined, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $degrees intrinsic function', function() {
+            const index = intrinsics.index('$degrees');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $difference intrinsic function', function() {

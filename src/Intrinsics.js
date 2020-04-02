@@ -330,6 +330,7 @@ exports.api = function(debug) {
 
         $containsItem: function(collection, item) {
             validateTypeArgument('$containsItem', '/bali/abstractions/Collection', collection);
+            validateTypeArgument('$containsItem', '/bali/abstractions/Component', item);
             return bali.probability(collection.containsItem(item));
         },
 
