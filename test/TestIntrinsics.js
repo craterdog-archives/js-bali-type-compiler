@@ -891,17 +891,63 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $magnitude intrinsic function', function() {
+            const index = intrinsics.index('$magnitude');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $matches intrinsic function', function() {
+            const index = intrinsics.index('$matches');
+            intrinsics.invoke(index, probability, bali.pattern.ANY);
+            expect(
+                function() {
+                    intrinsics.invoke(index, two, 2);
+                }
+            ).to.throw();
         });
+
         it('should invoke $more intrinsic function', function() {
+            const index = intrinsics.index('$more');
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, angle, probability);
+            expect(
+                function() {
+                    intrinsics.invoke(index, duration, 0);
+                }
+            ).to.throw();
         });
+
+        /* TODO: uncomment when version class has been fixed
         it('should invoke $nextVersion intrinsic function', function() {
+            const index = intrinsics.index('$nextVersion');
+            intrinsics.invoke(index, version, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, version, 2);
+                }
+            ).to.throw();
         });
+        */
+
         it('should invoke $not intrinsic function', function() {
+            const index = intrinsics.index('$not');
+            intrinsics.invoke(index, probability);
+            expect(
+                function() {
+                    intrinsics.invoke(index, true);
+                }
+            ).to.throw();
         });
+
         it('should invoke $now intrinsic function', function() {
+            const index = intrinsics.index('$now');
+            intrinsics.invoke(index);
         });
+
         it('should invoke $number intrinsic function', function() {
         });
         it('should invoke $or intrinsic function', function() {
