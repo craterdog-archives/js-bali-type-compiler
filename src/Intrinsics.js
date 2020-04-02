@@ -605,9 +605,10 @@ exports.api = function(debug) {
             return bali.list(items, parameters);
         },
 
-        $logarithm: function(number) {
-            validateTypeArgument('$logarithm', '/bali/elements/Number', number);
-            return bali.number.logarithm(number);
+        $logarithm: function(base, value) {
+            validateTypeArgument('$logarithm', '/bali/elements/Number', base);
+            validateTypeArgument('$logarithm', '/bali/elements/Number', value);
+            return bali.number.logarithm(base, value);
         },
 
         $magnitude: function(number) {

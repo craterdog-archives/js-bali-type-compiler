@@ -35,6 +35,7 @@ const stack = bali.stack();
 const symbol = bali.component('$type');
 const tree = bali.tree('/bali/composites/Statements');
 const type = bali.component('/bali/collections/Set');
+const version = bali.version([1, 2, 3]);
 const iterator = list.getIterator();
 const array = [];
 const object = {};
@@ -842,13 +843,53 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $less intrinsic function', function() {
+            const index = intrinsics.index('$less');
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, angle, probability);
+            expect(
+                function() {
+                    intrinsics.invoke(index, duration, 0);
+                }
+            ).to.throw();
         });
+
         it('should invoke $levels intrinsic function', function() {
+            const index = intrinsics.index('$levels');
+            intrinsics.invoke(index, version);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'v1.2.3');
+                }
+            ).to.throw();
         });
+
         it('should invoke $list intrinsic function', function() {
+            const index = intrinsics.index('$list');
+            intrinsics.invoke(index);
+            intrinsics.invoke(index, list);
+            intrinsics.invoke(index, list, bali.catalog({$type: '/bali/notary/Ledger'}));
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $logarithm intrinsic function', function() {
+            const index = intrinsics.index('$logarithm');
+            intrinsics.invoke(index, number, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $magnitude intrinsic function', function() {
         });
         it('should invoke $matches intrinsic function', function() {
