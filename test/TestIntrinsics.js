@@ -16,6 +16,7 @@ const generator = bali.generator();
 const angle = bali.angle.PI;
 const binary = bali.binary(generator.generateBytes(10));
 const number = bali.number(0.5);
+const tag = bali.tag();
 const two = bali.number(2);
 const probability = bali.probability(0.5);
 const reference = bali.reference('https://google.com/advertizing?foo=bar');
@@ -243,15 +244,56 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $bytes intrinsic function', function() {
+            const index = intrinsics.index('$bytes');
+            intrinsics.invoke(index, tag);
+            expect(
+                function() {
+                    intrinsics.invoke(index, binary);
+                }
+            ).to.throw();
         });
 
         it('should invoke $catalog intrinsic function', function() {
+            const index = intrinsics.index('$catalog');
+            intrinsics.invoke(index);
+            intrinsics.invoke(index, catalog);
+            intrinsics.invoke(index, catalog, bali.catalog({$type: '/bali/notary/Document'}));
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, text);
+                }
+            ).to.throw();
         });
 
         it('should invoke $coinToss intrinsic function', function() {
+            const index = intrinsics.index('$coinToss');
+            intrinsics.invoke(index, probability);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $comparison intrinsic function', function() {
+            const index = intrinsics.index('$comparison');
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, text, text);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 5, 6);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, text, number);
+                }
+            ).to.throw();
         });
 
         it('should invoke $complement intrinsic function', function() {

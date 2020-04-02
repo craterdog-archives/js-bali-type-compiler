@@ -288,6 +288,8 @@ exports.api = function(debug) {
         },
 
         $comparison: function(first, second) {
+            validateTypeArgument('$comparison', '/bali/abstractions/Component', first);
+            validateTypeArgument('$comparison', '/bali/abstractions/Component', second);
             validateSameType('$comparison', first, second);
             return bali.number(first.comparedTo(second));
         },
