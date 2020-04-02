@@ -407,12 +407,12 @@ exports.api = function(debug) {
 
         $format: function(moment) {
             validateTypeArgument('$format', '/bali/elements/Moment', moment);
-            return bali.Text(moment.getFormat());
+            return bali.text(moment.getFormat());
         },
 
         $fragment: function(reference) {
             validateTypeArgument('$fragment', '/bali/elements/Reference', reference);
-            return bali.Text(reference.getFragment());
+            return bali.text(reference.getFragment());
         },
 
         $getFirst: function(range) {
@@ -435,7 +435,7 @@ exports.api = function(debug) {
             validateTypeArgument('$getItem', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$getItem', '/bali/elements/Number', index);
             validateIndex('$getItem', collection.getSize(), index);
-            return collection.getItem(index.getNumber());
+            return collection.getItem(index.toNumber());
         },
 
         $getItems: function(collection, range) {
@@ -513,7 +513,7 @@ exports.api = function(debug) {
             validateTypeArgument('$insertItem', '/bali/elements/Number', index);
             validateTypeArgument('$insertItem', '/bali/abstractions/Component', item);
             validateIndex('$insertItem', list.getSize(), index);
-            list.insertItem(index.getNumber(), item);
+            list.insertItem(index.toNumber(), item);
             return list;
         },
 
@@ -521,7 +521,7 @@ exports.api = function(debug) {
             validateTypeArgument('$insertItems', '/bali/collections/List', list);
             validateTypeArgument('$insertItems', '/bali/elements/Number', index);
             validateTypeArgument('$insertItems', '/bali/abstractions/Collection', items);
-            list.insertItems(index.getNumber(), items);
+            list.insertItems(index.toNumber(), items);
             return list;
         },
 

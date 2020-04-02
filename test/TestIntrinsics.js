@@ -22,7 +22,7 @@ const number = bali.number(0.5);
 const tag = bali.tag();
 const two = bali.number(2);
 const probability = bali.probability(0.5);
-const reference = bali.reference('https://google.com/advertizing?foo=bar');
+const reference = bali.reference('https://google.com/advertizing?foo=bar#home');
 const text = bali.text('This is text...');
 const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
@@ -508,52 +508,113 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $format intrinsic function', function() {
+            const index = intrinsics.index('$format');
+            intrinsics.invoke(index, moment);
+            expect(
+                function() {
+                    intrinsics.invoke(index, duration);
+                }
+            ).to.throw();
         });
 
         it('should invoke $fragment intrinsic function', function() {
+            const index = intrinsics.index('$fragment');
+            intrinsics.invoke(index, reference);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'https://google.com#home');
+                }
+            ).to.throw();
         });
 
         it('should invoke $getFirst intrinsic function', function() {
+            const index = intrinsics.index('$getFirst');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
 
         it('should invoke $getHead intrinsic function', function() {
+            const index = intrinsics.index('$getHead');
+            intrinsics.invoke(index, queue);
+            expect(
+                function() {
+                    intrinsics.invoke(index, stack);
+                }
+            ).to.throw();
         });
+
         it('should invoke $getIndex intrinsic function', function() {
+            const index = intrinsics.index('$getIndex');
+            intrinsics.invoke(index, list, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, 5);
+                }
+            ).to.throw();
         });
+
         it('should invoke $getItem intrinsic function', function() {
+            const index = intrinsics.index('$getItem');
+            intrinsics.invoke(index, list, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, 5);
+                }
+            ).to.throw();
         });
+
         it('should invoke $getItems intrinsic function', function() {
         });
+
         it('should invoke $getLast intrinsic function', function() {
         });
+
         it('should invoke $getNext intrinsic function', function() {
         });
+
         it('should invoke $getParameter intrinsic function', function() {
         });
+
         it('should invoke $getPrevious intrinsic function', function() {
         });
+
         it('should invoke $getTop intrinsic function', function() {
         });
+
         it('should invoke $getValue intrinsic function', function() {
         });
+
         it('should invoke $getValues intrinsic function', function() {
         });
+
         it('should invoke $hash intrinsic function', function() {
         });
+
         it('should invoke $hasNext intrinsic function', function() {
         });
+
         it('should invoke $hasPrevious intrinsic function', function() {
         });
+
         it('should invoke $HTML intrinsic function', function() {
         });
+
         it('should invoke $imaginary intrinsic function', function() {
         });
+
         it('should invoke $insertItem intrinsic function', function() {
         });
+
         it('should invoke $insertItems intrinsic function', function() {
         });
+
         it('should invoke $interfaces intrinsic function', function() {
         });
+
         it('should invoke $inverse intrinsic function', function() {
         });
         it('should invoke $isEmpty intrinsic function', function() {
