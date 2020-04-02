@@ -279,6 +279,7 @@ exports.api = function(debug) {
         $catalog: function(items, parameters) {
             validateOptionalTypeArgument('$catalog', '/bali/abstractions/Collection', items);
             validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.catalog(items, parameters);
         },
 
@@ -359,8 +360,9 @@ exports.api = function(debug) {
 
         $document: function(component, indentation) {
             validateTypeArgument('$document', '/bali/abstractions/Component', component);
-            validateTypeArgument('$document', '/bali/elements/Text', indentation);
-            return bali.text(EOL + component.toBDN(indentation.getValue()) + EOL);
+            validateOptionalTypeArgument('$document', '/bali/elements/Text', indentation);
+            if (indentation) indentation = indentation.getValue();
+            return bali.text(EOL + component.toBDN(indentation) + EOL);
         },
 
         $duplicate: function(component) {
@@ -599,6 +601,7 @@ exports.api = function(debug) {
         $list: function(items, parameters) {
             validateOptionalTypeArgument('$list', '/bali/abstractions/Collection', items);
             validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.list(items, parameters);
         },
 
@@ -678,7 +681,8 @@ exports.api = function(debug) {
 
         $procedure: function(statements, parameters) {
             validateTypeArgument('$procedure', '/bali/composites/Statements', statements);
-            validateTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
+            validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.procedure(statements, parameters);
         },
 
@@ -696,6 +700,7 @@ exports.api = function(debug) {
         $queue: function(items, parameters) {
             validateOptionalTypeArgument('$queue', '/bali/abstractions/Collection', items);
             validateOptionalTypeArgument('$queue', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.queue(items, parameters);
         },
 
@@ -715,6 +720,7 @@ exports.api = function(debug) {
             validateTypeArgument('$range', '/bali/abstractions/Component', last);
             validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             validateAreSameType('$range', first, last);
+            if (parameters) parameters = parameters.toObject();
             return bali.range(first, last, parameters);
         },
 
@@ -820,6 +826,7 @@ exports.api = function(debug) {
         $set: function(items, parameters) {
             validateOptionalTypeArgument('$set', '/bali/abstractions/Collection', items);
             validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.set(items, parameters);
         },
 
@@ -865,6 +872,7 @@ exports.api = function(debug) {
         $stack: function(items, parameters) {
             validateOptionalTypeArgument('$stack', '/bali/abstractions/Collection', items);
             validateOptionalTypeArgument('$stack', '/bali/collections/Catalog', parameters);
+            if (parameters) parameters = parameters.toObject();
             return bali.stack(items, parameters);
         },
 
