@@ -20,6 +20,7 @@ const duration = bali.component('~P1W');
 const moment = bali.moment();
 const number = bali.number(0.5);
 const tag = bali.tag();
+const zero = bali.number(0);
 const two = bali.number(2);
 const probability = bali.probability(0.5);
 const reference = bali.reference('https://google.com/advertizing?foo=bar#home');
@@ -27,13 +28,14 @@ const text = bali.text('This is text...');
 const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
 const catalog = bali.catalog();
-const list = bali.list();
+const list = bali.list([1, 2, 3]);
 const range = bali.range(1, 5);
 const set = bali.set();
 const queue = bali.queue();
 const stack = bali.stack();
 const symbol = bali.component('$type');
-const tree = bali.tree('/bali/composites/Statements');
+const statements = bali.tree('/bali/composites/Statements');
+const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3]);
 const iterator = list.getIterator();
@@ -949,59 +951,289 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $number intrinsic function', function() {
+            const index = intrinsics.index('$number');
+            intrinsics.invoke(index, angle);
+            intrinsics.invoke(index, probability);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
         });
+
         it('should invoke $or intrinsic function', function() {
+            const index = intrinsics.index('$or');
+            intrinsics.invoke(index, probability, probability);
+            intrinsics.invoke(index, set, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $parameters intrinsic function', function() {
+            const index = intrinsics.index('$parameters');
+            intrinsics.invoke(index, catalog);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 5);
+                }
+            ).to.throw();
         });
+
         it('should invoke $parent intrinsic function', function() {
+            const index = intrinsics.index('$parent');
+            intrinsics.invoke(index, tree);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
+
         it('should invoke $path intrinsic function', function() {
+            const index = intrinsics.index('$path');
+            intrinsics.invoke(index, reference);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $phase intrinsic function', function() {
+            const index = intrinsics.index('$phase');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
+
+        /* TODO: uncomment when new utilities.Generator bug has been fixed
         it('should invoke $probability intrinsic function', function() {
+            const index = intrinsics.index('$probability');
+            intrinsics.invoke(index);
         });
+        */
+
         it('should invoke $procedure intrinsic function', function() {
+            const index = intrinsics.index('$procedure');
+            intrinsics.invoke(index, statements);
+            intrinsics.invoke(index, statements, catalog);
+            expect(
+                function() {
+                    intrinsics.invoke(index, tree);
+                }
+            ).to.throw();
         });
+
         it('should invoke $product intrinsic function', function() {
+            const index = intrinsics.index('$product');
+            intrinsics.invoke(index, number, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $query intrinsic function', function() {
+            const index = intrinsics.index('$query');
+            intrinsics.invoke(index, reference);
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $queue intrinsic function', function() {
+            const index = intrinsics.index('$queue');
+            intrinsics.invoke(index);
+            intrinsics.invoke(index, queue);
+            intrinsics.invoke(index, queue, bali.catalog({$type: '/bali/collections/Queue'}));
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, queue, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $quotient intrinsic function', function() {
+            const index = intrinsics.index('$quotient');
+            intrinsics.invoke(index, number, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $radians intrinsic function', function() {
+            const index = intrinsics.index('$radians');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
+
         it('should invoke $range intrinsic function', function() {
+            const index = intrinsics.index('$range');
+            intrinsics.invoke(index, zero, two);
+            intrinsics.invoke(index, zero, two, bali.catalog({$collection: [0, 1, 2]}));
+            expect(
+                function() {
+                    intrinsics.invoke(index, 0, 2);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, zero, two, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $real intrinsic function', function() {
+            const index = intrinsics.index('$real');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $reciprocal intrinsic function', function() {
+            const index = intrinsics.index('$reciprocal');
+            intrinsics.invoke(index, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
         });
+
         it('should invoke $remainder intrinsic function', function() {
+            const index = intrinsics.index('$remainder');
+            intrinsics.invoke(index, number, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeAll intrinsic function', function() {
+            const index = intrinsics.index('$removeAll');
+            intrinsics.invoke(index, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, range);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeHead intrinsic function', function() {
+            const index = intrinsics.index('$removeHead');
+            intrinsics.invoke(index, queue);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeIndex intrinsic function', function() {
+            const index = intrinsics.index('$removeIndex');
+            intrinsics.invoke(index, bali.list([1, 2, 3, 4, 5]), two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, symbol);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeItem intrinsic function', function() {
+            const index = intrinsics.index('$removeItem');
+            intrinsics.invoke(index, set, symbol);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, two);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeItems intrinsic function', function() {
+            const index = intrinsics.index('$removeItems');
+            intrinsics.invoke(index, set, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, set);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeRange intrinsic function', function() {
+            const index = intrinsics.index('$removeRange');
+            intrinsics.invoke(index, list, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, zero, two);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeTop intrinsic function', function() {
+            const index = intrinsics.index('$removeTop');
+            intrinsics.invoke(index, stack);
+            expect(
+                function() {
+                    intrinsics.invoke(index, queue);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeValue intrinsic function', function() {
+            const index = intrinsics.index('$removeValue');
+            intrinsics.invoke(index, catalog, symbol);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, association);
+                }
+            ).to.throw();
         });
+
         it('should invoke $removeValues intrinsic function', function() {
+            const index = intrinsics.index('$removeValues');
+            intrinsics.invoke(index, catalog, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, set);
+                }
+            ).to.throw();
         });
+
         it('should invoke $reverseItems intrinsic function', function() {
+            const index = intrinsics.index('$reverseItems');
+            intrinsics.invoke(index, list);
+            intrinsics.invoke(index, catalog);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
         });
+
         it('should invoke $same intrinsic function', function() {
         });
         it('should invoke $sans intrinsic function', function() {

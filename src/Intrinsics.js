@@ -88,23 +88,6 @@ exports.api = function(debug) {
 
     // PRIVATE FUNCTIONS
 
-    const validateSameType = function(procedure, first, second) {
-        const firstType = first.getType();
-        const secondType = second.getType();
-        if (firstType !== secondType) {
-            const exception = bali.exception({
-                $module: '/bali/compiler/Intrinsics',
-                $procedure: procedure,
-                $exception: '$argumentType',
-                $first: firstType,
-                $second: secondType,
-                $text: 'The arguments passed into the intrinsic function are not the same type.'
-            });
-            if (debug > 0) console.error(exception.toString());
-            throw exception;
-        }
-    };
-
     const validateTypeArgument = function(procedure, type, argument) {
         if (argument === undefined || argument === null || !argument.isComponent || !argument.isType(type)) {
             const exception = bali.exception({
@@ -141,9 +124,20 @@ exports.api = function(debug) {
         }
     };
 
-    const validateOptionalInterfaceArgument = function(procedure, iface, argument) {
-        if (argument !== undefined && argument !== null && !(argument.isComponent && argument.isEqualTo(bali.pattern.NONE))) {
-            validateInterfaceArgument(procedure, iface, argument);
+    const validateSameType = function(procedure, first, second) {
+        const firstType = first.getType();
+        const secondType = second.getType();
+        if (firstType !== secondType) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Intrinsics',
+                $procedure: procedure,
+                $exception: '$argumentType',
+                $first: firstType,
+                $second: secondType,
+                $text: 'The arguments passed into the intrinsic function are not the same type.'
+            });
+            if (debug > 0) console.error(exception.toString());
+            throw exception;
         }
     };
 
@@ -720,7 +714,7 @@ exports.api = function(debug) {
             validateTypeArgument('$range', '/bali/abstractions/Component', first);
             validateTypeArgument('$range', '/bali/abstractions/Component', last);
             validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
-            validateAreSameType('$range', first, last);
+            validateSameType('$range', first, last);
             if (parameters) parameters = parameters.toObject();
             return bali.range(first, last, parameters);
         },
@@ -809,7 +803,7 @@ exports.api = function(debug) {
         $sans: function(first, second) {
             validateInterfaceArgument('$sans', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$sans', '/bali/interfaces/Logical', second);
-            validateAreSameType('$sans', first, second);
+            validateSameType('$sans', first, second);
             return first.constructor.sans(first, second);
         },
 
@@ -885,7 +879,7 @@ exports.api = function(debug) {
         $sum: function(first, second) {
             validateInterfaceArgument('$sum', '/bali/interfaces/Scalable', first);
             validateInterfaceArgument('$sum', '/bali/interfaces/Scalable', second);
-            validateAreSameType('$sum', first, second);
+            validateSameType('$sum', first, second);
             return first.constructor.sum(first, second);
         },
 
@@ -954,7 +948,7 @@ exports.api = function(debug) {
         $xor: function(first, second) {
             validateInterfaceArgument('$xor', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$xor', '/bali/interfaces/Logical', second);
-            validateAreSameType('$xor', first, second);
+            validateSameType('$xor', first, second);
             return first.constructor.xor(first, second);
         }
 
