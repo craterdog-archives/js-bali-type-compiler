@@ -896,7 +896,7 @@ exports.api = function(debug) {
 
         $tag: function(size) {
             validateOptionalTypeArgument('$tag', '/bali/elements/Number', size);
-            return bali.tag(size);
+            return bali.tag(size.toNumber());
         },
 
         $tangent: function(angle) {

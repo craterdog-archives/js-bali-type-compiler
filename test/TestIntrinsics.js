@@ -29,9 +29,10 @@ const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
 const catalog = bali.catalog();
 const list = bali.list([1, 2, 3]);
+const percent = bali.percent(25);
+const queue = bali.queue();
 const range = bali.range(1, 5);
 const set = bali.set();
-const queue = bali.queue();
 const stack = bali.stack();
 const symbol = bali.component('$type');
 const statements = bali.tree('/bali/composites/Statements');
@@ -1375,37 +1376,156 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $statements intrinsic function', function() {
             const index = intrinsics.index('$statements');
             intrinsics.invoke(index, procedure);
+            intrinsics.invoke(index, procedure, bali.catalog({$foo: 'bar'}));
             expect(
                 function() {
                     intrinsics.invoke(index, probability);
                 }
             ).to.throw();
         });
+
         it('should invoke $sum intrinsic function', function() {
+            const index = intrinsics.index('$sum');
+            intrinsics.invoke(index, duration, duration);
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, angle, angle);
+            intrinsics.invoke(index, percent, percent);
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle, two);
+                }
+            ).to.throw();
         });
+
         it('should invoke $supplement intrinsic function', function() {
+            const index = intrinsics.index('$supplement');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
         });
+
         it('should invoke $supportsInterface intrinsic function', function() {
+            const index = intrinsics.index('$supportsInterface');
+            intrinsics.invoke(index, probability, type);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, '/bali/interfaces/Sortable');
+                }
+            ).to.throw();
         });
+
         it('should invoke $tag intrinsic function', function() {
+            const index = intrinsics.index('$tag');
+            intrinsics.invoke(index, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 20);
+                }
+            ).to.throw();
         });
+
         it('should invoke $tangent intrinsic function', function() {
+            const index = intrinsics.index('$tangent');
+            intrinsics.invoke(index, angle);
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
         });
+
         it('should invoke $toEnd intrinsic function', function() {
+            const index = intrinsics.index('$toEnd');
+            intrinsics.invoke(index, iterator);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
+
         it('should invoke $toSlot intrinsic function', function() {
+            const index = intrinsics.index('$toSlot');
+            intrinsics.invoke(index, iterator, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, iterator);
+                }
+            ).to.throw();
         });
+
         it('should invoke $toStart intrinsic function', function() {
+            const index = intrinsics.index('$toStart');
+            intrinsics.invoke(index, iterator);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
         });
+
         it('should invoke $tree intrinsic function', function() {
+            const index = intrinsics.index('$tree');
+            intrinsics.invoke(index, type);
+            intrinsics.invoke(index, type, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, type, text);
+                }
+            ).to.throw();
         });
+
         it('should invoke $type intrinsic function', function() {
+            const index = intrinsics.index('$type');
+            intrinsics.invoke(index, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'This is some text');
+                }
+            ).to.throw();
         });
+
+        /* TODO: uncomment when version class has been fixed
         it('should invoke $validNextVersion intrinsic function', function() {
+            const index = intrinsics.index('$validNextVersion');
+            intrinsics.invoke(index, version, bali.version[1, 3]);
+            intrinsics.invoke(index, version, bali.version[1, 2, 4]);
+            intrinsics.invoke(index, version, bali.version[1, 2, 3, 1]);
+            expect(
+                function() {
+                    intrinsics.invoke(index, version, 'v1.2.3.1');
+                }
+            ).to.throw();
         });
+        */
+
         it('should invoke $value intrinsic function', function() {
+            const index = intrinsics.index('$value');
+            intrinsics.invoke(index, association);
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
         });
+
         it('should invoke $xor intrinsic function', function() {
+            const index = intrinsics.index('$xor');
+            intrinsics.invoke(index, probability, probability);
+            intrinsics.invoke(index, set, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, probability);
+                }
+            ).to.throw();
         });
 
     });
