@@ -85,13 +85,11 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, object, association);
                 }
             ).to.throw();
-            /* TODO: uncomment once bug in Range is fixed
             expect(
                 function() {
                     intrinsics.invoke(index, range, 6);
                 }
             ).to.throw();
-            */
             expect(
                 function() {
                     intrinsics.invoke(index, association, 6);
@@ -479,9 +477,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $exponential intrinsic function', function() {
             const index = intrinsics.index('$exponential');
-            /* TODO: uncomment once bug in Calculator is fixed
             intrinsics.invoke(index, number, number);
-            */
             expect(
                 function() {
                     intrinsics.invoke(index, number, probability);
@@ -925,7 +921,6 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        /* TODO: uncomment when version class has been fixed
         it('should invoke $nextVersion intrinsic function', function() {
             const index = intrinsics.index('$nextVersion');
             intrinsics.invoke(index, version, two);
@@ -935,7 +930,6 @@ describe('Bali Intrinsic Functions', function() {
                 }
             ).to.throw();
         });
-        */
 
         it('should invoke $not intrinsic function', function() {
             const index = intrinsics.index('$not');
@@ -1014,12 +1008,10 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        /* TODO: uncomment when new utilities.Generator bug has been fixed
         it('should invoke $probability intrinsic function', function() {
             const index = intrinsics.index('$probability');
             intrinsics.invoke(index);
         });
-        */
 
         it('should invoke $procedure intrinsic function', function() {
             const index = intrinsics.index('$procedure');
@@ -1493,19 +1485,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        /* TODO: uncomment when version class has been fixed
         it('should invoke $validNextVersion intrinsic function', function() {
             const index = intrinsics.index('$validNextVersion');
-            intrinsics.invoke(index, version, bali.version[1, 3]);
-            intrinsics.invoke(index, version, bali.version[1, 2, 4]);
-            intrinsics.invoke(index, version, bali.version[1, 2, 3, 1]);
+            intrinsics.invoke(index, version, bali.version([1, 3]));
+            intrinsics.invoke(index, version, bali.version([1, 2, 4]));
+            intrinsics.invoke(index, version, bali.version([1, 2, 3, 1]));
             expect(
                 function() {
                     intrinsics.invoke(index, version, 'v1.2.3.1');
                 }
             ).to.throw();
         });
-        */
 
         it('should invoke $value intrinsic function', function() {
             const index = intrinsics.index('$value');
