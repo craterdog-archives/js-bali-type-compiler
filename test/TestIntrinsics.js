@@ -1009,7 +1009,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, probability, 5);
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, two);
                 }
             ).to.throw();
         });
@@ -1020,6 +1030,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
                 }
             ).to.throw();
             expect(
@@ -1035,6 +1050,16 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, list);
                 }
             ).to.throw();
             expect(
@@ -1084,6 +1109,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, set, '$type');
                 }
             ).to.throw();
@@ -1129,6 +1159,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, list, symbol);
                 }
             ).to.throw();
@@ -1144,6 +1179,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, catalog, symbol);
                 }
             ).to.throw();
@@ -1153,6 +1193,11 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$hash');
             intrinsics.invoke(index, probability);
             intrinsics.invoke(index, catalog);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
             expect(
                 function() {
                     intrinsics.invoke(index, 5);
@@ -1200,6 +1245,16 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, type);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, 'This is a document');
                 }
             ).to.throw();
@@ -1230,6 +1285,26 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, two, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, 2, symbol);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, catalog, two, association);
                 }
             ).to.throw();
@@ -1245,7 +1320,27 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, two, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, list, 2, stack);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, two, stack);
                 }
             ).to.throw();
         });
@@ -1331,6 +1426,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
                 }
             ).to.throw();
             expect(
@@ -1425,6 +1525,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, moment);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, duration, duration);
                 }
             ).to.throw();
@@ -1437,6 +1542,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, text);
                 }
             ).to.throw();
             expect(
@@ -1488,7 +1598,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, number, angle);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle, number);
                 }
             ).to.throw();
         });
@@ -1518,7 +1638,12 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, two, 2);
+                    intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 2, bali.pattern.ANY);
                 }
             ).to.throw();
         });
@@ -1534,6 +1659,16 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, duration);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 0, duration);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, duration, 0);
                 }
             ).to.throw();
@@ -1545,6 +1680,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, version);
                 }
             ).to.throw();
             expect(
@@ -1597,6 +1737,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability);
                 }
             ).to.throw();
             expect(
@@ -1697,7 +1842,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, angle, angle);
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, number, angle);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, angle, number);
                 }
             ).to.throw();
         });
@@ -1744,7 +1899,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, probability, probability);
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, number, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, number);
                 }
             ).to.throw();
         });
@@ -1775,7 +1940,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, 0, 2);
+                    intrinsics.invoke(index, zero);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, zero, 2);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 0, two);
                 }
             ).to.throw();
             expect(
@@ -1825,7 +2000,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, probability, probability);
+                    intrinsics.invoke(index, number);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, number, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, number);
                 }
             ).to.throw();
         });
@@ -1870,6 +2055,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, catalog, symbol);
                 }
             ).to.throw();
@@ -1881,6 +2071,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
                 }
             ).to.throw();
             expect(
@@ -1900,6 +2095,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, list, set);
                 }
             ).to.throw();
@@ -1911,6 +2111,16 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
                 }
             ).to.throw();
             expect(
@@ -1945,6 +2155,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, catalog, association);
                 }
             ).to.throw();
@@ -1956,6 +2171,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog);
                 }
             ).to.throw();
             expect(
@@ -1992,6 +2212,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, two);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, two, 2);
                 }
             ).to.throw();
@@ -2008,6 +2233,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, set, probability);
                 }
             ).to.throw();
@@ -2020,6 +2250,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, number);
                 }
             ).to.throw();
             expect(
@@ -2071,7 +2306,27 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, list, 2, probability);
+                    intrinsics.invoke(index, bali.list([0, 1, 2]));
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), 2, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), two, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.set([0, 1, 2]), two, probability);
                 }
             ).to.throw();
         });
@@ -2086,7 +2341,27 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, catalog, association);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, symbol, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, 5, symbol);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, symbol, text);
                 }
             ).to.throw();
         });
@@ -2197,6 +2472,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, angle, two);
                 }
             ).to.throw();
@@ -2223,6 +2503,16 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, [1, 2, 3], type);
                 }
             ).to.throw();
             expect(
@@ -2355,7 +2645,17 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
+                    intrinsics.invoke(index, version);
+                }
+            ).to.throw();
+            expect(
+                function() {
                     intrinsics.invoke(index, version, 'v1.2.3.1');
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'v1.2.3', version);
                 }
             ).to.throw();
         });
@@ -2382,6 +2682,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
                 }
             ).to.throw();
             expect(
