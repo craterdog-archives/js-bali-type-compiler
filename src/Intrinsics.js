@@ -142,7 +142,28 @@ exports.api = function(debug) {
     };
 
     const validateIndex = function(procedure, size, index) {
-        index = Math.abs(index);
+        if (size === 0) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Intrinsics',
+                $procedure: procedure,
+                $exception: '$argumentValue',
+                $text: 'An empty sequence cannot be accessed with an index.'
+            });
+            if (debug > 0) console.error(exception.toString());
+            throw exception;
+        }
+        if (Math.round(index) !== index) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Intrinsics',
+                $procedure: procedure,
+                $exception: '$argumentType',
+                $index: index,
+                $text: 'The index passed into the intrinsic function is not an integer.'
+            });
+            if (debug > 0) console.error(exception.toString());
+            throw exception;
+        }
+        index = Math.abs(index);  // handle reverse indexing
         if (index === 0 || index > size) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
@@ -223,7 +244,10 @@ exports.api = function(debug) {
         $base2: function(binary, indentation) {
             validateTypeArgument('$base2', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
-            if (indentation) indentation = indentation.getValue();
+            if (indentation) {
+                indentation = indentation.toNumber();
+                validateIndex('$base2', 20, indentation);
+            }
             const decoder = bali.decoder(indentation);
             return bali.text(decoder.base2Encode(binary.getValue()));
         },
@@ -231,7 +255,10 @@ exports.api = function(debug) {
         $base16: function(binary, indentation) {
             validateTypeArgument('$base16', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
-            if (indentation) indentation = indentation.getValue();
+            if (indentation) {
+                indentation = indentation.toNumber();
+                validateIndex('$base16', 20, indentation);
+            }
             const decoder = bali.decoder(indentation);
             return bali.text(decoder.base16Encode(binary.getValue()));
         },
@@ -239,7 +266,10 @@ exports.api = function(debug) {
         $base32: function(binary, indentation) {
             validateTypeArgument('$base32', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
-            if (indentation) indentation = indentation.getValue();
+            if (indentation) {
+                indentation = indentation.toNumber();
+                validateIndex('$base32', 20, indentation);
+            }
             const decoder = bali.decoder(indentation);
             return bali.text(decoder.base32Encode(binary.getValue()));
         },
@@ -247,7 +277,10 @@ exports.api = function(debug) {
         $base64: function(binary, indentation) {
             validateTypeArgument('$base64', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base64', '/bali/elements/Number', indentation);
-            if (indentation) indentation = indentation.getValue();
+            if (indentation) {
+                indentation = indentation.toNumber();
+                validateIndex('$base64', 20, indentation);
+            }
             const decoder = bali.decoder(indentation);
             return bali.text(decoder.base64Encode(binary.getValue()));
         },
@@ -255,7 +288,9 @@ exports.api = function(debug) {
         $binary: function(number, parameters) {
             validateTypeArgument('$binary', '/bali/elements/Number', number);
             validateOptionalTypeArgument('$binary', '/bali/collections/Catalog', parameters);
-            const bytes = generator.generateBytes(number.toNumber());
+            number = number.toNumber();
+            validateIndex('$binary', 1024, number);
+            const bytes = generator.generateBytes(number);
             if (parameters) parameters = parameters.toObject();
             return bali.binary(bytes, parameters);
         },
@@ -285,7 +320,6 @@ exports.api = function(debug) {
         $comparison: function(first, second) {
             validateTypeArgument('$comparison', '/bali/abstractions/Component', first);
             validateTypeArgument('$comparison', '/bali/abstractions/Component', second);
-            validateSameType('$comparison', first, second);
             return bali.number(first.comparedTo(second));
         },
 
@@ -354,8 +388,11 @@ exports.api = function(debug) {
 
         $document: function(component, indentation) {
             validateTypeArgument('$document', '/bali/abstractions/Component', component);
-            validateOptionalTypeArgument('$document', '/bali/elements/Text', indentation);
-            if (indentation) indentation = indentation.getValue();
+            validateOptionalTypeArgument('$document', '/bali/elements/Number', indentation);
+            if (indentation) {
+                indentation = indentation.toNumber();
+                validateIndex('$document', 20, indentation);
+            }
             return bali.text(EOL + component.toBDN(indentation) + EOL);
         },
 
@@ -428,8 +465,9 @@ exports.api = function(debug) {
         $getItem: function(collection, index) {
             validateTypeArgument('$getItem', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$getItem', '/bali/elements/Number', index);
+            index = index.toNumber();
             validateIndex('$getItem', collection.getSize(), index);
-            return collection.getItem(index.toNumber());
+            return collection.getItem(index);
         },
 
         $getItems: function(collection, range) {
@@ -506,8 +544,9 @@ exports.api = function(debug) {
             validateTypeArgument('$insertItem', '/bali/collections/List', list);
             validateTypeArgument('$insertItem', '/bali/elements/Number', index);
             validateTypeArgument('$insertItem', '/bali/abstractions/Component', item);
+            index = index.toNumber();
             validateIndex('$insertItem', list.getSize(), index);
-            list.insertItem(index.toNumber(), item);
+            list.insertItem(index, item);
             return list;
         },
 
@@ -515,7 +554,9 @@ exports.api = function(debug) {
             validateTypeArgument('$insertItems', '/bali/collections/List', list);
             validateTypeArgument('$insertItems', '/bali/elements/Number', index);
             validateTypeArgument('$insertItems', '/bali/abstractions/Collection', items);
-            list.insertItems(index.toNumber(), items);
+            index = index.toNumber();
+            validateIndex('$insertItems', list.getSize(), index);
+            list.insertItems(index, items);
             return list;
         },
 
@@ -625,6 +666,7 @@ exports.api = function(debug) {
         $nextVersion: function(version, level) {
             validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
             validateTypeArgument('$nextVersion', '/bali/elements/Number', level);
+            level = level.toNumber();
             validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
             return bali.version.nextVersion(version, level);
         },
@@ -749,6 +791,7 @@ exports.api = function(debug) {
         $removeIndex: function(list, index) {
             validateTypeArgument('$removeIndex', '/bali/collections/List', list);
             validateTypeArgument('$removeIndex', '/bali/elements/Number', index);
+            index = index.toNumber();
             validateIndex('$removeIndex', list.getSize(), index);
             return list.removeItem(index);
         },
@@ -829,6 +872,7 @@ exports.api = function(debug) {
             validateTypeArgument('$setItem', '/bali/collections/List', list);
             validateTypeArgument('$setItem', '/bali/elements/Number', index);
             validateTypeArgument('$setItem', '/bali/abstractions/Component', item);
+            index = index.toNumber();
             validateIndex('$setItem', list.getSize(), index);
             list.setItem(index, item);
             return list;
@@ -896,7 +940,9 @@ exports.api = function(debug) {
 
         $tag: function(size) {
             validateOptionalTypeArgument('$tag', '/bali/elements/Number', size);
-            return bali.tag(size.toNumber());
+            size = size.toNumber();
+            validateIndex('$tag', 1024, size);
+            return bali.tag(size);
         },
 
         $tangent: function(angle) {
