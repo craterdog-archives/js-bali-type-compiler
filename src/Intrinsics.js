@@ -82,7 +82,7 @@ exports.api = function(debug) {
             if (debug > 0) console.error(exception.toString());
             throw exception;
         }
-        return functions[names[index]](args[0], args[1], args[2]);
+        return functions[index](args[0], args[1], args[2]);
     };
 
 
@@ -161,7 +161,7 @@ exports.api = function(debug) {
     /*
      * The list of intrinsic functions supported by the virtual machine.
      */
-    const functions = {
+    const intrinsics = {
 
         $invalid: function() {
             throw new Error('PROCESSOR: No intrinsic function should have an index of zero.');
@@ -957,7 +957,15 @@ exports.api = function(debug) {
     /*
      * A list of the names of the intrinsic functions supported by the virtual machine.
      */
-    const names = Object.keys(functions);  // javascript now preserves the chronological order of keys
+    const names = Object.keys(intrinsics);  // javascript now preserves the chronological order of keys
+
+    /*
+     * A list of the implementations of the intrinsic functions supported by the virtual machine.
+     */
+    const functions = [];
+    names.forEach((name) => {
+        functions.push(intrinsics[name]);
+    });
 
     // return the actual API
     return {
