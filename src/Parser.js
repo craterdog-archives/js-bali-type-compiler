@@ -243,20 +243,20 @@ ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
 };
 
 
-// executeInstruction:
-//     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
-ParsingVisitor.prototype.visitExecuteInstruction = function(ctx) {
+// sendInstruction:
+//     'SEND' SYMBOL 'TO' 'COMPONENT' |
+//     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+ParsingVisitor.prototype.visitSendInstruction = function(ctx) {
     const instruction = bali.catalog();
-    instruction.setValue('$operation', types.EXECUTE);
+    instruction.setValue('$operation', types.SEND);
     var string = '';
     for (var i = 2; i < ctx.children.length; i++) {
         string += ctx.children[i].getText() + ' ';
     }
     string = string.slice(0, -1);  // strip off last space
-    const modifier = types.executeModifierValue(string);
+    const modifier = types.sendModifierValue(string);
     instruction.setValue('$modifier', modifier);
     instruction.setValue('$operand', bali.component(ctx.SYMBOL().getText()));
     this.result = instruction;

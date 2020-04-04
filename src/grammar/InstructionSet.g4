@@ -20,7 +20,7 @@ instruction:
     loadInstruction |
     storeInstruction |
     invokeInstruction |
-    executeInstruction |
+    sendInstruction |
     handleInstruction
 ;
 
@@ -81,16 +81,22 @@ invokeInstruction:
     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 ;
 
-// Load the bytecode for the specified procedure into a new component context
-// and begin executing it with the target component and array of arguments
-// that are on the top of the component stack. When the new component context
-// completes its execution, the resulting value replaces the target component
-// and array of arguments that were on the top of the component stack.
-executeInstruction:
-    'EXECUTE' SYMBOL |
-    'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
-    'EXECUTE' SYMBOL 'ON' 'TARGET' |
-    'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
+// Send a message with an optional list of arguments to the component or
+// committed document name that is on top of the component stack. If the
+// recipient is a named document, a new procedure context containing the
+// message, arguments, and document name is placed on a queue to be executed
+// by the next available processor. Otherwise, the current processor loads the
+// bytecode for the procedure associated with the message defined in the
+// component's type definition into a new procedure context and begins
+// executing it using the target component and array of arguments.  When the
+// new procedure context completes its execution, the resulting value replaces
+// the component and array of arguments that were on the top of the component
+// stack.
+sendInstruction:
+    'SEND' SYMBOL 'TO' 'COMPONENT' |
+    'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
+    'SEND' SYMBOL 'TO' 'DOCUMENT' |
+    'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 ;
 
 // Pop the result that is currently on top of the component stack off

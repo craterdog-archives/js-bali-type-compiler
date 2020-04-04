@@ -153,7 +153,7 @@ Compiler.prototype.compileProcedure = function(type, source) {
     const procedure = bali.catalog({
         $parameters: parameters,
         $variables: bali.set(['$target']),
-        $procedures: bali.set(),
+        $messages: bali.set(),
         $addresses: bali.catalog()
     });
 
@@ -898,7 +898,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH ARGUMENTS');
+        this.builder.insertSendInstruction('$getSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -992,21 +992,24 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM replaces the value on top of the component stack with its magnitude
-    this.builder.insertExecuteInstruction('$getMagnitude', 'ON TARGET');
+    this.builder.insertSendInstruction('$getMagnitude', 'TO COMPONENT');
     // the value has been replaced by its magnitude
 };
 
 
 /*
  * This method inserts instructions that cause the VM to execute the
- * procedure associated with the named message on the value of an
+ * procedure associated with the specified message for the value of the
  * expression, first placing the arguments on the component stack in
- * a list. The resulting value of the procedure remains on the component
- * stack.
+ * a list. If the value of the expression is a name, the message and
+ * its arguments are placed in a queue to be sent to the named document
+ * in a separate process. Otherwise, the result of the executed procedure
+ * is placed on the stack.
  */
-// messageExpression: expression '.' message '(' arguments ')'
+// messageExpression: expression ('.' | '<-') message '(' arguments ')'
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     const target = tree.getItem(1);
+    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO DOCUMENT';
     const message = tree.getItem(2);
     const args = tree.getItem(3);
     const numberOfArguments = args.getSize();
@@ -1014,8 +1017,8 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     // the VM places the value of the target expression onto the top of the component stack
     target.acceptVisitor(this);
 
-    // extract the procedure name
-    const procedureName = '$' + message.toString();
+    // extract the message name
+    const messageName = '$' + message.toString();
 
     // if there are arguments then compile accordingly
     if (numberOfArguments > 0) {
@@ -1030,11 +1033,11 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
             this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(list, argument)
         }
 
-        // the VM executes the target.<procedure name>(<args>) method
-        this.builder.insertExecuteInstruction(procedureName, 'ON TARGET WITH ARGUMENTS');
+        // the VM sends the message including a list of arguments to the recipient
+        this.builder.insertSendInstruction(messageName, recipient + ' WITH ARGUMENTS');
     } else {
-        // the VM executes the target.<procedure name>() method
-        this.builder.insertExecuteInstruction(procedureName, 'ON TARGET');
+        // the VM sends the message to the recipient
+        this.builder.insertSendInstruction(messageName, recipient);
     }
 
     // the result of the executed method remains on the component stack
@@ -1424,7 +1427,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertExecuteInstruction('$getSubcomponent', 'ON TARGET WITH ARGUMENTS');
+    this.builder.insertSendInstruction('$getSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
     // the parent and index have been replaced by the value of the subcomponent
 };
 
@@ -1572,7 +1575,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     sequence.acceptVisitor(this);
 
     // the VM replaces the sequence on the component stack with an iterator to it
-    this.builder.insertExecuteInstruction('$getIterator', 'ON TARGET');
+    this.builder.insertSendInstruction('$getIterator', 'TO COMPONENT');
 
     // The VM stores the iterater in a temporary variable
     const iterator = this.createTemporaryVariable('iterator');
@@ -1583,14 +1586,14 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
 
     // the VM jumps past the end of the loop if the iterator has no more items
     this.builder.insertLoadInstruction('VARIABLE', iterator);
-    this.builder.insertExecuteInstruction('$hasNext', 'ON TARGET');
+    this.builder.insertSendInstruction('$hasNext', 'TO COMPONENT');
     this.builder.insertJumpInstruction(statement.doneLabel, 'ON FALSE');
 
     // the VM places the iterator back onto the component stack
     this.builder.insertLoadInstruction('VARIABLE', iterator);
 
     // the VM replaces the iterator on the component stack with the next item from the sequence
-    this.builder.insertExecuteInstruction('$getNext', 'ON TARGET');
+    this.builder.insertSendInstruction('$getNext', 'TO COMPONENT');
 
     // the VM stores the item that is on top of the component stack in the variable
     this.builder.insertStoreInstruction('VARIABLE', variable);
@@ -1639,7 +1642,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
         // the VM sets the value of the subcomponent at the given index of the parent component
-        this.builder.insertExecuteInstruction('$setSubcomponent', 'ON TARGET WITH ARGUMENTS');
+        this.builder.insertSendInstruction('$setSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
     }
 };
 
@@ -1690,7 +1693,7 @@ function InstructionBuilder(context, procedure, debug) {
     this.constants = context.getValue('$constants');
     this.parameters = procedure.getValue('$parameters');
     this.variables = procedure.getValue('$variables');
-    this.procedures = procedure.getValue('$procedures');
+    this.messages = procedure.getValue('$messages');
     this.addresses = procedure.getValue('$addresses');
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
@@ -2007,13 +2010,12 @@ InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numbe
 
 
 /*
- * This method inserts an 'execute' instruction into the assembly code.
+ * This method inserts an 'send' instruction into the assembly code.
  */
-InstructionBuilder.prototype.insertExecuteInstruction = function(procedure, context) {
-    var instruction = 'EXECUTE ' + procedure;
-    if (context) instruction += ' ' + context;
+InstructionBuilder.prototype.insertSendInstruction = function(message, context) {
+    var instruction = 'SEND ' + message + ' ' + context;
     this.insertInstruction(instruction);
-    this.procedures.addItem(procedure);
+    this.messages.addItem(message);
 };
 
 

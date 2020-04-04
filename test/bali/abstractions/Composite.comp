@@ -9,7 +9,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: [
+            $messages: [
                 $asNumeric
             ]($type: /bali/collections/Set/v1)
             $addresses: [
@@ -18,12 +18,12 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                EXECUTE $asNumeric ON TARGET
+                SEND $asNumeric TO COMPONENT
                 PUSH LITERAL `0`
                 INVOKE $more WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001D0012801FFFFE000'(
+            $bytecode: '6001C0012801B04EE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -33,7 +33,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: [
+            $messages: [
                 $getSize
             ]($type: /bali/collections/Set/v1)
             $addresses: [
@@ -42,10 +42,10 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                EXECUTE $getSize ON TARGET
+                SEND $getSize TO COMPONENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001D001E000'(
+            $bytecode: '6001C001E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -55,17 +55,17 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: []($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
                 "1.ReturnStatement": 1
             ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getIterator WITH 1 ARGUMENT
+                INVOKE $iterator WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001FFFFE000'(
+            $bytecode: '6001A844E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -75,17 +75,17 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: []($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
                 "1.ReturnStatement": 1
             ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $getSize WITH 1 ARGUMENT
+                INVOKE $size WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A835E000'(
+            $bytecode: '6001A876E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -95,22 +95,20 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: [
-                $getSize
-            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
                 "1.ReturnStatement": 1
             ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                EXECUTE $getSize ON TARGET
+                INVOKE $size WITH 1 ARGUMENT
                 PUSH LITERAL `0`
                 INVOKE $more WITH 2 ARGUMENTS
                 INVOKE $complement WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001D0012801FFFFA80FE000'(
+            $bytecode: '6001A8762801B04EA814E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

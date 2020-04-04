@@ -9,7 +9,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: []($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
                 "1.ReturnStatement": 1
             ]
@@ -28,7 +28,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: []($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
                 "1.ReturnStatement": 1
             ]

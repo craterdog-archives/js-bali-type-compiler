@@ -17,7 +17,7 @@
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
-    $procedures: [
+    $messages: [
         $getSubcomponent
         $setSubcomponent
     ]($type: /bali/collections/Set/v1)
@@ -60,7 +60,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-5
         INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $setSubcomponent ON TARGET WITH ARGUMENTS
+        SEND $setSubcomponent TO COMPONENT WITH ARGUMENTS
         
         5.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
@@ -71,7 +71,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-7
         INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+        SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
         STORE DRAFT $$location-6
         
         6.CommitStatement:
@@ -83,7 +83,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-9
         INVOKE $addItem WITH 2 ARGUMENTS
-        EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+        SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
         STORE DOCUMENT $$location-8
         
         7.DiscardStatement:
@@ -96,8 +96,8 @@
     "($mediatype: "application/basm")
     $bytecode: '
         2801280280077807800128028009600190092802800A6001980A60026003
-        2802800B780B8004A04A6004B001D8022802800C600260038005A04A6005
-        B001D801900C2802800D600260038006A04A6006B001D801980D28028008
+        2802800B780B8004A04A6004B001C8022802800C600260038005A04A6005
+        B001C801900C2802800D600260038006A04A6006B001C801980D28028008
         28039008600EE000
     '(
         $encoding: $base16

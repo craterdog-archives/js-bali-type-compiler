@@ -90,8 +90,8 @@ InstructionSetVisitor.prototype.visitInvokeInstruction = function(ctx) {
 };
 
 
-// Visit a parse tree produced by InstructionSetParser#executeInstruction.
-InstructionSetVisitor.prototype.visitExecuteInstruction = function(ctx) {
+// Visit a parse tree produced by InstructionSetParser#sendInstruction.
+InstructionSetVisitor.prototype.visitSendInstruction = function(ctx) {
   return this.visitChildren(ctx);
 };
 

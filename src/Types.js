@@ -24,7 +24,7 @@ exports.POP = 2;
 exports.LOAD = 3;
 exports.STORE = 4;
 exports.INVOKE = 5;
-exports.EXECUTE = 6;
+exports.SEND = 6;
 exports.HANDLE = 7;
 
 exports.ON_ANY = 0;
@@ -43,10 +43,10 @@ exports.MESSAGE = 1;
 exports.DRAFT = 2;
 exports.DOCUMENT = 3;
 
-exports.WITH_NOTHING = 0;
-exports.WITH_ARGUMENTS = 1;
-exports.ON_TARGET = 2;
-exports.ON_TARGET_WITH_ARGUMENTS = 3;
+exports.TO_COMPONENT = 0;
+exports.TO_COMPONENT_WITH_ARGUMENTS = 1;
+exports.TO_DOCUMENT = 2;
+exports.TO_DOCUMENT_WITH_ARGUMENTS = 3;
 
 exports.RESULT = 0;
 exports.EXCEPTION = 1;
@@ -108,12 +108,12 @@ exports.storeModifierValue = function(string) {
 };
 
 
-exports.executeModifierString = function(value) {
-    return EXECUTE_MODIFIERS[value];
+exports.sendModifierString = function(value) {
+    return SEND_MODIFIERS[value];
 };
 
-exports.executeModifierValue = function(string) {
-    return EXECUTE_MODIFIERS.indexOf(string);
+exports.sendModifierValue = function(string) {
+    return SEND_MODIFIERS.indexOf(string);
 };
 
 
@@ -135,7 +135,7 @@ const OPERATIONS = [
     'LOAD',
     'STORE',
     'INVOKE',
-    'EXECUTE',
+    'SEND',
     'HANDLE'
 ];
 
@@ -172,11 +172,11 @@ const STORE_MODIFIERS = [
     'DOCUMENT'
 ];
 
-const EXECUTE_MODIFIERS = [
-    '',
-    'WITH ARGUMENTS',
-    'ON TARGET',
-    'ON TARGET WITH ARGUMENTS'
+const SEND_MODIFIERS = [
+    'TO COMPONENT',
+    'TO COMPONENT WITH ARGUMENTS',
+    'TO DOCUMENT',
+    'TO DOCUMENT WITH ARGUMENTS'
 ];
 
 const HANDLE_MODIFIERS = [

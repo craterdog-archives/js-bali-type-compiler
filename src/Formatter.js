@@ -137,8 +137,8 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
         case types.INVOKE:
             this.visitInvokeInstruction(step);
             break;
-        case types.EXECUTE:
-            this.visitExecuteInstruction(step);
+        case types.SEND:
+            this.visitSendInstruction(step);
             break;
         case types.HANDLE:
             this.visitHandleInstruction(step);
@@ -265,19 +265,17 @@ FormattingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 };
 
 
-// executeInstruction:
-//     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
-FormattingVisitor.prototype.visitExecuteInstruction = function(instruction) {
-    this.source += 'EXECUTE ';
+// sendInstruction:
+//     'SEND' SYMBOL 'TO' 'COMPONENT' |
+//     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+FormattingVisitor.prototype.visitSendInstruction = function(instruction) {
+    this.source += 'SEND ';
     this.source += instruction.getValue('$operand');
     const modifier = instruction.getValue('$modifier').toNumber();
-    if (modifier !== types.WITH_NOTHING) {
-        this.source += ' ';
-        this.source += types.executeModifierString(modifier);
-    }
+    this.source += ' ';
+    this.source += types.sendModifierString(modifier);
 };
 
 

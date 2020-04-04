@@ -164,7 +164,7 @@ const Decoder = function(debug) {
                 case types.LOAD:
                 case types.STORE:
                 case types.INVOKE:
-                case types.EXECUTE:
+                case types.SEND:
                     return true;
                 default:
                     return false;
@@ -210,7 +210,7 @@ const Decoder = function(debug) {
                 case types.LOAD:
                 case types.STORE:
                 case types.INVOKE:
-                case types.EXECUTE:
+                case types.SEND:
                     return operand > 0;
                 case types.HANDLE:
                     switch (modifier) {
@@ -323,9 +323,8 @@ const Decoder = function(debug) {
                         if (modifier > 0) description += ' WITH ' + modifier + ' ARGUMENT';
                         if (modifier > 1) description += 'S';
                         break;
-                    case types.EXECUTE:
-                        description += operand;
-                        if (modifier > 0) description += ' ' + types.executeModifierString(modifier);
+                    case types.SEND:
+                        description += operand + ' ' + types.sendModifierString(modifier);
                         break;
                     case types.HANDLE:
                         description += types.handleModifierString(modifier);

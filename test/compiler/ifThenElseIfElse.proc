@@ -6,7 +6,7 @@
         $target
         $yes
     ]($type: /bali/collections/Set/v1)
-    $procedures: []($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2

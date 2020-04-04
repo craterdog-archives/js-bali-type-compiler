@@ -128,12 +128,12 @@ InstructionSetListener.prototype.exitInvokeInstruction = function(ctx) {
 };
 
 
-// Enter a parse tree produced by InstructionSetParser#executeInstruction.
-InstructionSetListener.prototype.enterExecuteInstruction = function(ctx) {
+// Enter a parse tree produced by InstructionSetParser#sendInstruction.
+InstructionSetListener.prototype.enterSendInstruction = function(ctx) {
 };
 
-// Exit a parse tree produced by InstructionSetParser#executeInstruction.
-InstructionSetListener.prototype.exitExecuteInstruction = function(ctx) {
+// Exit a parse tree produced by InstructionSetParser#sendInstruction.
+InstructionSetListener.prototype.exitSendInstruction = function(ctx) {
 };
 
 

@@ -4,7 +4,7 @@
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
-    $procedures: []($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.EvaluateStatement": 1
     ]

@@ -15,7 +15,7 @@
                 $$result
                 $target
             ]($type: /bali/collections/Set/v1)
-            $procedures: [
+            $messages: [
                 $addItem
                 $getSubcomponent
             ]($type: /bali/collections/Set/v1)
@@ -41,7 +41,7 @@
                 INVOKE $list
                 LOAD VARIABLE $target
                 INVOKE $addItem WITH 2 ARGUMENTS
-                EXECUTE $addItem ON TARGET WITH ARGUMENTS
+                SEND $addItem TO COMPONENT WITH ARGUMENTS
                 STORE VARIABLE $$result
                 
                 3.EvaluateStatement:
@@ -60,7 +60,7 @@
                 INVOKE $list
                 LOAD VARIABLE $ancestor
                 INVOKE $addItem WITH 2 ARGUMENTS
-                EXECUTE $addItem ON TARGET WITH ARGUMENTS
+                SEND $addItem TO COMPONENT WITH ARGUMENTS
                 STORE VARIABLE $$result
                 
                 4.1.2.EvaluateStatement:
@@ -73,7 +73,7 @@
                 INVOKE $list
                 LOAD VARIABLE $$index-2
                 INVOKE $addItem WITH 2 ARGUMENTS
-                EXECUTE $getSubcomponent ON TARGET WITH ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
                 INVOKE $equal WITH 2 ARGUMENTS
                 STORE VARIABLE $$result
                 
@@ -88,8 +88,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                A04980022801A0496007B001D8018006600580010000600118216002A049
-                6001B001D8018006600160018004780460058003A0496003B001D802FFFF
+                A04A80022801A04A6007B001C8018006600580010000600118216002A04A
+                6001B001C8018006600160018004780460058003A04A6003B001C802B023
                 8006000C00006002E000
             '(
                 $encoding: $base16

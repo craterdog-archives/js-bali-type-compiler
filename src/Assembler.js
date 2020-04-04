@@ -75,7 +75,7 @@ function AssemblingVisitor(context, compilation, debug) {
     this.constants = context.getValue('$constants');
     this.parameters = compilation.getValue('$parameters');
     this.variables = compilation.getValue('$variables');
-    this.procedures = compilation.getValue('$procedures');
+    this.messages = compilation.getValue('$messages');
     this.addresses = compilation.getValue('$addresses');
     this.bytecode = [];
     return this;
@@ -132,8 +132,8 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
         case types.INVOKE:
             this.visitInvokeInstruction(step);
             break;
-        case types.EXECUTE:
-            this.visitExecuteInstruction(step);
+        case types.SEND:
+            this.visitSendInstruction(step);
             break;
         case types.HANDLE:
             this.visitHandleInstruction(step);
@@ -252,16 +252,16 @@ AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
 };
 
 
-// executeInstruction:
-//     'EXECUTE' SYMBOL |
-//     'EXECUTE' SYMBOL 'WITH' 'ARGUMENTS' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' |
-//     'EXECUTE' SYMBOL 'ON' 'TARGET' 'WITH' 'ARGUMENTS'
-AssemblingVisitor.prototype.visitExecuteInstruction = function(instruction) {
+// sendInstruction:
+//     'SEND' SYMBOL 'TO' 'COMPONENT' |
+//     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+AssemblingVisitor.prototype.visitSendInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
-    const index = this.procedures.getIndex(symbol);
-    const word = this.decoder.encodeInstruction(types.EXECUTE, modifier, index);
+    const index = this.messages.getIndex(symbol);
+    const word = this.decoder.encodeInstruction(types.SEND, modifier, index);
     this.bytecode.push(word);
 };
 

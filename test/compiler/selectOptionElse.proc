@@ -5,7 +5,7 @@
         $$selector-1
         $target
     ]($type: /bali/collections/Set/v1)
-    $procedures: []($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.SelectStatement": 1
         "1.1.OptionClause": 3
