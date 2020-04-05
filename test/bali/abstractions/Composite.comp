@@ -23,7 +23,7 @@
                 INVOKE $isMore WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001C0012801B043E000'(
+            $bytecode: '6001C0012801B03AE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -65,7 +65,7 @@
                 INVOKE $iterator WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A848E000'(
+            $bytecode: '6001A841E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -85,7 +85,7 @@
                 INVOKE $size WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A877E000'(
+            $bytecode: '6001A875E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -108,7 +108,7 @@
                 INVOKE $complement WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A8772801B043A817E000'(
+            $bytecode: '6001A8752801B03AA817E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

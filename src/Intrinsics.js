@@ -448,6 +448,11 @@ exports.api = function(debug) {
             return bali.number.factorial(number);
         },
 
+        $first: function(range) {
+            validateTypeArgument('$first', '/bali/collections/Range', range);
+            return range.getFirstItem();
+        },
+
         $format: function(moment) {
             validateTypeArgument('$format', '/bali/elements/Moment', moment);
             return bali.text(moment.getFormat());
@@ -456,74 +461,6 @@ exports.api = function(debug) {
         $fragment: function(reference) {
             validateTypeArgument('$fragment', '/bali/elements/Reference', reference);
             return bali.text(reference.getFragment());
-        },
-
-        $getFirst: function(range) {
-            validateTypeArgument('$getFirst', '/bali/collections/Range', range);
-            return range.getFirstItem();
-        },
-
-        $getHead: function(queue) {
-            validateTypeArgument('$getHead', '/bali/collections/Queue', queue);
-            return queue.headItem();
-        },
-
-        $getIndex: function(collection, item) {
-            validateTypeArgument('$getIndex', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$getIndex', '/bali/abstractions/Component', item);
-            return bali.number(collection.getIndex(item));
-        },
-
-        $getItem: function(collection, index) {
-            validateTypeArgument('$getItem', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$getItem', '/bali/elements/Number', index);
-            index = index.toNumber();
-            validateIndex('$getItem', collection.getSize(), index);
-            return collection.getItem(index);
-        },
-
-        $getItems: function(collection, range) {
-            validateTypeArgument('$getItems', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$getItems', '/bali/collections/Range', range);
-            return collection.getItems(range);
-        },
-
-        $getLast: function(range) {
-            validateTypeArgument('$getLast', '/bali/collections/Range', range);
-            return range.getLastItem();
-        },
-
-        $getNext: function(iterator) {
-            validateTypeArgument('$getNext', '/bali/abstractions/Iterator', iterator);
-            return iterator.getNext();
-        },
-
-        $getParameter: function(component, key) {
-            validateTypeArgument('$getParameter', '/bali/abstractions/Component', component);
-            validateTypeArgument('$getParameter', '/bali/abstractions/Element', key);
-            return component.getParameter(key);
-        },
-
-        $getPrevious: function(iterator) {
-            validateTypeArgument('$getPrevious', '/bali/abstractions/Iterator', iterator);
-            return iterator.getNext();
-        },
-
-        $getTop: function(stack) {
-            validateTypeArgument('$getTop', '/bali/collections/Stack', stack);
-            return stack.topItem();
-        },
-
-        $getValue: function(catalog, key) {
-            validateTypeArgument('$getValue', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$getValue', '/bali/abstractions/Element', key);
-            return catalog.getValue(key) || bali.pattern.NONE;
-        },
-
-        $getValues: function(catalog, keys) {
-            validateTypeArgument('$getValues', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$getValues', '/bali/collections/List', keys);
-            return catalog.getValues(keys);
         },
 
         $hash: function(component) {
@@ -541,6 +478,11 @@ exports.api = function(debug) {
             return iterator.hasPrevious();
         },
 
+        $head: function(queue) {
+            validateTypeArgument('$head', '/bali/collections/Queue', queue);
+            return queue.headItem();
+        },
+
         $HTML: function(component, style) {
             validateTypeArgument('$HTML', '/bali/abstractions/Component', component);
             validateTypeArgument('$HTML', '/bali/elements/Reference', style);
@@ -550,6 +492,12 @@ exports.api = function(debug) {
         $imaginary: function(number) {
             validateTypeArgument('$imaginary', '/bali/elements/Number', number);
             return bali.number(number.getImaginary());
+        },
+
+        $index: function(collection, item) {
+            validateTypeArgument('$index', '/bali/abstractions/Collection', collection);
+            validateTypeArgument('$index', '/bali/abstractions/Component', item);
+            return bali.number(collection.getIndex(item));
         },
 
         $insertItem: function(list, index, item) {
@@ -625,6 +573,20 @@ exports.api = function(debug) {
             return bali.probability(number.isZero());
         },
 
+        $item: function(collection, index) {
+            validateTypeArgument('$item', '/bali/abstractions/Collection', collection);
+            validateTypeArgument('$item', '/bali/elements/Number', index);
+            index = index.toNumber();
+            validateIndex('$item', collection.getSize(), index);
+            return collection.getItem(index);
+        },
+
+        $items: function(collection, range) {
+            validateTypeArgument('$items', '/bali/abstractions/Collection', collection);
+            validateTypeArgument('$items', '/bali/collections/Range', range);
+            return collection.getItems(range);
+        },
+
         $iterator: function(collection) {
             validateTypeArgument('$iterator', '/bali/abstractions/Collection', collection);
             return collection.getIterator();
@@ -638,6 +600,16 @@ exports.api = function(debug) {
         $keys: function(catalog) {
             validateTypeArgument('$keys', '/bali/collections/Catalog', catalog);
             return catalog.getKeys();
+        },
+
+        $keyValue: function(association) {
+            validateTypeArgument('$keyValue', '/bali/composites/Association', association);
+            return association.getValue();
+        },
+
+        $last: function(range) {
+            validateTypeArgument('$last', '/bali/collections/Range', range);
+            return range.getLastItem();
         },
 
         $later: function(moment, duration) {
@@ -675,6 +647,11 @@ exports.api = function(debug) {
             return bali.probability(component.isMatchedBy(pattern));
         },
 
+        $next: function(iterator) {
+            validateTypeArgument('$next', '/bali/abstractions/Iterator', iterator);
+            return iterator.getNext();
+        },
+
         $nextVersion: function(version, level) {
             validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
             validateTypeArgument('$nextVersion', '/bali/elements/Number', level);
@@ -704,6 +681,12 @@ exports.api = function(debug) {
             return first.constructor.or(first, second);
         },
 
+        $parameter: function(component, key) {
+            validateTypeArgument('$parameter', '/bali/abstractions/Component', component);
+            validateTypeArgument('$parameter', '/bali/abstractions/Element', key);
+            return component.getParameter(key);
+        },
+
         $parameters: function(component) {
             validateTypeArgument('$parameters', '/bali/abstractions/Component', component);
             return bali.catalog(component.getParameters());
@@ -722,6 +705,11 @@ exports.api = function(debug) {
         $phase: function(number) {
             validateTypeArgument('$phase', '/bali/elements/Number', number);
             return number.getPhase();
+        },
+
+        $previous: function(iterator) {
+            validateTypeArgument('$previous', '/bali/abstractions/Iterator', iterator);
+            return iterator.getNext();
         },
 
         $probability: function() {
@@ -962,6 +950,11 @@ exports.api = function(debug) {
             return iterator;
         },
 
+        $top: function(stack) {
+            validateTypeArgument('$top', '/bali/collections/Stack', stack);
+            return stack.topItem();
+        },
+
         $toSlot: function(iterator, slot) {
             validateTypeArgument('$toSlot', '/bali/abstractions/Iterator', iterator);
             validateTypeArgument('$toSlot', '/bali/elements/Number', slot);
@@ -986,9 +979,16 @@ exports.api = function(debug) {
             return bali.component(component.getType());
         },
 
-        $value: function(association) {
-            validateTypeArgument('$value', '/bali/composites/Association', association);
-            return association.getValue();
+        $value: function(catalog, key) {
+            validateTypeArgument('$value', '/bali/collections/Catalog', catalog);
+            validateTypeArgument('$value', '/bali/abstractions/Element', key);
+            return catalog.getValue(key) || bali.pattern.NONE;
+        },
+
+        $values: function(catalog, keys) {
+            validateTypeArgument('$values', '/bali/collections/Catalog', catalog);
+            validateTypeArgument('$values', '/bali/collections/List', keys);
+            return catalog.getValues(keys);
         },
 
         $xor: function(first, second) {

@@ -113,7 +113,7 @@
                 INVOKE $hash WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '3801A837E000'(
+            $bytecode: '3801A82CE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

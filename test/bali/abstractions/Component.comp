@@ -37,7 +37,7 @@
                 INVOKE $interfaces WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A83EE000'(
+            $bytecode: '6001A835E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -57,10 +57,10 @@
                 1.ReturnStatement:
                 LOAD VARIABLE $target
                 PUSH PARAMETER $key
-                INVOKE $getParameter WITH 2 ARGUMENTS
+                INVOKE $parameter WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '60013801B032E000'(
+            $bytecode: '60013801B052E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -80,7 +80,7 @@
                 INVOKE $parameters WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A856E000'(
+            $bytecode: '6001A853E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -100,7 +100,7 @@
                 INVOKE $type WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A884E000'(
+            $bytecode: '6001A883E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -120,7 +120,7 @@
                 INVOKE $isParameterized WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A844E000'(
+            $bytecode: '6001A83BE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -143,7 +143,7 @@
                 INVOKE $isType WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '60013801B045E000'(
+            $bytecode: '60013801B03CE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -166,7 +166,7 @@
                 INVOKE $supportsInterface WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '60013801B07DE000'(
+            $bytecode: '60013801B07BE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

@@ -35,7 +35,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/abstractions/Element/v1
             $source: {
-                return getParameter(target, key)
+                return parameter(target, key)
             }($key: /bali/elements/Symbol/v1)
         ]
         $getParameters: [

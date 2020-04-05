@@ -987,6 +987,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $first intrinsic function', function() {
+            const index = intrinsics.index('$first');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $format intrinsic function', function() {
             const index = intrinsics.index('$format');
             intrinsics.invoke(index, moment);
@@ -1013,226 +1028,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, 'https://google.com#home');
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getFirst intrinsic function', function() {
-            const index = intrinsics.index('$getFirst');
-            intrinsics.invoke(index, range);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getHead intrinsic function', function() {
-            const index = intrinsics.index('$getHead');
-            intrinsics.invoke(index, queue);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, stack);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getIndex intrinsic function', function() {
-            const index = intrinsics.index('$getIndex');
-            intrinsics.invoke(index, list, number);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, 5);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, probability, two);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getItem intrinsic function', function() {
-            const index = intrinsics.index('$getItem');
-            intrinsics.invoke(index, list, two);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, catalog, 5);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getItems intrinsic function', function() {
-            const index = intrinsics.index('$getItems');
-            intrinsics.invoke(index, list, range);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, list);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, catalog, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getLast intrinsic function', function() {
-            const index = intrinsics.index('$getLast');
-            intrinsics.invoke(index, range);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, stack);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getNext intrinsic function', function() {
-            const index = intrinsics.index('$getNext');
-            intrinsics.invoke(index, iterator);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getParameter intrinsic function', function() {
-            const index = intrinsics.index('$getParameter');
-            intrinsics.invoke(index, set, symbol);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, set);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, set, '$type');
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getPrevious intrinsic function', function() {
-            const index = intrinsics.index('$getPrevious');
-            intrinsics.invoke(index, iterator);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getTop intrinsic function', function() {
-            const index = intrinsics.index('$getTop');
-            intrinsics.invoke(index, stack);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getValue intrinsic function', function() {
-            const index = intrinsics.index('$getValue');
-            intrinsics.invoke(index, catalog, symbol);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, catalog);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, symbol);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $getValues intrinsic function', function() {
-            const index = intrinsics.index('$getValues');
-            intrinsics.invoke(index, catalog, list);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, catalog);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, catalog, symbol);
                 }
             ).to.throw();
         });
@@ -1283,6 +1078,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $head intrinsic function', function() {
+            const index = intrinsics.index('$head');
+            intrinsics.invoke(index, queue);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, stack);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $HTML intrinsic function', function() {
             const index = intrinsics.index('$HTML');
             intrinsics.invoke(index, catalog, reference);
@@ -1319,6 +1129,31 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $index intrinsic function', function() {
+            const index = intrinsics.index('$index');
+            intrinsics.invoke(index, list, number);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability, two);
                 }
             ).to.throw();
         });
@@ -1565,6 +1400,51 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $item intrinsic function', function() {
+            const index = intrinsics.index('$item');
+            intrinsics.invoke(index, list, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, 5);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $items intrinsic function', function() {
+            const index = intrinsics.index('$items');
+            intrinsics.invoke(index, list, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $iterator intrinsic function', function() {
             const index = intrinsics.index('$iterator');
             intrinsics.invoke(index, list);
@@ -1606,6 +1486,36 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, association);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $keyValue intrinsic function', function() {
+            const index = intrinsics.index('$keyValue');
+            intrinsics.invoke(index, association);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $last intrinsic function', function() {
+            const index = intrinsics.index('$last');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, stack);
                 }
             ).to.throw();
         });
@@ -1722,6 +1632,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $next intrinsic function', function() {
+            const index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $nextVersion intrinsic function', function() {
             const index = intrinsics.index('$nextVersion');
             intrinsics.invoke(index, version, two);
@@ -1799,6 +1724,26 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $parameter intrinsic function', function() {
+            const index = intrinsics.index('$parameter');
+            intrinsics.invoke(index, set, symbol);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, set, '$type');
+                }
+            ).to.throw();
+        });
+
         it('should invoke $parameters intrinsic function', function() {
             const index = intrinsics.index('$parameters');
             intrinsics.invoke(index, catalog);
@@ -1855,6 +1800,21 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, angle);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $previous intrinsic function', function() {
+            const index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
                 }
             ).to.throw();
         });
@@ -2594,6 +2554,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $top intrinsic function', function() {
+            const index = intrinsics.index('$top');
+            intrinsics.invoke(index, stack);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $toSlot intrinsic function', function() {
             const index = intrinsics.index('$toSlot');
             intrinsics.invoke(index, iterator, two);
@@ -2662,7 +2637,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $value intrinsic function', function() {
             const index = intrinsics.index('$value');
-            intrinsics.invoke(index, association);
+            intrinsics.invoke(index, catalog, symbol);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2671,6 +2646,31 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, symbol);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $values intrinsic function', function() {
+            const index = intrinsics.index('$values');
+            intrinsics.invoke(index, catalog, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, symbol);
                 }
             ).to.throw();
         });
