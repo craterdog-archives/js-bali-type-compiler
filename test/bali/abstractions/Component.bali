@@ -1,69 +1,51 @@
 [
     $compilation: /bali/compilations/MYS8S7RGS8GXGYZP8S8DW96ALJSP8KKR/v1
     $description: "
-        This abstract class defines the messages that all components support.
+        This abstract class defines the procedures for the messages that all components support.
     "($mediatype: "application/bsmd")
     $procedures: [
-        $asSource: [
-            $description: "
-                This procedure returns the source code equivalent of this value.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Text/v1($mediatype: "application/bali")
-            $source: {
-                return document(target)
-            }
-        ]
-        $isA: [
-            $description: "
-                This procedure determines whether or not this component is an instance
-                of the specified type.
-            "($mediatype: "application/bsmd")
-            $parameters: [
-                $type: [
-                    $description: "
-                        The component type to be compared with.
-                    "($mediatype: "application/bsmd")
-                    $type: /bali/elements/Reference/v1(
-                        $referencedType: /bali/abstractions/Type/v1
-                    )
-                ]
-            ]
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
-            $source: {
-                $ancestors := @type(target).getAncestors()
-                with each $ancestor in ancestors do {
-                    if ancestor = type then {
-                        return true
-                    }
-                }
-                return false
-            }($type: $type)
-        ]
         $getAncestry: [
             $description: "
-                This procedure returns a list of references to the ancestors for the
-                type of this component.
+                This procedure returns a list of the type names for the ancestors of this type of
+                component.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1(
-                $itemType: /bali/elements/Reference/v1(
-                    $referencedType: /bali/abstractions/Type/v1
-                )
+                $itemType: /bali/elements/Name/v1
             )
             $source: {
-                $type := type(target)
-                $ancestors := []
-                ancestors.addItem(type)
-                ancestors.addItems(@type[$ancestors])
-                return ancestors
+                return ancestry(target)
             }
+        ]
+        $getInterfaces: [
+            $description: "
+                This procedure returns a list of the interface names for the interfaces that this
+                type of component supports.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1(
+                $itemType: /bali/elements/Name/v1
+            )
+            $source: {
+                return interfaces(target)
+            }
+        ]
+        $getParameter: [
+            $description: "
+                This procedure returns a catalog of any parameters that were used to parameterize
+                this component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Element/v1
+            $source: {
+                return getParameter(target, key)
+            }($key: /bali/elements/Symbol/v1)
         ]
         $getParameters: [
             $description: "
-                This procedure returns a catalog of any parameters that were used to
-                parameterize this component.
+                This procedure returns a catalog of any parameters that were used to parameterize
+                this component.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/Catalog/v1(
-                $valueType: /bali/composites/Argument/v1
+                $keyType: /bali/elements/Symbol/v1
+                $valueType: /bali/abstractions/Element/v1
             )
             $source: {
                 return parameters(target)
@@ -71,7 +53,7 @@
         ]
         $getHash: [
             $description: "
-                This procedure returns a consistent hash value of this component.
+                This procedure returns a canonical hash value for this component.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Number/v1($range: [0..4294967295])
             $source: {
@@ -80,14 +62,41 @@
         ]
         $getType: [
             $description: "
-                This procedure returns the type of this component.
+                This procedure returns the name of the type of this component.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Reference/v1(
-                $referencedType: /bali/abstractions/Type/v1
-            )
+            $type: /bali/elements/Name/v1
             $source: {
                 return type(target)
             }
+        ]
+        $isParameterized: [
+            $description: "
+                This procedure determines whether or not this component is parameterized.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return isParameterized(target)
+            }
+        ]
+        $isType: [
+            $description: "
+                This procedure determines whether or not this component is an instance of the
+                specified type or any of its ancestors.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return isType(target, type)
+            }($type: /bali/elements/Name/v1)
+        ]
+        $supportsInterface: [
+            $description: "
+                This procedure determines whether or not this component supports the specified
+                interface.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return supportsInterface(target, interface)
+            }($interface: /bali/elements/Name/v1)
         ]
     ]
 ](

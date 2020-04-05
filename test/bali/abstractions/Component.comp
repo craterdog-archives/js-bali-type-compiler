@@ -1,12 +1,8 @@
 [
-    $literals: [
-        true
-        false
-        $ancestors
-    ]
+    $literals: []
     $constants: [:]
     $procedures: [
-        $asSource: [
+        $getAncestry: [
             $parameters: []
             $variables: [
                 $target
@@ -18,163 +14,53 @@
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $document WITH 1 ARGUMENT
+                INVOKE $ancestry WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A81FE000'(
+            $bytecode: '6001A803E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
         ]
-        $isA: [
-            $parameters: [
-                $type
-            ]
-            $variables: [
-                $ancestor
-                $ancestors
-                $$iterator-2
-                $$location-1
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: [
-                $getAncestors
-                $getIterator
-                $getNext
-                $hasNext
-            ]($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.EvaluateStatement": 1
-                "2.WithStatement": 7
-                "2.1.ConditionClause": 10
-                "2.1.1.IfStatement": 16
-                "2.1.1.1.ConditionClause": 17
-                "2.1.1.1.1.ReturnStatement": 21
-                "2.1.1.IfStatementDone": 23
-                "2.ConditionRepeat": 24
-                "2.WithStatementDone": 25
-                "3.ReturnStatement": 26
-            ]
-            $instructions: "
-                1.EvaluateStatement:
-                LOAD VARIABLE $target
-                INVOKE $type WITH 1 ARGUMENT
-                STORE VARIABLE $$location-1
-                LOAD DOCUMENT $$location-1
-                SEND $getAncestors TO COMPONENT
-                STORE VARIABLE $ancestors
-                
-                2.WithStatement:
-                LOAD VARIABLE $ancestors
-                SEND $getIterator TO COMPONENT
-                STORE VARIABLE $$iterator-2
-                
-                2.1.ConditionClause:
-                LOAD VARIABLE $$iterator-2
-                SEND $hasNext TO COMPONENT
-                JUMP TO 2.WithStatementDone ON FALSE
-                LOAD VARIABLE $$iterator-2
-                SEND $getNext TO COMPONENT
-                STORE VARIABLE $ancestor
-                
-                2.1.1.IfStatement:
-                SKIP INSTRUCTION
-                
-                2.1.1.1.ConditionClause:
-                LOAD VARIABLE $ancestor
-                PUSH PARAMETER $type
-                INVOKE $equal WITH 2 ARGUMENTS
-                JUMP TO 2.1.1.IfStatementDone ON FALSE
-                
-                2.1.1.1.1.ReturnStatement:
-                PUSH LITERAL `true`
-                HANDLE RESULT
-                
-                2.1.1.IfStatementDone:
-                SKIP INSTRUCTION
-                
-                2.ConditionRepeat:
-                JUMP TO 2.1.ConditionClause
-                
-                2.WithStatementDone:
-                SKIP INSTRUCTION
-                
-                3.ReturnStatement:
-                PUSH LITERAL `false`
-                HANDLE RESULT
-            "($mediatype: "application/basm")
-            $bytecode: '
-                6005A88380047804C00180026002C00280036003C00418196003C0038001
-                000060013801B02318172801E0000000000A00002802E000
-            '(
-                $encoding: $base16
-                $mediatype: "application/bcod"
-            )
-        ]
-        $getAncestry: [
+        $getInterfaces: [
             $parameters: []
             $variables: [
-                $ancestors
-                $$index-2
-                $$location-1
-                $$result
                 $target
-                $type
             ]($type: /bali/collections/Set/v1)
-            $messages: [
-                $addItem
-                $addItems
-                $getSubcomponent
-            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
             $addresses: [
-                "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 4
-                "3.EvaluateStatement": 6
-                "4.EvaluateStatement": 12
-                "5.ReturnStatement": 26
+                "1.ReturnStatement": 1
             ]
             $instructions: "
-                1.EvaluateStatement:
+                1.ReturnStatement:
                 LOAD VARIABLE $target
-                INVOKE $type WITH 1 ARGUMENT
-                STORE VARIABLE $type
-                
-                2.EvaluateStatement:
-                INVOKE $list
-                STORE VARIABLE $ancestors
-                
-                3.EvaluateStatement:
-                LOAD VARIABLE $ancestors
-                INVOKE $list
-                LOAD VARIABLE $type
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $addItem TO COMPONENT WITH ARGUMENTS
-                STORE VARIABLE $$result
-                
-                4.EvaluateStatement:
-                LOAD VARIABLE $ancestors
-                INVOKE $list
-                LOAD VARIABLE $type
-                STORE VARIABLE $$location-1
-                LOAD DOCUMENT $$location-1
-                PUSH LITERAL `$ancestors`
-                STORE VARIABLE $$index-2
-                INVOKE $list
-                LOAD VARIABLE $$index-2
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $addItems TO COMPONENT WITH ARGUMENTS
-                STORE VARIABLE $$result
-                
-                5.ReturnStatement:
-                LOAD VARIABLE $ancestors
+                INVOKE $interfaces WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '
-                6005A8838006A04A80016001A04A6006B001C80180046001A04A60068003
-                780328038002A04A6002B001C803B001C80280046001E000
-            '(
+            $bytecode: '6001A83CE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $getParameter: [
+            $parameters: [
+                $key
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $key
+                INVOKE $getParameter WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B030E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -235,6 +121,72 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '6001A883E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $isParameterized: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $isParameterized WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A840E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $isType: [
+            $parameters: [
+                $type
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $type
+                INVOKE $isType WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B041E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $supportsInterface: [
+            $parameters: [
+                $interface
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $interface
+                INVOKE $supportsInterface WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B07CE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

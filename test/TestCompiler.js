@@ -90,7 +90,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 expect(compilation).to.exist;
                 const source = compilation.toString() + '\n';  // POSIX compliant <EOL>
                 const filename = testFolder + file + '.comp';
-                //await pfs.writeFile(filename, source, 'utf8');
+                await pfs.writeFile(filename, source, 'utf8');
                 var document = await notary.notarizeDocument(type);
                 expect(document).to.exist;
                 var citation = await repository.writeDocument(document);
