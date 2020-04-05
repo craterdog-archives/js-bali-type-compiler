@@ -1,0 +1,74 @@
+[
+    $compilation: /bali/compilations/6NMPX2NN2VDHB27PQC513JBHZHP5317X/v1
+    $description: "
+        This library defines the procedures for the functions that operate on any type of component.
+    "($mediatype: "application/bsmd")
+    $procedures: [
+        $areEqual: [
+            $description: "
+                This procedure determines whether or not two components are equal to each other.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return areEqual(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+        ]
+        $areSame: [
+            $description: "
+                This procedure determines whether or not two components are really the same
+                component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return areSame(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+        ]
+        $comparison: [
+            $description: "
+                This procedure returns a tertiary number describing the natural ordering for two
+                components:
+                 -1: The first component should be listed before the second component.
+                 0: The first component should be listed the same as the second component.
+                 1: The first component should be listed after the second component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [-1..1])
+            $source: {
+                return comparison(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+        ]
+        $duplicate: [
+            $description: "
+                This procedure returns a (deep) copy of a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                return duplicate(component)
+            }($component: /bali/abstractions/Component/v1)
+        ]
+        $hash: [
+            $description: "
+                This procedure returns the canonical hash value for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..4294967295])
+            $source: {
+                return hash(component)
+            }($component: /bali/abstractions/Component/v1)
+        ]
+    ]
+](
+    $name: /bali/libraries/Component/v1
+    $type: /bali/abstractions/Library/v1
+    $tag: #L16JB13MH2FJFK65VC1KHXQW13C6V68R
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

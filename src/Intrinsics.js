@@ -230,6 +230,24 @@ exports.api = function(debug) {
             return bali.angle.arctangent(opposite.toNumber(), adjacent.toNumber());
         },
 
+        $areEqual: function(first, second) {
+            validateTypeArgument('$areEqual', '/bali/abstractions/Component', first);
+            validateTypeArgument('$areEqual', '/bali/abstractions/Component', second);
+            return bali.probability(first.isEqualTo(second));
+        },
+
+        $areSame: function(first, second) {
+            validateTypeArgument('$areSame', '/bali/abstractions/Component', first);
+            validateTypeArgument('$areSame', '/bali/abstractions/Component', second);
+            return bali.probability(first === second);
+        },
+
+        $areValid: function(current, next) {
+            validateTypeArgument('$areValid', '/bali/elements/Version', current);
+            validateTypeArgument('$areValid', '/bali/elements/Version', next);
+            return bali.probability(bali.version.validNextVersion(current, next));
+        },
+
         $association: function(key, value) {
             validateTypeArgument('$association', '/bali/abstractions/Element', key);
             validateTypeArgument('$association', '/bali/abstractions/Component', value);
@@ -413,12 +431,6 @@ exports.api = function(debug) {
             return bali.moment.earlier(moment, duration);
         },
 
-        $equal: function(first, second) {
-            validateTypeArgument('$equal', '/bali/abstractions/Component', first);
-            validateTypeArgument('$equal', '/bali/abstractions/Component', second);
-            return bali.probability(first.isEqualTo(second));
-        },
-
         $exponential: function(base, exponent) {
             validateTypeArgument('$exponential', '/bali/elements/Number', base);
             validateTypeArgument('$exponential', '/bali/elements/Number', exponent);
@@ -580,6 +592,18 @@ exports.api = function(debug) {
             return bali.probability(number.isInfinite());
         },
 
+        $isLess: function(first, second) {
+            validateTypeArgument('$isLess', '/bali/abstractions/Component', first);
+            validateTypeArgument('$isLess', '/bali/abstractions/Component', second);
+            return bali.probability(first.comparedTo(second) < 0);
+        },
+
+        $isMore: function(first, second) {
+            validateTypeArgument('$isMore', '/bali/abstractions/Component', first);
+            validateTypeArgument('$isMore', '/bali/abstractions/Component', second);
+            return bali.probability(first.comparedTo(second) > 0);
+        },
+
         $isParameterized: function(component) {
             validateTypeArgument('$isParameterized', '/bali/abstractions/Component', component);
             return bali.probability(component.isParameterized());
@@ -622,12 +646,6 @@ exports.api = function(debug) {
             return bali.moment.later(moment, duration);
         },
 
-        $less: function(first, second) {
-            validateTypeArgument('$less', '/bali/abstractions/Component', first);
-            validateTypeArgument('$less', '/bali/abstractions/Component', second);
-            return bali.probability(first.comparedTo(second) < 0);
-        },
-
         $levels: function(version) {
             validateTypeArgument('$levels', '/bali/elements/Version' , version);
             return bali.list(version.getValue());
@@ -655,12 +673,6 @@ exports.api = function(debug) {
             validateTypeArgument('$matches', '/bali/abstractions/Component', component);
             validateTypeArgument('$matches', '/bali/elements/Pattern', pattern);
             return bali.probability(component.isMatchedBy(pattern));
-        },
-
-        $more: function(first, second) {
-            validateTypeArgument('$more', '/bali/abstractions/Component', first);
-            validateTypeArgument('$more', '/bali/abstractions/Component', second);
-            return bali.probability(first.comparedTo(second) > 0);
         },
 
         $nextVersion: function(version, level) {
@@ -837,12 +849,6 @@ exports.api = function(debug) {
             return sortable;
         },
 
-        $same: function(first, second) {
-            validateTypeArgument('$same', '/bali/abstractions/Component', first);
-            validateTypeArgument('$same', '/bali/abstractions/Component', second);
-            return bali.probability(first === second);
-        },
-
         $sans: function(first, second) {
             validateInterfaceArgument('$sans', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$sans', '/bali/interfaces/Logical', second);
@@ -978,12 +984,6 @@ exports.api = function(debug) {
         $type: function(component) {
             validateTypeArgument('$type', '/bali/abstractions/Component', component);
             return bali.component(component.getType());
-        },
-
-        $validNextVersion: function(current, next) {
-            validateTypeArgument('$validNextVersion', '/bali/elements/Version', current);
-            validateTypeArgument('$validNextVersion', '/bali/elements/Version', next);
-            return bali.probability(bali.version.validNextVersion(current, next));
         },
 
         $value: function(association) {

@@ -452,19 +452,19 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
-            this.builder.insertInvokeInstruction('$less', 2);  // less(x, y)
+            this.builder.insertInvokeInstruction('$isLess', 2);  // less(x, y)
             break;
         case '=':
             // determine whether or not the first value is equal to the second value
-            this.builder.insertInvokeInstruction('$equal', 2);  // equal(x, y)
+            this.builder.insertInvokeInstruction('$areEqual', 2);  // equal(x, y)
             break;
         case '>':
             // determine whether or not the first value is more than the second value
-            this.builder.insertInvokeInstruction('$more', 2);  // more(x, y)
+            this.builder.insertInvokeInstruction('$isMore', 2);  // more(x, y)
             break;
         case 'is':
             // determine whether or not the first value is the same value as the second value
-            this.builder.insertInvokeInstruction('$same', 2);  // same(this, that)
+            this.builder.insertInvokeInstruction('$areSame', 2);  // same(this, that)
             break;
         case 'matches':
             // determine whether or not the first value matches the second value

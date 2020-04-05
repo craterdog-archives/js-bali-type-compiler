@@ -110,6 +110,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
 
 const sources = [
     '/bali/abstractions/Component',
+    '/bali/libraries/Component',
     '/bali/interfaces/Sequential',
     '/bali/abstractions/Element',
     '/bali/abstractions/Composite',

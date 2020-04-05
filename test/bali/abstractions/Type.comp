@@ -74,7 +74,7 @@
                 LOAD VARIABLE $$index-2
                 INVOKE $addItem WITH 2 ARGUMENTS
                 SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
-                INVOKE $equal WITH 2 ARGUMENTS
+                INVOKE $areEqual WITH 2 ARGUMENTS
                 STORE VARIABLE $$result
                 
                 4.ConditionRepeat:
@@ -88,8 +88,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                A04A80022801A04A6007B001C8018006600580010000600118216002A04A
-                6001B001C8018006600160018004780460058003A04A6003B001C802B023
+                A04D80022801A04D6007B001C8018006600580010000600118216002A04D
+                6001B001C8018006600160018004780460058003A04D6003B001C802B008
                 8006000C00006002E000
             '(
                 $encoding: $base16

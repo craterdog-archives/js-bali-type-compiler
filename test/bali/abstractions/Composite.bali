@@ -2,7 +2,8 @@
     $parent: /bali/abstractions/Component/v1
     $compilation: /bali/compilations/H9ABCGAL6K9YQX5GDJZSQF0AYVL1LK23/v1
     $description: "
-        This abstract class defines the messages that all composite components support.
+        This abstract class defines the procedures for the messages that all composite components
+        support.
     "($mediatype: "application/bsmd")
     $parameters: [
         $itemType: [
