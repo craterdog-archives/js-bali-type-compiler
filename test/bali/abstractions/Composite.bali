@@ -70,7 +70,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                return not size(target) > 0
+                return NOT size(target) > 0
             }
         ]
     ]

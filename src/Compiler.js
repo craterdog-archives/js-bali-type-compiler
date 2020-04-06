@@ -436,7 +436,7 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
  * of two expressions that are on top of the component stack with the resulting
  * value of a comparison operation on them.
  */
-// comparisonExpression: expression ('<' | '=' | '>' | 'is' | 'matches') expression
+// comparisonExpression: expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression
 CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     const firstOperand = tree.getItem(1);
     const secondOperand = tree.getItem(2);
@@ -462,11 +462,11 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
             // determine whether or not the first value is more than the second value
             this.builder.insertInvokeInstruction('$isMore', 2);  // more(x, y)
             break;
-        case 'is':
+        case 'IS':
             // determine whether or not the first value is the same value as the second value
             this.builder.insertInvokeInstruction('$areSame', 2);  // same(this, that)
             break;
-        case 'matches':
+        case 'MATCHES':
             // determine whether or not the first value matches the second value
             this.builder.insertInvokeInstruction('$doesMatch', 2);  // doesMatch(component, pattern)
             break;
@@ -479,7 +479,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
  * of the expression that is on top of the component stack with the logical
  * complement of the value.
  */
-// complementExpression: 'not' expression
+// complementExpression: 'NOT' expression
 CompilingVisitor.prototype.visitComplementExpression = function(tree) {
     const operand = tree.getItem(1);
 
@@ -487,7 +487,7 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM finds the logical complement of the top value on the component stack
-    this.builder.insertInvokeInstruction('$complement', 1);  // complement(p)
+    this.builder.insertInvokeInstruction('$not', 1);  // not(p)
 };
 
 
@@ -945,7 +945,7 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
  * of two expressions that are on top of the component stack with the resulting
  * value of a logical operation on them.
  */
-// logicalExpression: expression ('and' | 'sans' | 'xor' | 'or') expression
+// logicalExpression: expression ('AND' | 'SANS' | 'XOR' | 'OR') expression
 CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
     const firstOperand = tree.getItem(1);
     const secondOperand = tree.getItem(2);
@@ -959,19 +959,19 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
     // the VM leaves the result of the logical operation on the values on top of the component stack
     const operator = tree.operator;
     switch (operator) {
-        case 'and':
+        case 'AND':
             // find the logical AND of the two values on top of the component stack
             this.builder.insertInvokeInstruction('$and', 2);  // and(p, q)
             break;
-        case 'sans':
+        case 'SANS':
             // find the logical SANS of the two values on top of the component stack
             this.builder.insertInvokeInstruction('$sans', 2);  // sans(p, q)
             break;
-        case 'or':
+        case 'OR':
             // find the logical OR of the two values on top of the component stack
             this.builder.insertInvokeInstruction('$or', 2);  // or(p, q)
             break;
-        case 'xor':
+        case 'XOR':
             // find the logical XOR of the two values on top of the component stack
             this.builder.insertInvokeInstruction('$xor', 2);  // xor(p, q)
             break;

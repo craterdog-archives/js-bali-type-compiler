@@ -22,12 +22,12 @@
     a < b
     c = d
     f > g
-    h is j
-    k matches m
-    not p
-    a and b
-    c sans d
-    f xor g
-    h or j
+    h IS j
+    k MATCHES m
+    NOT p
+    a AND b
+    c SANS d
+    f XOR g
+    h OR j
     foo ? 5
 }

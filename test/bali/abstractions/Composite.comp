@@ -105,10 +105,10 @@
                 INVOKE $size WITH 1 ARGUMENT
                 PUSH LITERAL `0`
                 INVOKE $isMore WITH 2 ARGUMENTS
-                INVOKE $complement WITH 1 ARGUMENT
+                INVOKE $not WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A8752801B03BA817E000'(
+            $bytecode: '6001A8752801B03BA84EE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

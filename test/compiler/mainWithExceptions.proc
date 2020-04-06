@@ -3,37 +3,34 @@
     $variables: [
         $error
         $message
-        $$queue-1
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: []($type: /bali/collections/Set/v1)
     $addresses: [
-        "1.QueueStatement": 1
-        "1.QueueStatementDone": 6
-        "1.QueueStatementHandlers": 8
-        "1.1.HandleClause": 9
-        "1.1.1.EvaluateStatement": 20
-        "1.1.HandleClauseDone": 22
-        "1.2.HandleClause": 23
-        "1.2.1.EvaluateStatement": 34
-        "1.2.HandleClauseDone": 36
-        "1.QueueStatementFailed": 37
-        "1.QueueStatementSucceeded": 38
+        "1.PostStatement": 1
+        "1.PostStatementDone": 4
+        "1.PostStatementHandlers": 6
+        "1.1.HandleClause": 7
+        "1.1.1.EvaluateStatement": 18
+        "1.1.HandleClauseDone": 20
+        "1.2.HandleClause": 21
+        "1.2.1.EvaluateStatement": 32
+        "1.2.HandleClauseDone": 34
+        "1.PostStatementFailed": 35
+        "1.PostStatementSucceeded": 36
     ]
     $instructions: "
-        1.QueueStatement:
-        PUSH HANDLER 1.QueueStatementHandlers
-        PUSH LITERAL `<bali:/queues/myqueue>`
-        STORE VARIABLE $$queue-1
+        1.PostStatement:
+        PUSH HANDLER 1.PostStatementHandlers
         LOAD VARIABLE $message
-        STORE MESSAGE $$queue-1
+        PUSH LITERAL `<bali:/queues/myqueue>`
         
-        1.QueueStatementDone:
+        1.PostStatementDone:
         POP HANDLER
-        JUMP TO 1.QueueStatementSucceeded
+        JUMP TO 1.PostStatementSucceeded
         
-        1.QueueStatementHandlers:
+        1.PostStatementHandlers:
         SKIP INSTRUCTION
         
         1.1.HandleClause:
@@ -54,7 +51,7 @@
         STORE VARIABLE $$result
         
         1.1.HandleClauseDone:
-        JUMP TO 1.QueueStatementSucceeded
+        JUMP TO 1.PostStatementSucceeded
         
         1.2.HandleClause:
         STORE VARIABLE $error
@@ -66,7 +63,7 @@
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
         INVOKE $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.QueueStatementFailed ON FALSE
+        JUMP TO 1.PostStatementFailed ON FALSE
         POP COMPONENT
         
         1.2.1.EvaluateStatement:
@@ -74,19 +71,19 @@
         STORE VARIABLE $$result
         
         1.2.HandleClauseDone:
-        JUMP TO 1.QueueStatementSucceeded
+        JUMP TO 1.PostStatementSucceeded
         
-        1.QueueStatementFailed:
+        1.PostStatementFailed:
         HANDLE EXCEPTION
         
-        1.QueueStatementSucceeded:
+        1.PostStatementSucceeded:
         LOAD VARIABLE $$result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        20082801800360028803400000260000800160016001A01428022803B00B
-        B001B02318174800280480040026800160016001A01428022805B00BB001
-        B02318254800280680040026E8006004E000
+        200660022801400000240000800160016001A01428022803B00BB001B023
+        18154800280480030024800160016001A01428022805B00BB001B0231823
+        4800280680030024E8006003E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"
