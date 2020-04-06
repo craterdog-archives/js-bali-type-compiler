@@ -853,6 +853,26 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $doesMatch intrinsic function', function() {
+            const index = intrinsics.index('$doesMatch');
+            intrinsics.invoke(index, probability, bali.pattern.ANY);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 2, bali.pattern.ANY);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $duplicate intrinsic function', function() {
             const index = intrinsics.index('$duplicate');
             intrinsics.invoke(index, number);
@@ -1608,26 +1628,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, angle);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $matches intrinsic function', function() {
-            const index = intrinsics.index('$matches');
-            intrinsics.invoke(index, probability, bali.pattern.ANY);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, probability);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, 2, bali.pattern.ANY);
                 }
             ).to.throw();
         });

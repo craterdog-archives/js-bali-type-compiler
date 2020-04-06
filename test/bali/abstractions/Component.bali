@@ -4,7 +4,7 @@
         This abstract class defines the procedures for the messages that all components support.
     "($mediatype: "application/bsmd")
     $procedures: [
-        $getAncestry: [
+        $ancestry: [
             $description: "
                 This procedure returns a list of the type names for the ancestors of this type of
                 component.
@@ -16,7 +16,7 @@
                 return ancestry(target)
             }
         ]
-        $getInterfaces: [
+        $interfaces: [
             $description: "
                 This procedure returns a list of the interface names for the interfaces that this
                 type of component supports.
@@ -26,38 +26,6 @@
             )
             $source: {
                 return interfaces(target)
-            }
-        ]
-        $getParameter: [
-            $description: "
-                This procedure returns a catalog of any parameters that were used to parameterize
-                this component.
-            "($mediatype: "application/bsmd")
-            $type: /bali/abstractions/Element/v1
-            $source: {
-                return parameter(target, key)
-            }($key: /bali/elements/Symbol/v1)
-        ]
-        $getParameters: [
-            $description: "
-                This procedure returns a catalog of any parameters that were used to parameterize
-                this component.
-            "($mediatype: "application/bsmd")
-            $type: /bali/collections/Catalog/v1(
-                $keyType: /bali/elements/Symbol/v1
-                $valueType: /bali/abstractions/Element/v1
-            )
-            $source: {
-                return parameters(target)
-            }
-        ]
-        $getType: [
-            $description: "
-                This procedure returns the name of the type of this component.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Name/v1
-            $source: {
-                return type(target)
             }
         ]
         $isParameterized: [
@@ -79,6 +47,29 @@
                 return isType(target, type)
             }($type: /bali/elements/Name/v1)
         ]
+        $parameter: [
+            $description: "
+                This procedure returns a catalog of any parameters that were used to parameterize
+                this component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Element/v1
+            $source: {
+                return parameter(target, key)
+            }($key: /bali/elements/Symbol/v1)
+        ]
+        $parameters: [
+            $description: "
+                This procedure returns a catalog of any parameters that were used to parameterize
+                this component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1(
+                $keyType: /bali/elements/Symbol/v1
+                $valueType: /bali/abstractions/Element/v1
+            )
+            $source: {
+                return parameters(target)
+            }
+        ]
         $supportsInterface: [
             $description: "
                 This procedure determines whether or not this component supports the specified
@@ -88,6 +79,15 @@
             $source: {
                 return supportsInterface(target, interface)
             }($interface: /bali/elements/Name/v1)
+        ]
+        $type: [
+            $description: "
+                This procedure returns the name of the type of this component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Name/v1
+            $source: {
+                return type(target)
+            }
         ]
     ]
 ](

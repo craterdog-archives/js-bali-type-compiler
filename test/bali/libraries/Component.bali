@@ -63,6 +63,18 @@
                 return hash(component)
             }($component: /bali/abstractions/Component/v1)
         ]
+        $doesMatch: [
+            $description: "
+                This procedure determines whether or not a component matches a pattern.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return doesMatch(component, pattern)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $pattern: /bali/elements/Pattern/v1
+            )
+        ]
     ]
 ](
     $name: /bali/libraries/Component/v1

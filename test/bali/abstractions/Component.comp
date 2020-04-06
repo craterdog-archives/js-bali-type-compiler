@@ -2,7 +2,7 @@
     $literals: []
     $constants: [:]
     $procedures: [
-        $getAncestry: [
+        $ancestry: [
             $parameters: []
             $variables: [
                 $target
@@ -22,7 +22,7 @@
                 $mediatype: "application/bcod"
             )
         ]
-        $getInterfaces: [
+        $interfaces: [
             $parameters: []
             $variables: [
                 $target
@@ -37,70 +37,7 @@
                 INVOKE $interfaces WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A835E000'(
-                $encoding: $base16
-                $mediatype: "application/bcod"
-            )
-        ]
-        $getParameter: [
-            $parameters: [
-                $key
-            ]
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
-            $instructions: "
-                1.ReturnStatement:
-                LOAD VARIABLE $target
-                PUSH PARAMETER $key
-                INVOKE $parameter WITH 2 ARGUMENTS
-                HANDLE RESULT
-            "($mediatype: "application/basm")
-            $bytecode: '60013801B052E000'(
-                $encoding: $base16
-                $mediatype: "application/bcod"
-            )
-        ]
-        $getParameters: [
-            $parameters: []
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
-            $instructions: "
-                1.ReturnStatement:
-                LOAD VARIABLE $target
-                INVOKE $parameters WITH 1 ARGUMENT
-                HANDLE RESULT
-            "($mediatype: "application/basm")
-            $bytecode: '6001A853E000'(
-                $encoding: $base16
-                $mediatype: "application/bcod"
-            )
-        ]
-        $getType: [
-            $parameters: []
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
-            $instructions: "
-                1.ReturnStatement:
-                LOAD VARIABLE $target
-                INVOKE $type WITH 1 ARGUMENT
-                HANDLE RESULT
-            "($mediatype: "application/basm")
-            $bytecode: '6001A883E000'(
+            $bytecode: '6001A836E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -120,7 +57,7 @@
                 INVOKE $isParameterized WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '6001A83BE000'(
+            $bytecode: '6001A83CE000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -143,7 +80,50 @@
                 INVOKE $isType WITH 2 ARGUMENTS
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '60013801B03CE000'(
+            $bytecode: '60013801B03DE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $parameter: [
+            $parameters: [
+                $key
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $key
+                INVOKE $parameter WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B052E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $parameters: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $parameters WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A853E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -167,6 +147,26 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '60013801B07BE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $type: [
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $type WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A883E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

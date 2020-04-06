@@ -11,7 +11,13 @@
 
 /**
  * This library encapsulates the intrinsic functions supported by the Bali Nebula™
- * Virtual Processor.
+ * Virtual Processor. The functions use the following naming convention:
+ * <pre>
+ *  1. Functions that return a component or part of a component are named using noun or
+ *     adjective phrases.
+ *  2. Functions that modify something are named using verb phrases.
+ *  3. Functions that ask a question return a boolean value.
+ * </pre>
  */
 const bali = require('bali-component-framework').api();
 const validator = bali.validator();
@@ -414,6 +420,12 @@ exports.api = function(debug) {
             return bali.text(EOL + component.toBDN(indentation) + EOL);
         },
 
+        $doesMatch: function(component, pattern) {
+            validateTypeArgument('$doesMatch', '/bali/abstractions/Component', component);
+            validateTypeArgument('$doesMatch', '/bali/elements/Pattern', pattern);
+            return bali.probability(component.isMatchedBy(pattern));
+        },
+
         $duplicate: function(component) {
             validateTypeArgument('$duplicate', '/bali/abstractions/Component', component);
             return component.duplicate();
@@ -639,12 +651,6 @@ exports.api = function(debug) {
         $magnitude: function(number) {
             validateTypeArgument('$magnitude', '/bali/elements/Number', number);
             return bali.number(number.getMagnitude());
-        },
-
-        $matches: function(component, pattern) {
-            validateTypeArgument('$matches', '/bali/abstractions/Component', component);
-            validateTypeArgument('$matches', '/bali/elements/Pattern', pattern);
-            return bali.probability(component.isMatchedBy(pattern));
         },
 
         $next: function(iterator) {
