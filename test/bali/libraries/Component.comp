@@ -50,6 +50,28 @@
                 $mediatype: "application/bcod"
             )
         ]
+        $boolean: [
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                INVOKE $boolean WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '3801A812E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
         $comparison: [
             $parameters: [
                 $first
@@ -70,6 +92,54 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '38013802B016E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $doesMatch: [
+            $parameters: [
+                $component
+                $pattern
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                PUSH PARAMETER $pattern
+                INVOKE $doesMatch WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B023E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $document: [
+            $parameters: [
+                $component
+                $indentation
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                PUSH PARAMETER $indentation
+                INVOKE $document WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B022E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
@@ -118,10 +188,9 @@
                 $mediatype: "application/bcod"
             )
         ]
-        $doesMatch: [
+        $HTML: [
             $parameters: [
                 $component
-                $pattern
             ]
             $variables: [
                 $target
@@ -133,11 +202,10 @@
             $instructions: "
                 1.ReturnStatement:
                 PUSH PARAMETER $component
-                PUSH PARAMETER $pattern
-                INVOKE $doesMatch WITH 2 ARGUMENTS
+                INVOKE $HTML WITH 1 ARGUMENT
                 HANDLE RESULT
             "($mediatype: "application/basm")
-            $bytecode: '38013802B023E000'(
+            $bytecode: '3801A831E000'(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )

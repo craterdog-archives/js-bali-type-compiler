@@ -29,6 +29,16 @@
                 $second: /bali/abstractions/Component/v1
             )
         ]
+        $boolean: [
+            $description: "
+                This procedure returns a boolean value describing whether or not the component has
+                a meaningful value.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return boolean(component)
+            }($component: /bali/abstractions/Component/v1)
+        ]
         $comparison: [
             $description: "
                 This procedure returns a tertiary number describing the natural ordering for two
@@ -43,6 +53,32 @@
             }(
                 $first: /bali/abstractions/Component/v1
                 $second: /bali/abstractions/Component/v1
+            )
+        ]
+        $doesMatch: [
+            $description: "
+                This procedure determines whether or not a component matches a pattern.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return doesMatch(component, pattern)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $pattern: /bali/elements/Pattern/v1
+            )
+        ]
+        $document: [
+            $description: "
+                This procedure returns the Bali Document Notation™ for a component.  If an
+                indentation is specified, each line of the resulting document will be indented by
+                that number of additional levels.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: "application/bali")
+            $source: {
+                return document(component, indentation)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $indentation: /bali/elements/Number/v1($range: [0..20])
             )
         ]
         $duplicate: [
@@ -63,17 +99,15 @@
                 return hash(component)
             }($component: /bali/abstractions/Component/v1)
         ]
-        $doesMatch: [
+        $HTML: [
             $description: "
-                This procedure determines whether or not a component matches a pattern.
+                This procedure returns a text string containing the corresponding HTML code for
+                a component.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $type: /bali/elements/Text/v1($mediatype: "text/html")
             $source: {
-                return doesMatch(component, pattern)
-            }(
-                $component: /bali/abstractions/Component/v1
-                $pattern: /bali/elements/Pattern/v1
-            )
+                return HTML(component)
+            }($component: /bali/abstractions/Component/v1)
         ]
     ]
 ](
