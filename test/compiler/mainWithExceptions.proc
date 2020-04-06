@@ -3,28 +3,31 @@
     $variables: [
         $error
         $message
+        $$queue-1
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: []($type: /bali/collections/Set/v1)
     $addresses: [
         "1.PostStatement": 1
-        "1.PostStatementDone": 4
-        "1.PostStatementHandlers": 6
-        "1.1.HandleClause": 7
-        "1.1.1.EvaluateStatement": 18
-        "1.1.HandleClauseDone": 20
-        "1.2.HandleClause": 21
-        "1.2.1.EvaluateStatement": 32
-        "1.2.HandleClauseDone": 34
-        "1.PostStatementFailed": 35
-        "1.PostStatementSucceeded": 36
+        "1.PostStatementDone": 6
+        "1.PostStatementHandlers": 8
+        "1.1.HandleClause": 9
+        "1.1.1.EvaluateStatement": 20
+        "1.1.HandleClauseDone": 22
+        "1.2.HandleClause": 23
+        "1.2.1.EvaluateStatement": 34
+        "1.2.HandleClauseDone": 36
+        "1.PostStatementFailed": 37
+        "1.PostStatementSucceeded": 38
     ]
     $instructions: "
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandlers
-        LOAD VARIABLE $message
         PUSH LITERAL `<bali:/queues/myqueue>`
+        STORE VARIABLE $$queue-1
+        LOAD VARIABLE $message
+        STORE MESSAGE $$queue-1
         
         1.PostStatementDone:
         POP HANDLER
@@ -81,9 +84,9 @@
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        200660022801400000240000800160016001A01428022803B00BB001B023
-        18154800280480030024800160016001A01428022805B00BB001B0231823
-        4800280680030024E8006003E000
+        20082801800360028803400000260000800160016001A01428022803B00B
+        B001B02318174800280480040026800160016001A01428022805B00BB001
+        B02318254800280680040026E8006004E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"

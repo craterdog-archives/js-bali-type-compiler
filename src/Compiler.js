@@ -1100,6 +1100,28 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
 };
 
 
+/*
+ * This method inserts the instructions that cause the VM to evaluate a
+ * message expression and then place the resulting message on a message
+ * queue in the Bali Nebula™. The reference to the message
+ * queue is another expression that the VM evaluates as well.
+ */
+// postClause: 'post' expression 'on' expression
+CompilingVisitor.prototype.visitPostClause = function(tree) {
+    const message = tree.getItem(1);
+    const reference = tree.getItem(2);
+
+    // the VM stores the reference to the queue in a temporary variable
+    reference.acceptVisitor(this);
+    const queue = this.createTemporaryVariable('queue');
+    this.builder.insertStoreInstruction('VARIABLE', queue);
+
+    // the VM stores the message on the message queue
+    message.acceptVisitor(this);
+    this.builder.insertStoreInstruction('MESSAGE', queue);
+};
+
+
 // probability: 'false' | FRACTION | 'true'
 CompilingVisitor.prototype.visitProbability = function(probability) {
     this.visitElement(probability);
@@ -1134,28 +1156,6 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 
     // the VM stores the event on the event queue
     this.builder.insertStoreInstruction('MESSAGE', '$$eventQueue');
-};
-
-
-/*
- * This method inserts the instructions that cause the VM to evaluate a
- * message expression and then place the resulting message on a message
- * queue in the Bali Nebula™. The reference to the message
- * queue is another expression that the VM evaluates as well.
- */
-// queueClause: 'queue' expression 'on' expression
-CompilingVisitor.prototype.visitQueueClause = function(tree) {
-    const message = tree.getItem(1);
-    const reference = tree.getItem(2);
-
-    // the VM stores the reference to the queue in a temporary variable
-    reference.acceptVisitor(this);
-    const queue = this.createTemporaryVariable('queue');
-    this.builder.insertStoreInstruction('VARIABLE', queue);
-
-    // the VM stores the message on the message queue
-    message.acceptVisitor(this);
-    this.builder.insertStoreInstruction('MESSAGE', queue);
 };
 
 
