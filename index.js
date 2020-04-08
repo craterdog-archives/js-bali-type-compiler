@@ -19,13 +19,11 @@ const Compiler = require('./src/Compiler').Compiler;
 /**
  * This function returns an object that implements the Bali Nebula™ compiler interface.
  *
- * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
- * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
  * @returns {Object} An object that implements the Bali Nebula™ compiler interface.
  */
-exports.api = function(notary, repository, debug) {
+exports.api = function(debug) {
     // validate the parameters
     debug = debug || false;
     const intrinsics = require('./src/Intrinsics').api(debug);
@@ -39,7 +37,7 @@ exports.api = function(notary, repository, debug) {
          * @param {Catalog} type The type definition to be compiled.
          */
         compileType: function(type) {
-            const compiler = new Compiler(notary, repository, debug);
+            const compiler = new Compiler(debug);
             compiler.compileType(type);
         },
 
@@ -52,7 +50,7 @@ exports.api = function(notary, repository, debug) {
          * @param {Catalog} procedure The procedure being compiled.
          */
         compileProcedure: function(type, procedure) {
-            const compiler = new Compiler(notary, repository, debug);
+            const compiler = new Compiler(debug);
             compiler.compileProcedure(type, procedure);
         },
 

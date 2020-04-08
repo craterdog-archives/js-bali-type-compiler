@@ -16,26 +16,10 @@ const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(1);
 const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const notary = require('bali-digital-notary').test(account, directory);
-const repository = require('bali-document-repository').test(notary, directory, debug);
-const compiler = require('../index').api(notary, repository, debug);
+const compiler = require('../index').api(debug);
 
 
 describe('Bali Nebula™ Procedure Compiler', function() {
-
-    describe('Initialize the environment', function() {
-
-        it('should generate the notary key and publish its certificate', async function() {
-            const certificate = await notary.generateKey();
-            expect(certificate).to.exist;
-            const document = await notary.notarizeDocument(certificate);
-            expect(document).to.exist;
-            const citation = await notary.activateKey(document);
-            expect(citation).to.exist;
-            await repository.writeDocument(document);
-        });
-
-    });
 
     describe('Test the compiler and assembler.', function() {
 
@@ -87,13 +71,10 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 await compiler.compileType(type);
                 const source = type.toString() + '\n';  // POSIX compliant <EOL>
                 const filename = testFolder + file + '.comp';
-                await pfs.writeFile(filename, source, 'utf8');
-                var document = await notary.notarizeDocument(type);
-                expect(document).to.exist;
-                var citation = await repository.writeDocument(document);
-                expect(citation).to.exist;
-                const name = bali.component(file + '/v1');
-                await repository.writeName(name, citation);
+                //await pfs.writeFile(filename, source, 'utf8');
+                var expected = await pfs.readFile(filename, 'utf8');
+                expect(expected).to.exist;
+                expect(source).to.equal(expected);
             }
         });
 

@@ -26,18 +26,14 @@ const EOL = '\n';  // POSIX end of line character
 // PUBLIC FUNCTIONS
 
 /**
- * This class implements a compiler that analyzes and compiles a document into a
- * type document containing the bytecode for each of its procedures.
+ * This class implements a compiler that compiles a type definition document into a
+ * compiled type document containing the bytecode for each of its procedures.
  *
- * @param {Object} notary An object that implements the Bali Nebula™ digital notary interface.
- * @param {Object} repository An object that implements the Bali Nebula™ document repository interface.
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
  * @returns {Compiler} The new document compiler.
  */
-function Compiler(notary, repository, debug) {
-    this.notary = notary;
-    this.repository = repository;
+function Compiler(debug) {
     this.debug = debug || false;
     return this;
 }
@@ -46,8 +42,8 @@ exports.Compiler = Compiler;
 
 
 /**
- * This function compiles a type definition an returns a compiled type that may be run
- * in the Bali Nebula™.
+ * This function compiles a type definition so that it may be run on the Bali Nebula™ virtual
+ * machine.
  *
  * @param {Catalog} type The type definition to be compiled.
  */
@@ -86,7 +82,7 @@ Compiler.prototype.compileType = async function(type) {
 
 
 /**
- * This method compiles source code into a procedure containing the corresponding
+ * This method compiles the a procedure containing Bali source code into the corresponding
  * assembly instructions for the Bali Nebula™ virtual processor.
  *
  * @param {Catalog} type The type context for the procedure being compiled.
