@@ -1,0 +1,703 @@
+[
+    $description: "
+        This library defines the procedures for the functions that operate on any type component.
+    "($mediatype: "application/bsmd")
+    $constants: [:]
+    $procedures: [
+        $attributes: [
+            $description: "
+                This procedure returns the list of attributes that are supported by instances of
+                the specified type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1($itemType: /bali/composites/Attribute/v1)
+            $source: {
+                $current := type
+                $attributes := []
+                while current do {
+                    attributes.addItems(current[attributes])
+                    $parent := @(current[parent])
+                }
+                return attributes
+            }($type: /bali/meta/Type/v1)
+            $parameters: [
+                $type
+            ]
+            $variables: [
+                $attributes
+                $current
+                $$index-1
+                $$index-2
+                $$location-3
+                $parent
+                $$result
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 5
+                "3.1.ConditionClause": 6
+                "3.1.1.EvaluateStatement": 8
+                "3.1.2.EvaluateStatement": 20
+                "3.ConditionRepeat": 30
+                "3.WhileStatementDone": 31
+                "4.ReturnStatement": 32
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.EvaluateStatement:
+                INVOKE $list
+                STORE VARIABLE $attributes
+                
+                3.WhileStatement:
+                SKIP INSTRUCTION
+                
+                3.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 3.WhileStatementDone ON FALSE
+                
+                3.1.1.EvaluateStatement:
+                LOAD VARIABLE $attributes
+                INVOKE $list
+                LOAD VARIABLE $current
+                LOAD VARIABLE $attributes
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $addItems TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                3.1.2.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                3.ConditionRepeat:
+                JUMP TO 3.1.ConditionClause
+                
+                3.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                4.ReturnStatement:
+                LOAD VARIABLE $attributes
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018002A049800100006002181F6001A049600260018003A0496003B001
+                C802B001C8018007600260068004A0496004B001C8028005780580060006
+                00006001E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $interfaces: [
+            $description: "
+                This procedure returns the list of interfaces that are supported by instances of
+                the specified type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1($itemType: /bali/composites/Interface/v1)
+            $source: {
+                $current := type
+                $interfaces := []
+                while current do {
+                    interfaces.addItems(current[interfaces])
+                    $parent := @(current[parent])
+                }
+                return interfaces
+            }($type: /bali/meta/Type/v1)
+            $parameters: [
+                $type
+            ]
+            $variables: [
+                $current
+                $$index-1
+                $$index-2
+                $interfaces
+                $$location-3
+                $parent
+                $$result
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 5
+                "3.1.ConditionClause": 6
+                "3.1.1.EvaluateStatement": 8
+                "3.1.2.EvaluateStatement": 20
+                "3.ConditionRepeat": 30
+                "3.WhileStatementDone": 31
+                "4.ReturnStatement": 32
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.EvaluateStatement:
+                INVOKE $list
+                STORE VARIABLE $interfaces
+                
+                3.WhileStatement:
+                SKIP INSTRUCTION
+                
+                3.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 3.WhileStatementDone ON FALSE
+                
+                3.1.1.EvaluateStatement:
+                LOAD VARIABLE $interfaces
+                INVOKE $list
+                LOAD VARIABLE $current
+                LOAD VARIABLE $interfaces
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $addItems TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                3.1.2.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                3.ConditionRepeat:
+                JUMP TO 3.1.ConditionClause
+                
+                3.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                4.ReturnStatement:
+                LOAD VARIABLE $interfaces
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018001A049800400006001181F6004A049600160048002A0496002B001
+                C802B001C8018007600160068003A0496003B001C8028005780580060006
+                00006004E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $procedures: [
+            $description: "
+                This procedure returns the list of procedures that are supported by instances of
+                the specified type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1($itemType: /bali/composites/Procedure/v1)
+            $source: {
+                $current := type
+                $procedures := []
+                while current do {
+                    procedures.addItems(current[procedures])
+                    $parent := @(current[parent])
+                }
+                return procedures
+            }($type: /bali/meta/Type/v1)
+            $parameters: [
+                $type
+            ]
+            $variables: [
+                $current
+                $$index-1
+                $$index-2
+                $$location-3
+                $parent
+                $procedures
+                $$result
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 5
+                "3.1.ConditionClause": 6
+                "3.1.1.EvaluateStatement": 8
+                "3.1.2.EvaluateStatement": 20
+                "3.ConditionRepeat": 30
+                "3.WhileStatementDone": 31
+                "4.ReturnStatement": 32
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.EvaluateStatement:
+                INVOKE $list
+                STORE VARIABLE $procedures
+                
+                3.WhileStatement:
+                SKIP INSTRUCTION
+                
+                3.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 3.WhileStatementDone ON FALSE
+                
+                3.1.1.EvaluateStatement:
+                LOAD VARIABLE $procedures
+                INVOKE $list
+                LOAD VARIABLE $current
+                LOAD VARIABLE $procedures
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $addItems TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                3.1.2.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                3.ConditionRepeat:
+                JUMP TO 3.1.ConditionClause
+                
+                3.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                4.ReturnStatement:
+                LOAD VARIABLE $procedures
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018001A049800600006001181F6006A049600160068002A0496002B001
+                C802B001C8018007600160058003A0496003B001C8028004780480050006
+                00006006E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $supportsAttribute: [
+            $description: "
+                This procedure determines whether or not the specified type supports the specified
+                attribute.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type
+                while current do {
+                    $attributes := current[attributes]
+                    if attributes AND attributes.containsItem(attribute) then {
+                        return true
+                    }
+                    $parent := @(current[parent])
+                }
+                return false
+            }(
+                $type: /bali/meta/Type/v1
+                $attribute: /bali/elements/Symbol/v1
+            )
+            $parameters: [
+                $type
+                $attribute
+            ]
+            $variables: [
+                $attributes
+                $current
+                $$index-1
+                $$index-2
+                $$location-3
+                $parent
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 3
+                "2.1.ConditionClause": 4
+                "2.1.1.EvaluateStatement": 6
+                "2.1.2.IfStatement": 14
+                "2.1.2.1.ConditionClause": 15
+                "2.1.2.1.1.ReturnStatement": 23
+                "2.1.2.IfStatementDone": 25
+                "2.1.3.EvaluateStatement": 26
+                "2.ConditionRepeat": 36
+                "2.WhileStatementDone": 37
+                "3.ReturnStatement": 38
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $attributes
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $attributes
+                
+                2.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $attributes
+                LOAD VARIABLE $attributes
+                INVOKE $list
+                PUSH PARAMETER $attribute
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $containsItem TO COMPONENT WITH ARGUMENTS
+                INVOKE $and WITH 2 ARGUMENTS
+                JUMP TO 2.1.2.IfStatementDone ON FALSE
+                
+                2.1.2.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.1.3.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018002000060021825600260018003A0496003B001C802800100006001
+                6001A0493802B001C801B00418192801E0000000600260068004A0496004
+                B001C802800578058006000400002802E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $supportsInterface: [
+            $description: "
+                This procedure determines whether or not the specified type supports the specified
+                interface.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type
+                while current do {
+                    $interfaces := current[interfaces]
+                    if interfaces AND interfaces.containsItem(interface) then {
+                        return true
+                    }
+                    $parent := @(current[parent])
+                }
+                return false
+            }(
+                $type: /bali/meta/Type/v1
+                $interface: /bali/elements/Name/v1
+            )
+            $parameters: [
+                $type
+                $interface
+            ]
+            $variables: [
+                $current
+                $$index-1
+                $$index-2
+                $interfaces
+                $$location-3
+                $parent
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 3
+                "2.1.ConditionClause": 4
+                "2.1.1.EvaluateStatement": 6
+                "2.1.2.IfStatement": 14
+                "2.1.2.1.ConditionClause": 15
+                "2.1.2.1.1.ReturnStatement": 23
+                "2.1.2.IfStatementDone": 25
+                "2.1.3.EvaluateStatement": 26
+                "2.ConditionRepeat": 36
+                "2.WhileStatementDone": 37
+                "3.ReturnStatement": 38
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $interfaces
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $interfaces
+                
+                2.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $interfaces
+                LOAD VARIABLE $interfaces
+                INVOKE $list
+                PUSH PARAMETER $interface
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $containsItem TO COMPONENT WITH ARGUMENTS
+                INVOKE $and WITH 2 ARGUMENTS
+                JUMP TO 2.1.2.IfStatementDone ON FALSE
+                
+                2.1.2.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.1.3.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018001000060011825600160048002A0496002B001C802800400006004
+                6004A0493802B001C801B00418192801E0000000600160068003A0496003
+                B001C802800578058006000400002802E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $supportsProcedure: [
+            $description: "
+                This procedure determines whether or not the specified type supports the specified
+                procedure.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type
+                while current do {
+                    $procedures := current[procedures]
+                    if procedures AND procedures.containsItem(procedure) then {
+                        return true
+                    }
+                    $parent := @(current[parent])
+                }
+                return false
+            }(
+                $type: /bali/meta/Type/v1
+                $procedure: /bali/elements/Symbol/v1
+            )
+            $parameters: [
+                $type
+                $procedure
+            ]
+            $variables: [
+                $current
+                $$index-1
+                $$index-2
+                $$location-3
+                $parent
+                $procedures
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 3
+                "2.1.ConditionClause": 4
+                "2.1.1.EvaluateStatement": 6
+                "2.1.2.IfStatement": 14
+                "2.1.2.1.ConditionClause": 15
+                "2.1.2.1.1.ReturnStatement": 23
+                "2.1.2.IfStatementDone": 25
+                "2.1.3.EvaluateStatement": 26
+                "2.ConditionRepeat": 36
+                "2.WhileStatementDone": 37
+                "3.ReturnStatement": 38
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $type
+                STORE VARIABLE $current
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $procedures
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $procedures
+                
+                2.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $procedures
+                LOAD VARIABLE $procedures
+                INVOKE $list
+                PUSH PARAMETER $procedure
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $containsItem TO COMPONENT WITH ARGUMENTS
+                INVOKE $and WITH 2 ARGUMENTS
+                JUMP TO 2.1.2.IfStatementDone ON FALSE
+                
+                2.1.2.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.1.3.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-2
+                INVOKE $list
+                LOAD VARIABLE $$index-2
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-3
+                LOAD DOCUMENT $$location-3
+                STORE VARIABLE $parent
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                38018001000060011825600160068002A0496002B001C802800600006006
+                6006A0493802B001C801B00418192801E0000000600160058003A0496003
+                B001C802800478048005000400002802E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+    ]
+    $literals: [
+        true
+        false
+    ]
+](
+    $name: /bali/libraries/Type/v1
+    $type: /bali/abstractions/Library/v1
+    $tag: #6ZTY8XJLTQ4SDA36KW7B2M17VDWGPB6A
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

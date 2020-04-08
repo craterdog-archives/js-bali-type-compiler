@@ -1,4 +1,9 @@
 [
+    $source: {
+        if true then {
+            yes
+        }
+    }
     $parameters: []
     $variables: [
         $$result

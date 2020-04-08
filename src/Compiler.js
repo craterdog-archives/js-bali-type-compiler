@@ -50,83 +50,38 @@ exports.Compiler = Compiler;
  * in the Bali Nebula™.
  *
  * @param {Catalog} type The type definition to be compiled.
- * @returns {Catalog} The compiled type.
  */
 Compiler.prototype.compileType = async function(type) {
+    const assembler = new Assembler(this.debug);
 
-    // calculate compilation catalog parameters
-    const tokens = type.getValue('$compilation').getValue();
-    const tag = bali.tag(tokens[tokens.length - 2]);
-    const version = type.getParameter('$version');
-    const permissions = type.getParameter('$permissions');
-    var previous = type.getParameter('$previous');
-
-    // check for a previous version of the type
-    if (previous && !previous.isEqualTo(bali.pattern.NONE)) {
-        const previousType = await this.repository.readDocument(previous);
-        const previousContent = previousType.getValue('$content');
-        const previousName = previousContent.getValue('$compilation');
-        const previousCompilation = await this.repository.readName(previousName);
-        previous = await this.notary.citeDocument(previousCompilation);
-
+    var constants = type.getValue('$constants');
+    if (!constants || constants.isEqualTo(bali.pattern.NONE)) {
+        constants = bali.catalog();
+        type.setValue('$constants', constants);
     }
 
-    // create the compilation catalog
-    const literals = bali.list();
-    const constants = bali.catalog();
-    const procedures = bali.catalog();
-    const compilation = bali.catalog({
-        $literals: literals,
-        $constants: constants,
-        $procedures: procedures
-    }, {
-        $type: bali.component('/bali/types/Compilation/v1'),
-        $tag: tag,
-        $version: version,
-        $permissions: permissions,
-        $previous: previous
-    });
-
-    // extract the literals, constants and compiled procedures from the parent type
-    const parentName = type.getValue('$parent');
-    if (parentName && !parentName.isEqualTo(bali.pattern.NONE)) {
-        const parentType = await this.repository.readName(parentName);
-        literals.addItems(parentType.getValue('$literals') || []);
-        constants.addItems(parentType.getValue('$constants') || []);
-        procedures.addItems(parentType.getValue('$procedures') || []);
+    var procedures = type.getValue('$procedures');
+    if (!procedures || procedures.isEqualTo(bali.pattern.NONE)) {
+        procedures = bali.catalog();
+        type.setValue('$procedures', procedures);
     }
 
-    // add in the constants from the child type definition
-    // TODO: what if the child overrides the value of a parent constant?
-    constants.addItems(type.getValue('$constants') || []);
+    type.setValue('$literals', bali.list());
 
-    // compile each procedure defined in the child type definition
-    const catalog = type.getValue('$procedures');
-    if (catalog && !catalog.isEqualTo(bali.pattern.NONE)) {
+    // compile each procedure
+    const iterator = procedures.getIterator();
+    while (iterator.hasNext()) {
 
-        // iterate through procedure definitions
-        const assembler = new Assembler(this.debug);
-        const iterator = catalog.getIterator();
-        while (iterator.hasNext()) {
+        // retrieve the source code for the procedure
+        const association = iterator.getNext();
+        const procedure = association.getValue();
 
-            // retrieve the source code for the procedure
-            const association = iterator.getNext();
-            const name = association.getKey();
-            const source = association.getValue().getValue('$source');
+        // compile the source code into assembly instructions
+        this.compileProcedure(type, procedure);
 
-            // compile the source code
-            const procedure = this.compileProcedure(compilation, source);
-
-            // assemble the instructions in the procedure into bytecode
-            assembler.assembleProcedure(compilation, procedure);
-
-            // add the assembled procedure to the compilation
-            procedures.setValue(name, procedure);
-        }
-
+        // assemble the instructions into bytecode
+        assembler.assembleProcedure(type, procedure);
     }
-
-    return compilation;
 };
 
 
@@ -134,11 +89,11 @@ Compiler.prototype.compileType = async function(type) {
  * This method compiles source code into a procedure containing the corresponding
  * assembly instructions for the Bali Nebula™ virtual processor.
  *
- * @param {Catalog} type The type context for the document being compiled.
- * @param {Procedure} source The source code component for the procedure.
- * @returns {Catalog} The compiled procedure.
+ * @param {Catalog} type The type context for the procedure being compiled.
+ * @param {Catalog} procedure The procedure to be compiled.
  */
-Compiler.prototype.compileProcedure = function(type, source) {
+Compiler.prototype.compileProcedure = function(type, procedure) {
+    const source = procedure.getValue('$source');
 
     // extract the parameter names for the procedure
     const parameters = bali.list();
@@ -149,13 +104,11 @@ Compiler.prototype.compileProcedure = function(type, source) {
         });
     }
 
-    // construct the procedure catalog
-    const procedure = bali.catalog({
-        $parameters: parameters,
-        $variables: bali.set(['$target']),
-        $messages: bali.set(),
-        $addresses: bali.catalog()
-    });
+    // add the compilation context to the procedure
+    procedure.setValue('$parameters', parameters);
+    procedure.setValue('$variables', bali.set(['$target']));
+    procedure.setValue('$messages', bali.set());
+    procedure.setValue('$addresses', bali.catalog());
 
     // compile the procedure into assembly instructions
     const visitor = new CompilingVisitor(type, procedure, this.debug);
@@ -168,8 +121,6 @@ Compiler.prototype.compileProcedure = function(type, source) {
     const formatter = new Formatter(0, this.debug);
     instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediatype: 'application/basm'});
     procedure.setValue('$instructions', instructions);
-
-    return procedure;
 };
 
 
@@ -181,10 +132,10 @@ Compiler.prototype.compileProcedure = function(type, source) {
  * to construct the corresponding Bali Nebula™ virtual processor instructions for the
  * syntax tree is it traversing.
  */
-function CompilingVisitor(context, procedure, debug) {
+function CompilingVisitor(type, procedure, debug) {
     Visitor.call(this);
     this.debug = debug || false;
-    this.builder = new InstructionBuilder(context, procedure);
+    this.builder = new InstructionBuilder(type, procedure);
     this.temporaryVariableCount = 1;
     return this;
 }
@@ -1687,10 +1638,10 @@ function getSubclauses(statement) {
  * clause number.  For example, a prefix of '2.3.4.' would correspond to the
  * fourth statement in the third clause of the second statement in the main procedure.
  */
-function InstructionBuilder(context, procedure, debug) {
+function InstructionBuilder(type, procedure, debug) {
     this.debug = debug || false;
-    this.literals = context.getValue('$literals');
-    this.constants = context.getValue('$constants');
+    this.literals = type.getValue('$literals');
+    this.constants = type.getValue('$constants');
     this.parameters = procedure.getValue('$parameters');
     this.variables = procedure.getValue('$variables');
     this.messages = procedure.getValue('$messages');

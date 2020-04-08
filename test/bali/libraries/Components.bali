@@ -1,9 +1,27 @@
 [
-    $compilation: /bali/compilations/6NMPX2NN2VDHB27PQC513JBHZHP5317X/v1
     $description: "
         This library defines the procedures for the functions that operate on any type of component.
     "($mediatype: "application/bsmd")
+    $constants: [:]
     $procedures: [
+        $ancestry: [
+            $description: "
+                This procedure returns a list of the type names for the ancestors of this type of
+                component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1(
+                $itemType: /bali/elements/Name/v1
+            )
+            $source: {
+                $ancestry := []
+                $current := type(component)
+                while current do {
+                    ancestry.addItem(current)
+                    $current := @(current[parent])
+                }
+                return ancestry
+            }($component: /bali/abstractions/Component/v1)
+        ]
         $areEqual: [
             $description: "
                 This procedure determines whether or not two components are equal to each other.
@@ -55,18 +73,6 @@
                 $second: /bali/abstractions/Component/v1
             )
         ]
-        $doesMatch: [
-            $description: "
-                This procedure determines whether or not a component matches a pattern.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
-            $source: {
-                return doesMatch(component, pattern)
-            }(
-                $component: /bali/abstractions/Component/v1
-                $pattern: /bali/elements/Pattern/v1
-            )
-        ]
         $document: [
             $description: "
                 This procedure returns the Bali Document Notation™ for a component.  If an
@@ -79,6 +85,18 @@
             }(
                 $component: /bali/abstractions/Component/v1
                 $indentation: /bali/elements/Number/v1($range: [0..20])
+            )
+        ]
+        $doesMatch: [
+            $description: "
+                This procedure determines whether or not a component matches a pattern.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return doesMatch(component, pattern)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $pattern: /bali/elements/Pattern/v1
             )
         ]
         $duplicate: [
@@ -109,9 +127,29 @@
                 return HTML(component)
             }($component: /bali/abstractions/Component/v1)
         ]
+        $isA: [
+            $description: "
+                This procedure determines whether or not a component is an instance of the
+                specified type or any of its ancestors.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type(component)
+                while current do {
+                    if current = type then {
+                        return true
+                    }
+                    $current := @(current[parent])
+                }
+                return false
+            }(
+                $component: /bali/abstractions/Component/v1
+                $type: /bali/elements/Name/v1
+            )
+        ]
     ]
 ](
-    $name: /bali/libraries/Component/v1
+    $name: /bali/libraries/Components/v1
     $type: /bali/abstractions/Library/v1
     $tag: #L16JB13MH2FJFK65VC1KHXQW13C6V68R
     $version: v1

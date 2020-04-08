@@ -1,4 +1,8 @@
 [
+    $source: {
+        $foo := bar
+        document[$customer, $order, 3] := 5
+    }
     $parameters: []
     $variables: [
         $bar

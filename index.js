@@ -34,17 +34,13 @@ exports.api = function(notary, repository, debug) {
     return {
 
         /**
-         * This function compiles a type definition residing in the Bali Nebula™ and returns
-         * a document citation to the newly compiled type.  The type definition must be a
-         * committed document in the Bali Nebula™.
+         * This function compiles a type definition.
          *
-         * @param {Catalog} document A document containing the type definition to be compiled.
-         * @returns {Catalog} A catalog containing the newly compiled type.
+         * @param {Catalog} type The type definition to be compiled.
          */
-        compileType: function(document) {
+        compileType: function(type) {
             const compiler = new Compiler(notary, repository, debug);
-            const context = compiler.compileType(document);
-            return context;
+            compiler.compileType(type);
         },
 
         /**
@@ -53,13 +49,11 @@ exports.api = function(notary, repository, debug) {
          *
          * @param {Catalog} type A catalog containing the type context for the procedure being
          * compiled.
-         * @param {Procedure} procedure The source code for the procedure being compiled.
-         * @returns {Catalog} A catalog containing the compiled procedure context.
+         * @param {Catalog} procedure The procedure being compiled.
          */
         compileProcedure: function(type, procedure) {
             const compiler = new Compiler(notary, repository, debug);
-            const context = compiler.compileProcedure(type, procedure);
-            return context;
+            compiler.compileProcedure(type, procedure);
         },
 
         /**

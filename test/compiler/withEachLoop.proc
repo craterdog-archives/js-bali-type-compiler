@@ -1,4 +1,14 @@
 [
+    $source: {
+        with each $symbol in $sequence do {
+            $x := true
+            if x then {
+                $y := none
+                continue loop
+            }
+            $z := any
+        }
+    }
     $parameters: []
     $variables: [
         $$iterator-1

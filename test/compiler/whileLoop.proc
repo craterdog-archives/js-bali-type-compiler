@@ -1,4 +1,13 @@
 [
+    $source: {
+        while condition do {
+            $a := b
+            if a then {
+                break loop
+            }
+            $a := c
+        }
+    }
     $parameters: []
     $variables: [
         $a

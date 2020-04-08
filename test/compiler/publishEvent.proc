@@ -1,4 +1,11 @@
 [
+    $source: {
+        publish [
+            $type: $changeEvent
+            $key: $foo
+            $value: 5
+        ]
+    }
     $parameters: []
     $variables: [
         $$eventQueue

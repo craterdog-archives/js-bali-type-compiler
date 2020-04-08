@@ -1,33 +1,9 @@
 [
-    $compilation: /bali/compilations/MYS8S7RGS8GXGYZP8S8DW96ALJSP8KKR/v1
     $description: "
         This abstract class defines the procedures for the messages that all components support.
     "($mediatype: "application/bsmd")
+    $constants: [:]
     $procedures: [
-        $ancestry: [
-            $description: "
-                This procedure returns a list of the type names for the ancestors of this type of
-                component.
-            "($mediatype: "application/bsmd")
-            $type: /bali/collections/List/v1(
-                $itemType: /bali/elements/Name/v1
-            )
-            $source: {
-                return ancestry(target)
-            }
-        ]
-        $interfaces: [
-            $description: "
-                This procedure returns a list of the interface names for the interfaces that this
-                type of component supports.
-            "($mediatype: "application/bsmd")
-            $type: /bali/collections/List/v1(
-                $itemType: /bali/elements/Name/v1
-            )
-            $source: {
-                return interfaces(target)
-            }
-        ]
         $isParameterized: [
             $description: "
                 This procedure determines whether or not this component is parameterized.
@@ -36,16 +12,6 @@
             $source: {
                 return isParameterized(target)
             }
-        ]
-        $isType: [
-            $description: "
-                This procedure determines whether or not this component is an instance of the
-                specified type or any of its ancestors.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
-            $source: {
-                return isType(target, type)
-            }($type: /bali/elements/Name/v1)
         ]
         $parameter: [
             $description: "
@@ -69,16 +35,6 @@
             $source: {
                 return parameters(target)
             }
-        ]
-        $supportsInterface: [
-            $description: "
-                This procedure determines whether or not this component supports the specified
-                interface.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
-            $source: {
-                return supportsInterface(target, interface)
-            }($interface: /bali/elements/Name/v1)
         ]
         $type: [
             $description: "

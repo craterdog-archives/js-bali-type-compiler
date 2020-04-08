@@ -1,4 +1,37 @@
 [
+    $source: {
+        [
+            $foo: $bar
+            $baz: 5
+        ]
+        variable
+        isZero(13)
+        (a + b) * c
+        @reference
+        customer[$order, $item, 5]
+        list.addItem(item)
+        23!
+        2 ^ 8
+        -π
+        *(3, 4i)
+        x * y
+        a / b
+        c // d
+        x + y
+        w - z
+        |(3, 4i)|
+        a < b
+        c = d
+        f > g
+        h IS j
+        k MATCHES m
+        NOT p
+        a AND b
+        c SANS d
+        f XOR g
+        h OR j
+        foo ? 5
+    }
     $parameters: []
     $variables: [
         $a

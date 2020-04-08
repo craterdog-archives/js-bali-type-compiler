@@ -1,9 +1,9 @@
 [
-    $parent: /bali/abstractions/Composite/v1
-    $compilation: /bali/compilations/890V6V443DJHKRF30CXRKVJYHNDX3VWH/v1
     $description: "
-        This abstract class defines the attributes and messages that all types support.
+        This abstract structure defines the attributes and messages that all types support.
     "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Composite/v1
+    $constants: [:]
     $parameters: [
         $existence: [
             $description: "
@@ -15,6 +15,12 @@
         ]
     ]
     $attributes: [
+        $description: [
+            $description: "
+                This attribute describes the purpose for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: /bali/elements/Text/v1)
+        ]
         $parent: [
             $description: "
                 A reference to the parent type from which this type inherits its behavior.
@@ -31,43 +37,10 @@
                 $valueType: /bali/composites/Parameter/v1
             )
         ]
-        $dependencies: [
-            $description: "
-                A catalog of the other types that this type is dependent upon.
-            "($mediatype: "application/bsmd")
-            $type: /bali/collections/Catalog/v1(
-                $valueType: /bali/elements/Reference/v1(
-                    $referencedType: /bali/abstractions/Type/v1
-                )
-            )
-        ]
-    ]
-    $procedures: [
-        $getAncestry: [
-            $description: "
-                This procedure returns a list of the types from which this type inherits its
-                behavior.
-            "($mediatype: "application/bsmd")
-            $type: /bali/collections/List/v1(
-                $itemType: /bali/elements/Reference/v1(
-                    $referencedType: /bali/abstractions/Type/v1
-                )
-            )
-            $source: {
-                $ancestors := []
-                $ancestors.addItem(target)
-                $ancestor := parent
-                while ancestor do {
-                    ancestors.addItem(ancestor)
-                    ancestor = @ancestor[parent]
-                }
-                return ancestors
-            }
-        ]
     ]
 ](
     $name: /bali/abstractions/Type/v1
-    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $type: /bali/abstractions/Structure/v1($existence: $abstract)
     $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
     $permissions: /bali/permissions/public/v1

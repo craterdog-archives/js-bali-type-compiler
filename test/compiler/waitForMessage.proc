@@ -1,4 +1,8 @@
 [
+    $source: {
+        wait for $message from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+        wait for messages[$foo, 5] from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+    }
     $parameters: []
     $variables: [
         $$index-3

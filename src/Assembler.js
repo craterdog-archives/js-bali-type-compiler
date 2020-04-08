@@ -45,38 +45,38 @@ exports.assembler = new Assembler();
  * This method assembles the instructions in a compiled procedure into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
  *
- * @param {Catalog} context The type context for the document being compiled and assembled.
- * @param {Catalog} compilation The compilation context for the procedure being assembled.
+ * @param {Catalog} type The type context for the procedure being assembled.
+ * @param {Catalog} procedure The procedure being assembled.
  */
-Assembler.prototype.assembleProcedure = function(context, compilation) {
+Assembler.prototype.assembleProcedure = function(type, procedure) {
 
     // assemble the instructions into bytecode
-    var instructions = compilation.getValue('$instructions');
+    var instructions = procedure.getValue('$instructions');
     const parser = new Parser();
     instructions = parser.parseInstructions(instructions.getValue());
-    const visitor = new AssemblingVisitor(context, compilation, this.debug);
+    const visitor = new AssemblingVisitor(type, procedure, this.debug);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the procedure context
     var bytecode = visitor.getBytecode();
     const base16 = bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
     bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediatype: "application/bcod")');
-    compilation.setValue('$bytecode', bytecode);
+    procedure.setValue('$bytecode', bytecode);
 };
 
 
 // PRIVATE CLASSES
 
-function AssemblingVisitor(context, compilation, debug) {
+function AssemblingVisitor(type, procedure, debug) {
     this.debug = debug || 0;
     this.decoder = new Decoder(this.debug);
     this.intrinsics = require('./Intrinsics').api(this.debug);
-    this.literals = context.getValue('$literals');
-    this.constants = context.getValue('$constants');
-    this.parameters = compilation.getValue('$parameters');
-    this.variables = compilation.getValue('$variables');
-    this.messages = compilation.getValue('$messages');
-    this.addresses = compilation.getValue('$addresses');
+    this.literals = type.getValue('$literals');
+    this.constants = type.getValue('$constants');
+    this.parameters = procedure.getValue('$parameters');
+    this.variables = procedure.getValue('$variables');
+    this.messages = procedure.getValue('$messages');
+    this.addresses = procedure.getValue('$addresses');
     this.bytecode = [];
     return this;
 }

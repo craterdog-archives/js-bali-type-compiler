@@ -1,0 +1,156 @@
+[
+    $description: "
+        This abstract class defines the procedures for the messages that all collection components
+        support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
+    $constants: [:]
+    $procedures: [
+        $addItem: [
+            $description: "
+                This procedure attempts to add the specified item to this collection.  The return
+                value indicates whether or not the item was successfully added.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return addItem(target, item)
+            }($item: /bali/abstractions/Component/v1)
+            $parameters: [
+                $item
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $item
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B001E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $addItems: [
+            $description: "
+                This procedure attempts to add the specified sequence of items to this collection.
+                The return value indicates the number of item that were successfully added.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..∞])
+            $source: {
+                $count := 0
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if addItem(target, item) then {
+                        $count := count + 1
+                    }
+                }
+                return count
+            }($items: /bali/interfaces/Sequential/v1)
+            $parameters: [
+                $items
+            ]
+            $variables: [
+                $count
+                $item
+                $iterator
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $hasNext
+                $iterator
+                $next
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 6
+                "3.1.ConditionClause": 7
+                "3.1.1.EvaluateStatement": 10
+                "3.1.2.IfStatement": 13
+                "3.1.2.1.ConditionClause": 14
+                "3.1.2.1.1.EvaluateStatement": 18
+                "3.1.2.IfStatementDone": 22
+                "3.ConditionRepeat": 23
+                "3.WhileStatementDone": 24
+                "4.ReturnStatement": 25
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH LITERAL `0`
+                STORE VARIABLE $count
+                
+                2.EvaluateStatement:
+                PUSH PARAMETER $items
+                SEND $iterator TO COMPONENT
+                STORE VARIABLE $iterator
+                
+                3.WhileStatement:
+                SKIP INSTRUCTION
+                
+                3.1.ConditionClause:
+                LOAD VARIABLE $iterator
+                SEND $hasNext TO COMPONENT
+                JUMP TO 3.WhileStatementDone ON FALSE
+                
+                3.1.1.EvaluateStatement:
+                LOAD VARIABLE $iterator
+                SEND $next TO COMPONENT
+                STORE VARIABLE $item
+                
+                3.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                3.1.2.1.ConditionClause:
+                LOAD VARIABLE $target
+                LOAD VARIABLE $item
+                INVOKE $addItem WITH 2 ARGUMENTS
+                JUMP TO 3.1.2.IfStatementDone ON FALSE
+                
+                3.1.2.1.1.EvaluateStatement:
+                LOAD VARIABLE $count
+                PUSH LITERAL `1`
+                INVOKE $sum WITH 2 ARGUMENTS
+                STORE VARIABLE $count
+                
+                3.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ConditionRepeat:
+                JUMP TO 3.1.ConditionClause
+                
+                3.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                4.ReturnStatement:
+                LOAD VARIABLE $count
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                280180013801C002800300006003C00118186003C0038002000060046002
+                B001181660012802B07980010000000700006001E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+    ]
+    $literals: [
+        0
+        1
+    ]
+](
+    $name: /bali/abstractions/Collection/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #69KMNPGSBDXWLBATY5PR9GSNM9MV7GV2
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

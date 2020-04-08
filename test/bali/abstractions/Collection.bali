@@ -1,0 +1,45 @@
+[
+    $description: "
+        This abstract class defines the procedures for the messages that all collection components
+        support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
+    $constants: [:]
+    $procedures: [
+        $addItem: [
+            $description: "
+                This procedure attempts to add the specified item to this collection.  The return
+                value indicates whether or not the item was successfully added.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return addItem(target, item)
+            }($item: /bali/abstractions/Component/v1)
+        ]
+        $addItems: [
+            $description: "
+                This procedure attempts to add the specified sequence of items to this collection.
+                The return value indicates the number of item that were successfully added.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..infinity])
+            $source: {
+                $count := 0
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if addItem(target, item) then {
+                        $count := count + 1
+                    }
+                }
+                return count
+            }($items: /bali/interfaces/Sequential/v1)
+        ]
+    ]
+](
+    $name: /bali/abstractions/Collection/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #69KMNPGSBDXWLBATY5PR9GSNM9MV7GV2
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

@@ -1,105 +1,45 @@
 [
-    $literals: [
-        $ancestors
-    ]
+    $description: "
+        This abstract structure defines the attributes and messages that all types support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Composite/v1
     $constants: [:]
-    $procedures: [
-        $getAncestry: [
-            $parameters: []
-            $variables: [
-                $ancestor
-                $ancestors
-                $$index-2
-                $$location-1
-                $parent
-                $$result
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: [
-                $addItem
-                $getSubcomponent
-            ]($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 3
-                "3.EvaluateStatement": 9
-                "4.WhileStatement": 11
-                "4.1.ConditionClause": 12
-                "4.1.1.EvaluateStatement": 14
-                "4.1.2.EvaluateStatement": 20
-                "4.ConditionRepeat": 32
-                "4.WhileStatementDone": 33
-                "5.ReturnStatement": 34
-            ]
-            $instructions: "
-                1.EvaluateStatement:
-                INVOKE $list
-                STORE VARIABLE $ancestors
-                
-                2.EvaluateStatement:
-                PUSH LITERAL `$ancestors`
-                INVOKE $list
-                LOAD VARIABLE $target
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $addItem TO COMPONENT WITH ARGUMENTS
-                STORE VARIABLE $$result
-                
-                3.EvaluateStatement:
-                LOAD VARIABLE $parent
-                STORE VARIABLE $ancestor
-                
-                4.WhileStatement:
-                SKIP INSTRUCTION
-                
-                4.1.ConditionClause:
-                LOAD VARIABLE $ancestor
-                JUMP TO 4.WhileStatementDone ON FALSE
-                
-                4.1.1.EvaluateStatement:
-                LOAD VARIABLE $ancestors
-                INVOKE $list
-                LOAD VARIABLE $ancestor
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $addItem TO COMPONENT WITH ARGUMENTS
-                STORE VARIABLE $$result
-                
-                4.1.2.EvaluateStatement:
-                LOAD VARIABLE $ancestor
-                LOAD VARIABLE $ancestor
-                STORE VARIABLE $$location-1
-                LOAD DOCUMENT $$location-1
-                LOAD VARIABLE $parent
-                STORE VARIABLE $$index-2
-                INVOKE $list
-                LOAD VARIABLE $$index-2
-                INVOKE $addItem WITH 2 ARGUMENTS
-                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
-                INVOKE $areEqual WITH 2 ARGUMENTS
-                STORE VARIABLE $$result
-                
-                4.ConditionRepeat:
-                JUMP TO 4.1.ConditionClause
-                
-                4.WhileStatementDone:
-                SKIP INSTRUCTION
-                
-                5.ReturnStatement:
-                LOAD VARIABLE $ancestors
-                HANDLE RESULT
-            "($mediatype: "application/basm")
-            $bytecode: '
-                A04980022801A0496007B001C8018006600580010000600118216002A049
-                6001B001C8018006600160018004780460058003A0496003B001C802B008
-                8006000C00006002E000
-            '(
-                $encoding: $base16
-                $mediatype: "application/bcod"
-            )
+    $parameters: [
+        $existence: [
+            $description: "
+                This parameter describes whether this type is concrete and can be instantiated
+                or if it is abstract and cannot.
+            "($mediatype: "application/bsmd")
+            $type: /bali/enumerations/Existence/v1
+            $default: $concrete
         ]
     ]
+    $attributes: [
+        $description: [
+            $description: "
+                This attribute describes the purpose for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: /bali/elements/Text/v1)
+        ]
+        $parent: [
+            $description: "
+                A reference to the parent type from which this type inherits its behavior.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Reference/v1($referencedType: /bali/abstractions/Type/v1($existence: $abstract))
+        ]
+        $parameters: [
+            $description: "
+                A catalog of the parameters that are used to parameterize instances of this type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1($valueType: /bali/composites/Parameter/v1)
+        ]
+    ]
+    $procedures: [:]
+    $literals: []
 ](
-    $type: /bali/types/Compilation/v1
-    $tag: #890V6V443DJHKRF30CXRKVJYHNDX3VWH
+    $name: /bali/abstractions/Type/v1
+    $type: /bali/abstractions/Structure/v1($existence: $abstract)
+    $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
     $permissions: /bali/permissions/public/v1
     $previous: none

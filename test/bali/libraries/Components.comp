@@ -1,0 +1,516 @@
+[
+    $description: "
+        This library defines the procedures for the functions that operate on any type of component.
+    "($mediatype: "application/bsmd")
+    $constants: [:]
+    $procedures: [
+        $ancestry: [
+            $description: "
+                This procedure returns a list of the type names for the ancestors of this type of
+                component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1($itemType: /bali/elements/Name/v1)
+            $source: {
+                $ancestry := []
+                $current := type(component)
+                while current do {
+                    ancestry.addItem(current)
+                    $current := @(current[parent])
+                }
+                return ancestry
+            }($component: /bali/abstractions/Component/v1)
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $ancestry
+                $current
+                $$index-1
+                $$location-2
+                $parent
+                $$result
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItem
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 6
+                "3.1.ConditionClause": 7
+                "3.1.1.EvaluateStatement": 9
+                "3.1.2.EvaluateStatement": 15
+                "3.ConditionRepeat": 25
+                "3.WhileStatementDone": 26
+                "4.ReturnStatement": 27
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                INVOKE $list
+                STORE VARIABLE $ancestry
+                
+                2.EvaluateStatement:
+                PUSH PARAMETER $component
+                INVOKE $type WITH 1 ARGUMENT
+                STORE VARIABLE $current
+                
+                3.WhileStatement:
+                SKIP INSTRUCTION
+                
+                3.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 3.WhileStatementDone ON FALSE
+                
+                3.1.1.EvaluateStatement:
+                LOAD VARIABLE $ancestry
+                INVOKE $list
+                LOAD VARIABLE $current
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $addItem TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$result
+                
+                3.1.2.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-2
+                LOAD DOCUMENT $$location-2
+                STORE VARIABLE $current
+                
+                3.ConditionRepeat:
+                JUMP TO 3.1.ConditionClause
+                
+                3.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                4.ReturnStatement:
+                LOAD VARIABLE $ancestry
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A04980013801A883800200006002181A6001A0496002B001C80180066002
+                60058003A0496003B001C802800478048002000700006001E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $areEqual: [
+            $description: "
+                This procedure determines whether or not two components are equal to each other.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return areEqual(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+            $parameters: [
+                $first
+                $second
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $first
+                PUSH PARAMETER $second
+                INVOKE $areEqual WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B008E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $areSame: [
+            $description: "
+                This procedure determines whether or not two components are really the same
+                component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return areSame(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+            $parameters: [
+                $first
+                $second
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $first
+                PUSH PARAMETER $second
+                INVOKE $areSame WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B009E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $boolean: [
+            $description: "
+                This procedure returns a boolean value describing whether or not the component has
+                a meaningful value.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return boolean(component)
+            }($component: /bali/abstractions/Component/v1)
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                INVOKE $boolean WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '3801A812E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $comparison: [
+            $description: "
+                This procedure returns a tertiary number describing the natural ordering for two
+                components:
+                 -1: The first component should be listed before the second component.
+                 0: The first component should be listed the same as the second component.
+                 1: The first component should be listed after the second component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [-1..1])
+            $source: {
+                return comparison(first, second)
+            }(
+                $first: /bali/abstractions/Component/v1
+                $second: /bali/abstractions/Component/v1
+            )
+            $parameters: [
+                $first
+                $second
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $first
+                PUSH PARAMETER $second
+                INVOKE $comparison WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B016E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $document: [
+            $description: "
+                This procedure returns the Bali Document Notation™ for a component.  If an
+                indentation is specified, each line of the resulting document will be indented by
+                that number of additional levels.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: "application/bali")
+            $source: {
+                return document(component, indentation)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $indentation: /bali/elements/Number/v1($range: [0..20])
+            )
+            $parameters: [
+                $component
+                $indentation
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                PUSH PARAMETER $indentation
+                INVOKE $document WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B022E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $doesMatch: [
+            $description: "
+                This procedure determines whether or not a component matches a pattern.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return doesMatch(component, pattern)
+            }(
+                $component: /bali/abstractions/Component/v1
+                $pattern: /bali/elements/Pattern/v1
+            )
+            $parameters: [
+                $component
+                $pattern
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                PUSH PARAMETER $pattern
+                INVOKE $doesMatch WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '38013802B023E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $duplicate: [
+            $description: "
+                This procedure returns a (deep) copy of a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                return duplicate(component)
+            }($component: /bali/abstractions/Component/v1)
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                INVOKE $duplicate WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '3801A824E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $hash: [
+            $description: "
+                This procedure returns the canonical hash value for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..4294967295])
+            $source: {
+                return hash(component)
+            }($component: /bali/abstractions/Component/v1)
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                INVOKE $hash WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '3801A82DE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $HTML: [
+            $description: "
+                This procedure returns a text string containing the corresponding HTML code for
+                a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: "text/html")
+            $source: {
+                return HTML(component)
+            }($component: /bali/abstractions/Component/v1)
+            $parameters: [
+                $component
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $instructions: "
+                1.ReturnStatement:
+                PUSH PARAMETER $component
+                INVOKE $HTML WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '3801A831E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+        $isA: [
+            $description: "
+                This procedure determines whether or not a component is an instance of the
+                specified type or any of its ancestors.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type(component)
+                while current do {
+                    if current = type then {
+                        return true
+                    }
+                    $current := @(current[parent])
+                }
+                return false
+            }(
+                $component: /bali/abstractions/Component/v1
+                $type: /bali/elements/Name/v1
+            )
+            $parameters: [
+                $component
+                $type
+            ]
+            $variables: [
+                $current
+                $$index-1
+                $$location-2
+                $parent
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $getSubcomponent
+            ]($type: /bali/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 4
+                "2.1.ConditionClause": 5
+                "2.1.1.IfStatement": 7
+                "2.1.1.1.ConditionClause": 8
+                "2.1.1.1.1.ReturnStatement": 12
+                "2.1.1.IfStatementDone": 14
+                "2.1.2.EvaluateStatement": 15
+                "2.ConditionRepeat": 25
+                "2.WhileStatementDone": 26
+                "3.ReturnStatement": 27
+            ]
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $component
+                INVOKE $type WITH 1 ARGUMENT
+                STORE VARIABLE $current
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $current
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.1.1.ConditionClause:
+                LOAD VARIABLE $current
+                PUSH PARAMETER $type
+                INVOKE $areEqual WITH 2 ARGUMENTS
+                JUMP TO 2.1.1.IfStatementDone ON FALSE
+                
+                2.1.1.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.1.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.1.2.EvaluateStatement:
+                LOAD VARIABLE $current
+                LOAD VARIABLE $parent
+                STORE VARIABLE $$index-1
+                INVOKE $list
+                LOAD VARIABLE $$index-1
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+                STORE VARIABLE $$location-2
+                LOAD DOCUMENT $$location-2
+                STORE VARIABLE $current
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                3801A883800100006001181A000060013802B008180E2801E00000006001
+                60048002A0496002B001C801800378038001000500002802E000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+        ]
+    ]
+    $literals: [
+        true
+        false
+    ]
+](
+    $name: /bali/libraries/Components/v1
+    $type: /bali/abstractions/Library/v1
+    $tag: #L16JB13MH2FJFK65VC1KHXQW13C6V68R
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

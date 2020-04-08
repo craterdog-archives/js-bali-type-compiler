@@ -1,29 +1,11 @@
 [
-    $parent: /bali/abstractions/Component/v1
-    $compilation: /bali/compilations/0F410JSKPM6ABT758J80JSQNMFJMKFT4/v1
     $description: "
-        This abstract class defines the messages that all elemental components support.
+        This abstract class defines the procedures for the messages that all elemental components
+        support.
     "($mediatype: "application/bsmd")
-    $procedures: [
-        $asBoolean: [
-            $description: "
-                This procedure returns the boolean value equivalent of this value.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
-            $source: {
-                return false
-            }
-        ]
-        $asNumeric: [
-            $description: "
-                This procedure returns the numeric value equivalent of this value.
-            "($mediatype: "application/bsmd")
-            $type: /bali/elements/Number/v1
-            $source: {
-                return 0
-            }
-        ]
-    ]
+    $parent: /bali/abstractions/Component/v1
+    $constants: [:]
+    $procedures: [:]
 ](
     $name: /bali/abstractions/Element/v1
     $type: /bali/abstractions/Class/v1($existence: $abstract)

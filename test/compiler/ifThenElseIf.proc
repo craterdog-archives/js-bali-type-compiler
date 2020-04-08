@@ -1,4 +1,11 @@
 [
+    $source: {
+        if true then {
+            yes
+        } else if false then {
+            no
+        }
+    }
     $parameters: []
     $variables: [
         $no
