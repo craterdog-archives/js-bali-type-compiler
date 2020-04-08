@@ -90,10 +90,6 @@
         "6.CommitStatement": 34
         "7.DiscardStatement": 44
     ]
-    $messages: [
-        $setSubcomponent
-        $subcomponent
-    ]($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
         $document
@@ -111,5 +107,9 @@
         $$location-8
         $$result
         $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: [
+        $setSubcomponent
+        $subcomponent
     ]($type: /bali/collections/Set/v1)
 ]

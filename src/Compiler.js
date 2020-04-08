@@ -104,9 +104,9 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
     procedure.setValue('$instructions', bali.pattern.NONE);
     procedure.setValue('$bytecode', bali.pattern.NONE);
     procedure.setValue('$addresses', bali.catalog());
-    procedure.setValue('$messages', bali.set());
     procedure.setValue('$parameters', parameters);
     procedure.setValue('$variables', bali.set(['$target']));
+    procedure.setValue('$messages', bali.set());
 
     // compile the procedure into assembly instructions
     const visitor = new CompilingVisitor(type, procedure, this.debug);
@@ -1426,12 +1426,18 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     const variable = '$' + identifier.toString();
     if (this.builder.parameters.containsItem(variable)) {
+        // parameters take precedence over local variables and global constants
         this.builder.insertPushInstruction('PARAMETER', variable);
+    } else if (this.builder.variables.containsItem(variable)) {
+        // local variables take precedence over global constants
+        this.builder.insertLoadInstruction('VARIABLE', variable);
     } else if (this.builder.constants.getValue(variable)) {
+        // the variable refers to a global constant
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
-        this.builder.insertLoadInstruction('VARIABLE', variable);
+        // define a new local variable
         this.builder.variables.addItem(variable);
+        this.builder.insertLoadInstruction('VARIABLE', variable);
     }
 };
 

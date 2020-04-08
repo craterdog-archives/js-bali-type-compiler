@@ -51,13 +51,13 @@
             $addresses: [
                 "1.ThrowStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $item
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $addItems: [
             $description: "
@@ -150,12 +150,6 @@
                 "3.WhileStatementDone": 26
                 "4.ReturnStatement": 27
             ]
-            $messages: [
-                $addItem
-                $hasNext
-                $iterator
-                $next
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $items
             ]
@@ -164,6 +158,12 @@
                 $item
                 $iterator
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItem
+                $hasNext
+                $iterator
+                $next
             ]($type: /bali/collections/Set/v1)
         ]
         $containsAll: [
@@ -250,12 +250,6 @@
                 "2.WhileStatementDone": 23
                 "3.ReturnStatement": 24
             ]
-            $messages: [
-                $containsItem
-                $hasNext
-                $iterator
-                $next
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $items
             ]
@@ -263,6 +257,12 @@
                 $item
                 $iterator
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $hasNext
+                $iterator
+                $next
             ]($type: /bali/collections/Set/v1)
         ]
         $containsAny: [
@@ -348,12 +348,6 @@
                 "2.WhileStatementDone": 22
                 "3.ReturnStatement": 23
             ]
-            $messages: [
-                $containsItem
-                $hasNext
-                $iterator
-                $next
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $items
             ]
@@ -361,6 +355,12 @@
                 $item
                 $iterator
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $hasNext
+                $iterator
+                $next
             ]($type: /bali/collections/Set/v1)
         ]
         $containsItem: [
@@ -408,13 +408,13 @@
             $addresses: [
                 "1.ThrowStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $item
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
     ]
     $literals: [

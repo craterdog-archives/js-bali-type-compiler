@@ -40,10 +40,6 @@
         "1.WaitStatement": 1
         "2.WaitStatement": 6
     ]
-    $messages: [
-        $setSubcomponent
-        $subcomponent
-    ]($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
         $$index-3
@@ -53,5 +49,9 @@
         $$queue-2
         $$result
         $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: [
+        $setSubcomponent
+        $subcomponent
     ]($type: /bali/collections/Set/v1)
 ]

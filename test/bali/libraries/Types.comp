@@ -90,10 +90,6 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $messages: [
-                $addItems
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
             ]
@@ -106,6 +102,10 @@
                 $parent
                 $$result
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $interfaces: [
@@ -194,10 +194,6 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $messages: [
-                $addItems
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
             ]
@@ -210,6 +206,10 @@
                 $parent
                 $$result
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $procedures: [
@@ -298,10 +298,6 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $messages: [
-                $addItems
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
             ]
@@ -314,6 +310,10 @@
                 $procedures
                 $$result
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItems
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $supportsAttribute: [
@@ -422,10 +422,6 @@
                 "2.WhileStatementDone": 37
                 "3.ReturnStatement": 38
             ]
-            $messages: [
-                $containsItem
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
                 $attribute
@@ -438,6 +434,10 @@
                 $$location-3
                 $parent
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $supportsInterface: [
@@ -546,10 +546,6 @@
                 "2.WhileStatementDone": 37
                 "3.ReturnStatement": 38
             ]
-            $messages: [
-                $containsItem
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
                 $interface
@@ -562,6 +558,10 @@
                 $$location-3
                 $parent
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $supportsProcedure: [
@@ -670,10 +670,6 @@
                 "2.WhileStatementDone": 37
                 "3.ReturnStatement": 38
             ]
-            $messages: [
-                $containsItem
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $type
                 $procedure
@@ -686,6 +682,10 @@
                 $parent
                 $procedures
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $containsItem
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
     ]

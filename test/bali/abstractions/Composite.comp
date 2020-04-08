@@ -49,13 +49,13 @@
             $addresses: [
                 "1.ThrowStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $index
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $setSubcomponent: [
             $description: "
@@ -105,7 +105,6 @@
             $addresses: [
                 "1.ThrowStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $index
                 $value
@@ -113,6 +112,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
     ]
     $literals: [

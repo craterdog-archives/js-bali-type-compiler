@@ -60,7 +60,6 @@
         "1.ConditionRepeat": 13
         "1.WhileStatementDone": 14
     ]
-    $messages: []($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
         $a
@@ -70,4 +69,5 @@
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
 ]

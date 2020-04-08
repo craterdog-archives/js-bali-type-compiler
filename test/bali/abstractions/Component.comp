@@ -25,11 +25,11 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: []
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $parameter: [
             $description: "
@@ -54,13 +54,13 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $key
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $parameters: [
             $description: "
@@ -87,11 +87,11 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: []
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $type: [
             $description: "
@@ -114,11 +114,11 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: []
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
     ]
     $literals: []

@@ -46,7 +46,6 @@
         "1.2.1.EvaluateStatement": 9
         "1.IfStatementDone": 11
     ]
-    $messages: []($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
         $no
@@ -54,4 +53,5 @@
         $target
         $yes
     ]($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
 ]

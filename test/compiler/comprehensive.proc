@@ -373,12 +373,6 @@
         "2.ConditionRepeat": 136
         "2.WhileStatementDone": 137
     ]
-    $messages: [
-        $find
-        $hasNext
-        $iterator
-        $next
-    ]($type: /bali/collections/Set/v1)
     $parameters: [
         $string
     ]
@@ -399,5 +393,11 @@
         $sequence
         $tag
         $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: [
+        $find
+        $hasNext
+        $iterator
+        $next
     ]($type: /bali/collections/Set/v1)
 ]

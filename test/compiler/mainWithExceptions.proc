@@ -93,7 +93,6 @@
         "1.PostStatementFailed": 37
         "1.PostStatementSucceeded": 38
     ]
-    $messages: []($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
         $error
@@ -102,4 +101,5 @@
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
 ]

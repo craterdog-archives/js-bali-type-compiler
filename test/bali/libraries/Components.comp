@@ -84,10 +84,6 @@
                 "3.WhileStatementDone": 26
                 "4.ReturnStatement": 27
             ]
-            $messages: [
-                $addItem
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
             ]
@@ -99,6 +95,10 @@
                 $parent
                 $$result
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $addItem
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
         $areEqual: [
@@ -126,7 +126,6 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $first
                 $second
@@ -134,6 +133,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $areSame: [
             $description: "
@@ -161,7 +161,6 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $first
                 $second
@@ -169,6 +168,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $boolean: [
             $description: "
@@ -192,13 +192,13 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $comparison: [
             $description: "
@@ -229,7 +229,6 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $first
                 $second
@@ -237,6 +236,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $document: [
             $description: "
@@ -265,7 +265,6 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
                 $indentation
@@ -273,6 +272,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $doesMatch: [
             $description: "
@@ -299,7 +299,6 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
                 $pattern
@@ -307,6 +306,7 @@
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $duplicate: [
             $description: "
@@ -329,13 +329,13 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $hash: [
             $description: "
@@ -358,13 +358,13 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $HTML: [
             $description: "
@@ -388,13 +388,13 @@
             $addresses: [
                 "1.ReturnStatement": 1
             ]
-            $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
             ]
             $variables: [
                 $target
             ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $isA: [
             $description: "
@@ -486,9 +486,6 @@
                 "2.WhileStatementDone": 26
                 "3.ReturnStatement": 27
             ]
-            $messages: [
-                $subcomponent
-            ]($type: /bali/collections/Set/v1)
             $parameters: [
                 $component
                 $type
@@ -499,6 +496,9 @@
                 $$location-2
                 $parent
                 $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: [
+                $subcomponent
             ]($type: /bali/collections/Set/v1)
         ]
     ]
