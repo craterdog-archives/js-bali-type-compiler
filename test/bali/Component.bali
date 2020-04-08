@@ -4,6 +4,41 @@
     "($mediatype: "application/bsmd")
     $constants: [:]
     $procedures: [
+        $ancestry: [
+            $description: "
+                This procedure returns a list of the type names of the ancestors for this type of
+                component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1(
+                $itemType: /bali/elements/Name/v1
+            )
+            $source: {
+                $ancestry := []
+                $current := type(target)
+                while current do {
+                    ancestry.addItem(current)
+                    $current := @(current[$parent])
+                }
+                return ancestry
+            }
+        ]
+        $isA: [
+            $description: "
+                This procedure determines whether or not a component is an instance of the
+                specified type or any of its ancestors.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $current := type(target)
+                while current do {
+                    if current = type then {
+                        return true
+                    }
+                    $current := @(current[$parent])
+                }
+                return false
+            }($type: /bali/elements/Name/v1)
+        ]
         $isParameterized: [
             $description: "
                 This procedure determines whether or not this component is parameterized.

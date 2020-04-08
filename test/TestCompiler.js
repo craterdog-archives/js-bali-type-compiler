@@ -34,7 +34,6 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
-                var codeFile = testFolder + prefix + '.proc';
                 var source = await pfs.readFile(baliFile, 'utf8');
                 var procedure = bali.component(source);
                 expect(procedure).to.exist;
@@ -53,8 +52,10 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 // assemble the procedure into bytecode
                 compiler.assembleProcedure(type, procedure);
 
+                // check for differences
+                var codeFile = testFolder + prefix + '.proc';
                 source = procedure.toString() + '\n';  // POSIX compliant <EOL>
-                await pfs.writeFile(codeFile, source, 'utf8');
+                //await pfs.writeFile(codeFile, source, 'utf8');
                 var expected = await pfs.readFile(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
@@ -62,17 +63,28 @@ describe('Bali Nebula™ Procedure Compiler', function() {
         });
 
         it('should compile the Bali Nebula™ types', async function() {
-            const testFolder = 'test';
-            for (var i = 0; i < sources.length; i++) {
-                const file = sources[i];
+            const testFolder = 'test/bali/';
+            const files = await pfs.readdir(testFolder);
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (!file.endsWith('.bali')) continue;
+
+                // read in the source code
                 console.log('      ' + file + '.bali');
-                const type = bali.component(await pfs.readFile(testFolder + file + '.bali', 'utf8'));
+                var prefix = file.split('.').slice(0, 1);
+                var baliFile = testFolder + prefix + '.bali';
+                var source = await pfs.readFile(baliFile, 'utf8');
+                const type = bali.component(source);
                 expect(type).to.exist;
+
+                // compile the source code
                 await compiler.compileType(type);
-                const source = type.toString() + '\n';  // POSIX compliant <EOL>
-                const filename = testFolder + file + '.comp';
-                await pfs.writeFile(filename, source, 'utf8');
-                var expected = await pfs.readFile(filename, 'utf8');
+
+                // check for differences
+                var codeFile = testFolder + prefix + '.comp';
+                source = type.toString() + '\n';  // POSIX compliant <EOL>
+                //await pfs.writeFile(codeFile, source, 'utf8');
+                var expected = await pfs.readFile(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
             }
@@ -81,16 +93,3 @@ describe('Bali Nebula™ Procedure Compiler', function() {
     });
 
 });
-
-const sources = [
-    '/bali/abstractions/Component',
-    '/bali/libraries/Components',
-    '/bali/abstractions/Type',
-    '/bali/libraries/Types',
-    '/bali/interfaces/Sequential',
-    '/bali/abstractions/Element',
-    '/bali/abstractions/Composite',
-    '/bali/abstractions/Iterator',
-    '/bali/abstractions/Collection'
-];
-

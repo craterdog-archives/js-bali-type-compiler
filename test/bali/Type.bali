@@ -1,65 +1,100 @@
 [
     $description: "
-        This library defines the procedures for the functions that operate on any type component.
+        This abstract structure defines the attributes and messages that all types support.
     "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
     $constants: [:]
+    $parameters: [
+        $existence: [
+            $description: "
+                This parameter describes whether this type is concrete and can be instantiated
+                or if it is abstract and cannot.
+            "($mediatype: "application/bsmd")
+            $type: /bali/enumerations/Existence/v1
+            $default: $concrete
+        ]
+    ]
+    $attributes: [
+        $description: [
+            $description: "
+                This attribute describes the purpose for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: /bali/elements/Text/v1)
+        ]
+        $parent: [
+            $description: "
+                A reference to the parent type from which this type inherits its behavior.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Reference/v1(
+                $referencedType: /bali/abstractions/Type/v1($existence: $abstract)
+            )
+        ]
+        $parameters: [
+            $description: "
+                A catalog of the parameters that are used to parameterize instances of this type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1(
+                $valueType: /bali/composites/Parameter/v1
+            )
+        ]
+    ]
     $procedures: [
         $attributes: [
             $description: "
                 This procedure returns the list of attributes that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Attribute/v1)
             $source: {
-                $current := type
+                $current := target
                 $attributes := []
                 while current do {
                     attributes.addItems(current[attributes])
                     $parent := @(current[parent])
                 }
                 return attributes
-            }($type: /bali/meta/Type/v1)
+            }
         ]
         $interfaces: [
             $description: "
                 This procedure returns the list of interfaces that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Interface/v1)
             $source: {
-                $current := type
+                $current := target
                 $interfaces := []
                 while current do {
                     interfaces.addItems(current[interfaces])
                     $parent := @(current[parent])
                 }
                 return interfaces
-            }($type: /bali/meta/Type/v1)
+            }
         ]
         $procedures: [
             $description: "
                 This procedure returns the list of procedures that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Procedure/v1)
             $source: {
-                $current := type
+                $current := target
                 $procedures := []
                 while current do {
                     procedures.addItems(current[procedures])
                     $parent := @(current[parent])
                 }
                 return procedures
-            }($type: /bali/meta/Type/v1)
+            }
         ]
         $supportsAttribute: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 attribute.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $attributes := current[attributes]
                     if attributes AND attributes.containsItem(attribute) then {
@@ -68,19 +103,16 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $attribute: /bali/elements/Symbol/v1
-            )
+            }($attribute: /bali/elements/Symbol/v1)
         ]
         $supportsInterface: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 interface.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $interfaces := current[interfaces]
                     if interfaces AND interfaces.containsItem(interface) then {
@@ -89,19 +121,16 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $interface: /bali/elements/Name/v1
-            )
+            }($interface: /bali/elements/Name/v1)
         ]
         $supportsProcedure: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 procedure.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $procedures := current[procedures]
                     if procedures AND procedures.containsItem(procedure) then {
@@ -110,16 +139,13 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $procedure: /bali/elements/Symbol/v1
-            )
+            }($procedure: /bali/elements/Symbol/v1)
         ]
     ]
 ](
-    $name: /bali/libraries/Type/v1
-    $type: /bali/abstractions/Library/v1
-    $tag: #6ZTY8XJLTQ4SDA36KW7B2M17VDWGPB6A
+    $name: /bali/abstractions/Type/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
     $permissions: /bali/permissions/public/v1
     $previous: none

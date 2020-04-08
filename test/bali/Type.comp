@@ -1,27 +1,58 @@
 [
     $description: "
-        This library defines the procedures for the functions that operate on any type component.
+        This abstract structure defines the attributes and messages that all types support.
     "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
     $constants: [:]
+    $parameters: [
+        $existence: [
+            $description: "
+                This parameter describes whether this type is concrete and can be instantiated
+                or if it is abstract and cannot.
+            "($mediatype: "application/bsmd")
+            $type: /bali/enumerations/Existence/v1
+            $default: $concrete
+        ]
+    ]
+    $attributes: [
+        $description: [
+            $description: "
+                This attribute describes the purpose for a component.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Text/v1($mediatype: /bali/elements/Text/v1)
+        ]
+        $parent: [
+            $description: "
+                A reference to the parent type from which this type inherits its behavior.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Reference/v1($referencedType: /bali/abstractions/Type/v1($existence: $abstract))
+        ]
+        $parameters: [
+            $description: "
+                A catalog of the parameters that are used to parameterize instances of this type.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1($valueType: /bali/composites/Parameter/v1)
+        ]
+    ]
     $procedures: [
         $attributes: [
             $description: "
                 This procedure returns the list of attributes that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Attribute/v1)
             $source: {
-                $current := type
+                $current := target
                 $attributes := []
                 while current do {
                     attributes.addItems(current[attributes])
                     $parent := @(current[parent])
                 }
                 return attributes
-            }($type: /bali/meta/Type/v1)
+            }
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.EvaluateStatement:
@@ -72,7 +103,7 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018002A049800100006002181F6001A049600260018003A0496003B001
+                60088002A049800100006002181F6001A049600260018003A0496003B001
                 C802B001C8018007600260068004A0496004B001C8028005780580060006
                 00006001E000
             '(
@@ -90,9 +121,7 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $parameters: [
-                $type
-            ]
+            $parameters: []
             $variables: [
                 $attributes
                 $current
@@ -111,21 +140,21 @@
         $interfaces: [
             $description: "
                 This procedure returns the list of interfaces that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Interface/v1)
             $source: {
-                $current := type
+                $current := target
                 $interfaces := []
                 while current do {
                     interfaces.addItems(current[interfaces])
                     $parent := @(current[parent])
                 }
                 return interfaces
-            }($type: /bali/meta/Type/v1)
+            }
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.EvaluateStatement:
@@ -176,7 +205,7 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018001A049800400006001181F6004A049600160048002A0496002B001
+                60088001A049800400006001181F6004A049600160048002A0496002B001
                 C802B001C8018007600160068003A0496003B001C8028005780580060006
                 00006004E000
             '(
@@ -194,9 +223,7 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $parameters: [
-                $type
-            ]
+            $parameters: []
             $variables: [
                 $current
                 $$index-1
@@ -215,21 +242,21 @@
         $procedures: [
             $description: "
                 This procedure returns the list of procedures that are supported by instances of
-                the specified type.
+                this type.
             "($mediatype: "application/bsmd")
             $type: /bali/collections/List/v1($itemType: /bali/composites/Procedure/v1)
             $source: {
-                $current := type
+                $current := target
                 $procedures := []
                 while current do {
                     procedures.addItems(current[procedures])
                     $parent := @(current[parent])
                 }
                 return procedures
-            }($type: /bali/meta/Type/v1)
+            }
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.EvaluateStatement:
@@ -280,7 +307,7 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018001A049800600006001181F6006A049600160068002A0496002B001
+                60088001A049800600006001181F6006A049600160068002A0496002B001
                 C802B001C8018007600160058003A0496003B001C8028004780480050006
                 00006006E000
             '(
@@ -298,9 +325,7 @@
                 "3.WhileStatementDone": 31
                 "4.ReturnStatement": 32
             ]
-            $parameters: [
-                $type
-            ]
+            $parameters: []
             $variables: [
                 $current
                 $$index-1
@@ -318,12 +343,12 @@
         ]
         $supportsAttribute: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 attribute.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $attributes := current[attributes]
                     if attributes AND attributes.containsItem(attribute) then {
@@ -332,13 +357,10 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $attribute: /bali/elements/Symbol/v1
-            )
+            }($attribute: /bali/elements/Symbol/v1)
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.WhileStatement:
@@ -401,8 +423,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018002000060021825600260018003A0496003B001C802800100006001
-                6001A0493802B001C801B00418192801E0000000600260068004A0496004
+                60078002000060021825600260018003A0496003B001C802800100006001
+                6001A0493801B001C801B00418192801E0000000600260068004A0496004
                 B001C802800578058006000400002802E000
             '(
                 $encoding: $base16
@@ -423,7 +445,6 @@
                 "3.ReturnStatement": 38
             ]
             $parameters: [
-                $type
                 $attribute
             ]
             $variables: [
@@ -442,12 +463,12 @@
         ]
         $supportsInterface: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 interface.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $interfaces := current[interfaces]
                     if interfaces AND interfaces.containsItem(interface) then {
@@ -456,13 +477,10 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $interface: /bali/elements/Name/v1
-            )
+            }($interface: /bali/elements/Name/v1)
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.WhileStatement:
@@ -525,8 +543,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018001000060011825600160048002A0496002B001C802800400006004
-                6004A0493802B001C801B00418192801E0000000600160068003A0496003
+                60078001000060011825600160048002A0496002B001C802800400006004
+                6004A0493801B001C801B00418192801E0000000600160068003A0496003
                 B001C802800578058006000400002802E000
             '(
                 $encoding: $base16
@@ -547,7 +565,6 @@
                 "3.ReturnStatement": 38
             ]
             $parameters: [
-                $type
                 $interface
             ]
             $variables: [
@@ -566,12 +583,12 @@
         ]
         $supportsProcedure: [
             $description: "
-                This procedure determines whether or not the specified type supports the specified
+                This procedure determines whether or not this type supports the specified
                 procedure.
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $current := type
+                $current := target
                 while current do {
                     $procedures := current[procedures]
                     if procedures AND procedures.containsItem(procedure) then {
@@ -580,13 +597,10 @@
                     $parent := @(current[parent])
                 }
                 return false
-            }(
-                $type: /bali/meta/Type/v1
-                $procedure: /bali/elements/Symbol/v1
-            )
+            }($procedure: /bali/elements/Symbol/v1)
             $instructions: "
                 1.EvaluateStatement:
-                PUSH PARAMETER $type
+                LOAD VARIABLE $target
                 STORE VARIABLE $current
                 
                 2.WhileStatement:
@@ -649,8 +663,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                38018001000060011825600160068002A0496002B001C802800600006006
-                6006A0493802B001C801B00418192801E0000000600160058003A0496003
+                60078001000060011825600160068002A0496002B001C802800600006006
+                6006A0493801B001C801B00418192801E0000000600160058003A0496003
                 B001C802800478048005000400002802E000
             '(
                 $encoding: $base16
@@ -671,7 +685,6 @@
                 "3.ReturnStatement": 38
             ]
             $parameters: [
-                $type
                 $procedure
             ]
             $variables: [
@@ -694,9 +707,9 @@
         false
     ]
 ](
-    $name: /bali/libraries/Type/v1
-    $type: /bali/abstractions/Library/v1
-    $tag: #6ZTY8XJLTQ4SDA36KW7B2M17VDWGPB6A
+    $name: /bali/abstractions/Type/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #Z2RZ1550HK9HSW6QVVP6WTAA55P31ZQX
     $version: v1
     $permissions: /bali/permissions/public/v1
     $previous: none
