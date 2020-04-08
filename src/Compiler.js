@@ -1436,7 +1436,6 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
         // define a new local variable
-        this.builder.variables.addItem(variable);
         this.builder.insertLoadInstruction('VARIABLE', variable);
     }
 };
