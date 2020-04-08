@@ -10,28 +10,6 @@
             none
         }
     }
-    $parameters: []
-    $variables: [
-        $error
-        $message
-        $$queue-1
-        $$result
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.PostStatement": 1
-        "1.PostStatementDone": 6
-        "1.PostStatementHandlers": 8
-        "1.1.HandleClause": 9
-        "1.1.1.EvaluateStatement": 20
-        "1.1.HandleClauseDone": 22
-        "1.2.HandleClause": 23
-        "1.2.1.EvaluateStatement": 34
-        "1.2.HandleClauseDone": 36
-        "1.PostStatementFailed": 37
-        "1.PostStatementSucceeded": 38
-    ]
     $instructions: "
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandlers
@@ -102,4 +80,26 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.PostStatement": 1
+        "1.PostStatementDone": 6
+        "1.PostStatementHandlers": 8
+        "1.1.HandleClause": 9
+        "1.1.1.EvaluateStatement": 20
+        "1.1.HandleClauseDone": 22
+        "1.2.HandleClause": 23
+        "1.2.1.EvaluateStatement": 34
+        "1.2.HandleClauseDone": 36
+        "1.PostStatementFailed": 37
+        "1.PostStatementSucceeded": 38
+    ]
+    $messages: []($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $error
+        $message
+        $$queue-1
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

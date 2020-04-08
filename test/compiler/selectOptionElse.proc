@@ -10,29 +10,6 @@
             none
         }
     }
-    $parameters: []
-    $variables: [
-        $$result
-        $$selector-1
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.SelectStatement": 1
-        "1.1.OptionClause": 3
-        "1.1.1.EvaluateStatement": 7
-        "1.1.OptionClauseDone": 9
-        "1.2.OptionClause": 10
-        "1.2.1.EvaluateStatement": 14
-        "1.2.OptionClauseDone": 16
-        "1.3.OptionClause": 17
-        "1.3.1.EvaluateStatement": 21
-        "1.3.OptionClauseDone": 23
-        "1.4.ElseClause": 24
-        "1.4.1.EvaluateStatement": 25
-        "1.4.ElseClauseDone": 27
-        "1.SelectStatementDone": 28
-    ]
     $instructions: "
         1.SelectStatement:
         PUSH LITERAL `$selection`
@@ -98,4 +75,27 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.SelectStatement": 1
+        "1.1.OptionClause": 3
+        "1.1.1.EvaluateStatement": 7
+        "1.1.OptionClauseDone": 9
+        "1.2.OptionClause": 10
+        "1.2.1.EvaluateStatement": 14
+        "1.2.OptionClauseDone": 16
+        "1.3.OptionClause": 17
+        "1.3.1.EvaluateStatement": 21
+        "1.3.OptionClauseDone": 23
+        "1.4.ElseClause": 24
+        "1.4.1.EvaluateStatement": 25
+        "1.4.ElseClauseDone": 27
+        "1.SelectStatementDone": 28
+    ]
+    $messages: []($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $$result
+        $$selector-1
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

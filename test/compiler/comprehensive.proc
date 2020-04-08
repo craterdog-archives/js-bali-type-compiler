@@ -49,90 +49,6 @@
             }
         }
     }($string: /bali/elements/Text/v1)
-    $parameters: [
-        $string
-    ]
-    $variables: [
-        $a
-        $b
-        $bar
-        $c
-        $count
-        $d
-        $exception
-        $foo
-        $item
-        $$iterator-1
-        $$result
-        $selection
-        $$selector-2
-        $sequence
-        $tag
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: [
-        $find
-        $getIterator
-        $getNext
-        $hasNext
-    ]($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.IfStatement": 1
-        "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 6
-        "1.1.2.EvaluateStatement": 8
-        "1.1.3.ThrowStatement": 10
-        "1.1.ConditionClauseDone": 12
-        "1.2.ConditionClause": 13
-        "1.2.1.EvaluateStatement": 17
-        "1.2.2.EvaluateStatement": 19
-        "1.2.3.ReturnStatement": 22
-        "1.2.ConditionClauseDone": 24
-        "1.3.ElseClause": 25
-        "1.3.1.EvaluateStatement": 26
-        "1.3.2.EvaluateStatement": 32
-        "1.3.3.ReturnStatement": 34
-        "1.3.ElseClauseDone": 36
-        "1.IfStatementDone": 37
-        "1.IfStatementHandlers": 39
-        "1.4.HandleClause": 40
-        "1.4.1.EvaluateStatement": 51
-        "1.4.2.EvaluateStatement": 55
-        "1.4.HandleClauseDone": 65
-        "1.5.HandleClause": 66
-        "1.5.1.EvaluateStatement": 77
-        "1.5.2.ThrowStatement": 87
-        "1.5.HandleClauseDone": 89
-        "1.IfStatementFailed": 90
-        "1.IfStatementSucceeded": 91
-        "2.WhileStatement": 92
-        "2.1.ConditionClause": 93
-        "2.1.1.EvaluateStatement": 95
-        "2.1.2.IfStatement": 97
-        "2.1.2.1.ConditionClause": 98
-        "2.1.2.1.1.BreakStatement": 100
-        "2.1.2.1.ConditionClauseDone": 101
-        "2.1.2.2.ElseClause": 102
-        "2.1.2.2.1.WithStatement": 103
-        "2.1.2.2.1.1.ConditionClause": 106
-        "2.1.2.2.1.1.1.SelectStatement": 112
-        "2.1.2.2.1.1.1.1.OptionClause": 114
-        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 118
-        "2.1.2.2.1.1.1.1.OptionClauseDone": 120
-        "2.1.2.2.1.1.1.2.OptionClause": 121
-        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 125
-        "2.1.2.2.1.1.1.2.OptionClauseDone": 127
-        "2.1.2.2.1.1.1.3.ElseClause": 128
-        "2.1.2.2.1.1.1.3.1.ContinueStatement": 129
-        "2.1.2.2.1.1.1.3.ElseClauseDone": 130
-        "2.1.2.2.1.1.1.SelectStatementDone": 131
-        "2.1.2.2.1.ConditionRepeat": 132
-        "2.1.2.2.1.WithStatementDone": 133
-        "2.1.2.2.ElseClauseDone": 134
-        "2.1.2.IfStatementDone": 135
-        "2.ConditionRepeat": 136
-        "2.WhileStatementDone": 137
-    ]
     $instructions: "
         1.IfStatement:
         PUSH HANDLER 1.IfStatementHandlers
@@ -400,4 +316,88 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.IfStatement": 1
+        "1.1.ConditionClause": 2
+        "1.1.1.EvaluateStatement": 6
+        "1.1.2.EvaluateStatement": 8
+        "1.1.3.ThrowStatement": 10
+        "1.1.ConditionClauseDone": 12
+        "1.2.ConditionClause": 13
+        "1.2.1.EvaluateStatement": 17
+        "1.2.2.EvaluateStatement": 19
+        "1.2.3.ReturnStatement": 22
+        "1.2.ConditionClauseDone": 24
+        "1.3.ElseClause": 25
+        "1.3.1.EvaluateStatement": 26
+        "1.3.2.EvaluateStatement": 32
+        "1.3.3.ReturnStatement": 34
+        "1.3.ElseClauseDone": 36
+        "1.IfStatementDone": 37
+        "1.IfStatementHandlers": 39
+        "1.4.HandleClause": 40
+        "1.4.1.EvaluateStatement": 51
+        "1.4.2.EvaluateStatement": 55
+        "1.4.HandleClauseDone": 65
+        "1.5.HandleClause": 66
+        "1.5.1.EvaluateStatement": 77
+        "1.5.2.ThrowStatement": 87
+        "1.5.HandleClauseDone": 89
+        "1.IfStatementFailed": 90
+        "1.IfStatementSucceeded": 91
+        "2.WhileStatement": 92
+        "2.1.ConditionClause": 93
+        "2.1.1.EvaluateStatement": 95
+        "2.1.2.IfStatement": 97
+        "2.1.2.1.ConditionClause": 98
+        "2.1.2.1.1.BreakStatement": 100
+        "2.1.2.1.ConditionClauseDone": 101
+        "2.1.2.2.ElseClause": 102
+        "2.1.2.2.1.WithStatement": 103
+        "2.1.2.2.1.1.ConditionClause": 106
+        "2.1.2.2.1.1.1.SelectStatement": 112
+        "2.1.2.2.1.1.1.1.OptionClause": 114
+        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 118
+        "2.1.2.2.1.1.1.1.OptionClauseDone": 120
+        "2.1.2.2.1.1.1.2.OptionClause": 121
+        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 125
+        "2.1.2.2.1.1.1.2.OptionClauseDone": 127
+        "2.1.2.2.1.1.1.3.ElseClause": 128
+        "2.1.2.2.1.1.1.3.1.ContinueStatement": 129
+        "2.1.2.2.1.1.1.3.ElseClauseDone": 130
+        "2.1.2.2.1.1.1.SelectStatementDone": 131
+        "2.1.2.2.1.ConditionRepeat": 132
+        "2.1.2.2.1.WithStatementDone": 133
+        "2.1.2.2.ElseClauseDone": 134
+        "2.1.2.IfStatementDone": 135
+        "2.ConditionRepeat": 136
+        "2.WhileStatementDone": 137
+    ]
+    $messages: [
+        $find
+        $getIterator
+        $getNext
+        $hasNext
+    ]($type: /bali/collections/Set/v1)
+    $parameters: [
+        $string
+    ]
+    $variables: [
+        $a
+        $b
+        $bar
+        $c
+        $count
+        $d
+        $exception
+        $foo
+        $item
+        $$iterator-1
+        $$result
+        $selection
+        $$selector-2
+        $sequence
+        $tag
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

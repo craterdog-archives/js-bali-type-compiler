@@ -3,24 +3,6 @@
         wait for $message from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
         wait for messages[$foo, 5] from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
     }
-    $parameters: []
-    $variables: [
-        $$index-3
-        $message
-        $messages
-        $$queue-1
-        $$queue-2
-        $$result
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: [
-        $getSubcomponent
-        $setSubcomponent
-    ]($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.WaitStatement": 1
-        "2.WaitStatement": 6
-    ]
     $instructions: "
         1.WaitStatement:
         PUSH LITERAL `$message`
@@ -54,4 +36,22 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.WaitStatement": 1
+        "2.WaitStatement": 6
+    ]
+    $messages: [
+        $getSubcomponent
+        $setSubcomponent
+    ]($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $$index-3
+        $message
+        $messages
+        $$queue-1
+        $$queue-2
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

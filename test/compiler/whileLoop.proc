@@ -8,28 +8,6 @@
             $a := c
         }
     }
-    $parameters: []
-    $variables: [
-        $a
-        $b
-        $c
-        $condition
-        $$result
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.WhileStatement": 1
-        "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 4
-        "1.1.2.IfStatement": 6
-        "1.1.2.1.ConditionClause": 7
-        "1.1.2.1.1.BreakStatement": 9
-        "1.1.2.IfStatementDone": 10
-        "1.1.3.EvaluateStatement": 11
-        "1.ConditionRepeat": 13
-        "1.WhileStatementDone": 14
-    ]
     $instructions: "
         1.WhileStatement:
         SKIP INSTRUCTION
@@ -70,4 +48,26 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.WhileStatement": 1
+        "1.1.ConditionClause": 2
+        "1.1.1.EvaluateStatement": 4
+        "1.1.2.IfStatement": 6
+        "1.1.2.1.ConditionClause": 7
+        "1.1.2.1.1.BreakStatement": 9
+        "1.1.2.IfStatementDone": 10
+        "1.1.3.EvaluateStatement": 11
+        "1.ConditionRepeat": 13
+        "1.WhileStatementDone": 14
+    ]
+    $messages: []($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $a
+        $b
+        $c
+        $condition
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

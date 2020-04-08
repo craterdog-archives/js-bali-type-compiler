@@ -12,14 +12,6 @@
             $source: {
                 return isParameterized(target)
             }
-            $parameters: []
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -30,6 +22,14 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
         $parameter: [
             $description: "
@@ -40,16 +40,6 @@
             $source: {
                 return parameter(target, key)
             }($key: /bali/elements/Symbol/v1)
-            $parameters: [
-                $key
-            ]
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -61,6 +51,16 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: [
+                $key
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
         $parameters: [
             $description: "
@@ -74,14 +74,6 @@
             $source: {
                 return parameters(target)
             }
-            $parameters: []
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -92,6 +84,14 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
         $type: [
             $description: "
@@ -101,14 +101,6 @@
             $source: {
                 return type(target)
             }
-            $parameters: []
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -119,6 +111,14 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
     ]
     $literals: []

@@ -8,37 +8,6 @@
         commit documents[index] to <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
         discard <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
     }
-    $parameters: []
-    $variables: [
-        $document
-        $documents
-        $index
-        $$index-5
-        $$index-7
-        $$index-9
-        $$location-1
-        $$location-10
-        $$location-2
-        $$location-3
-        $$location-4
-        $$location-6
-        $$location-8
-        $$result
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: [
-        $getSubcomponent
-        $setSubcomponent
-    ]($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.CheckoutStatement": 1
-        "2.SaveStatement": 6
-        "3.CommitStatement": 10
-        "4.CheckoutStatement": 14
-        "5.SaveStatement": 24
-        "6.CommitStatement": 34
-        "7.DiscardStatement": 44
-    ]
     $instructions: "
         1.CheckoutStatement:
         PUSH LITERAL `$document`
@@ -112,4 +81,35 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.CheckoutStatement": 1
+        "2.SaveStatement": 6
+        "3.CommitStatement": 10
+        "4.CheckoutStatement": 14
+        "5.SaveStatement": 24
+        "6.CommitStatement": 34
+        "7.DiscardStatement": 44
+    ]
+    $messages: [
+        $getSubcomponent
+        $setSubcomponent
+    ]($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $document
+        $documents
+        $index
+        $$index-5
+        $$index-7
+        $$index-9
+        $$location-1
+        $$location-10
+        $$location-2
+        $$location-3
+        $$location-4
+        $$location-6
+        $$location-8
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

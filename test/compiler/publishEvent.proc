@@ -6,16 +6,6 @@
             $value: 5
         ]
     }
-    $parameters: []
-    $variables: [
-        $$eventQueue
-        $$result
-        $target
-    ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.PublishStatement": 1
-    ]
     $instructions: "
         1.PublishStatement:
         INVOKE $catalog
@@ -42,4 +32,14 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.PublishStatement": 1
+    ]
+    $messages: []($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $$eventQueue
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
 ]

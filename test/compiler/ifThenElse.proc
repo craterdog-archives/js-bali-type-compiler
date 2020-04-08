@@ -6,24 +6,6 @@
             no
         }
     }
-    $parameters: []
-    $variables: [
-        $no
-        $$result
-        $target
-        $yes
-    ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
-    $addresses: [
-        "1.IfStatement": 1
-        "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 4
-        "1.1.ConditionClauseDone": 6
-        "1.2.ElseClause": 7
-        "1.2.1.EvaluateStatement": 8
-        "1.2.ElseClauseDone": 10
-        "1.IfStatementDone": 11
-    ]
     $instructions: "
         1.IfStatement:
         SKIP INSTRUCTION
@@ -57,4 +39,22 @@
         $encoding: $base16
         $mediatype: "application/bcod"
     )
+    $addresses: [
+        "1.IfStatement": 1
+        "1.1.ConditionClause": 2
+        "1.1.1.EvaluateStatement": 4
+        "1.1.ConditionClauseDone": 6
+        "1.2.ElseClause": 7
+        "1.2.1.EvaluateStatement": 8
+        "1.2.ElseClauseDone": 10
+        "1.IfStatementDone": 11
+    ]
+    $messages: []($type: /bali/collections/Set/v1)
+    $parameters: []
+    $variables: [
+        $no
+        $$result
+        $target
+        $yes
+    ]($type: /bali/collections/Set/v1)
 ]

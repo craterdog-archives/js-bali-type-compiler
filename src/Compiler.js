@@ -105,10 +105,12 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
     }
 
     // add the compilation context to the procedure
+    procedure.setValue('$instructions', bali.pattern.NONE);
+    procedure.setValue('$bytecode', bali.pattern.NONE);
+    procedure.setValue('$addresses', bali.catalog());
+    procedure.setValue('$messages', bali.set());
     procedure.setValue('$parameters', parameters);
     procedure.setValue('$variables', bali.set(['$target']));
-    procedure.setValue('$messages', bali.set());
-    procedure.setValue('$addresses', bali.catalog());
 
     // compile the procedure into assembly instructions
     const visitor = new CompilingVisitor(type, procedure, this.debug);

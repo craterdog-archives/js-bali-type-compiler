@@ -15,16 +15,6 @@
             $source: {
                 return addItem(target, item)
             }($item: /bali/abstractions/Component/v1)
-            $parameters: [
-                $item
-            ]
-            $variables: [
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: []($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.ReturnStatement": 1
-            ]
             $instructions: "
                 1.ReturnStatement:
                 LOAD VARIABLE $target
@@ -36,6 +26,16 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: [
+                $item
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
         $addItems: [
             $description: "
@@ -54,34 +54,6 @@
                 }
                 return count
             }($items: /bali/interfaces/Sequential/v1)
-            $parameters: [
-                $items
-            ]
-            $variables: [
-                $count
-                $item
-                $iterator
-                $target
-            ]($type: /bali/collections/Set/v1)
-            $messages: [
-                $hasNext
-                $iterator
-                $next
-            ]($type: /bali/collections/Set/v1)
-            $addresses: [
-                "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 3
-                "3.WhileStatement": 6
-                "3.1.ConditionClause": 7
-                "3.1.1.EvaluateStatement": 10
-                "3.1.2.IfStatement": 13
-                "3.1.2.1.ConditionClause": 14
-                "3.1.2.1.1.EvaluateStatement": 18
-                "3.1.2.IfStatementDone": 22
-                "3.ConditionRepeat": 23
-                "3.WhileStatementDone": 24
-                "4.ReturnStatement": 25
-            ]
             $instructions: "
                 1.EvaluateStatement:
                 PUSH LITERAL `0`
@@ -140,6 +112,34 @@
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.WhileStatement": 6
+                "3.1.ConditionClause": 7
+                "3.1.1.EvaluateStatement": 10
+                "3.1.2.IfStatement": 13
+                "3.1.2.1.ConditionClause": 14
+                "3.1.2.1.1.EvaluateStatement": 18
+                "3.1.2.IfStatementDone": 22
+                "3.ConditionRepeat": 23
+                "3.WhileStatementDone": 24
+                "4.ReturnStatement": 25
+            ]
+            $messages: [
+                $hasNext
+                $iterator
+                $next
+            ]($type: /bali/collections/Set/v1)
+            $parameters: [
+                $items
+            ]
+            $variables: [
+                $count
+                $item
+                $iterator
+                $target
+            ]($type: /bali/collections/Set/v1)
         ]
     ]
     $literals: [
