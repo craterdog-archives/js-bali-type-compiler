@@ -52,8 +52,7 @@ module.exports = function(grunt) {
         'src/grammar/*.tokens'
       ],
       build: [
-        'dist/*',
-        'test/config/*'
+        'dist/*'
       ],
       options: {
         force: true
