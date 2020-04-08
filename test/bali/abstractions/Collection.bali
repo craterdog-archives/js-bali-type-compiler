@@ -13,7 +13,12 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                return addItem(target, item)
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $addItem
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
             }($item: /bali/abstractions/Component/v1)
         ]
         $addItems: [
@@ -27,12 +32,61 @@
                 $iterator := items.iterator()
                 while iterator.hasNext() do {
                     $item := iterator.next()
-                    if addItem(target, item) then {
+                    if target.addItem(item) then {
                         $count := count + 1
                     }
                 }
                 return count
             }($items: /bali/interfaces/Sequential/v1)
+        ]
+        $containsAll: [
+            $description: "
+                This procedure determines whether or not this collection contains all of the
+                specified items.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if NOT target.containsItem(item) then {
+                        return false
+                    }
+                }
+                return true
+            }($items: /bali/interfaces/Sequential/v1)
+        ]
+        $containsAny: [
+            $description: "
+                This procedure determines whether or not this collection contains any of the
+                specified items.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if target.containsItem(item) then {
+                        return true
+                    }
+                }
+                return false
+            }($items: /bali/interfaces/Sequential/v1)
+        ]
+        $containsItem: [
+            $description: "
+                This procedure determines whether or not this collection contains the specified
+                item.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $containsItem
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($item: /bali/abstractions/Component/v1)
         ]
     ]
 ](

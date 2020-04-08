@@ -13,21 +13,43 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                return addItem(target, item)
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $addItem
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
             }($item: /bali/abstractions/Component/v1)
             $instructions: "
-                1.ReturnStatement:
-                LOAD VARIABLE $target
-                PUSH PARAMETER $item
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Collection`
+                INVOKE $association WITH 2 ARGUMENTS
                 INVOKE $addItem WITH 2 ARGUMENTS
-                HANDLE RESULT
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$addItem`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
             "($mediatype: "application/basm")
-            $bytecode: '60013801B001E000'(
+            $bytecode: '
+                A01428012802B00BB00128032804B00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
             $addresses: [
-                "1.ReturnStatement": 1
+                "1.ThrowStatement": 1
             ]
             $messages: []($type: /bali/collections/Set/v1)
             $parameters: [
@@ -48,7 +70,7 @@
                 $iterator := items.iterator()
                 while iterator.hasNext() do {
                     $item := iterator.next()
-                    if addItem(target, item) then {
+                    if target.addItem(item) then {
                         $count := count + 1
                     }
                 }
@@ -82,8 +104,10 @@
                 
                 3.1.2.1.ConditionClause:
                 LOAD VARIABLE $target
+                INVOKE $list
                 LOAD VARIABLE $item
                 INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $addItem TO COMPONENT WITH ARGUMENTS
                 JUMP TO 3.1.2.IfStatementDone ON FALSE
                 
                 3.1.2.1.1.EvaluateStatement:
@@ -106,8 +130,8 @@
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                280180013801C002800300006003C00118186003C0038002000060046002
-                B001181660012802B07980010000000700006001E000
+                280980013801C003800300006003C002181A6003C004800200006004A049
+                6002B001C80118186001280AB07980010000000700006001E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -120,13 +144,14 @@
                 "3.1.1.EvaluateStatement": 10
                 "3.1.2.IfStatement": 13
                 "3.1.2.1.ConditionClause": 14
-                "3.1.2.1.1.EvaluateStatement": 18
-                "3.1.2.IfStatementDone": 22
-                "3.ConditionRepeat": 23
-                "3.WhileStatementDone": 24
-                "4.ReturnStatement": 25
+                "3.1.2.1.1.EvaluateStatement": 20
+                "3.1.2.IfStatementDone": 24
+                "3.ConditionRepeat": 25
+                "3.WhileStatementDone": 26
+                "4.ReturnStatement": 27
             ]
             $messages: [
+                $addItem
                 $hasNext
                 $iterator
                 $next
@@ -141,10 +166,271 @@
                 $target
             ]($type: /bali/collections/Set/v1)
         ]
+        $containsAll: [
+            $description: "
+                This procedure determines whether or not this collection contains all of the
+                specified items.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if NOT target.containsItem(item) then {
+                        return false
+                    }
+                }
+                return true
+            }($items: /bali/interfaces/Sequential/v1)
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $items
+                SEND $iterator TO COMPONENT
+                STORE VARIABLE $iterator
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $iterator
+                SEND $hasNext TO COMPONENT
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $iterator
+                SEND $next TO COMPONENT
+                STORE VARIABLE $item
+                
+                2.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $target
+                INVOKE $list
+                LOAD VARIABLE $item
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $containsItem TO COMPONENT WITH ARGUMENTS
+                INVOKE $not WITH 1 ARGUMENT
+                JUMP TO 2.1.2.IfStatementDone ON FALSE
+                
+                2.1.2.1.1.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+                
+                2.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                3801C003800200006002C00218176002C004800100006003A0496001B001
+                C801A84E1815280BE000000000050000280CE000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 4
+                "2.1.ConditionClause": 5
+                "2.1.1.EvaluateStatement": 8
+                "2.1.2.IfStatement": 11
+                "2.1.2.1.ConditionClause": 12
+                "2.1.2.1.1.ReturnStatement": 19
+                "2.1.2.IfStatementDone": 21
+                "2.ConditionRepeat": 22
+                "2.WhileStatementDone": 23
+                "3.ReturnStatement": 24
+            ]
+            $messages: [
+                $containsItem
+                $hasNext
+                $iterator
+                $next
+            ]($type: /bali/collections/Set/v1)
+            $parameters: [
+                $items
+            ]
+            $variables: [
+                $item
+                $iterator
+                $target
+            ]($type: /bali/collections/Set/v1)
+        ]
+        $containsAny: [
+            $description: "
+                This procedure determines whether or not this collection contains any of the
+                specified items.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                $iterator := items.iterator()
+                while iterator.hasNext() do {
+                    $item := iterator.next()
+                    if target.containsItem(item) then {
+                        return true
+                    }
+                }
+                return false
+            }($items: /bali/interfaces/Sequential/v1)
+            $instructions: "
+                1.EvaluateStatement:
+                PUSH PARAMETER $items
+                SEND $iterator TO COMPONENT
+                STORE VARIABLE $iterator
+                
+                2.WhileStatement:
+                SKIP INSTRUCTION
+                
+                2.1.ConditionClause:
+                LOAD VARIABLE $iterator
+                SEND $hasNext TO COMPONENT
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $iterator
+                SEND $next TO COMPONENT
+                STORE VARIABLE $item
+                
+                2.1.2.IfStatement:
+                SKIP INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $target
+                INVOKE $list
+                LOAD VARIABLE $item
+                INVOKE $addItem WITH 2 ARGUMENTS
+                SEND $containsItem TO COMPONENT WITH ARGUMENTS
+                JUMP TO 2.1.2.IfStatementDone ON FALSE
+                
+                2.1.2.1.1.ReturnStatement:
+                PUSH LITERAL `true`
+                HANDLE RESULT
+                
+                2.1.2.IfStatementDone:
+                SKIP INSTRUCTION
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                SKIP INSTRUCTION
+                
+                3.ReturnStatement:
+                PUSH LITERAL `false`
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '
+                3801C003800200006002C00218166002C004800100006003A0496001B001
+                C8011814280CE000000000050000280BE000
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.WhileStatement": 4
+                "2.1.ConditionClause": 5
+                "2.1.1.EvaluateStatement": 8
+                "2.1.2.IfStatement": 11
+                "2.1.2.1.ConditionClause": 12
+                "2.1.2.1.1.ReturnStatement": 18
+                "2.1.2.IfStatementDone": 20
+                "2.ConditionRepeat": 21
+                "2.WhileStatementDone": 22
+                "3.ReturnStatement": 23
+            ]
+            $messages: [
+                $containsItem
+                $hasNext
+                $iterator
+                $next
+            ]($type: /bali/collections/Set/v1)
+            $parameters: [
+                $items
+            ]
+            $variables: [
+                $item
+                $iterator
+                $target
+            ]($type: /bali/collections/Set/v1)
+        ]
+        $containsItem: [
+            $description: "
+                This procedure determines whether or not this collection contains the specified
+                item.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $containsItem
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($item: /bali/abstractions/Component/v1)
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Collection`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$containsItem`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280DB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $messages: []($type: /bali/collections/Set/v1)
+            $parameters: [
+                $item
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+        ]
     ]
     $literals: [
+        $module
+        /bali/abstractions/Collection
+        $procedure
+        $addItem
+        $exception
+        $abstractMethod
+        $text
+        "An abstract method must be implemented by a subclass."
         0
         1
+        false
+        true
+        $containsItem
     ]
 ](
     $name: /bali/abstractions/Collection/v1

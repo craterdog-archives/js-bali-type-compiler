@@ -16,7 +16,7 @@
         INVOKE $list
         PUSH LITERAL `$foo`
         INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+        SEND $getItem TO COMPONENT WITH ARGUMENTS
         PUSH LITERAL `5`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$queue-2
@@ -41,7 +41,7 @@
         "2.WaitStatement": 6
     ]
     $messages: [
-        $getSubcomponent
+        $getItem
         $setSubcomponent
     ]($type: /bali/collections/Set/v1)
     $parameters: []

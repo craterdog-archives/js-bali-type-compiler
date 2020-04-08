@@ -49,7 +49,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-7
         INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+        SEND $getItem TO COMPONENT WITH ARGUMENTS
         STORE DRAFT $$location-6
         
         6.CommitStatement:
@@ -61,7 +61,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-9
         INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $getSubcomponent TO COMPONENT WITH ARGUMENTS
+        SEND $getItem TO COMPONENT WITH ARGUMENTS
         STORE DOCUMENT $$location-8
         
         7.DiscardStatement:
@@ -91,7 +91,7 @@
         "7.DiscardStatement": 44
     ]
     $messages: [
-        $getSubcomponent
+        $getItem
         $setSubcomponent
     ]($type: /bali/collections/Set/v1)
     $parameters: []

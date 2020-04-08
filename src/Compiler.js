@@ -847,7 +847,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertSendInstruction('$getSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
+        this.builder.insertSendInstruction('$getItem', 'TO COMPONENT WITH ARGUMENTS');
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -1376,7 +1376,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertSendInstruction('$getSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
+    this.builder.insertSendInstruction('$getItem', 'TO COMPONENT WITH ARGUMENTS');
     // the parent and index have been replaced by the value of the subcomponent
 };
 
