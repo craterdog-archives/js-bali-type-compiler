@@ -1,0 +1,48 @@
+[
+    $description: "
+        This abstract class defines the procedures for the messages that all composite components
+        support.
+    "($mediatype: "application/bsmd")
+    $constants: [:]
+    $procedures: [
+        $subcomponent: [
+            $description: "
+                This procedure retrieves the subcomponent associated with the specified index.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Composite
+                    $procedure: $subcomponent
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($index: /bali/abstractions/Element/v1)
+        ]
+        $setSubcomponent: [
+            $description: "
+                This procedure sets the subcomponent associated with the specified index to the
+                specified value.
+            "($mediatype: "application/bsmd")
+            $type: none
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Composite
+                    $procedure: $subcomponent
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }(
+                $index: /bali/abstractions/Element/v1
+                $value: /bali/abstractions/Component/v1
+            )
+        ]
+    ]
+](
+    $name: /bali/abstractions/Composite/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #XLWZBR7XA25FKLVS1P5DFW4ZLPJQC65F
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

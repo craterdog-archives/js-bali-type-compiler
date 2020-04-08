@@ -49,7 +49,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-7
         INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $getItem TO COMPONENT WITH ARGUMENTS
+        SEND $subcomponent TO COMPONENT WITH ARGUMENTS
         STORE DRAFT $$location-6
         
         6.CommitStatement:
@@ -61,7 +61,7 @@
         INVOKE $list
         LOAD VARIABLE $$index-9
         INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $getItem TO COMPONENT WITH ARGUMENTS
+        SEND $subcomponent TO COMPONENT WITH ARGUMENTS
         STORE DOCUMENT $$location-8
         
         7.DiscardStatement:
@@ -74,8 +74,8 @@
     "($mediatype: "application/basm")
     $bytecode: '
         2801280280077807800128028009600190092802800A6001980A60026003
-        2802800B780B8004A0496004B001C8022802800C600260038005A0496005
-        B001C801900C2802800D600260038006A0496006B001C801980D28028008
+        2802800B780B8004A0496004B001C8012802800C600260038005A0496005
+        B001C802900C2802800D600260038006A0496006B001C802980D28028008
         28039008600EE000
     '(
         $encoding: $base16
@@ -91,8 +91,8 @@
         "7.DiscardStatement": 44
     ]
     $messages: [
-        $getItem
         $setSubcomponent
+        $subcomponent
     ]($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [

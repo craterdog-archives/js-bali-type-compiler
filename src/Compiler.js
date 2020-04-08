@@ -847,7 +847,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertSendInstruction('$getItem', 'TO COMPONENT WITH ARGUMENTS');
+        this.builder.insertSendInstruction('$subcomponent', 'TO COMPONENT WITH ARGUMENTS');
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -941,7 +941,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM replaces the value on top of the component stack with its magnitude
-    this.builder.insertSendInstruction('$getMagnitude', 'TO COMPONENT');
+    this.builder.insertInvokeInstruction('$magnitude', 1);  // magnitude(x)
     // the value has been replaced by its magnitude
 };
 
@@ -1376,7 +1376,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertSendInstruction('$getItem', 'TO COMPONENT WITH ARGUMENTS');
+    this.builder.insertSendInstruction('$subcomponent', 'TO COMPONENT WITH ARGUMENTS');
     // the parent and index have been replaced by the value of the subcomponent
 };
 
@@ -1524,7 +1524,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     sequence.acceptVisitor(this);
 
     // the VM replaces the sequence on the component stack with an iterator to it
-    this.builder.insertSendInstruction('$getIterator', 'TO COMPONENT');
+    this.builder.insertSendInstruction('$iterator', 'TO COMPONENT');
 
     // The VM stores the iterater in a temporary variable
     const iterator = this.createTemporaryVariable('iterator');
@@ -1542,7 +1542,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     this.builder.insertLoadInstruction('VARIABLE', iterator);
 
     // the VM replaces the iterator on the component stack with the next item from the sequence
-    this.builder.insertSendInstruction('$getNext', 'TO COMPONENT');
+    this.builder.insertSendInstruction('$next', 'TO COMPONENT');
 
     // the VM stores the item that is on top of the component stack in the variable
     this.builder.insertStoreInstruction('VARIABLE', variable);

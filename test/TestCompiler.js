@@ -89,6 +89,7 @@ const sources = [
     '/bali/libraries/Types',
     '/bali/interfaces/Sequential',
     '/bali/abstractions/Element',
+    '/bali/abstractions/Composite',
     '/bali/abstractions/Collection'
 ];
 

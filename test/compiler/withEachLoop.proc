@@ -12,7 +12,7 @@
     $instructions: "
         1.WithStatement:
         PUSH LITERAL `$sequence`
-        SEND $getIterator TO COMPONENT
+        SEND $iterator TO COMPONENT
         STORE VARIABLE $$iterator-1
         
         1.1.ConditionClause:
@@ -20,7 +20,7 @@
         SEND $hasNext TO COMPONENT
         JUMP TO 1.WithStatementDone ON FALSE
         LOAD VARIABLE $$iterator-1
-        SEND $getNext TO COMPONENT
+        SEND $next TO COMPONENT
         STORE VARIABLE $symbol
         
         1.1.1.EvaluateStatement:
@@ -56,7 +56,7 @@
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        2801C00180016001C00318166001C0028003280280050000600518122803
+        2801C00280016001C00118166001C0038003280280050000600518122803
         8006000400002804800700046002E000
     '(
         $encoding: $base16
@@ -76,9 +76,9 @@
         "1.WithStatementDone": 22
     ]
     $messages: [
-        $getIterator
-        $getNext
         $hasNext
+        $iterator
+        $next
     ]($type: /bali/collections/Set/v1)
     $parameters: []
     $variables: [
