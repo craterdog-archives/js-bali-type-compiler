@@ -3,7 +3,7 @@
         This abstract class defines the procedures for the messages that all collection components
         support.
     "($mediatype: "application/bsmd")
-    $parent: /bali/abstractions/Component/v1
+    $parent: /bali/abstractions/Composite/v1
     $constants: [:]
     $procedures: [
         $addItem: [
@@ -29,9 +29,7 @@
             $type: /bali/elements/Number/v1($range: [0..infinity])
             $source: {
                 $count := 0
-                $iterator := items.iterator()
-                while iterator.hasNext() do {
-                    $item := iterator.next()
+                with each $item in items do {
                     if target.addItem(item) then {
                         $count := count + 1
                     }
@@ -46,9 +44,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $iterator := items.iterator()
-                while iterator.hasNext() do {
-                    $item := iterator.next()
+                with each $item in items do {
                     if NOT target.containsItem(item) then {
                         return false
                     }
@@ -63,9 +59,7 @@
             "($mediatype: "application/bsmd")
             $type: /bali/elements/Probability/v1($granularity: $boolean)
             $source: {
-                $iterator := items.iterator()
-                while iterator.hasNext() do {
-                    $item := iterator.next()
+                with each $item in items do {
                     if target.containsItem(item) then {
                         return true
                     }
@@ -87,6 +81,90 @@
                     $text: "An abstract method must be implemented by a subclass."
                 ]
             }($item: /bali/abstractions/Component/v1)
+        ]
+        $index: [
+            $description: "
+                This procedure returns the index of the specified item from this collection, or 0
+                if it is not found.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..infinity])
+            $source: {
+                $index := 0
+                with each $candidate in target do {
+                    $index := index + 1
+                    if candidate = item then {
+                        break loop
+                    }
+                }
+                return index
+            }($item: /bali/abstractions/Component/v1)
+        ]
+        $isEmpty: [
+            $description: "
+                This procedure determines whether or not this collection is empty.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return target.size() = 0
+            }
+        ]
+        $item: [
+            $description: "
+                This procedure returns from this collection the item corresponding to the the
+                specified index.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $item
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($index: /bali/elements/Number/v1($range: [0..infinity]))
+        ]
+        $items: [
+            $description: "
+                This procedure returns from this collection the subset of items in the specified
+                range.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                $items := []
+                with each $index in range do {
+                    items.addItem(target[index])
+                }
+                return items
+            }($range: /bali/collections/Range/v1)
+        ]
+        $iterator: [
+            $description: "
+                This procedure returns an iterator that can be used to visit, in order, each item
+                in this collection.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Iterator/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $iterator
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $size: [
+            $description: "
+                This procedure returns the number of items contained in this collection.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..infinity])
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Collection
+                    $procedure: $size
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
         ]
     ]
 ](

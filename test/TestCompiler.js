@@ -54,7 +54,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 compiler.assembleProcedure(type, procedure);
 
                 source = procedure.toString() + '\n';  // POSIX compliant <EOL>
-                //await pfs.writeFile(codeFile, source, 'utf8');
+                await pfs.writeFile(codeFile, source, 'utf8');
                 var expected = await pfs.readFile(codeFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
@@ -71,7 +71,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 await compiler.compileType(type);
                 const source = type.toString() + '\n';  // POSIX compliant <EOL>
                 const filename = testFolder + file + '.comp';
-                //await pfs.writeFile(filename, source, 'utf8');
+                await pfs.writeFile(filename, source, 'utf8');
                 var expected = await pfs.readFile(filename, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
@@ -90,6 +90,7 @@ const sources = [
     '/bali/interfaces/Sequential',
     '/bali/abstractions/Element',
     '/bali/abstractions/Composite',
+    '/bali/abstractions/Iterator',
     '/bali/abstractions/Collection'
 ];
 

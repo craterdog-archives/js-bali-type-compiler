@@ -3,6 +3,7 @@
         This abstract class defines the procedures for the messages that all composite components
         support.
     "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
     $constants: [:]
     $procedures: [
         $subcomponent: [

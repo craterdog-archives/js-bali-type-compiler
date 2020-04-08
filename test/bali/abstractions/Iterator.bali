@@ -1,0 +1,122 @@
+[
+    $description: "
+        This abstract class defines the procedures for the messages that all iterator components
+        support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
+    $constants: [:]
+    $procedures: [
+        $hasNext: [
+            $description: "
+                This procedure determines whether or not there is an item following the current
+                slot between items in the sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $hasNext
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $hasPrevious: [
+            $description: "
+                This procedure determines whether or not there is an item preceding the current
+                slot between items in the sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $hasPrevious
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $next: [
+            $description: "
+                This procedure retrieves the next item in the sequence that this iterator
+                refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $next
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $previous: [
+            $description: "
+                This procedure retrieves the previous item in the sequence that this iterator
+                refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $previous
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $toEnd: [
+            $description: "
+                This procedure moves this iterator to the slot following the last item in the
+                sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toEnd
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+        $toSlot: [
+            $description: "
+                This procedure moves this iterator to the specified slot in the sequence that
+                this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toSlot
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($slot: /bali/elements/Number/v1($range: [0..infinity]))
+        ]
+        $toStart: [
+            $description: "
+                This procedure moves this iterator to the slot preceding the first item in the
+                sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toStart
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+        ]
+    ]
+](
+    $name: /bali/abstractions/Composite/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #XLWZBR7XA25FKLVS1P5DFW4ZLPJQC65F
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)

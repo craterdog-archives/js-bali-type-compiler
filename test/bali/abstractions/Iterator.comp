@@ -1,0 +1,392 @@
+[
+    $description: "
+        This abstract class defines the procedures for the messages that all iterator components
+        support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Component/v1
+    $constants: [:]
+    $procedures: [
+        $hasNext: [
+            $description: "
+                This procedure determines whether or not there is an item following the current
+                slot between items in the sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $hasNext
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$hasNext`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB00128032804B00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $hasPrevious: [
+            $description: "
+                This procedure determines whether or not there is an item preceding the current
+                slot between items in the sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $hasPrevious
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$hasPrevious`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB00128032809B00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $next: [
+            $description: "
+                This procedure retrieves the next item in the sequence that this iterator
+                refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $next
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$next`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280AB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $previous: [
+            $description: "
+                This procedure retrieves the previous item in the sequence that this iterator
+                refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $previous
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$previous`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280BB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $toEnd: [
+            $description: "
+                This procedure moves this iterator to the slot following the last item in the
+                sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toEnd
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$toEnd`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280CB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $toSlot: [
+            $description: "
+                This procedure moves this iterator to the specified slot in the sequence that
+                this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toSlot
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }($slot: /bali/elements/Number/v1($range: [0..∞]))
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$toSlot`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280DB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: [
+                $slot
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $toStart: [
+            $description: "
+                This procedure moves this iterator to the slot preceding the first item in the
+                sequence that this iterator refers to.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                throw [
+                    $module: /bali/abstractions/Iterator
+                    $procedure: $toStart
+                    $exception: $abstractMethod
+                    $text: "An abstract method must be implemented by a subclass."
+                ]
+            }
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Iterator`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$toStart`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB0012803280EB00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+    ]
+    $literals: [
+        $module
+        /bali/abstractions/Iterator
+        $procedure
+        $hasNext
+        $exception
+        $abstractMethod
+        $text
+        "An abstract method must be implemented by a subclass."
+        $hasPrevious
+        $next
+        $previous
+        $toEnd
+        $toSlot
+        $toStart
+    ]
+](
+    $name: /bali/abstractions/Composite/v1
+    $type: /bali/abstractions/Class/v1($existence: $abstract)
+    $tag: #XLWZBR7XA25FKLVS1P5DFW4ZLPJQC65F
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)
