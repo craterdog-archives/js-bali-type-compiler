@@ -4,8 +4,10 @@
         support.
     "($mediatype: "application/bsmd")
     $parent: /bali/abstractions/Component/v1
+    $parameters: [:]
     $constants: [:]
     $procedures: [:]
+    $literals: []
 ](
     $name: /bali/abstractions/Element/v1
     $type: /bali/abstractions/Class/v1($existence: $abstract)

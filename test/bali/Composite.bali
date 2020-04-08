@@ -4,6 +4,7 @@
         support.
     "($mediatype: "application/bsmd")
     $parent: /bali/abstractions/Component/v1
+    $parameters: [:]
     $constants: [:]
     $procedures: [
         $subcomponent: [
@@ -19,6 +20,44 @@
                     $text: "An abstract method must be implemented by a subclass."
                 ]
             }($index: /bali/abstractions/Element/v1)
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Composite`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$subcomponent`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB00128032804B00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: [
+                $index
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
         $setSubcomponent: [
             $description: "
@@ -37,7 +76,56 @@
                 $index: /bali/abstractions/Element/v1
                 $value: /bali/abstractions/Component/v1
             )
+            $instructions: "
+                1.ThrowStatement:
+                INVOKE $catalog
+                PUSH LITERAL `$module`
+                PUSH LITERAL `/bali/abstractions/Composite`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$procedure`
+                PUSH LITERAL `$subcomponent`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$abstractMethod`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                PUSH LITERAL `$text`
+                PUSH LITERAL `"An abstract method must be implemented by a subclass."`
+                INVOKE $association WITH 2 ARGUMENTS
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE EXCEPTION
+            "($mediatype: "application/basm")
+            $bytecode: '
+                A01428012802B00BB00128032804B00BB00128052806B00BB00128072808
+                B00BB001E800
+            '(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ThrowStatement": 1
+            ]
+            $parameters: [
+                $index
+                $value
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
         ]
+    ]
+    $literals: [
+        $module
+        /bali/abstractions/Composite
+        $procedure
+        $subcomponent
+        $exception
+        $abstractMethod
+        $text
+        "An abstract method must be implemented by a subclass."
     ]
 ](
     $name: /bali/abstractions/Composite/v1

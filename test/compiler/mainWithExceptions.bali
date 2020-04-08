@@ -1,7 +1,105 @@
-{
-    post message on <bali:/queues/myqueue> handle $error matching [$type: "bad"] with {
-        any
-    } handle $error matching [$type: "horrid"] with {
-        none
+[
+    $source: {
+        post message on <bali:/queues/myqueue> handle $error matching [
+            $type: "bad"
+        ] with {
+            any
+        } handle $error matching [
+            $type: "horrid"
+        ] with {
+            none
+        }
     }
-}
+    $instructions: "
+        1.PostStatement:
+        PUSH HANDLER 1.PostStatementHandlers
+        PUSH LITERAL `<bali:/queues/myqueue>`
+        STORE VARIABLE $$queue-1
+        LOAD VARIABLE $message
+        STORE MESSAGE $$queue-1
+        
+        1.PostStatementDone:
+        POP HANDLER
+        JUMP TO 1.PostStatementSucceeded
+        
+        1.PostStatementHandlers:
+        SKIP INSTRUCTION
+        
+        1.1.HandleClause:
+        STORE VARIABLE $error
+        LOAD VARIABLE $error
+        LOAD VARIABLE $error
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `"bad"`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $doesMatch WITH 2 ARGUMENTS
+        JUMP TO 1.2.HandleClause ON FALSE
+        POP COMPONENT
+        
+        1.1.1.EvaluateStatement:
+        PUSH LITERAL `any`
+        STORE VARIABLE $$result
+        
+        1.1.HandleClauseDone:
+        JUMP TO 1.PostStatementSucceeded
+        
+        1.2.HandleClause:
+        STORE VARIABLE $error
+        LOAD VARIABLE $error
+        LOAD VARIABLE $error
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `"horrid"`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $doesMatch WITH 2 ARGUMENTS
+        JUMP TO 1.PostStatementFailed ON FALSE
+        POP COMPONENT
+        
+        1.2.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $$result
+        
+        1.2.HandleClauseDone:
+        JUMP TO 1.PostStatementSucceeded
+        
+        1.PostStatementFailed:
+        HANDLE EXCEPTION
+        
+        1.PostStatementSucceeded:
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "($mediatype: "application/basm")
+    $bytecode: '
+        20082801800360028803400000260000800160016001A01428022803B00B
+        B001B02318174800280480040026800160016001A01428022805B00BB001
+        B02318254800280680040026E8006004E000
+    '(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $addresses: [
+        "1.PostStatement": 1
+        "1.PostStatementDone": 6
+        "1.PostStatementHandlers": 8
+        "1.1.HandleClause": 9
+        "1.1.1.EvaluateStatement": 20
+        "1.1.HandleClauseDone": 22
+        "1.2.HandleClause": 23
+        "1.2.1.EvaluateStatement": 34
+        "1.2.HandleClauseDone": 36
+        "1.PostStatementFailed": 37
+        "1.PostStatementSucceeded": 38
+    ]
+    $parameters: []
+    $variables: [
+        $error
+        $message
+        $$queue-1
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
+]

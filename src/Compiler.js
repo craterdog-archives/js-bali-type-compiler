@@ -94,10 +94,7 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
     // extract the parameter names for the procedure
     const parameters = bali.list();
     if (source.isParameterized()) {
-        const keys = Object.keys(source.getParameters());
-        keys.forEach(function(key) {
-            parameters.addItem(key);
-        });
+        parameters.addItems(Object.keys(source.getParameters()));
     }
 
     // add the compilation context to the procedure

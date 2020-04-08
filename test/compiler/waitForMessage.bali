@@ -1,4 +1,57 @@
-{
-    wait for $message from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
-    wait for messages[$foo, 5] from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
-}
+[
+    $source: {
+        wait for $message from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+        wait for messages[$foo, 5] from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+    }
+    $instructions: "
+        1.WaitStatement:
+        PUSH LITERAL `$message`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$queue-1
+        LOAD MESSAGE $$queue-1
+        STORE VARIABLE $message
+        
+        2.WaitStatement:
+        LOAD VARIABLE $messages
+        INVOKE $list
+        PUSH LITERAL `$foo`
+        INVOKE $addItem WITH 2 ARGUMENTS
+        SEND $subcomponent TO COMPONENT WITH ARGUMENTS
+        PUSH LITERAL `5`
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$queue-2
+        LOAD MESSAGE $$queue-2
+        STORE VARIABLE $$index-3
+        INVOKE $list
+        LOAD VARIABLE $$index-3
+        INVOKE $addItem WITH 2 ARGUMENTS
+        SEND $setSubcomponent TO COMPONENT WITH ARGUMENTS
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "($mediatype: "application/basm")
+    $bytecode: '
+        280128028004680480026003A0492803B001C80228042802800568058001
+        A0496001B001C8016006E000
+    '(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $addresses: [
+        "1.WaitStatement": 1
+        "2.WaitStatement": 6
+    ]
+    $parameters: []
+    $variables: [
+        $$index-3
+        $message
+        $messages
+        $$queue-1
+        $$queue-2
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: [
+        $setSubcomponent
+        $subcomponent
+    ]($type: /bali/collections/Set/v1)
+]

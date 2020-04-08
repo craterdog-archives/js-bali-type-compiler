@@ -37,7 +37,6 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 var source = await pfs.readFile(baliFile, 'utf8');
                 var procedure = bali.component(source);
                 expect(procedure).to.exist;
-                procedure = bali.catalog({$source: procedure});
 
                 // create the type context
                 var literals = bali.list();
@@ -53,10 +52,9 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 compiler.assembleProcedure(type, procedure);
 
                 // check for differences
-                var codeFile = testFolder + prefix + '.proc';
                 source = procedure.toString() + '\n';  // POSIX compliant <EOL>
-                //await pfs.writeFile(codeFile, source, 'utf8');
-                var expected = await pfs.readFile(codeFile, 'utf8');
+                //await pfs.writeFile(baliFile, source, 'utf8');
+                var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
             }
@@ -81,10 +79,9 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 await compiler.compileType(type);
 
                 // check for differences
-                var codeFile = testFolder + prefix + '.comp';
                 source = type.toString() + '\n';  // POSIX compliant <EOL>
-                //await pfs.writeFile(codeFile, source, 'utf8');
-                var expected = await pfs.readFile(codeFile, 'utf8');
+                //await pfs.writeFile(baliFile, source, 'utf8');
+                var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
             }

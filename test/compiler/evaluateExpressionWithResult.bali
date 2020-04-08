@@ -1,4 +1,40 @@
-{
-    $foo := bar
-    document[$customer, $order, 3] := 5
-}
+[
+    $source: {
+        $foo := bar
+        document[$customer, $order, 3] := 5
+    }
+    $instructions: "
+        1.EvaluateStatement:
+        LOAD VARIABLE $bar
+        STORE VARIABLE $foo
+        
+        2.EvaluateStatement:
+        PUSH LITERAL `5`
+        STORE VARIABLE $$index-1
+        INVOKE $list
+        LOAD VARIABLE $$index-1
+        INVOKE $addItem WITH 2 ARGUMENTS
+        SEND $setSubcomponent TO COMPONENT WITH ARGUMENTS
+        LOAD VARIABLE $$result
+        HANDLE RESULT
+    "($mediatype: "application/basm")
+    $bytecode: '6001800228018003A0496003B001C8016004E000'(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $addresses: [
+        "1.EvaluateStatement": 1
+        "2.EvaluateStatement": 3
+    ]
+    $parameters: []
+    $variables: [
+        $bar
+        $foo
+        $$index-1
+        $$result
+        $target
+    ]($type: /bali/collections/Set/v1)
+    $messages: [
+        $setSubcomponent
+    ]($type: /bali/collections/Set/v1)
+]
