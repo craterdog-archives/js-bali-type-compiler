@@ -51,21 +51,19 @@ Compiler.prototype.cleanType = async function(type) {
 
     // create the procedures catalog if necessary
     var procedures = type.getValue('$procedures');
-    if (!procedures || procedures.isEqualTo(bali.pattern.NONE)) {
-        procedures = bali.catalog();
-        type.setValue('$procedures', procedures);
-    }
+    if (procedures && !procedures.isEqualTo(bali.pattern.NONE)) {
 
-    // clean each procedure
-    const iterator = procedures.getIterator();
-    while (iterator.hasNext()) {
+        // clean each procedure
+        const iterator = procedures.getIterator();
+        while (iterator.hasNext()) {
 
-        // retrieve the source code for the procedure
-        const association = iterator.getNext();
-        const procedure = association.getValue();
+            // retrieve the source code for the procedure
+            const association = iterator.getNext();
+            const procedure = association.getValue();
 
-        // compile the source code into assembly instructions
-        this.cleanProcedure(procedure);
+            // compile the source code into assembly instructions
+            this.cleanProcedure(procedure);
+        }
     }
 };
 
