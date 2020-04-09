@@ -599,9 +599,9 @@ exports.api = function(debug) {
             return collection.getItems(range);
         },
 
-        $iterator: function(collection) {
-            validateTypeArgument('$iterator', '/bali/abstractions/Collection', collection);
-            return collection.getIterator();
+        $iterator: function(sequential) {
+            validateInterfaceArgument('$iterator', '/bali/interfaces/Sequential', sequential);
+            return sequential.getIterator();
         },
 
         $key: function(association) {
