@@ -15,7 +15,7 @@
                 This procedure attempts to add the specified item to this collection.  The return
                 value indicates whether or not the item was successfully added.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $type: /bali/abstractions/Collection/v1
             $source: {
                 throw [
                     $module: /bali/abstractions/Collection
@@ -68,90 +68,67 @@
                 This procedure attempts to add the specified sequence of items to this collection.
                 The return value indicates the number of item that were successfully added.
             "($mediatype: "application/bsmd")
-            $type: /bali/elements/Number/v1($range: [0..∞])
+            $type: /bali/abstractions/Collection/v1
             $source: {
-                $count := 0
                 with each $item in items do {
-                    if target.addItem(item) then {
-                        $count := count + 1
-                    }
+                    target.addItem(item)
                 }
-                return count
+                return target
             }($items: /bali/interfaces/Sequential/v1)
             $instructions: "
-                1.EvaluateStatement:
-                PUSH LITERAL `0`
-                STORE VARIABLE $count
-                
-                2.WithStatement:
+                1.WithStatement:
                 PUSH PARAMETER $items
                 SEND $iterator TO COMPONENT
                 STORE VARIABLE $$iterator-1
                 
-                2.1.ConditionClause:
+                1.1.ConditionClause:
                 LOAD VARIABLE $$iterator-1
                 SEND $hasNext TO COMPONENT
-                JUMP TO 2.WithStatementDone ON FALSE
+                JUMP TO 1.WithStatementDone ON FALSE
                 LOAD VARIABLE $$iterator-1
                 SEND $next TO COMPONENT
                 STORE VARIABLE $item
                 
-                2.1.1.IfStatement:
-                SKIP INSTRUCTION
-                
-                2.1.1.1.ConditionClause:
+                1.1.1.EvaluateStatement:
                 LOAD VARIABLE $target
                 INVOKE $list
                 LOAD VARIABLE $item
                 INVOKE $addItem WITH 2 ARGUMENTS
                 SEND $addItem TO COMPONENT WITH ARGUMENTS
-                JUMP TO 2.1.1.IfStatementDone ON FALSE
+                STORE VARIABLE $$result
                 
-                2.1.1.1.1.EvaluateStatement:
-                LOAD VARIABLE $count
-                PUSH LITERAL `1`
-                INVOKE $sum WITH 2 ARGUMENTS
-                STORE VARIABLE $count
+                1.ConditionRepeat:
+                JUMP TO 1.1.ConditionClause
                 
-                2.1.1.IfStatementDone:
+                1.WithStatementDone:
                 SKIP INSTRUCTION
                 
-                2.ConditionRepeat:
-                JUMP TO 2.1.ConditionClause
-                
-                2.WithStatementDone:
-                SKIP INSTRUCTION
-                
-                3.ReturnStatement:
-                LOAD VARIABLE $count
+                2.ReturnStatement:
+                LOAD VARIABLE $target
                 HANDLE RESULT
             "($mediatype: "application/basm")
             $bytecode: '
-                280980013801C00380036003C00218196003C004800200006004A0496002
-                B001C80118176001280AB07980010000000600006001E000
+                3801C00380026002C00218116002C00480016004A0496001B001C8018003
+                000400006004E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
             )
             $addresses: [
-                "1.EvaluateStatement": 1
-                "2.WithStatement": 3
-                "2.1.ConditionClause": 6
-                "2.1.1.IfStatement": 12
-                "2.1.1.1.ConditionClause": 13
-                "2.1.1.1.1.EvaluateStatement": 19
-                "2.1.1.IfStatementDone": 23
-                "2.ConditionRepeat": 24
-                "2.WithStatementDone": 25
-                "3.ReturnStatement": 26
+                "1.WithStatement": 1
+                "1.1.ConditionClause": 4
+                "1.1.1.EvaluateStatement": 10
+                "1.ConditionRepeat": 16
+                "1.WithStatementDone": 17
+                "2.ReturnStatement": 18
             ]
             $parameters: [
                 $items
             ]
             $variables: [
-                $count
                 $item
                 $$iterator-1
+                $$result
                 $target
             ]($type: /bali/collections/Set/v1)
             $messages: [
@@ -220,7 +197,7 @@
             "($mediatype: "application/basm")
             $bytecode: '
                 3801C00380026002C00218166002C004800100006003A0496001B001C801
-                A84E1814280BE000000000040000280CE000
+                A84E18142809E000000000040000280AE000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -309,7 +286,7 @@
             "($mediatype: "application/basm")
             $bytecode: '
                 3801C00380026002C00218156002C004800100006003A0496001B001C801
-                1813280CE000000000040000280BE000
+                1813280AE0000000000400002809E000
             '(
                 $encoding: $base16
                 $mediatype: "application/bcod"
@@ -376,7 +353,7 @@
                 HANDLE EXCEPTION
             "($mediatype: "application/basm")
             $bytecode: '
-                A01428012802B00BB0012803280DB00BB00128052806B00BB00128072808
+                A01428012802B00BB0012803280BB00BB00128052806B00BB00128072808
                 B00BB001E800
             '(
                 $encoding: $base16
@@ -526,8 +503,8 @@
         ]
         $item: [
             $description: "
-                This procedure returns from this collection the item corresponding to the the
-                specified index.
+                This procedure returns from this collection the item corresponding to the specified
+                index.
             "($mediatype: "application/bsmd")
             $type: /bali/abstractions/Component/v1
             $source: {
@@ -560,7 +537,7 @@
                 HANDLE EXCEPTION
             "($mediatype: "application/basm")
             $bytecode: '
-                A01428012802B00BB0012803280EB00BB00128052806B00BB00128072808
+                A01428012802B00BB0012803280CB00BB00128052806B00BB00128072808
                 B00BB001E800
             '(
                 $encoding: $base16
@@ -703,7 +680,7 @@
                 HANDLE EXCEPTION
             "($mediatype: "application/basm")
             $bytecode: '
-                A01428012802B00BB0012803280FB00BB00128052806B00BB00128072808
+                A01428012802B00BB0012803280DB00BB00128052806B00BB00128072808
                 B00BB001E800
             '(
                 $encoding: $base16
@@ -753,7 +730,7 @@
                 HANDLE EXCEPTION
             "($mediatype: "application/basm")
             $bytecode: '
-                A01428012802B00BB00128032810B00BB00128052806B00BB00128072808
+                A01428012802B00BB0012803280EB00BB00128052806B00BB00128072808
                 B00BB001E800
             '(
                 $encoding: $base16
@@ -778,8 +755,6 @@
         $abstractMethod
         $text
         "An abstract method must be implemented by a subclass."
-        0
-        1
         false
         true
         $containsItem

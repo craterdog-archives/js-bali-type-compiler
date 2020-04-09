@@ -80,7 +80,7 @@ describe('Bali Nebula™ Procedure Compiler', function() {
 
                 // check for differences
                 source = type.toString() + '\n';  // POSIX compliant <EOL>
-                //await pfs.writeFile(baliFile, source, 'utf8');
+                await pfs.writeFile(baliFile, source, 'utf8');
                 var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);

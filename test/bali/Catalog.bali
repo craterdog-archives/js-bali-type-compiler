@@ -1,0 +1,440 @@
+[
+    $description: "
+        This class defines the procedures for the messages that catalog components support.
+    "($mediatype: "application/bsmd")
+    $parent: /bali/abstractions/Collection/v1
+    $parameters: [:]
+    $constants: [:]
+    $interfaces: [
+        /bali/interfaces/Chainable
+        /bali/interfaces/Sortable
+    ]
+    $procedures: [
+        $addItem: [
+            $description: "
+                This procedure attempts to add the specified association to this catalog.  The
+                return value indicates whether or not the association was successfully added.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1
+            $source: {
+                return addItem(target, association)
+            }($association: /bali/composites/Association/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $association
+                INVOKE $addItem WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B001E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $association
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $containsItem: [
+            $description: "
+                This procedure determines whether or not this catalog contains the specified
+                association.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Probability/v1($granularity: $boolean)
+            $source: {
+                return containsItem(target, association)
+            }($association: /bali/composites/Association/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $association
+                INVOKE $containsItem WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B01DE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $association
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $item: [
+            $description: "
+                This procedure returns from this catalog the association corresponding to the
+                specified index.
+            "($mediatype: "application/bsmd")
+            $type: /bali/composites/Association/v1
+            $source: {
+                return item(target, index)
+            }($index: /bali/elements/Number/v1($range: [0..∞]))
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $index
+                INVOKE $item WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B040E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $index
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $iterator: [
+            $description: "
+                This procedure returns an iterator that can be used to visit, in order, each
+                association in this catalog.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Iterator/v1
+            $source: {
+                return iterator(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $iterator WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A842E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $keys: [
+            $description: "
+                This procedure returns from this catalog a list containing the keys in the
+                same order as they are in the catalog.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1
+            $source: {
+                return keys(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $keys WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A844E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $removeAll: [
+            $description: "
+                This procedure removes all associations from this catalog.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1
+            $source: {
+                return removeAll(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $removeAll WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A863E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $removeValue: [
+            $description: "
+                This procedure removes from this catalog the value associated with the specified
+                key.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                return removeValue(target, key)
+            }($key: /bali/abstractions/Element/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $key
+                INVOKE $removeValue WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B06AE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $key
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $removeValues: [
+            $description: "
+                This procedure removes from this catalog the values associated with the specified
+                keys.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1
+            $source: {
+                return removeValues(target, keys)
+            }($keys: /bali/collections/List/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $keys
+                INVOKE $removeValues WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B06BE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $keys
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $reverseItems: [
+            $description: "
+                This procedure reverses the order of the associations contained in this catalog.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1
+            $source: {
+                return reverseItems(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $reverseItems WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A86CE000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $setValue: [
+            $description: "
+                This procedure associates in this catalog the specified key with the specified
+                value.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1
+            $source: {
+                return setValue(target, key, value)
+            }(
+                $key: /bali/abstractions/Element/v1
+                $value: /bali/abstractions/Component/v1
+            )
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $key
+                PUSH PARAMETER $value
+                INVOKE $setValue WITH 3 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '600138013802B872E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $key
+                $value
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $sortItems: [
+            $description: "
+                This procedure orders the associations contained in this catalog in their
+                natural order by key.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/Catalog/v1
+            $source: {
+                return sortItems(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $sortItems WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A876E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $size: [
+            $description: "
+                This procedure returns the number of associations contained in this catalog.
+            "($mediatype: "application/bsmd")
+            $type: /bali/elements/Number/v1($range: [0..∞])
+            $source: {
+                return size(target)
+            }
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                INVOKE $size WITH 1 ARGUMENT
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '6001A875E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: []
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $value: [
+            $description: "
+                This procedure returns from this catalog the value corresponding to the
+                specified key.
+            "($mediatype: "application/bsmd")
+            $type: /bali/abstractions/Component/v1
+            $source: {
+                return value(target, key)
+            }($key: /bali/abstractions/Element/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $key
+                INVOKE $value WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B084E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $key
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+        $values: [
+            $description: "
+                This procedure returns from this catalog a list of the values corresponding to the
+                specified keys.
+            "($mediatype: "application/bsmd")
+            $type: /bali/collections/List/v1
+            $source: {
+                return values(target, keys)
+            }($keys: /bali/interfaces/Sequential/v1)
+            $instructions: "
+                1.ReturnStatement:
+                LOAD VARIABLE $target
+                PUSH PARAMETER $keys
+                INVOKE $values WITH 2 ARGUMENTS
+                HANDLE RESULT
+            "($mediatype: "application/basm")
+            $bytecode: '60013801B085E000'(
+                $encoding: $base16
+                $mediatype: "application/bcod"
+            )
+            $addresses: [
+                "1.ReturnStatement": 1
+            ]
+            $parameters: [
+                $keys
+            ]
+            $variables: [
+                $target
+            ]($type: /bali/collections/Set/v1)
+            $messages: []($type: /bali/collections/Set/v1)
+        ]
+    ]
+    $literals: []
+](
+    $name: /bali/collections/Catalog/v1
+    $type: /bali/abstractions/Class/v1($existence: $concrete)
+    $tag: #MK7A2JDNQHGYPB8QW8K40LC5PQ29G48K
+    $version: v1
+    $permissions: /bali/permissions/public/v1
+    $previous: none
+)
