@@ -42,29 +42,21 @@ exports.Compiler = Compiler;
 
 
 /**
- * This function compiles a type definition so that it may be run on the Bali Nebula™ virtual
- * machine.
+ * This function cleans a type definition so that it does not contain any compilation attributes.
  *
- * @param {Catalog} type The type definition to be compiled.
+ * @param {Catalog} type The type definition to be cleaned.
  */
-Compiler.prototype.compileType = async function(type) {
-    const assembler = new Assembler(this.debug);
+Compiler.prototype.cleanType = async function(type) {
+    type.removeValue('$literals');
 
-    var constants = type.getValue('$constants');
-    if (!constants || constants.isEqualTo(bali.pattern.NONE)) {
-        constants = bali.catalog();
-        type.setValue('$constants', constants);
-    }
-
+    // create the procedures catalog if necessary
     var procedures = type.getValue('$procedures');
     if (!procedures || procedures.isEqualTo(bali.pattern.NONE)) {
         procedures = bali.catalog();
         type.setValue('$procedures', procedures);
     }
 
-    type.setValue('$literals', bali.list());
-
-    // compile each procedure
+    // clean each procedure
     const iterator = procedures.getIterator();
     while (iterator.hasNext()) {
 
@@ -73,10 +65,74 @@ Compiler.prototype.compileType = async function(type) {
         const procedure = association.getValue();
 
         // compile the source code into assembly instructions
-        this.compileProcedure(type, procedure);
+        this.cleanProcedure(procedure);
+    }
+};
 
-        // assemble the instructions into bytecode
-        assembler.assembleProcedure(type, procedure);
+
+/**
+ * This function cleans a procedure definition so that it does not contain any compilation
+ * attributes.
+ *
+ * @param {Catalog} procedure The procedure definition to be cleaned.
+ */
+Compiler.prototype.cleanProcedure = async function(procedure) {
+    procedure.removeValue('$instructions');
+    procedure.removeValue('$bytecode');
+    procedure.removeValue('$addresses');
+    procedure.removeValue('$parameters');
+    procedure.removeValue('$variables');
+    procedure.removeValue('$messages');
+};
+
+
+/**
+ * This function compiles a type definition so that it may be run on the Bali Nebula™ virtual
+ * machine.
+ *
+ * @param {Catalog} type The type definition to be compiled.
+ */
+Compiler.prototype.compileType = async function(type) {
+    const assembler = new Assembler(this.debug);
+
+    var parent = type.getValue('$parent');
+    if (!parent || parent.isEqualTo(bali.pattern.NONE)) {
+        parent = bali.component('/bali/abstractions/Component/v1');
+        type.setValue('$parent', parent);
+    }
+
+    var parameters = type.getValue('$parameters');
+    if (!parameters || parameters.isEqualTo(bali.pattern.NONE)) {
+        parameters = bali.catalog();
+        type.setValue('$parameters', parameters);
+    }
+
+    var constants = type.getValue('$constants');
+    if (!constants || constants.isEqualTo(bali.pattern.NONE)) {
+        constants = bali.catalog();
+        type.setValue('$constants', constants);
+    }
+
+    var procedures = type.getValue('$procedures');
+    if (procedures && !procedures.isEqualTo(bali.pattern.NONE)) {
+
+        // create the literals list
+        type.setValue('$literals', bali.list());
+
+        // compile each procedure
+        const iterator = procedures.getIterator();
+        while (iterator.hasNext()) {
+
+            // retrieve the source code for the procedure
+            const association = iterator.getNext();
+            const procedure = association.getValue();
+
+            // compile the source code into assembly instructions
+            this.compileProcedure(type, procedure);
+
+            // assemble the instructions into bytecode
+            assembler.assembleProcedure(type, procedure);
+        }
     }
 };
 

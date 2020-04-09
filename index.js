@@ -32,6 +32,26 @@ exports.api = function(debug) {
     return {
 
         /**
+         * This function cleans removes all compilation attributes from a type definition.
+         *
+         * @param {Catalog} type The type definition to be cleaned.
+         */
+        cleanType: function(type) {
+            const compiler = new Compiler(debug);
+            compiler.cleanType(type);
+        },
+
+        /**
+         * This function cleans removes all compilation attributes from a procedure definition.
+         *
+         * @param {Catalog} procedure The procedure being cleaned.
+         */
+        cleanProcedure: function(procedure) {
+            const compiler = new Compiler(debug);
+            compiler.cleanProcedure(procedure);
+        },
+
+        /**
          * This function compiles a type definition.
          *
          * @param {Catalog} type The type definition to be compiled.
