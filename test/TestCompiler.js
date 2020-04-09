@@ -19,7 +19,7 @@ const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
 const compiler = require('../index').api(debug);
 
 
-describe('Bali Nebula™ Procedure Compiler', function() {
+describe('Bali Nebula™ Type Compiler', function() {
 
     describe('Test the compiler and assembler.', function() {
 
@@ -54,33 +54,6 @@ describe('Bali Nebula™ Procedure Compiler', function() {
                 // check for differences
                 source = procedure.toString() + '\n';  // POSIX compliant <EOL>
                 //await pfs.writeFile(baliFile, source, 'utf8');
-                var expected = await pfs.readFile(baliFile, 'utf8');
-                expect(expected).to.exist;
-                expect(source).to.equal(expected);
-            }
-        });
-
-        it('should compile the Bali Nebula™ types', async function() {
-            const testFolder = 'test/bali/';
-            const files = await pfs.readdir(testFolder);
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                if (!file.endsWith('.bali')) continue;
-
-                // read in the source code
-                console.log('      ' + file + '.bali');
-                var prefix = file.split('.').slice(0, 1);
-                var baliFile = testFolder + prefix + '.bali';
-                var source = await pfs.readFile(baliFile, 'utf8');
-                const type = bali.component(source);
-                expect(type).to.exist;
-
-                // compile the source code
-                await compiler.compileType(type);
-
-                // check for differences
-                source = type.toString() + '\n';  // POSIX compliant <EOL>
-                await pfs.writeFile(baliFile, source, 'utf8');
                 var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);
