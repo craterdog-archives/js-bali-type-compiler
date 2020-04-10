@@ -868,6 +868,14 @@ exports.api = function(debug) {
             return bali.set(items, parameters);
         },
 
+        $setSubcomponent: function(composite, index, subcomponent) {
+            validateInterfaceArgument('$setSubcomponent', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$setSubcomponent', '/bali/abstractions/Element', index);
+            validateTypeArgument('$setSubcomponent', '/bali/abstractions/Component', subcomponent);
+            composite.setSubcomponent(index, subcomponent);
+            return composite;
+        },
+
         $setItem: function(list, index, item) {
             validateTypeArgument('$setItem', '/bali/collections/List', list);
             validateTypeArgument('$setItem', '/bali/elements/Number', index);
@@ -918,6 +926,12 @@ exports.api = function(debug) {
         $statements: function(procedure) {
             validateTypeArgument('$statements', '/bali/composites/Procedure', procedure);
             return procedure.getStatements();
+        },
+
+        $subcomponent: function(composite, index) {
+            validateInterfaceArgument('$subcomponent', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$subcomponent', '/bali/abstractions/Element', index);
+            return composite.getSubcomponent(index);
         },
 
         $sum: function(first, second) {

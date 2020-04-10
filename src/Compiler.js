@@ -888,17 +888,11 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
     var count = tree.getSize() - 1;  // skip the last index
     const iterator = tree.getIterator();
     while (count--) {
-        // the VM places a new empty arguments list on the component stack
-        this.builder.insertInvokeInstruction('$list', 0);  // list()
-
         // the VM places the value of the next index onto the top of the component stack
         iterator.getNext().acceptVisitor(this);
 
-        // the VM adds the index to the arguments list as its only item
-        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, item)
-
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertSendInstruction('$subcomponent', 'TO COMPONENT WITH ARGUMENTS');
+        this.builder.insertInvokeInstruction('$subcomponent', 2);  // subcomponent(composite, index)
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -1415,19 +1409,8 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     // the VM replaces the value on the component stack with the parent and index of the subcomponent
     indices.acceptVisitor(this);
 
-    // the VM saves off the index for after the list is created
-    const index = this.createTemporaryVariable('index');
-    this.builder.insertStoreInstruction('VARIABLE', index);
-
-    // the VM places a new empty arguments list on the component stack
-    this.builder.insertInvokeInstruction('$list', 0);  // list()
-
-    // the VM adds the index to the arguments list as its only item
-    this.builder.insertLoadInstruction('VARIABLE', index);
-    this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
-
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertSendInstruction('$subcomponent', 'TO COMPONENT WITH ARGUMENTS');
+    this.builder.insertInvokeInstruction('$subcomponent', 2);  // subcomponent(composite, index)
     // the parent and index have been replaced by the value of the subcomponent
 };
 
@@ -1635,19 +1618,8 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         const symbol = recipient.toString();
         this.builder.insertStoreInstruction('VARIABLE', symbol);
     } else {
-        // the VM saves off the index for after the arguments list is created
-        const index = this.createTemporaryVariable('index');
-        this.builder.insertStoreInstruction('VARIABLE', index);
-
-        // the VM places a new empty arguments list on the component stack
-        this.builder.insertInvokeInstruction('$list', 0);  // list()
-
-        // the VM adds the index to the arguments list as its only item
-        this.builder.insertLoadInstruction('VARIABLE', index);
-        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(arguments, index)
-
         // the VM sets the value of the subcomponent at the given index of the parent component
-        this.builder.insertSendInstruction('$setSubcomponent', 'TO COMPONENT WITH ARGUMENTS');
+        this.builder.insertInvokeInstruction('$setSubcomponent', 3);
     }
 };
 

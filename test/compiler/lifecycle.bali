@@ -34,49 +34,36 @@
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-4
         LOAD DOCUMENT $$location-4
-        STORE VARIABLE $$index-5
-        INVOKE $list
-        LOAD VARIABLE $$index-5
-        INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $setSubcomponent TO COMPONENT WITH ARGUMENTS
+        INVOKE $setSubcomponent WITH 3 ARGUMENTS
         
         5.SaveStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $$location-5
+        LOAD VARIABLE $documents
+        LOAD VARIABLE $index
+        INVOKE $subcomponent WITH 2 ARGUMENTS
+        STORE DRAFT $$location-5
+        
+        6.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $$location-6
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
-        STORE VARIABLE $$index-7
-        INVOKE $list
-        LOAD VARIABLE $$index-7
-        INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $subcomponent TO COMPONENT WITH ARGUMENTS
-        STORE DRAFT $$location-6
-        
-        6.CommitStatement:
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-8
-        LOAD VARIABLE $documents
-        LOAD VARIABLE $index
-        STORE VARIABLE $$index-9
-        INVOKE $list
-        LOAD VARIABLE $$index-9
-        INVOKE $addItem WITH 2 ARGUMENTS
-        SEND $subcomponent TO COMPONENT WITH ARGUMENTS
-        STORE DOCUMENT $$location-8
+        INVOKE $subcomponent WITH 2 ARGUMENTS
+        STORE DOCUMENT $$location-6
         
         7.DiscardStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-10
+        STORE VARIABLE $$location-7
         PUSH LITERAL `none`
-        STORE DRAFT $$location-10
+        STORE DRAFT $$location-7
         LOAD VARIABLE $$result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
-        2801280280077807800128028009600190092802800A6001980A60026003
-        2802800B780B8004A0496004B001C8012802800C600260038005A0496005
-        B001C802900C2802800D600260038006A0496006B001C802980D28028008
-        28039008600EE000
+        280128028004780480012802800560019005280280066001980660026003
+        280280077807B8712802800860026003B07A90082802800960026003B07A
+        98092802800A2803900A600BE000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"
@@ -86,30 +73,24 @@
         "2.SaveStatement": 6
         "3.CommitStatement": 10
         "4.CheckoutStatement": 14
-        "5.SaveStatement": 24
-        "6.CommitStatement": 34
-        "7.DiscardStatement": 44
+        "5.SaveStatement": 20
+        "6.CommitStatement": 26
+        "7.DiscardStatement": 32
     ]
     $parameters: []
     $variables: [
         $document
         $documents
         $index
-        $$index-5
-        $$index-7
-        $$index-9
         $$location-1
-        $$location-10
         $$location-2
         $$location-3
         $$location-4
+        $$location-5
         $$location-6
-        $$location-8
+        $$location-7
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
-    $messages: [
-        $setSubcomponent
-        $subcomponent
-    ]($type: /bali/collections/Set/v1)
+    $messages: []($type: /bali/collections/Set/v1)
 ]
