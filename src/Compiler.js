@@ -165,8 +165,6 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
 
     // format the instructions and add to the compiled procedure
     var instructions = visitor.getInstructions();
-    console.log('procedure: ' + procedure);
-    console.log('instructions: ' + instructions);
     const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
