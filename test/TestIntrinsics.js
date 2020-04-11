@@ -36,7 +36,7 @@ const range = bali.range(1, 5);
 const set = bali.set();
 const stack = bali.stack();
 const symbol = bali.component('$type');
-const statements = bali.tree('/bali/composites/Statements');
+const statements = bali.tree('/bali/structures/Statements');
 const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3]);
@@ -2318,6 +2318,42 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $setSubcomponent intrinsic function', function() {
+            const index = intrinsics.index('$setSubcomponent');
+            intrinsics.invoke(index, bali.list([0, 1, 2]), two, angle);
+            intrinsics.invoke(index, bali.catalog({$foo: "bar", $type: "baz"}), symbol, type);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]));
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), 2, probability);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.list([0, 1, 2]), two, 5);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, bali.set([0, 1, 2]), two, probability);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $setValue intrinsic function', function() {
             const index = intrinsics.index('$setValue');
             intrinsics.invoke(index, catalog, symbol, text);
@@ -2442,6 +2478,27 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $subcomponent intrinsic function', function() {
+            const index = intrinsics.index('$subcomponent');
+            intrinsics.invoke(index, list, two);
+            intrinsics.invoke(index, catalog, symbol);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, catalog, 5);
                 }
             ).to.throw();
         });

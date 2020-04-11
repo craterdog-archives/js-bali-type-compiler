@@ -23,7 +23,7 @@
         LOAD VARIABLE $$result
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '2801280280036803800160022803B07A2804280280046804B8716005E000'(
+    $bytecode: '2801280280036803800160022803B07A2804280280046804B8726005E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

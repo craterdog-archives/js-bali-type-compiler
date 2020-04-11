@@ -16,7 +16,7 @@
  * Bali Nebula™ virtual processor.
  */
 const bali = require('bali-component-framework').api();
-const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
+const Visitor = require('bali-component-framework/src/types/Visitor').Visitor;
 const Assembler = require('./Assembler').Assembler;
 const Parser = require('./Parser').Parser;
 const Formatter = require('./Formatter').Formatter;
@@ -95,7 +95,7 @@ Compiler.prototype.compileType = async function(type) {
 
     var parent = type.getValue('$parent');
     if (!parent || parent.isEqualTo(bali.pattern.NONE)) {
-        parent = bali.component('/bali/abstractions/Component/v1');
+        parent = bali.component('/bali/types/Component/v1');
         type.setValue('$parent', parent);
     }
 
@@ -165,6 +165,8 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
 
     // format the instructions and add to the compiled procedure
     var instructions = visitor.getInstructions();
+    console.log('procedure: ' + procedure);
+    console.log('instructions: ' + instructions);
     const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
@@ -658,7 +660,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         const recipient = tree.getItem(1);
-        if (recipient.isType('/bali/composites/SubcomponentExpression')) {
+        if (recipient.isType('/bali/structures/SubcomponentExpression')) {
             recipient.acceptVisitor(this);
         }
 
@@ -1646,7 +1648,7 @@ function getSubclauses(statement) {
     const iterator = statement.getIterator();
     while (iterator.hasNext()) {
         var item = iterator.getNext();
-        if (item.isType('/bali/composites/Block')) {
+        if (item.isType('/bali/structures/Block')) {
             subClauses.push(item);
         }
     }
@@ -1733,7 +1735,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
 
     // initialize the procedure configuration for this statement
     const statement = procedure.statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.clauseCount > 0) {
@@ -1825,7 +1827,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
     return type;
 };
 
