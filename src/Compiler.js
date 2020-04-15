@@ -359,7 +359,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 // collection: range | list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
     var numberOfArguments = collection.isParameterized() ? 1 : 0;
-    if (collection.isType('/bali/collections/Range')) {
+    if (collection.isType('/bali/elements/Range')) {
         var parameters;
         if (numberOfArguments) {
             // the VM saves off the parameters for after the indices are loaded

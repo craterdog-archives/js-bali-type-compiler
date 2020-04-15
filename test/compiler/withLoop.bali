@@ -75,7 +75,7 @@
         "1.ConditionRepeat": 21
         "1.WithStatementDone": 22
     ]
-    $parameters: []
+    $parameters: [ ]
     $variables: [
         $$item-1
         $$iterator-2

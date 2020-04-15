@@ -68,12 +68,12 @@
         "1.3.ElseClauseDone": 15
         "1.IfStatementDone": 16
     ]
-    $parameters: []
+    $parameters: [ ]
     $variables: [
         $no
         $$result
         $target
         $yes
     ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
+    $messages: [ ]($type: /bali/collections/Set/v1)
 ]

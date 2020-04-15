@@ -22,12 +22,12 @@
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
     ]
-    $parameters: []
+    $parameters: [ ]
     $variables: [
         $bar
         $foo
         $$result
         $target
     ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
+    $messages: [ ]($type: /bali/collections/Set/v1)
 ]

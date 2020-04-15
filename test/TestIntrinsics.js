@@ -8,10 +8,11 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
+const debug = 0;
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework').api();
-const intrinsics = require('../src/Intrinsics').api();
+const bali = require('bali-component-framework').api(debug);
+const intrinsics = require('../src/Intrinsics').api(debug);
 const generator = bali.generator();
 const angle = bali.angle.PI;
 const binary = bali.binary(generator.generateBytes(10));
@@ -41,7 +42,7 @@ const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3]);
 const iterator = list.getIterator();
-const procedure = bali.procedure(statements, bali.catalog({$foo: 'bar'}));
+const procedure = bali.procedure(statements, {$foo: 'bar'});
 const array = [];
 const object = {};
 
@@ -1943,16 +1944,6 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, zero, two, bali.catalog({$collection: [0, 1, 2]}));
             expect(
                 function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, zero);
-                }
-            ).to.throw();
-            expect(
-                function() {
                     intrinsics.invoke(index, zero, 2);
                 }
             ).to.throw();
@@ -2115,6 +2106,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $removeRange intrinsic function', function() {
             const index = intrinsics.index('$removeRange');
+            const list = bali.list([1, 2, 3, 4, 5, 6]);
             intrinsics.invoke(index, list, range);
             expect(
                 function() {
@@ -2484,6 +2476,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $subcomponent intrinsic function', function() {
             const index = intrinsics.index('$subcomponent');
+            const list = bali.list([1, 2, 3]);
             intrinsics.invoke(index, list, two);
             intrinsics.invoke(index, catalog, symbol);
             expect(

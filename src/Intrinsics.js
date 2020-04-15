@@ -268,6 +268,7 @@ exports.api = function(debug) {
         $base2: function(binary, indentation) {
             validateTypeArgument('$base2', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
                 validateIndex('$base2', 20, indentation);
@@ -279,6 +280,7 @@ exports.api = function(debug) {
         $base16: function(binary, indentation) {
             validateTypeArgument('$base16', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
                 validateIndex('$base16', 20, indentation);
@@ -290,6 +292,7 @@ exports.api = function(debug) {
         $base32: function(binary, indentation) {
             validateTypeArgument('$base32', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
                 validateIndex('$base32', 20, indentation);
@@ -301,6 +304,7 @@ exports.api = function(debug) {
         $base64: function(binary, indentation) {
             validateTypeArgument('$base64', '/bali/elements/Binary', binary);
             validateOptionalTypeArgument('$base64', '/bali/elements/Number', indentation);
+            indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
                 validateIndex('$base64', 20, indentation);
@@ -461,8 +465,9 @@ exports.api = function(debug) {
         },
 
         $first: function(range) {
-            validateTypeArgument('$first', '/bali/collections/Range', range);
-            return range.getFirstItem();
+            validateTypeArgument('$first', '/bali/elements/Range', range);
+            const first = range.getFirst();
+            return (first === undefined) ? bali.pattern.NONE : bali.number(first);
         },
 
         $format: function(moment) {
@@ -595,7 +600,7 @@ exports.api = function(debug) {
 
         $items: function(collection, range) {
             validateTypeArgument('$items', '/bali/types/Collection', collection);
-            validateTypeArgument('$items', '/bali/collections/Range', range);
+            validateTypeArgument('$items', '/bali/elements/Range', range);
             return collection.getItems(range);
         },
 
@@ -620,8 +625,9 @@ exports.api = function(debug) {
         },
 
         $last: function(range) {
-            validateTypeArgument('$last', '/bali/collections/Range', range);
-            return range.getLastItem();
+            validateTypeArgument('$last', '/bali/elements/Range', range);
+            const last = range.getLast();
+            return (last === undefined) ? bali.pattern.NONE : bali.number(last);
         },
 
         $later: function(moment, duration) {
@@ -759,10 +765,11 @@ exports.api = function(debug) {
         },
 
         $range: function(first, last, parameters) {
-            validateTypeArgument('$range', '/bali/types/Component', first);
-            validateTypeArgument('$range', '/bali/types/Component', last);
+            validateOptionalTypeArgument('$range', '/bali/elements/Number', first);
+            validateOptionalTypeArgument('$range', '/bali/elements/Number', last);
             validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
-            validateSameType('$range', first, last);
+            if (first) first = first.toNumber();
+            if (last) last = last.toNumber();
             if (parameters) parameters = parameters.toObject();
             return bali.range(first, last, parameters);
         },
@@ -799,25 +806,29 @@ exports.api = function(debug) {
             validateTypeArgument('$removeIndex', '/bali/elements/Number', index);
             index = index.toNumber();
             validateIndex('$removeIndex', list.getSize(), index);
-            return list.removeItem(index);
+            list.removeItem(index);
+            return list;
         },
 
         $removeItem: function(set, item) {
             validateTypeArgument('$removeItem', '/bali/collections/Set', set);
             validateTypeArgument('$removeItem', '/bali/types/Component', item);
-            return bali.probability(set.removeItem(item));
+            set.removeItem(item);
+            return set;
         },
 
         $removeItems: function(set, items) {
             validateTypeArgument('$removeItems', '/bali/collections/Set', set);
             validateTypeArgument('$removeItems', '/bali/types/Collection', items);
-            return bali.number(set.removeItems(items));
+            set.removeItems(items);
+            return set;
         },
 
         $removeRange: function(list, range) {
             validateTypeArgument('$removeRange', '/bali/collections/List', list);
-            validateTypeArgument('$removeRange', '/bali/collections/Range', range);
-            return list.removeItems(range);
+            validateTypeArgument('$removeRange', '/bali/elements/Range', range);
+            list.removeItems(range);
+            return list;
         },
 
         $removeTop: function(stack) {
@@ -828,13 +839,15 @@ exports.api = function(debug) {
         $removeValue: function(catalog, key) {
             validateTypeArgument('$removeValue', '/bali/collections/Catalog', catalog);
             validateTypeArgument('$removeValue', '/bali/types/Element', key);
-            return catalog.removeValue(key);
+            catalog.removeValue(key);
+            return catalog;
         },
 
         $removeValues: function(catalog, keys) {
             validateTypeArgument('$removeValues', '/bali/collections/Catalog', catalog);
             validateTypeArgument('$removeValues', '/bali/collections/List', keys);
-            return catalog.removeValues(keys);
+            catalog.removeValues(keys);
+            return catalog;
         },
 
         $reverseItems: function(sortable) {
@@ -878,11 +891,11 @@ exports.api = function(debug) {
             return list;
         },
 
-        $setSubcomponent: function(composite, index, subcomponent) {
+        $setSubcomponent: function(composite, element, subcomponent) {
             validateInterfaceArgument('$setSubcomponent', '/bali/interfaces/Composite', composite);
-            validateTypeArgument('$setSubcomponent', '/bali/types/Element', index);
+            validateTypeArgument('$setSubcomponent', '/bali/types/Element', element);
             validateTypeArgument('$setSubcomponent', '/bali/types/Component', subcomponent);
-            composite.setSubcomponent(index, subcomponent);
+            composite.setSubcomponent(element, subcomponent);
             return composite;
         },
 
@@ -928,10 +941,10 @@ exports.api = function(debug) {
             return procedure.getStatements();
         },
 
-        $subcomponent: function(composite, index) {
+        $subcomponent: function(composite, element) {
             validateInterfaceArgument('$subcomponent', '/bali/interfaces/Composite', composite);
-            validateTypeArgument('$subcomponent', '/bali/types/Element', index);
-            return composite.getSubcomponent(index);
+            validateTypeArgument('$subcomponent', '/bali/types/Element', element);
+            return composite.getSubcomponent(element);
         },
 
         $sum: function(first, second) {

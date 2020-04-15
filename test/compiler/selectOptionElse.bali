@@ -91,11 +91,11 @@
         "1.4.ElseClauseDone": 27
         "1.SelectStatementDone": 28
     ]
-    $parameters: []
+    $parameters: [ ]
     $variables: [
         $$result
         $$selector-1
         $target
     ]($type: /bali/collections/Set/v1)
-    $messages: []($type: /bali/collections/Set/v1)
+    $messages: [ ]($type: /bali/collections/Set/v1)
 ]
