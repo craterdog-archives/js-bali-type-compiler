@@ -94,7 +94,7 @@ Compiler.prototype.compileType = async function(type) {
     const assembler = new Assembler(this.debug);
 
     var parent = type.getValue('$parent');
-    if (!parent || parent.isEqualTo(bali.pattern.NONE)) {
+    if (!parent) {
         parent = bali.component('/bali/types/Component/v1');
         type.setValue('$parent', parent);
     }
