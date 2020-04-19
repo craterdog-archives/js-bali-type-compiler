@@ -1,6 +1,6 @@
 [
     $source: {
-        with $sequence do {
+        with 1..10 do {
             $x := true
             if x then {
                 $y := none
@@ -11,7 +11,7 @@
     }
     $instructions: "
         1.WithStatement:
-        PUSH LITERAL `$sequence`
+        PUSH LITERAL `1..10`
         SEND $iterator TO COMPONENT
         STORE VARIABLE $$iterator-2
         

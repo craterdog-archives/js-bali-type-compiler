@@ -356,51 +356,23 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
  * This method inserts the instructions that cause the VM to place the collection
  * on top of the component stack.
  */
-// collection: range | list | catalog
+// collection: list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
     var numberOfArguments = collection.isParameterized() ? 1 : 0;
-    if (collection.isType('/bali/elements/Range')) {
-        var parameters;
-        if (numberOfArguments) {
-            // the VM saves off the parameters for after the indices are loaded
-            parameters = this.createTemporaryVariable('parameters');
-            this.builder.insertStoreInstruction('VARIABLE', parameters);
-        }
+    // the VM replaces any parameters on the component stack with a new parameterized collection
+    var type = collection.getType().split('/')[3];
+    type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
+    this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
 
-        // the VM places the value of the starting expression on the component stack
-        const first = collection.getFirst();
-        first.acceptVisitor(this);  // first value in the range
-
-        // the VM places the value of the ending expression on the component stack
-        const last = collection.getLast();
-        last.acceptVisitor(this);  // last value in the range
-
-        if (numberOfArguments) {
-            // load the parameters back onto the component stack
-            this.builder.insertLoadInstruction('VARIABLE', parameters);
-        }
-
-        // the VM replaces the arguments on the component stack with a new parameterized range
-        numberOfArguments += 2;  // for the first and last values
-        this.builder.insertInvokeInstruction('$range', numberOfArguments);  // range(first, last, parameters)
-
-    } else {
-        // the VM replaces any parameters on the component stack with a new parameterized collection
-        var type = collection.getType().split('/')[3];
-        type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-        this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
-
-        // the VM adds each expression to the collection
-        this.depth++;
-        const iterator = collection.getIterator();
-        while (iterator.hasNext()) {
-            var item = iterator.getNext();
-            item.acceptVisitor(this);
-            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(collection, item)
-        }
-        this.depth--;
+    // the VM adds each expression to the collection
+    this.depth++;
+    const iterator = collection.getIterator();
+    while (iterator.hasNext()) {
+        var item = iterator.getNext();
+        item.acceptVisitor(this);
+        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(collection, item)
     }
-
+    this.depth--;
     // the parameterized collection remains on the component stack
 };
 
@@ -630,6 +602,7 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 //     number |
 //     percent |
 //     probability |
+//     range |
 //     reference |
 //     symbol |
 //     tag |
@@ -1150,6 +1123,12 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 
     // the VM stores the event on the event queue
     this.builder.insertStoreInstruction('MESSAGE', '$$eventQueue');
+};
+
+
+// range: ('0' | REAL)? '..' ('0' | REAL)?
+CompilingVisitor.prototype.visitRange = function(range) {
+    this.visitElement(range);
 };
 
 
