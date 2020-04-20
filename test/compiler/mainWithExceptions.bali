@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         post message on <bali:/queues/myqueue> handle $error matching [
             $type: "bad"
         ] with {

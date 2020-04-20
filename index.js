@@ -42,13 +42,13 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function cleans removes all compilation attributes from a procedure definition.
+         * This function cleans removes all compilation attributes from a method definition.
          *
-         * @param {Catalog} procedure The procedure being cleaned.
+         * @param {Catalog} method The method being cleaned.
          */
-        cleanProcedure: function(procedure) {
+        cleanMethod: function(method) {
             const compiler = new Compiler(debug);
-            compiler.cleanProcedure(procedure);
+            compiler.cleanMethod(method);
         },
 
         /**
@@ -62,30 +62,30 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function compiles the Bali Nebula™ source code for a procedure into a compilation
+         * This function compiles the Bali Nebula™ source code for a method into a compilation
          * context containing the corresponding Bali Nebula™ virtual machine instructions.
          *
-         * @param {Catalog} type A catalog containing the type context for the procedure being
+         * @param {Catalog} type A catalog containing the type context for the method being
          * compiled.
-         * @param {Catalog} procedure The procedure being compiled.
+         * @param {Catalog} method The method being compiled.
          */
-        compileProcedure: function(type, procedure) {
+        compileMethod: function(type, method) {
             const compiler = new Compiler(debug);
-            compiler.compileProcedure(type, procedure);
+            compiler.compileMethod(type, method);
         },
 
         /**
          * This function assembles the Bali Nebula™ virtual machine instructions contained in
-         * a compiled procedure context into the corresponding bytecode which is added to the
-         * compiled procedure context.
+         * a compiled method context into the corresponding bytecode which is added to the
+         * compiled method context.
          *
-         * @param {Catalog} type A catalog containing the type context for the procedure being
+         * @param {Catalog} type A catalog containing the type context for the method being
          * assembled.
-         * @param {Catalog} procedure A catalog containing the compiled procedure context.
+         * @param {Catalog} method A catalog containing the compiled method context.
          */
-        assembleProcedure: function(type, procedure) {
+        assembleMethod: function(type, method) {
             const assembler = new Assembler(debug);
-            assembler.assembleProcedure(type, procedure);
+            assembler.assembleMethod(type, method);
         },
 
         /**

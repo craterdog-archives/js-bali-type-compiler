@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         with 1..10 do {
             $x := true
             if x then {

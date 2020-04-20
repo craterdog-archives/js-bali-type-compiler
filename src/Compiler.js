@@ -12,7 +12,7 @@
 /**
  * This module defines a class that analyzes and compiles a document written using
  * Bali Document Notation™ into a type document that contains the bytecode for each
- * procedure defined in the document. The bytecode can then be executed on a
+ * method defined in the document. The bytecode can then be executed on a
  * Bali Nebula™ virtual processor.
  */
 const bali = require('bali-component-framework').api();
@@ -27,7 +27,7 @@ const EOL = '\n';  // POSIX end of line character
 
 /**
  * This class implements a compiler that compiles a type definition document into a
- * compiled type document containing the bytecode for each of its procedures.
+ * compiled type document containing the bytecode for each of its methods.
  *
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
  * will be logged to the error console.
@@ -49,38 +49,38 @@ exports.Compiler = Compiler;
 Compiler.prototype.cleanType = async function(type) {
     type.removeValue('$literals');
 
-    // create the procedures catalog if necessary
-    var procedures = type.getValue('$procedures');
-    if (procedures && !procedures.isEqualTo(bali.pattern.NONE)) {
+    // create the methods catalog if necessary
+    var methods = type.getValue('$methods');
+    if (methods && !methods.isEqualTo(bali.pattern.NONE)) {
 
-        // clean each procedure
-        const iterator = procedures.getIterator();
+        // clean each method
+        const iterator = methods.getIterator();
         while (iterator.hasNext()) {
 
-            // retrieve the source code for the procedure
+            // retrieve the source code for the method
             const association = iterator.getNext();
-            const procedure = association.getValue();
+            const method = association.getValue();
 
             // compile the source code into assembly instructions
-            this.cleanProcedure(procedure);
+            this.cleanMethod(method);
         }
     }
 };
 
 
 /**
- * This function cleans a procedure definition so that it does not contain any compilation
+ * This function cleans a method definition so that it does not contain any compilation
  * attributes.
  *
- * @param {Catalog} procedure The procedure definition to be cleaned.
+ * @param {Catalog} method The method definition to be cleaned.
  */
-Compiler.prototype.cleanProcedure = async function(procedure) {
-    procedure.removeValue('$instructions');
-    procedure.removeValue('$bytecode');
-    procedure.removeValue('$addresses');
-    procedure.removeValue('$parameters');
-    procedure.removeValue('$variables');
-    procedure.removeValue('$messages');
+Compiler.prototype.cleanMethod = async function(method) {
+    method.removeValue('$instructions');
+    method.removeValue('$bytecode');
+    method.removeValue('$addresses');
+    method.removeValue('$parameters');
+    method.removeValue('$variables');
+    method.removeValue('$messages');
 };
 
 
@@ -111,65 +111,55 @@ Compiler.prototype.compileType = async function(type) {
         type.setValue('$constants', constants);
     }
 
-    var procedures = type.getValue('$procedures');
-    if (procedures && !procedures.isEqualTo(bali.pattern.NONE)) {
-
-        // create the literals list
+    var methods = type.getValue('$methods');
+    if (methods && !methods.isEqualTo(bali.pattern.NONE)) {
         type.setValue('$literals', bali.list());
-
-        // compile each procedure
-        const iterator = procedures.getIterator();
+        const iterator = methods.getIterator();
         while (iterator.hasNext()) {
-
-            // retrieve the source code for the procedure
             const association = iterator.getNext();
-            const procedure = association.getValue();
-
-            // compile the source code into assembly instructions
-            this.compileProcedure(type, procedure);
-
-            // assemble the instructions into bytecode
-            assembler.assembleProcedure(type, procedure);
+            const method = association.getValue();
+            this.compileMethod(type, method);
+            assembler.assembleMethod(type, method);
         }
     }
 };
 
 
 /**
- * This method compiles the a procedure containing Bali source code into the corresponding
+ * This method compiles a method containing a Bali procedure into the corresponding
  * assembly instructions for the Bali Nebula™ virtual processor.
  *
- * @param {Catalog} type The type context for the procedure being compiled.
- * @param {Catalog} procedure The procedure to be compiled.
+ * @param {Catalog} type The type context for the method being compiled.
+ * @param {Catalog} method The method to be compiled.
  */
-Compiler.prototype.compileProcedure = function(type, procedure) {
-    const source = procedure.getValue('$source');
+Compiler.prototype.compileMethod = function(type, method) {
+    const procedure = method.getValue('$procedure');
 
     // extract the parameter names for the procedure
     const parameters = bali.list();
-    if (source.isParameterized()) {
-        parameters.addItems(Object.keys(source.getParameters()));
+    if (procedure.isParameterized()) {
+        parameters.addItems(Object.keys(procedure.getParameters()));
     }
 
-    // add the compilation context to the procedure
-    procedure.setValue('$instructions', bali.pattern.NONE);
-    procedure.setValue('$bytecode', bali.pattern.NONE);
-    procedure.setValue('$addresses', bali.catalog());
-    procedure.setValue('$parameters', parameters);
-    procedure.setValue('$variables', bali.set(['$target']));
-    procedure.setValue('$messages', bali.set());
+    // add the compilation context to the method
+    method.setValue('$instructions', bali.pattern.NONE);
+    method.setValue('$bytecode', bali.pattern.NONE);
+    method.setValue('$addresses', bali.catalog());
+    method.setValue('$parameters', parameters);
+    method.setValue('$variables', bali.set(['$target']));
+    method.setValue('$messages', bali.set());
 
-    // compile the procedure into assembly instructions
-    const visitor = new CompilingVisitor(type, procedure, this.debug);
-    source.getStatements().acceptVisitor(visitor);
+    // compile the method into assembly instructions
+    const visitor = new CompilingVisitor(type, method, this.debug);
+    procedure.getStatements().acceptVisitor(visitor);
 
-    // format the instructions and add to the compiled procedure
+    // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
     const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
     instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediatype: 'application/basm'});
-    procedure.setValue('$instructions', instructions);
+    method.setValue('$instructions', instructions);
 };
 
 
@@ -181,10 +171,10 @@ Compiler.prototype.compileProcedure = function(type, procedure) {
  * to construct the corresponding Bali Nebula™ virtual processor instructions for the
  * syntax tree is it traversing.
  */
-function CompilingVisitor(type, procedure, debug) {
+function CompilingVisitor(type, method, debug) {
     Visitor.call(this);
     this.debug = debug || false;
-    this.builder = new InstructionBuilder(type, procedure);
+    this.builder = new InstructionBuilder(type, method);
     this.temporaryVariableCount = 1;
     return this;
 }
@@ -193,7 +183,7 @@ CompilingVisitor.prototype.constructor = CompilingVisitor;
 
 
 /**
- * This method returns the resulting assembly instructions for the compiled procedure.
+ * This method returns the resulting assembly instructions for the compiled method.
  *
  * @returns {String}
  */

@@ -15,7 +15,7 @@ const bali = require('bali-component-framework').api();
 const Decoder = require('../src/Decoder').Decoder;
 const decoder = new Decoder(1);
 
-describe('Bali Procedure Compiler', function() {
+describe('Bali Method Compiler', function() {
 
     describe('Test bytecode utilities on bytecodes', function() {
 

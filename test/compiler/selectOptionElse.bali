@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         select $selection from "alpha" do {
             none
         } "beta" do {

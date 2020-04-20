@@ -10,7 +10,7 @@
 'use strict';
 
 /**
- * This module defines a class that assembles compiled procedures into bytecode that
+ * This module defines a class that assembles compiled methods into bytecode that
  * can run on the Bali Nebula™ Virtual Processor.
  */
 const bali = require('bali-component-framework').api();
@@ -24,7 +24,7 @@ const EOL = '\n';  // POSIX end of line character
 // PUBLIC FUNCTIONS
 
 /**
- * This class implements an assembler that assembles a compiled procedure into the corresponding
+ * This class implements an assembler that assembles a compiled method into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
  *
  * @param {Boolean} debug An optional flag that determines whether or not exceptions
@@ -42,41 +42,41 @@ exports.assembler = new Assembler();
 
 
 /**
- * This method assembles the instructions in a compiled procedure into the corresponding
+ * This method assembles the instructions in a compiled method into the corresponding
  * bytecode to be run on the Nebula Virtual Processor.
  *
- * @param {Catalog} type The type context for the procedure being assembled.
- * @param {Catalog} procedure The procedure being assembled.
+ * @param {Catalog} type The type context for the method being assembled.
+ * @param {Catalog} method The method being assembled.
  */
-Assembler.prototype.assembleProcedure = function(type, procedure) {
+Assembler.prototype.assembleMethod = function(type, method) {
 
     // assemble the instructions into bytecode
-    var instructions = procedure.getValue('$instructions');
+    var instructions = method.getValue('$instructions');
     const parser = new Parser();
     instructions = parser.parseInstructions(instructions.getValue());
-    const visitor = new AssemblingVisitor(type, procedure, this.debug);
+    const visitor = new AssemblingVisitor(type, method, this.debug);
     instructions.acceptVisitor(visitor);
 
-    // format the bytecode and add to the procedure context
+    // format the bytecode and add to the method context
     var bytecode = visitor.getBytecode();
     const base16 = bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
     bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediatype: "application/bcod")');
-    procedure.setValue('$bytecode', bytecode);
+    method.setValue('$bytecode', bytecode);
 };
 
 
 // PRIVATE CLASSES
 
-function AssemblingVisitor(type, procedure, debug) {
+function AssemblingVisitor(type, method, debug) {
     this.debug = debug || 0;
     this.decoder = new Decoder(this.debug);
     this.intrinsics = require('./Intrinsics').api(this.debug);
     this.literals = type.getValue('$literals');
     this.constants = type.getValue('$constants');
-    this.parameters = procedure.getValue('$parameters');
-    this.variables = procedure.getValue('$variables');
-    this.messages = procedure.getValue('$messages');
-    this.addresses = procedure.getValue('$addresses');
+    this.parameters = method.getValue('$parameters');
+    this.variables = method.getValue('$variables');
+    this.messages = method.getValue('$messages');
+    this.addresses = method.getValue('$addresses');
     this.bytecode = [];
     return this;
 }

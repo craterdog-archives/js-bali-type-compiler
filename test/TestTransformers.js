@@ -14,7 +14,7 @@ const expect = require('chai').expect;
 const Parser = require('../src/Parser').Parser;
 const Formatter = require('../src/Formatter').Formatter;
 
-describe('Bali Procedure Compiler', function() {
+describe('Bali Method Compiler', function() {
 
     describe('Test Parser and Formatter', function() {
         const parser = new Parser(true);

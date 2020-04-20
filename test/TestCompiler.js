@@ -46,10 +46,10 @@ describe('Bali Nebula™ Type Compiler', function() {
                 type.setValue('$constants', constants);
 
                 // compile the procedure
-                compiler.compileProcedure(type, procedure);
+                compiler.compileMethod(type, procedure);
 
                 // assemble the procedure into bytecode
-                compiler.assembleProcedure(type, procedure);
+                compiler.assembleMethod(type, procedure);
 
                 // check for differences
                 source = procedure.toString() + '\n';  // POSIX compliant <EOL>

@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         if true then {
             yes
         } else {

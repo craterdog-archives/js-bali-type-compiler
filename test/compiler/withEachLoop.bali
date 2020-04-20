@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         with each $symbol in sequence do {
             $x := true
             if x then {

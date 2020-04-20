@@ -1,5 +1,5 @@
 [
-    $source: {
+    $procedure: {
         [
             $foo: $bar
             $baz: 5
