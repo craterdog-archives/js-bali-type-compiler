@@ -595,7 +595,7 @@ exports.api = function(debug) {
             validateTypeArgument('$item', '/bali/elements/Number', index);
             index = index.toNumber();
             validateIndex('$item', sequential.getSize(), index);
-            return sequential.getItem(index);
+            return sequential.componentize(sequential.getItem(index));
         },
 
         $items: function(sequential, range) {
@@ -661,7 +661,7 @@ exports.api = function(debug) {
 
         $next: function(iterator) {
             validateTypeArgument('$next', '/bali/types/Iterator', iterator);
-            return iterator.getNext();
+            return iterator.componentize(iterator.getNext());
         },
 
         $nextVersion: function(version, level) {
@@ -721,7 +721,7 @@ exports.api = function(debug) {
 
         $previous: function(iterator) {
             validateTypeArgument('$previous', '/bali/types/Iterator', iterator);
-            return iterator.getNext();
+            return iterator.componentize(iterator.getPrevious());
         },
 
         $probability: function() {

@@ -30,13 +30,13 @@ const reference = bali.reference('https://google.com/advertizing?foo=bar#home');
 const text = bali.text('This is text...');
 const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
-const catalog = bali.catalog();
+const catalog = bali.catalog({$a: 'a', $b: 'b', $c: 'c', $d: 'd', $e: 'e'});
 const list = bali.list([1, 2, 3]);
 const percent = bali.percent(25);
-const queue = bali.queue();
+const queue = bali.queue([2,4,6,8,10,12]);
 const range = bali.range(1, 4);
-const set = bali.set();
-const stack = bali.stack();
+const set = bali.set([2,4,6,8,10,12]);
+const stack = bali.stack([2,4,6,8,10,12]);
 const symbol = bali.component('$type');
 const statements = bali.tree('/bali/structures/Statements');
 const tree = bali.tree('/bali/collections/Tree');
@@ -1163,7 +1163,11 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, symbol, two);
             intrinsics.invoke(index, text, two);
             intrinsics.invoke(index, version, two);
+            intrinsics.invoke(index, catalog, two);
             intrinsics.invoke(index, list, two);
+            intrinsics.invoke(index, queue, two);
+            intrinsics.invoke(index, set, two);
+            intrinsics.invoke(index, stack, two);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1294,7 +1298,11 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, symbol);
             intrinsics.invoke(index, text);
             intrinsics.invoke(index, version);
+            intrinsics.invoke(index, catalog);
             intrinsics.invoke(index, list);
+            intrinsics.invoke(index, queue);
+            intrinsics.invoke(index, set);
+            intrinsics.invoke(index, stack);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1442,7 +1450,11 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, symbol, two);
             intrinsics.invoke(index, text, two);
             intrinsics.invoke(index, version, two);
+            intrinsics.invoke(index, catalog, two);
             intrinsics.invoke(index, list, two);
+            intrinsics.invoke(index, queue, two);
+            intrinsics.invoke(index, set, two);
+            intrinsics.invoke(index, stack, two);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1468,7 +1480,11 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, symbol, range);
             intrinsics.invoke(index, text, range);
             intrinsics.invoke(index, version, range);
+            intrinsics.invoke(index, catalog, range);
             intrinsics.invoke(index, list, range);
+            intrinsics.invoke(index, queue, range);
+            intrinsics.invoke(index, set, range);
+            intrinsics.invoke(index, stack, range);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1492,14 +1508,84 @@ describe('Bali Intrinsic Functions', function() {
         });
 
         it('should invoke $iterator intrinsic function', function() {
-            const index = intrinsics.index('$iterator');
-            intrinsics.invoke(index, binary);
-            intrinsics.invoke(index, name);
-            intrinsics.invoke(index, range);
-            intrinsics.invoke(index, symbol);
-            intrinsics.invoke(index, text);
-            intrinsics.invoke(index, version);
-            intrinsics.invoke(index, list);
+            var index = intrinsics.index('$iterator');
+            var iterator = intrinsics.invoke(index, binary);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, name);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, range);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, symbol);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, text);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, version);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, catalog);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, list);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, queue);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, set);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
+            iterator = intrinsics.invoke(index, stack);
+            index = intrinsics.index('$next');
+            intrinsics.invoke(index, iterator);
+            index = intrinsics.index('$previous');
+            intrinsics.invoke(index, iterator);
+
+            index = intrinsics.index('$iterator');
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2450,9 +2536,11 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, symbol);
             intrinsics.invoke(index, text);
             intrinsics.invoke(index, version);
-            intrinsics.invoke(index, list);
-            intrinsics.invoke(index, stack);
             intrinsics.invoke(index, catalog);
+            intrinsics.invoke(index, list);
+            intrinsics.invoke(index, queue);
+            intrinsics.invoke(index, set);
+            intrinsics.invoke(index, stack);
             expect(
                 function() {
                     intrinsics.invoke(index);
