@@ -13,13 +13,13 @@
         1.WithStatement:
         LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        STORE VARIABLE $$iterator-1
+        STORE VARIABLE $iterator-1
         
         1.1.ConditionClause:
-        LOAD VARIABLE $$iterator-1
+        LOAD VARIABLE $iterator-1
         SEND $hasNext TO COMPONENT
         JUMP TO 1.WithStatementDone ON FALSE
-        LOAD VARIABLE $$iterator-1
+        LOAD VARIABLE $iterator-1
         SEND $next TO COMPONENT
         STORE VARIABLE $symbol
         
@@ -52,7 +52,7 @@
         JUMP TO 1.1.ConditionClause
         
         1.WithStatementDone:
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -77,8 +77,8 @@
     ]
     $parameters: [ ]
     $variables: [
-        $$iterator-1
-        $$result
+        $iterator-1
+        $result
         $sequence
         $symbol
         $target

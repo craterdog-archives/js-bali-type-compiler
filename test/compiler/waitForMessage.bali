@@ -1,14 +1,14 @@
 [
     $procedure: {
-        wait for $message from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
-        wait for messages[$foo, 5] from <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+        wait for $message from /acme/messages/inbound/v1.2.3
+        wait for messages[$foo, 5] from /acme/messages/outbound/v2.3.4
     }
     $instructions: "
         1.WaitStatement:
         PUSH LITERAL `$message`
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$queue-1
-        LOAD MESSAGE $$queue-1
+        PUSH LITERAL `/acme/messages/inbound/v1.2.3`
+        STORE VARIABLE $queue-1
+        LOAD MESSAGE $queue-1
         STORE VARIABLE $message
         
         2.WaitStatement:
@@ -16,14 +16,14 @@
         PUSH LITERAL `$foo`
         INVOKE $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$queue-2
-        LOAD MESSAGE $$queue-2
+        PUSH LITERAL `/acme/messages/outbound/v2.3.4`
+        STORE VARIABLE $queue-2
+        LOAD MESSAGE $queue-2
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '2801280280036803800160022803B07A2804280280046804B8726005E000'(
+    $bytecode: '2801280280036803800160022803B07A2804280580046804B8726005E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )
@@ -35,9 +35,9 @@
     $variables: [
         $message
         $messages
-        $$queue-1
-        $$queue-2
-        $$result
+        $queue-1
+        $queue-2
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

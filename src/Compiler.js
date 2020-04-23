@@ -635,7 +635,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         expression.acceptVisitor(this);
 
         // the VM stores the value of the expression in the temporary result variable
-        this.builder.insertStoreInstruction('VARIABLE', '$$result');
+        this.builder.insertStoreInstruction('VARIABLE', '$result');
     }
 };
 
@@ -1111,8 +1111,13 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
     // the VM places the value of the event expression onto the top of the component stack
     event.acceptVisitor(this);
 
+    // the VM stores the name of the global event queue in a temporary variable
+    this.builder.insertPushInstruction('LITERAL', '/bali/events/queue');
+    const queue = this.createTemporaryVariable('queue');
+    this.builder.insertStoreInstruction('VARIABLE', queue);
+
     // the VM stores the event on the event queue
-    this.builder.insertStoreInstruction('MESSAGE', '$$eventQueue');
+    this.builder.insertStoreInstruction('MESSAGE', queue);
 };
 
 
@@ -1125,12 +1130,6 @@ CompilingVisitor.prototype.visitRange = function(range) {
 // reference: RESOURCE
 CompilingVisitor.prototype.visitReference = function(reference) {
     this.visitElement(reference);
-};
-
-
-// reserved: RESERVED
-CompilingVisitor.prototype.visitReserved = function(reserved) {
-    this.visitElement(reserved);
 };
 
 
@@ -1572,7 +1571,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
  * used to append a unique number to the end of each temporary variable.
  */
 CompilingVisitor.prototype.createTemporaryVariable = function(name) {
-    return '$$' + name + '-' + this.temporaryVariableCount++;
+    return '$' + name + '-' + this.temporaryVariableCount++;
 };
 
 
@@ -1979,6 +1978,6 @@ InstructionBuilder.prototype.insertHandleInstruction = function(context) {
  * result if not handled earlier.
  */
 InstructionBuilder.prototype.finalize = function() {
-    this.insertLoadInstruction('VARIABLE', '$$result');
+    this.insertLoadInstruction('VARIABLE', '$result');
     this.insertHandleInstruction('RESULT');
 };

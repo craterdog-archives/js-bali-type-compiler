@@ -41,7 +41,7 @@
         JUMP TO 1.1.ConditionClause
         
         1.WhileStatementDone:
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '00006004180E6002800100006001180A000E00006003800100026005E000'(
@@ -66,7 +66,7 @@
         $b
         $c
         $condition
-        $$result
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

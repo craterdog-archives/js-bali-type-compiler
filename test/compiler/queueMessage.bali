@@ -2,19 +2,19 @@
     $procedure: {
         post [
             $foo: "bar"
-        ] on <bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>
+        ] on /acme/messages/inbound/v1.2.3
     }
     $instructions: "
         1.PostStatement:
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$queue-1
+        PUSH LITERAL `/acme/messages/inbound/v1.2.3`
+        STORE VARIABLE $queue-1
         INVOKE $catalog
         PUSH LITERAL `$foo`
         PUSH LITERAL `"bar"`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        STORE MESSAGE $$queue-1
-        LOAD VARIABLE $$result
+        STORE MESSAGE $queue-1
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '28018001A01428022803B00BB00188016002E000'(
@@ -26,8 +26,8 @@
     ]
     $parameters: [ ]
     $variables: [
-        $$queue-1
-        $$result
+        $queue-1
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

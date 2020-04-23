@@ -12,52 +12,52 @@
         1.CheckoutStatement:
         PUSH LITERAL `$document`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-1
-        LOAD DOCUMENT $$location-1
+        STORE VARIABLE $location-1
+        LOAD DOCUMENT $location-1
         STORE VARIABLE $document
         
         2.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-2
+        STORE VARIABLE $location-2
         LOAD VARIABLE $document
-        STORE DRAFT $$location-2
+        STORE DRAFT $location-2
         
         3.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-3
+        STORE VARIABLE $location-3
         LOAD VARIABLE $document
-        STORE DOCUMENT $$location-3
+        STORE DOCUMENT $location-3
         
         4.CheckoutStatement:
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-4
-        LOAD DOCUMENT $$location-4
+        STORE VARIABLE $location-4
+        LOAD DOCUMENT $location-4
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
         
         5.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-5
+        STORE VARIABLE $location-5
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE DRAFT $$location-5
+        STORE DRAFT $location-5
         
         6.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-6
+        STORE VARIABLE $location-6
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE DOCUMENT $$location-6
+        STORE DOCUMENT $location-6
         
         7.DiscardStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $$location-7
+        STORE VARIABLE $location-7
         PUSH LITERAL `none`
-        STORE DRAFT $$location-7
-        LOAD VARIABLE $$result
+        STORE DRAFT $location-7
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -82,14 +82,14 @@
         $document
         $documents
         $index
-        $$location-1
-        $$location-2
-        $$location-3
-        $$location-4
-        $$location-5
-        $$location-6
-        $$location-7
-        $$result
+        $location-1
+        $location-2
+        $location-3
+        $location-4
+        $location-5
+        $location-6
+        $location-7
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

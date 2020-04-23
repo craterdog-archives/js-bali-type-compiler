@@ -13,15 +13,15 @@
         1.WithStatement:
         PUSH LITERAL `1..10`
         SEND $iterator TO COMPONENT
-        STORE VARIABLE $$iterator-2
+        STORE VARIABLE $iterator-2
         
         1.1.ConditionClause:
-        LOAD VARIABLE $$iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $hasNext TO COMPONENT
         JUMP TO 1.WithStatementDone ON FALSE
-        LOAD VARIABLE $$iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
-        STORE VARIABLE $$item-1
+        STORE VARIABLE $item-1
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
@@ -52,7 +52,7 @@
         JUMP TO 1.1.ConditionClause
         
         1.WithStatementDone:
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -77,9 +77,9 @@
     ]
     $parameters: [ ]
     $variables: [
-        $$item-1
-        $$iterator-2
-        $$result
+        $item-1
+        $iterator-2
+        $result
         $target
         $x
         $y

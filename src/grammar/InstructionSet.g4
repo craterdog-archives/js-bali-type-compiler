@@ -10,7 +10,7 @@ step: label? instruction;
 
 label: EOL? LABEL ':' EOL;
 
-variable: SYMBOL | RESERVED;
+variable: SYMBOL;
 
 instruction:
     skipInstruction |
@@ -117,9 +117,7 @@ NUMBER: '1'..'9' ('0'..'9')*;
 
 LITERAL: '`' ('\\`' | ~'`')*? '`';
 
-SYMBOL: '$' IDENTIFIER;
-
-RESERVED: '$$' IDENTIFIER ('-' NUMBER)?;
+SYMBOL: '$' IDENTIFIER ('-' NUMBER)?;
 
 EOL: '\r'? '\n';
 

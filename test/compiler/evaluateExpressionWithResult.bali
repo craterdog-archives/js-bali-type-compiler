@@ -11,7 +11,7 @@
         2.EvaluateStatement:
         PUSH LITERAL `5`
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '600180022801B8726003E000'(
@@ -26,7 +26,7 @@
     $variables: [
         $bar
         $foo
-        $$result
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

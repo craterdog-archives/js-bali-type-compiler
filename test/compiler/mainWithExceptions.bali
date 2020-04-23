@@ -14,9 +14,9 @@
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandlers
         PUSH LITERAL `<bali:/queues/myqueue>`
-        STORE VARIABLE $$queue-1
+        STORE VARIABLE $queue-1
         LOAD VARIABLE $message
-        STORE MESSAGE $$queue-1
+        STORE MESSAGE $queue-1
         
         1.PostStatementDone:
         POP HANDLER
@@ -40,7 +40,7 @@
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `any`
-        STORE VARIABLE $$result
+        STORE VARIABLE $result
         
         1.1.HandleClauseDone:
         JUMP TO 1.PostStatementSucceeded
@@ -60,7 +60,7 @@
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $$result
+        STORE VARIABLE $result
         
         1.2.HandleClauseDone:
         JUMP TO 1.PostStatementSucceeded
@@ -69,7 +69,7 @@
         HANDLE EXCEPTION
         
         1.PostStatementSucceeded:
-        LOAD VARIABLE $$result
+        LOAD VARIABLE $result
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -97,8 +97,8 @@
     $variables: [
         $error
         $message
-        $$queue-1
-        $$result
+        $queue-1
+        $result
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
