@@ -511,10 +511,10 @@ exports.api = function(debug) {
             return bali.number(number.getImaginary());
         },
 
-        $index: function(collection, item) {
-            validateTypeArgument('$index', '/bali/types/Collection', collection);
+        $index: function(sequential, item) {
+            validateInterfaceArgument('$index', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$index', '/bali/types/Component', item);
-            return bali.number(collection.getIndex(item));
+            return bali.number(sequential.getIndex(item));
         },
 
         $insertItem: function(list, index, item) {
@@ -590,18 +590,18 @@ exports.api = function(debug) {
             return bali.probability(number.isZero());
         },
 
-        $item: function(collection, index) {
-            validateTypeArgument('$item', '/bali/types/Collection', collection);
+        $item: function(sequential, index) {
+            validateInterfaceArgument('$item', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$item', '/bali/elements/Number', index);
             index = index.toNumber();
-            validateIndex('$item', collection.getSize(), index);
-            return collection.getItem(index);
+            validateIndex('$item', sequential.getSize(), index);
+            return sequential.getItem(index);
         },
 
-        $items: function(collection, range) {
-            validateTypeArgument('$items', '/bali/types/Collection', collection);
+        $items: function(sequential, range) {
+            validateInterfaceArgument('$items', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$items', '/bali/elements/Range', range);
-            return collection.getItems(range);
+            return sequential.getItems(range);
         },
 
         $iterator: function(sequential) {

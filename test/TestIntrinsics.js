@@ -20,6 +20,7 @@ const complex = bali.component('(3, 4i)');
 const duration = bali.component('~P1W');
 const indentation = bali.number(4);
 const moment = bali.moment();
+const name = bali.name(['bali', 'collections', 'Set', 'v1']);
 const number = bali.number(0.5);
 const tag = bali.tag();
 const zero = bali.number(0);
@@ -33,14 +34,14 @@ const catalog = bali.catalog();
 const list = bali.list([1, 2, 3]);
 const percent = bali.percent(25);
 const queue = bali.queue();
-const range = bali.range(1, 5);
+const range = bali.range(1, 4);
 const set = bali.set();
 const stack = bali.stack();
 const symbol = bali.component('$type');
 const statements = bali.tree('/bali/structures/Statements');
 const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
-const version = bali.version([1, 2, 3]);
+const version = bali.version([1, 2, 3, 4]);
 const iterator = list.getIterator();
 const procedure = bali.procedure(statements, {$foo: 'bar'});
 const array = [];
@@ -1156,7 +1157,13 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $index intrinsic function', function() {
             const index = intrinsics.index('$index');
-            intrinsics.invoke(index, list, number);
+            intrinsics.invoke(index, binary, two);
+            intrinsics.invoke(index, name, two);
+            intrinsics.invoke(index, range, two);
+            intrinsics.invoke(index, symbol, two);
+            intrinsics.invoke(index, text, two);
+            intrinsics.invoke(index, version, two);
+            intrinsics.invoke(index, list, two);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1281,6 +1288,12 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $isEmpty intrinsic function', function() {
             const index = intrinsics.index('$isEmpty');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, name);
+            intrinsics.invoke(index, range);
+            intrinsics.invoke(index, symbol);
+            intrinsics.invoke(index, text);
+            intrinsics.invoke(index, version);
             intrinsics.invoke(index, list);
             expect(
                 function() {
@@ -1423,6 +1436,12 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $item intrinsic function', function() {
             const index = intrinsics.index('$item');
+            intrinsics.invoke(index, binary, two);
+            intrinsics.invoke(index, name, two);
+            intrinsics.invoke(index, range, two);
+            intrinsics.invoke(index, symbol, two);
+            intrinsics.invoke(index, text, two);
+            intrinsics.invoke(index, version, two);
             intrinsics.invoke(index, list, two);
             expect(
                 function() {
@@ -1443,6 +1462,12 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $items intrinsic function', function() {
             const index = intrinsics.index('$items');
+            intrinsics.invoke(index, binary, range);
+            intrinsics.invoke(index, name, range);
+            intrinsics.invoke(index, range, range);
+            intrinsics.invoke(index, symbol, range);
+            intrinsics.invoke(index, text, range);
+            intrinsics.invoke(index, version, range);
             intrinsics.invoke(index, list, range);
             expect(
                 function() {
@@ -1468,6 +1493,12 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $iterator intrinsic function', function() {
             const index = intrinsics.index('$iterator');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, name);
+            intrinsics.invoke(index, range);
+            intrinsics.invoke(index, symbol);
+            intrinsics.invoke(index, text);
+            intrinsics.invoke(index, version);
             intrinsics.invoke(index, list);
             expect(
                 function() {
@@ -2413,8 +2444,12 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $size intrinsic function', function() {
             const index = intrinsics.index('$size');
+            intrinsics.invoke(index, binary);
+            intrinsics.invoke(index, name);
+            intrinsics.invoke(index, range);
             intrinsics.invoke(index, symbol);
             intrinsics.invoke(index, text);
+            intrinsics.invoke(index, version);
             intrinsics.invoke(index, list);
             intrinsics.invoke(index, stack);
             intrinsics.invoke(index, catalog);
