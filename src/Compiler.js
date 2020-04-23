@@ -175,7 +175,7 @@ function CompilingVisitor(type, method, debug) {
     Visitor.call(this);
     this.debug = debug || false;
     this.builder = new InstructionBuilder(type, method);
-    this.temporaryVariableCount = 1;
+    this.temporaryVariableCount = 2;  // skip the $result-1 temporary variable
     return this;
 }
 CompilingVisitor.prototype = Object.create(Visitor.prototype);
@@ -635,7 +635,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         expression.acceptVisitor(this);
 
         // the VM stores the value of the expression in the temporary result variable
-        this.builder.insertStoreInstruction('VARIABLE', '$result');
+        this.builder.insertStoreInstruction('VARIABLE', '$result-1');
     }
 };
 
@@ -1978,6 +1978,6 @@ InstructionBuilder.prototype.insertHandleInstruction = function(context) {
  * result if not handled earlier.
  */
 InstructionBuilder.prototype.finalize = function() {
-    this.insertLoadInstruction('VARIABLE', '$result');
+    this.insertLoadInstruction('VARIABLE', '$result-1');
     this.insertHandleInstruction('RESULT');
 };
