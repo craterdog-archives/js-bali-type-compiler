@@ -14,10 +14,10 @@
         
         1.1.1.EvaluateStatement:
         LOAD VARIABLE $yes
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.IfStatementDone:
-        LOAD VARIABLE $result
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '000028011806600380016001E000'(
@@ -30,9 +30,9 @@
         "1.1.1.EvaluateStatement": 4
         "1.IfStatementDone": 6
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
-        $result
+        $result-1
         $target
         $yes
     ]($type: /bali/collections/Set/v1)

@@ -16,7 +16,7 @@
         
         1.1.1.EvaluateStatement:
         LOAD VARIABLE $yes
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.1.ConditionClauseDone:
         JUMP TO 1.IfStatementDone
@@ -26,13 +26,13 @@
         
         1.2.1.EvaluateStatement:
         LOAD VARIABLE $no
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.2.ElseClauseDone:
         SKIP INSTRUCTION
         
         1.IfStatementDone:
-        LOAD VARIABLE $result
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '00002801180760048002000B00006001800200006002E000'(
@@ -49,10 +49,10 @@
         "1.2.ElseClauseDone": 10
         "1.IfStatementDone": 11
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
         $no
-        $result
+        $result-1
         $target
         $yes
     ]($type: /bali/collections/Set/v1)

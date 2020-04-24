@@ -7,14 +7,14 @@
     $instructions: "
         1.PostStatement:
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
-        STORE VARIABLE $queue-1
+        STORE VARIABLE $queue-2
         INVOKE $catalog
         PUSH LITERAL `$foo`
         PUSH LITERAL `"bar"`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        STORE MESSAGE $queue-1
-        LOAD VARIABLE $result
+        STORE MESSAGE $queue-2
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '28018001A01428022803B00BB00188016002E000'(
@@ -24,10 +24,10 @@
     $addresses: [
         "1.PostStatement": 1
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
-        $queue-1
-        $result
+        $queue-2
+        $result-1
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

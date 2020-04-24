@@ -1630,7 +1630,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $keyValue intrinsic function', function() {
             const index = intrinsics.index('$keyValue');
-            intrinsics.invoke(index, association);
+            intrinsics.invoke(index, catalog, symbol);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1639,6 +1639,11 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, catalog);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, symbol);
                 }
             ).to.throw();
         });
@@ -2810,7 +2815,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $value intrinsic function', function() {
             const index = intrinsics.index('$value');
-            intrinsics.invoke(index, catalog, symbol);
+            intrinsics.invoke(index, association);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2819,11 +2824,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, catalog);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, symbol);
                 }
             ).to.throw();
         });

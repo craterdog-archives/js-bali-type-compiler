@@ -12,8 +12,8 @@
 /**
  * This module defines a class that analyzes and compiles a document written using
  * Bali Document Notation™ into a type document that contains the bytecode for each
- * method defined in the document. The bytecode can then be executed on a
- * Bali Nebula™ virtual processor.
+ * method defined in the document. The bytecode can then be executed on the
+ * Bali Virtual Machine™.
  */
 const bali = require('bali-component-framework').api();
 const Visitor = require('bali-component-framework/src/types/Visitor').Visitor;
@@ -78,47 +78,37 @@ Compiler.prototype.cleanMethod = async function(method) {
     method.removeValue('$instructions');
     method.removeValue('$bytecode');
     method.removeValue('$addresses');
-    method.removeValue('$parameters');
+    method.removeValue('$arguments');
     method.removeValue('$variables');
     method.removeValue('$messages');
 };
 
 
 /**
- * This function compiles a type definition so that it may be run on the Bali Nebula™ virtual
- * machine.
+ * This function compiles and assembles each method in a type definition so that they may be
+ * run on the Bali Virtual Machine™.
  *
  * @param {Catalog} type The type definition to be compiled.
  */
 Compiler.prototype.compileType = async function(type) {
-    const assembler = new Assembler(this.debug);
-
-    var parent = type.getValue('$parent');
-    if (!parent) {
-        parent = bali.component('/bali/types/Component/v1');
-        type.setValue('$parent', parent);
-    }
-
-    var parameters = type.getValue('$parameters');
-    if (!parameters || parameters.isEqualTo(bali.pattern.NONE)) {
-        parameters = bali.catalog();
-        type.setValue('$parameters', parameters);
-    }
-
-    var constants = type.getValue('$constants');
-    if (!constants || constants.isEqualTo(bali.pattern.NONE)) {
-        constants = bali.catalog();
-        type.setValue('$constants', constants);
-    }
-
     var methods = type.getValue('$methods');
-    if (methods && !methods.isEqualTo(bali.pattern.NONE)) {
-        type.setValue('$literals', bali.list());
+    if (methods) {
+        type.setValue('$literals', bali.set());
+
+        // compile each method
         const iterator = methods.getIterator();
         while (iterator.hasNext()) {
             const association = iterator.getNext();
             const method = association.getValue();
             this.compileMethod(type, method);
+        }
+
+        // assemble each method
+        const assembler = new Assembler(this.debug);
+        iterator.toStart();
+        while (iterator.hasNext()) {
+            const association = iterator.getNext();
+            const method = association.getValue();
             assembler.assembleMethod(type, method);
         }
     }
@@ -127,7 +117,7 @@ Compiler.prototype.compileType = async function(type) {
 
 /**
  * This method compiles a method containing a Bali procedure into the corresponding
- * assembly instructions for the Bali Nebula™ virtual processor.
+ * assembly instructions for the Bali Virtual Machine™.
  *
  * @param {Catalog} type The type context for the method being compiled.
  * @param {Catalog} method The method to be compiled.
@@ -135,17 +125,17 @@ Compiler.prototype.compileType = async function(type) {
 Compiler.prototype.compileMethod = function(type, method) {
     const procedure = method.getValue('$procedure');
 
-    // extract the parameter names for the procedure
-    const parameters = bali.list();
+    // extract the argument names for the procedure
+    const args = bali.set();
     if (procedure.isParameterized()) {
-        parameters.addItems(Object.keys(procedure.getParameters()));
+        args.addItems(Object.keys(procedure.getParameters()));
     }
 
     // add the compilation context to the method
     method.setValue('$instructions', bali.pattern.NONE);
     method.setValue('$bytecode', bali.pattern.NONE);
     method.setValue('$addresses', bali.catalog());
-    method.setValue('$parameters', parameters);
+    method.setValue('$arguments', args);
     method.setValue('$variables', bali.set(['$target']));
     method.setValue('$messages', bali.set());
 
@@ -168,7 +158,7 @@ Compiler.prototype.compileMethod = function(type, method) {
 /*
  * This private class uses the Visitor Pattern to traverse the syntax tree generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
- * to construct the corresponding Bali Nebula™ virtual processor instructions for the
+ * to construct the corresponding Bali Virtual Machine™ instructions for the
  * syntax tree is it traversing.
  */
 function CompilingVisitor(type, method, debug) {
@@ -1427,17 +1417,14 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     const variable = '$' + identifier.toString();
-    if (this.builder.parameters.containsItem(variable)) {
-        // parameters take precedence over local variables and global constants
-        this.builder.insertPushInstruction('PARAMETER', variable);
-    } else if (this.builder.variables.containsItem(variable)) {
-        // local variables take precedence over global constants
-        this.builder.insertLoadInstruction('VARIABLE', variable);
+    if (this.builder.arguments.containsItem(variable)) {
+        // arguments take precedence over local variables and global constants
+        this.builder.insertPushInstruction('ARGUMENT', variable);
     } else if (this.builder.constants.getValue(variable)) {
-        // the variable refers to a global constant
+        // global constants take precedence over local variables
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
-        // define a new local variable
+        // it is a local variable
         this.builder.insertLoadInstruction('VARIABLE', variable);
     }
 };
@@ -1625,21 +1612,21 @@ function getSubclauses(statement) {
 // PRIVATE BUILDER CLASS
 
 /*
- * This helper class is used to construct the Bali assembly code. It
- * maintains a stack of procedure context objects that track the current statement
- * number and clause number within each procedure.  A prefix is a dot separated
- * sequence of positive numbers defining alternately the statement number and
- * clause number.  For example, a prefix of '2.3.4.' would correspond to the
- * fourth statement in the third clause of the second statement in the main procedure.
+ * This helper class is used to construct the Bali assembly code for the procedure defined
+ * within a method. It maintains a stack of procedure context objects that track the current
+ * statement number and clause number within each procedure.  A prefix is a dot separated
+ * sequence of positive numbers defining alternately the statement number and  clause number.
+ * For example, a prefix of '2.3.4.' would correspond to the fourth statement in the third
+ * clause of the second statement in the main procedure.
  */
-function InstructionBuilder(type, procedure, debug) {
+function InstructionBuilder(type, method, debug) {
     this.debug = debug || false;
-    this.literals = type.getValue('$literals');
-    this.constants = type.getValue('$constants');
-    this.parameters = procedure.getValue('$parameters');
-    this.variables = procedure.getValue('$variables');
-    this.messages = procedure.getValue('$messages');
-    this.addresses = procedure.getValue('$addresses');
+    this.literals = type.getValue('$literals') || bali.set;
+    this.constants = type.getValue('$constants') || bali.catalog();
+    this.arguments = method.getValue('$arguments') || bali.catalog();
+    this.variables = method.getValue('$variables') || bali.set();
+    this.messages = method.getValue('$messages') || bali.set;
+    this.addresses = method.getValue('$addresses') || bali.catalog;
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
     this.instructions = '';
@@ -1893,12 +1880,12 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
             var literal = '`' + value + '`';
             instruction += literal;
             literal = bali.component(value);
-            if (!this.literals.containsItem(literal)) this.literals.addItem(literal);
+            this.literals.addItem(literal);
             break;
         case 'CONSTANT':
             instruction += value;
             break;
-        case 'PARAMETER':
+        case 'ARGUMENT':
             instruction += value;
             break;
     }

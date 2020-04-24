@@ -39,8 +39,8 @@ function Formatter(indentation, debug) {
             $module: '/bali/compiler/Formatter',
             $procedure: '$Formatter',
             $exception: '$invalidParameter',
-            $parameter: indentation,
-            $message: '"The indentation parameter should be the number of levels to indent."'
+            $indentation: indentation,
+            $message: '"The indentation argument should be the number of levels to indent."'
         });
         if (debug) console.error(exception.toString());
         throw exception;
@@ -185,7 +185,7 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
 //     'PUSH' 'HANDLER' LABEL |
 //     'PUSH' 'LITERAL' LITERAL |
 //     'PUSH' 'CONSTANT' SYMBOL |
-//     'PUSH' 'PARAMETER' SYMBOL |
+//     'PUSH' 'ARGUMENT' SYMBOL |
 FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
     this.source += 'PUSH ';
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -200,7 +200,7 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
             operand = '`' + operand.toBDN(this.indentation) + '`';
             break;
         case types.CONSTANT:
-        case types.PARAMETER:
+        case types.ARGUMENT:
             // leave it as a symbol
             break;
     }

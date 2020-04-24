@@ -85,7 +85,7 @@
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.2.2.EvaluateStatement:
         LOAD VARIABLE $b
@@ -112,7 +112,7 @@
         
         1.3.2.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.3.3.ReturnStatement:
         PUSH LITERAL `none`
@@ -157,7 +157,7 @@
         PUSH LITERAL `$oops`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.4.HandleClauseDone:
         JUMP TO 1.IfStatementSucceeded
@@ -230,42 +230,42 @@
         2.1.2.2.1.WithStatement:
         LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        STORE VARIABLE $iterator-1
+        STORE VARIABLE $iterator-2
         
         2.1.2.2.1.1.ConditionClause:
-        LOAD VARIABLE $iterator-1
+        LOAD VARIABLE $iterator-2
         SEND $hasNext TO COMPONENT
         JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
-        LOAD VARIABLE $iterator-1
+        LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
         STORE VARIABLE $item
         
         2.1.2.2.1.1.1.SelectStatement:
         LOAD VARIABLE $selection
-        STORE VARIABLE $selector-2
+        STORE VARIABLE $selector-3
         
         2.1.2.2.1.1.1.1.OptionClause:
-        LOAD VARIABLE $selector-2
+        LOAD VARIABLE $selector-3
         PUSH LITERAL `$first`
         INVOKE $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
         
         2.1.2.2.1.1.1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         2.1.2.2.1.1.1.1.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
         
         2.1.2.2.1.1.1.2.OptionClause:
-        LOAD VARIABLE $selector-2
+        LOAD VARIABLE $selector-3
         PUSH LITERAL `$second`
         INVOKE $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
         
         2.1.2.2.1.1.1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         2.1.2.2.1.1.1.2.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
@@ -298,7 +298,7 @@
         JUMP TO 2.1.ConditionClause
         
         2.WhileStatementDone:
-        LOAD VARIABLE $result
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -306,11 +306,11 @@
         18192803800B6002A82980046004E000002500006002A049600FB001C801
         80062804800B2805E00000004000005B0000800760076007A01428062807
         B00BB001B0231842480060052808B07B8005A0142809280AB00BB001280B
-        280CB00BB001800B005B800760076007A0142806280DB00BB001B023185A
-        4800A0142809280EB00BB001280B280FB00BB00180076007E800005BE800
-        000000002810188960038008000060081866008900870000600EC003800A
-        600AC0021885600AC0048009600C800D600D2811B02318792810800B0083
-        600D2812B02318802803800B00830000006A00830000006A000000000000
+        280CB00BB001800B005B800760076007A0142806280EB00BB001B023185A
+        4800A01428092810B00BB001280B2812B00BB00180076007E800005BE800
+        000000002813188960038008000060081866008900870000600EC003800A
+        600AC0021885600AC0048009600C800D600D2814B02318792813800B0083
+        600D2816B02318802803800B00830000006A00830000006A000000000000
         005D600BE000
     '(
         $encoding: $base16
@@ -373,9 +373,9 @@
         "2.ConditionRepeat": 136
         "2.WhileStatementDone": 137
     ]
-    $parameters: [
+    $arguments: [
         $string
-    ]
+    ]($type: /bali/collections/Set/v1)
     $variables: [
         $a
         $b
@@ -386,10 +386,10 @@
         $exception
         $foo
         $item
-        $iterator-1
-        $result
+        $iterator-2
+        $result-1
         $selection
-        $selector-2
+        $selector-3
         $sequence
         $tag
         $target

@@ -44,7 +44,7 @@ pushInstruction:
     'PUSH' 'HANDLER' LABEL |
     'PUSH' 'LITERAL' LITERAL |
     'PUSH' 'CONSTANT' SYMBOL |
-    'PUSH' 'PARAMETER' SYMBOL
+    'PUSH' 'ARGUMENT' SYMBOL
 ;
 
 // Pop the component or handler address that is currently on top of it

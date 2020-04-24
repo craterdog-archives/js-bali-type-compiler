@@ -73,7 +73,7 @@ function AssemblingVisitor(type, method, debug) {
     this.intrinsics = require('./Intrinsics').api(this.debug);
     this.literals = type.getValue('$literals');
     this.constants = type.getValue('$constants');
-    this.parameters = method.getValue('$parameters');
+    this.arguments = method.getValue('$arguments');
     this.variables = method.getValue('$variables');
     this.messages = method.getValue('$messages');
     this.addresses = method.getValue('$addresses');
@@ -178,7 +178,7 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
 //     'PUSH' 'HANDLER' LABEL |
 //     'PUSH' 'LITERAL' LITERAL |
 //     'PUSH' 'CONSTANT' SYMBOL |
-//     'PUSH' 'PARAMETER' SYMBOL
+//     'PUSH' 'ARGUMENT' SYMBOL
 AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     var value = instruction.getValue('$operand');
@@ -192,8 +192,8 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
         case types.CONSTANT:
             value = this.constants.getKeys().getIndex(value);
             break;
-        case types.PARAMETER:
-            value = this.parameters.getIndex(value);
+        case types.ARGUMENT:
+            value = this.arguments.getIndex(value);
             break;
     }
     const word = this.decoder.encodeInstruction(types.PUSH, modifier, value);

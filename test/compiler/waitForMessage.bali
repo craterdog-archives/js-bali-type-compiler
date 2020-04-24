@@ -7,8 +7,8 @@
         1.WaitStatement:
         PUSH LITERAL `$message`
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
-        STORE VARIABLE $queue-1
-        LOAD MESSAGE $queue-1
+        STORE VARIABLE $queue-2
+        LOAD MESSAGE $queue-2
         STORE VARIABLE $message
         
         2.WaitStatement:
@@ -17,10 +17,10 @@
         INVOKE $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
         PUSH LITERAL `/acme/messages/outbound/v2.3.4`
-        STORE VARIABLE $queue-2
-        LOAD MESSAGE $queue-2
+        STORE VARIABLE $queue-3
+        LOAD MESSAGE $queue-3
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
-        LOAD VARIABLE $result
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '2801280280036803800160022803B07A2804280580046804B8726005E000'(
@@ -31,13 +31,13 @@
         "1.WaitStatement": 1
         "2.WaitStatement": 6
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
         $message
         $messages
-        $queue-1
         $queue-2
-        $result
+        $queue-3
+        $result-1
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

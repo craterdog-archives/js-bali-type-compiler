@@ -22,9 +22,9 @@
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
         PUSH LITERAL `/bali/events/queue`
-        STORE VARIABLE $queue-1
-        STORE MESSAGE $queue-1
-        LOAD VARIABLE $result
+        STORE VARIABLE $queue-2
+        STORE MESSAGE $queue-2
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
@@ -37,10 +37,10 @@
     $addresses: [
         "1.PublishStatement": 1
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
-        $queue-1
-        $result
+        $queue-2
+        $result-1
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

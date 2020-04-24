@@ -12,58 +12,58 @@
         1.CheckoutStatement:
         PUSH LITERAL `$document`
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-1
-        LOAD DOCUMENT $location-1
+        STORE VARIABLE $location-2
+        LOAD DOCUMENT $location-2
         STORE VARIABLE $document
         
         2.SaveStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-2
+        STORE VARIABLE $location-3
         LOAD VARIABLE $document
-        STORE DRAFT $location-2
+        STORE DRAFT $location-3
         
         3.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-3
+        STORE VARIABLE $location-4
         LOAD VARIABLE $document
-        STORE DOCUMENT $location-3
+        STORE DOCUMENT $location-4
         
         4.CheckoutStatement:
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-4
-        LOAD DOCUMENT $location-4
+        STORE VARIABLE $location-5
+        LOAD DOCUMENT $location-5
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
         
         5.SaveStatement:
-        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-5
-        LOAD VARIABLE $documents
-        LOAD VARIABLE $index
-        INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE DRAFT $location-5
-        
-        6.CommitStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
         STORE VARIABLE $location-6
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE DOCUMENT $location-6
+        STORE DRAFT $location-6
+        
+        6.CommitStatement:
+        PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
+        STORE VARIABLE $location-7
+        LOAD VARIABLE $documents
+        LOAD VARIABLE $index
+        INVOKE $subcomponent WITH 2 ARGUMENTS
+        STORE DOCUMENT $location-7
         
         7.DiscardStatement:
         PUSH LITERAL `<bali:MJ0YKAX450LD84TCFJ7CNJ5CX8ZAPZ1Qv3.1>`
-        STORE VARIABLE $location-7
+        STORE VARIABLE $location-8
         PUSH LITERAL `none`
-        STORE DRAFT $location-7
-        LOAD VARIABLE $result
+        STORE DRAFT $location-8
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         280128028004780480012802800560019005280280066001980660026003
         280280077807B8722802800860026003B07A90082802800960026003B07A
-        98092802800A2803900A600BE000
+        98092802800A2809900A600BE000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"
@@ -77,19 +77,19 @@
         "6.CommitStatement": 26
         "7.DiscardStatement": 32
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
         $document
         $documents
         $index
-        $location-1
         $location-2
         $location-3
         $location-4
         $location-5
         $location-6
         $location-7
-        $result
+        $location-8
+        $result-1
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

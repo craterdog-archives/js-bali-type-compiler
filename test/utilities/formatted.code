@@ -8,7 +8,7 @@
 [006]:    2005    10 [005]    PUSH HANDLER [005]
 [007]:    2806    11    6     PUSH LITERAL 6
 [008]:    3007    12    7     PUSH CONSTANT 7
-[009]:    3808    13    8     PUSH PARAMETER 8
+[009]:    3808    13    8     PUSH ARGUMENT 8
 [00A]:    4000    20    0     POP HANDLER
 [00B]:    4800    21    0     POP COMPONENT
 [00C]:    600D    30   13     LOAD VARIABLE 13

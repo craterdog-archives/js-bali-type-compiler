@@ -43,16 +43,16 @@
         PUSH LITERAL `5`
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         2.EvaluateStatement:
         LOAD VARIABLE $variable
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         3.EvaluateStatement:
         PUSH LITERAL `13`
         INVOKE $isZero WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         4.EvaluateStatement:
         LOAD VARIABLE $a
@@ -60,13 +60,13 @@
         INVOKE $sum WITH 2 ARGUMENTS
         LOAD VARIABLE $c
         INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         5.EvaluateStatement:
         LOAD VARIABLE $reference
-        STORE VARIABLE $location-1
-        LOAD DOCUMENT $location-1
-        STORE VARIABLE $result
+        STORE VARIABLE $location-2
+        LOAD DOCUMENT $location-2
+        STORE VARIABLE $result-1
         
         6.EvaluateStatement:
         LOAD VARIABLE $customer
@@ -76,7 +76,7 @@
         INVOKE $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
         INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         7.EvaluateStatement:
         LOAD VARIABLE $list
@@ -84,137 +84,137 @@
         LOAD VARIABLE $item
         INVOKE $addItem WITH 2 ARGUMENTS
         SEND $addItem TO COMPONENT WITH ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         8.EvaluateStatement:
         PUSH LITERAL `23`
         INVOKE $factorial WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         9.EvaluateStatement:
         PUSH LITERAL `2`
         PUSH LITERAL `8`
         INVOKE $exponential WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         10.EvaluateStatement:
         PUSH LITERAL `π`
         INVOKE $inverse WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         11.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         INVOKE $conjugate WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         12.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         13.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $quotient WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         14.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $remainder WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         15.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         INVOKE $sum WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         16.EvaluateStatement:
         LOAD VARIABLE $w
         LOAD VARIABLE $z
         INVOKE $difference WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         17.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         INVOKE $magnitude WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         18.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $isLess WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         19.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $areEqual WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         20.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         INVOKE $isMore WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         21.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         INVOKE $areSame WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         22.EvaluateStatement:
         LOAD VARIABLE $k
         LOAD VARIABLE $m
         INVOKE $doesMatch WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         23.EvaluateStatement:
         LOAD VARIABLE $p
         INVOKE $not WITH 1 ARGUMENT
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         24.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         INVOKE $and WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         25.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         INVOKE $sans WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         26.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         INVOKE $xor WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         27.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         INVOKE $or WITH 2 ARGUMENTS
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         28.EvaluateStatement:
         LOAD VARIABLE $foo
         PUSH LITERAL `5`
         INVOKE $default WITH 2 ARGUMENTS
-        STORE VARIABLE $result
-        LOAD VARIABLE $result
+        STORE VARIABLE $result-1
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         A01428012802B00BB00128032804B00BB0018012601480122805A83F8012
         60016002B07B6003B05A80126011800E780E801260042806B07A2807B07A
-        2804B07A8012600DA049600AB001C80180122808A82980122809280AB027
-        8012280BA8378012280CA81A801260166017B05A801260016002B05D8012
-        60036005B062801260166017B07B801260156018B0218012280CA84B8012
+        2804B07A8012600DA049600AB001C80180122809A8298012280A280BB027
+        8012280CA8378012280DA81A801260166017B05A801260016002B05D8012
+        60036005B062801260166017B07B801260156018B0218012280DA84B8012
         60016002B03A801260036005B008801260066008B03B80126009600BB009
         8012600C600FB02380126010A84E801260016002B004801260036005B06D
         801260066008B08880126009600BB051801260072804B01F80126012E000
@@ -252,7 +252,7 @@
         "27.EvaluateStatement": 111
         "28.EvaluateStatement": 115
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
         $a
         $b
@@ -267,11 +267,11 @@
         $j
         $k
         $list
-        $location-1
+        $location-2
         $m
         $p
         $reference
-        $result
+        $result-1
         $target
         $variable
         $w

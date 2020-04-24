@@ -13,43 +13,43 @@
     $instructions: "
         1.SelectStatement:
         PUSH LITERAL `$selection`
-        STORE VARIABLE $selector-1
+        STORE VARIABLE $selector-2
         
         1.1.OptionClause:
-        LOAD VARIABLE $selector-1
+        LOAD VARIABLE $selector-2
         PUSH LITERAL `"alpha"`
         INVOKE $doesMatch WITH 2 ARGUMENTS
         JUMP TO 1.2.OptionClause ON FALSE
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.1.OptionClauseDone:
         JUMP TO 1.SelectStatementDone
         
         1.2.OptionClause:
-        LOAD VARIABLE $selector-1
+        LOAD VARIABLE $selector-2
         PUSH LITERAL `"beta"`
         INVOKE $doesMatch WITH 2 ARGUMENTS
         JUMP TO 1.3.OptionClause ON FALSE
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.2.OptionClauseDone:
         JUMP TO 1.SelectStatementDone
         
         1.3.OptionClause:
-        LOAD VARIABLE $selector-1
+        LOAD VARIABLE $selector-2
         PUSH LITERAL `"gamma"`
         INVOKE $doesMatch WITH 2 ARGUMENTS
         JUMP TO 1.4.ElseClause ON FALSE
         
         1.3.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.3.OptionClauseDone:
         JUMP TO 1.SelectStatementDone
@@ -59,18 +59,18 @@
         
         1.4.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $result
+        STORE VARIABLE $result-1
         
         1.4.ElseClauseDone:
         JUMP TO 1.SelectStatementDone
         
         1.SelectStatementDone:
-        LOAD VARIABLE $result
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '
         2801800260022802B023180A28038001001C60022804B023181128038001
-        001C60022805B023181828038001001C000028038001001C6001E000
+        001C60022806B023181828038001001C000028038001001C6001E000
     '(
         $encoding: $base16
         $mediatype: "application/bcod"
@@ -91,10 +91,10 @@
         "1.4.ElseClauseDone": 27
         "1.SelectStatementDone": 28
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
-        $result
-        $selector-1
+        $result-1
+        $selector-2
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

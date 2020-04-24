@@ -192,7 +192,7 @@ const Decoder = function(debug) {
                         case types.HANDLER:
                         case types.LITERAL:
                         case types.CONSTANT:
-                        case types.PARAMETER:
+                        case types.ARGUMENT:
                             return operand > 0;
                         default:
                             return false;

@@ -23,20 +23,20 @@ describe('Bali Nebula™ Type Compiler', function() {
 
     describe('Test the compiler and assembler.', function() {
 
-        it('should compile procedures into assembly instructions and bytecodes', async function() {
+        it('should compile methods into assembly instructions and bytecodes', async function() {
             const testFolder = 'test/compiler/';
             const files = await pfs.readdir(testFolder);
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;
 
-                // read in the procedure source code
+                // read in the method source code
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
                 var source = await pfs.readFile(baliFile, 'utf8');
-                var procedure = bali.component(source);
-                expect(procedure).to.exist;
+                var method = bali.component(source);
+                expect(method).to.exist;
 
                 // create the type context
                 var literals = bali.list();
@@ -45,15 +45,18 @@ describe('Bali Nebula™ Type Compiler', function() {
                 type.setValue('$literals', literals);
                 type.setValue('$constants', constants);
 
-                // compile the procedure
-                compiler.compileMethod(type, procedure);
+                // clean the method
+                compiler.cleanMethod(method);
 
-                // assemble the procedure into bytecode
-                compiler.assembleMethod(type, procedure);
+                // compile the method
+                compiler.compileMethod(type, method);
+
+                // assemble the method into bytecode
+                compiler.assembleMethod(type, method);
 
                 // check for differences
-                source = procedure.toString() + '\n';  // POSIX compliant <EOL>
-                await pfs.writeFile(baliFile, source, 'utf8');
+                source = method.toString() + '\n';  // POSIX compliant <EOL>
+                //await pfs.writeFile(baliFile, source, 'utf8');
                 var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;
                 expect(source).to.equal(expected);

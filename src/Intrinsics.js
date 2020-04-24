@@ -619,9 +619,10 @@ exports.api = function(debug) {
             return catalog.getKeys();
         },
 
-        $keyValue: function(association) {
-            validateTypeArgument('$keyValue', '/bali/structures/Association', association);
-            return association.getValue();
+        $keyValue: function(catalog, key) {
+            validateTypeArgument('$keyValue', '/bali/collections/Catalog', catalog);
+            validateTypeArgument('$keyValue', '/bali/types/Element', key);
+            return catalog.getValue(key) || bali.pattern.NONE;
         },
 
         $last: function(range) {
@@ -1012,10 +1013,9 @@ exports.api = function(debug) {
             return bali.component(component.getType());
         },
 
-        $value: function(catalog, key) {
-            validateTypeArgument('$value', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$value', '/bali/types/Element', key);
-            return catalog.getValue(key) || bali.pattern.NONE;
+        $value: function(association) {
+            validateTypeArgument('$value', '/bali/structures/Association', association);
+            return association.getValue();
         },
 
         $values: function(catalog, keys) {

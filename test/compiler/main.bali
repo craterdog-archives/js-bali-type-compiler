@@ -5,8 +5,8 @@
     $instructions: "
         1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $result
-        LOAD VARIABLE $result
+        STORE VARIABLE $result-1
+        LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
     $bytecode: '280180016001E000'(
@@ -16,9 +16,9 @@
     $addresses: [
         "1.EvaluateStatement": 1
     ]
-    $parameters: [ ]
+    $arguments: [ ]($type: /bali/collections/Set/v1)
     $variables: [
-        $result
+        $result-1
         $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

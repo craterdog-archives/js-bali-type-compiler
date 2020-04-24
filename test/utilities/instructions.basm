@@ -15,7 +15,7 @@ PUSH LITERAL `{
     $baz := foo
 }($bar: 5)`
 PUSH CONSTANT $constant
-PUSH PARAMETER $parameter
+PUSH ARGUMENT $argument
 
 3.pop:
 POP HANDLER

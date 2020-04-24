@@ -162,7 +162,7 @@ ParsingVisitor.prototype.visitJumpInstruction = function(ctx) {
 //     'PUSH' 'HANDLER' LABEL |
 //     'PUSH' 'LITERAL' LITERAL |
 //     'PUSH' 'CONSTANT' SYMBOL |
-//     'PUSH' 'PARAMETER' SYMBOL
+//     'PUSH' 'ARGUMENT' SYMBOL
 ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.PUSH);
@@ -178,7 +178,7 @@ ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
             value = bali.component(operand.slice(1, -1));  // remove the back tick delimeters
             break;
         case types.CONSTANT:
-        case types.PARAMETER:
+        case types.ARGUMENT:
             value = bali.component(operand);
             break;
     }

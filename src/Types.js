@@ -36,7 +36,7 @@ exports.HANDLER = 0;
 exports.COMPONENT = 1;
 exports.LITERAL = 1;
 exports.CONSTANT = 2;
-exports.PARAMETER = 3;
+exports.ARGUMENT = 3;
 
 exports.VARIABLE = 0;
 exports.MESSAGE = 1;
@@ -150,7 +150,7 @@ const PUSH_MODIFIERS = [
     'HANDLER',
     'LITERAL',
     'CONSTANT',
-    'PARAMETER'
+    'ARGUMENT'
 ];
 
 const POP_MODIFIERS = [
