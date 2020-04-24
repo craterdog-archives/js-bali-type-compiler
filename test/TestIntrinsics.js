@@ -745,6 +745,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $day intrinsic function', function() {
+            const index = intrinsics.index('$day');
+            intrinsics.invoke(index, moment);
+        });
+
         it('should invoke $default intrinsic function', function() {
             const index = intrinsics.index('$default');
             intrinsics.invoke(index, number, number);
@@ -1113,6 +1118,11 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, stack);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $hour intrinsic function', function() {
+            const index = intrinsics.index('$hour');
+            intrinsics.invoke(index, moment);
         });
 
         it('should invoke $HTML intrinsic function', function() {
@@ -1755,6 +1765,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $millisecond intrinsic function', function() {
+            const index = intrinsics.index('$millisecond');
+            intrinsics.invoke(index, moment);
+        });
+
+        it('should invoke $minute intrinsic function', function() {
+            const index = intrinsics.index('$minute');
+            intrinsics.invoke(index, moment);
+        });
+
+        it('should invoke $month intrinsic function', function() {
+            const index = intrinsics.index('$month');
+            intrinsics.invoke(index, moment);
+        });
+
         it('should invoke $next intrinsic function', function() {
             const index = intrinsics.index('$next');
             intrinsics.invoke(index, iterator);
@@ -2380,6 +2405,11 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $second intrinsic function', function() {
+            const index = intrinsics.index('$second');
+            intrinsics.invoke(index, moment);
+        });
+
         it('should invoke $set intrinsic function', function() {
             const index = intrinsics.index('$set');
             intrinsics.invoke(index);
@@ -2867,6 +2897,11 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, set, probability);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $year intrinsic function', function() {
+            const index = intrinsics.index('$year');
+            intrinsics.invoke(index, moment);
         });
 
     });
