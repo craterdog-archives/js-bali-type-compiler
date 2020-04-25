@@ -397,8 +397,13 @@ exports.api = function(debug) {
         },
 
         $day: function(moment) {
-            validateTypeArgument('$day', '/bali/elements/Moment', moment);
+            validateTypeArgument('$days', '/bali/elements/Moment', moment);
             return bali.number(moment.getDay(moment));
+        },
+
+        $days: function(duration) {
+            validateTypeArgument('$day', '/bali/elements/Duration', duration);
+            return bali.number(duration.getDays(duration));
         },
 
         $default: function(component, defaultValue) {
@@ -508,6 +513,11 @@ exports.api = function(debug) {
         $hour: function(moment) {
             validateTypeArgument('$hour', '/bali/elements/Moment', moment);
             return bali.number(moment.getHour(moment));
+        },
+
+        $hours: function(duration) {
+            validateTypeArgument('$hours', '/bali/elements/Duration', duration);
+            return bali.number(duration.getHours(duration));
         },
 
         $HTML: function(component, style) {
@@ -675,14 +685,29 @@ exports.api = function(debug) {
             return bali.number(moment.getMillisecond(moment));
         },
 
+        $milliseconds: function(duration) {
+            validateTypeArgument('$milliseconds', '/bali/elements/Duration', duration);
+            return bali.number(duration.getMilliseconds(duration));
+        },
+
         $minute: function(moment) {
             validateTypeArgument('$minute', '/bali/elements/Moment', moment);
             return bali.number(moment.getMinute(moment));
         },
 
+        $minutes: function(duration) {
+            validateTypeArgument('$minutes', '/bali/elements/Duration', duration);
+            return bali.number(duration.getMinutes(duration));
+        },
+
         $month: function(moment) {
             validateTypeArgument('$month', '/bali/elements/Moment', moment);
             return bali.number(moment.getMonth(moment));
+        },
+
+        $months: function(duration) {
+            validateTypeArgument('$months', '/bali/elements/Duration', duration);
+            return bali.number(duration.getMonths(duration));
         },
 
         $next: function(iterator) {
@@ -905,6 +930,11 @@ exports.api = function(debug) {
             return bali.number(moment.getSecond(moment));
         },
 
+        $seconds: function(duration) {
+            validateTypeArgument('$seconds', '/bali/elements/Duration', duration);
+            return bali.number(duration.getSeconds(duration));
+        },
+
         $set: function(items, parameters) {
             validateOptionalTypeArgument('$set', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
@@ -1054,6 +1084,11 @@ exports.api = function(debug) {
             return catalog.getValues(keys);
         },
 
+        $weeks: function(duration) {
+            validateTypeArgument('$weeks', '/bali/elements/Duration', duration);
+            return bali.number(duration.getWeeks(duration));
+        },
+
         $xor: function(first, second) {
             validateInterfaceArgument('$xor', '/bali/interfaces/Logical', first);
             validateInterfaceArgument('$xor', '/bali/interfaces/Logical', second);
@@ -1064,6 +1099,11 @@ exports.api = function(debug) {
         $year: function(moment) {
             validateTypeArgument('$year', '/bali/elements/Moment', moment);
             return bali.number(moment.getYear(moment));
+        },
+
+        $years: function(duration) {
+            validateTypeArgument('$years', '/bali/elements/Duration', duration);
+            return bali.number(duration.getYears(duration));
         }
 
     };
