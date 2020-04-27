@@ -1,4 +1,4 @@
-// Generated from src/grammar/InstructionSet.g4 by ANTLR 4.7.1
+// Generated from src/grammar/Document.g4 by ANTLR 4.7.1
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 
@@ -206,100 +206,95 @@ var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
 var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new antlr4.dfa.DFA(ds, index); });
 
-function InstructionSetLexer(input) {
+function DocumentLexer(input) {
 	antlr4.Lexer.call(this, input);
     this._interp = new antlr4.atn.LexerATNSimulator(this, atn, decisionsToDFA, new antlr4.PredictionContextCache());
     return this;
 }
 
-InstructionSetLexer.prototype = Object.create(antlr4.Lexer.prototype);
-InstructionSetLexer.prototype.constructor = InstructionSetLexer;
+DocumentLexer.prototype = Object.create(antlr4.Lexer.prototype);
+DocumentLexer.prototype.constructor = DocumentLexer;
 
-Object.defineProperty(InstructionSetLexer.prototype, "atn", {
+Object.defineProperty(DocumentLexer.prototype, "atn", {
         get : function() {
                 return atn;
         }
 });
 
-InstructionSetLexer.EOF = antlr4.Token.EOF;
-InstructionSetLexer.T__0 = 1;
-InstructionSetLexer.T__1 = 2;
-InstructionSetLexer.T__2 = 3;
-InstructionSetLexer.T__3 = 4;
-InstructionSetLexer.T__4 = 5;
-InstructionSetLexer.T__5 = 6;
-InstructionSetLexer.T__6 = 7;
-InstructionSetLexer.T__7 = 8;
-InstructionSetLexer.T__8 = 9;
-InstructionSetLexer.T__9 = 10;
-InstructionSetLexer.T__10 = 11;
-InstructionSetLexer.T__11 = 12;
-InstructionSetLexer.T__12 = 13;
-InstructionSetLexer.T__13 = 14;
-InstructionSetLexer.T__14 = 15;
-InstructionSetLexer.T__15 = 16;
-InstructionSetLexer.T__16 = 17;
-InstructionSetLexer.T__17 = 18;
-InstructionSetLexer.T__18 = 19;
-InstructionSetLexer.T__19 = 20;
-InstructionSetLexer.T__20 = 21;
-InstructionSetLexer.T__21 = 22;
-InstructionSetLexer.T__22 = 23;
-InstructionSetLexer.T__23 = 24;
-InstructionSetLexer.T__24 = 25;
-InstructionSetLexer.T__25 = 26;
-InstructionSetLexer.T__26 = 27;
-InstructionSetLexer.T__27 = 28;
-InstructionSetLexer.T__28 = 29;
-InstructionSetLexer.LABEL = 30;
-InstructionSetLexer.NUMBER = 31;
-InstructionSetLexer.LITERAL = 32;
-InstructionSetLexer.SYMBOL = 33;
-InstructionSetLexer.EOL = 34;
-InstructionSetLexer.SPACE = 35;
+DocumentLexer.EOF = antlr4.Token.EOF;
+DocumentLexer.T__0 = 1;
+DocumentLexer.T__1 = 2;
+DocumentLexer.T__2 = 3;
+DocumentLexer.T__3 = 4;
+DocumentLexer.T__4 = 5;
+DocumentLexer.T__5 = 6;
+DocumentLexer.T__6 = 7;
+DocumentLexer.T__7 = 8;
+DocumentLexer.T__8 = 9;
+DocumentLexer.T__9 = 10;
+DocumentLexer.T__10 = 11;
+DocumentLexer.T__11 = 12;
+DocumentLexer.T__12 = 13;
+DocumentLexer.T__13 = 14;
+DocumentLexer.T__14 = 15;
+DocumentLexer.T__15 = 16;
+DocumentLexer.T__16 = 17;
+DocumentLexer.T__17 = 18;
+DocumentLexer.T__18 = 19;
+DocumentLexer.T__19 = 20;
+DocumentLexer.T__20 = 21;
+DocumentLexer.T__21 = 22;
+DocumentLexer.T__22 = 23;
+DocumentLexer.T__23 = 24;
+DocumentLexer.T__24 = 25;
+DocumentLexer.T__25 = 26;
+DocumentLexer.T__26 = 27;
+DocumentLexer.T__27 = 28;
+DocumentLexer.T__28 = 29;
+DocumentLexer.LABEL = 30;
+DocumentLexer.NUMBER = 31;
+DocumentLexer.LITERAL = 32;
+DocumentLexer.SYMBOL = 33;
+DocumentLexer.EOL = 34;
+DocumentLexer.SPACE = 35;
 
-InstructionSetLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
+DocumentLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
 
-InstructionSetLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
+DocumentLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
 
-InstructionSetLexer.prototype.literalNames = [ null, "':'", "'SKIP INSTRUCTION'", 
-                                               "'JUMP'", "'TO'", "'ON'", 
-                                               "'NONE'", "'TRUE'", "'FALSE'", 
-                                               "'PUSH'", "'HANDLER'", "'LITERAL'", 
-                                               "'CONSTANT'", "'ARGUMENT'", 
-                                               "'POP'", "'COMPONENT'", "'LOAD'", 
-                                               "'VARIABLE'", "'MESSAGE'", 
-                                               "'DRAFT'", "'DOCUMENT'", 
-                                               "'STORE'", "'INVOKE'", "'WITH'", 
-                                               "'1'", "'ARGUMENTS'", "'SEND'", 
-                                               "'HANDLE'", "'EXCEPTION'", 
-                                               "'RESULT'" ];
+DocumentLexer.prototype.literalNames = [ null, "':'", "'SKIP INSTRUCTION'", 
+                                         "'JUMP'", "'TO'", "'ON'", "'NONE'", 
+                                         "'TRUE'", "'FALSE'", "'PUSH'", 
+                                         "'HANDLER'", "'LITERAL'", "'CONSTANT'", 
+                                         "'ARGUMENT'", "'POP'", "'COMPONENT'", 
+                                         "'LOAD'", "'VARIABLE'", "'MESSAGE'", 
+                                         "'DRAFT'", "'DOCUMENT'", "'STORE'", 
+                                         "'INVOKE'", "'WITH'", "'1'", "'ARGUMENTS'", 
+                                         "'SEND'", "'HANDLE'", "'EXCEPTION'", 
+                                         "'RESULT'" ];
 
-InstructionSetLexer.prototype.symbolicNames = [ null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, null, null, 
-                                                null, null, "LABEL", "NUMBER", 
-                                                "LITERAL", "SYMBOL", "EOL", 
-                                                "SPACE" ];
+DocumentLexer.prototype.symbolicNames = [ null, null, null, null, null, 
+                                          null, null, null, null, null, 
+                                          null, null, null, null, null, 
+                                          null, null, null, null, null, 
+                                          null, null, null, null, null, 
+                                          null, null, null, null, null, 
+                                          "LABEL", "NUMBER", "LITERAL", 
+                                          "SYMBOL", "EOL", "SPACE" ];
 
-InstructionSetLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", "T__3", 
-                                            "T__4", "T__5", "T__6", "T__7", 
-                                            "T__8", "T__9", "T__10", "T__11", 
-                                            "T__12", "T__13", "T__14", "T__15", 
-                                            "T__16", "T__17", "T__18", "T__19", 
-                                            "T__20", "T__21", "T__22", "T__23", 
-                                            "T__24", "T__25", "T__26", "T__27", 
-                                            "T__28", "LABEL", "NUMBER", 
-                                            "LITERAL", "SYMBOL", "EOL", 
-                                            "SPACE", "IDENTIFIER" ];
+DocumentLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", 
+                                      "T__5", "T__6", "T__7", "T__8", "T__9", 
+                                      "T__10", "T__11", "T__12", "T__13", 
+                                      "T__14", "T__15", "T__16", "T__17", 
+                                      "T__18", "T__19", "T__20", "T__21", 
+                                      "T__22", "T__23", "T__24", "T__25", 
+                                      "T__26", "T__27", "T__28", "LABEL", 
+                                      "NUMBER", "LITERAL", "SYMBOL", "EOL", 
+                                      "SPACE", "IDENTIFIER" ];
 
-InstructionSetLexer.prototype.grammarFileName = "InstructionSet.g4";
+DocumentLexer.prototype.grammarFileName = "Document.g4";
 
 
 
-exports.InstructionSetLexer = InstructionSetLexer;
+exports.DocumentLexer = DocumentLexer;
 

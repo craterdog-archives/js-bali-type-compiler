@@ -63,12 +63,12 @@ Parser.prototype.parseInstructions = function(assembly) {
 function initializeParser(document, debug) {
     debug = debug || false;
     const chars = new antlr.InputStream(document);
-    const lexer = new grammar.InstructionSetLexer(chars);
+    const lexer = new grammar.DocumentLexer(chars);
     const listener = new CustomErrorListener(debug);
     lexer.removeErrorListeners();
     lexer.addErrorListener(listener);
     const tokens = new antlr.CommonTokenStream(lexer);
-    const parser = new grammar.InstructionSetParser(tokens);
+    const parser = new grammar.DocumentParser(tokens);
     parser.buildParseTrees = true;
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
@@ -88,10 +88,10 @@ function convertParseTree(antlrTree) {
 // PRIVATE CLASSES
 
 function ParsingVisitor() {
-    grammar.InstructionSetVisitor.call(this);
+    grammar.DocumentVisitor.call(this);
     return this;
 }
-ParsingVisitor.prototype = Object.create(grammar.InstructionSetVisitor.prototype);
+ParsingVisitor.prototype = Object.create(grammar.DocumentVisitor.prototype);
 ParsingVisitor.prototype.constructor = ParsingVisitor;
 
 
@@ -277,7 +277,7 @@ ParsingVisitor.prototype.visitHandleInstruction = function(ctx) {
 // CUSTOM ERROR HANDLING
 
 // override the recover method in the lexer to fail fast
-grammar.InstructionSetLexer.prototype.recover = function(e) {
+grammar.DocumentLexer.prototype.recover = function(e) {
     throw e;
 };
 

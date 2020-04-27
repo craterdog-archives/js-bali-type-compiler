@@ -11,7 +11,7 @@
 
 /**
  * This module defines a class that assembles compiled methods into bytecode that
- * can run on the Bali Nebula™ Virtual Processor.
+ * can run on the Bali Virtual Machine™.
  */
 const bali = require('bali-component-framework').api();
 const Decoder = require('./Decoder').Decoder;
@@ -42,8 +42,8 @@ exports.assembler = new Assembler();
 
 
 /**
- * This method assembles the instructions in a compiled method into the corresponding
- * bytecode to be run on the Nebula Virtual Processor.
+ * This method assembles the instructions for a procedure in a compiled method into the
+ * corresponding bytecode to be run on the Bali Virtual Machine™.
  *
  * @param {Catalog} type The type context for the method being assembled.
  * @param {Catalog} method The method being assembled.

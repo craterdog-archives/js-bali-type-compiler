@@ -9,7 +9,7 @@
  ************************************************************************/
 'use strict';
 
-exports.InstructionSetLexer = require('./InstructionSetLexer').InstructionSetLexer;
-exports.InstructionSetParser = require('./InstructionSetParser').InstructionSetParser;
-exports.InstructionSetVisitor = require('./InstructionSetVisitor').InstructionSetVisitor;
-exports.InstructionSetListener = require('./InstructionSetListener').InstructionSetListener;
+exports.DocumentLexer = require('./DocumentLexer').DocumentLexer;
+exports.DocumentParser = require('./DocumentParser').DocumentParser;
+exports.DocumentVisitor = require('./DocumentVisitor').DocumentVisitor;
+exports.DocumentListener = require('./DocumentListener').DocumentListener;

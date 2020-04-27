@@ -1,8 +1,5 @@
-grammar InstructionSet;
-
-// RULES
-
-document: EOL* instructions EOL* EOF;
+grammar Instructions;
+import Tokens;
 
 instructions: step (EOL step)*;
 
@@ -107,22 +104,3 @@ handleInstruction:
     'HANDLE' 'EXCEPTION' |
     'HANDLE' 'RESULT'
 ;
-
-
-// TOKENS
-
-LABEL: (NUMBER '.')+ IDENTIFIER;
-
-NUMBER: '1'..'9' ('0'..'9')*;
-
-LITERAL: '`' ('\\`' | ~'`')*? '`';
-
-SYMBOL: '$' IDENTIFIER ('-' NUMBER)?;
-
-EOL: '\r'? '\n';
-
-// remove white space
-SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN);
-
-fragment
-IDENTIFIER: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*;

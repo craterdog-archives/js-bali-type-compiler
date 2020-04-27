@@ -1,10 +1,10 @@
-// Generated from src/grammar/InstructionSet.g4 by ANTLR 4.7.1
+// Generated from src/grammar/Document.g4 by ANTLR 4.7.1
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
-var InstructionSetListener = require('./InstructionSetListener').InstructionSetListener;
-var InstructionSetVisitor = require('./InstructionSetVisitor').InstructionSetVisitor;
+var DocumentListener = require('./DocumentListener').DocumentListener;
+var DocumentVisitor = require('./DocumentVisitor').DocumentVisitor;
 
-var grammarFileName = "InstructionSet.g4";
+var grammarFileName = "Document.g4";
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003%\u00c1\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
@@ -152,7 +152,7 @@ var ruleNames =  [ "document", "instructions", "step", "label", "variable",
                    "storeInstruction", "invokeInstruction", "sendInstruction", 
                    "handleInstruction" ];
 
-function InstructionSetParser (input) {
+function DocumentParser (input) {
 	antlr4.Parser.call(this, input);
     this._interp = new antlr4.atn.ParserATNSimulator(this, atn, decisionsToDFA, sharedContextCache);
     this.ruleNames = ruleNames;
@@ -161,67 +161,67 @@ function InstructionSetParser (input) {
     return this;
 }
 
-InstructionSetParser.prototype = Object.create(antlr4.Parser.prototype);
-InstructionSetParser.prototype.constructor = InstructionSetParser;
+DocumentParser.prototype = Object.create(antlr4.Parser.prototype);
+DocumentParser.prototype.constructor = DocumentParser;
 
-Object.defineProperty(InstructionSetParser.prototype, "atn", {
+Object.defineProperty(DocumentParser.prototype, "atn", {
 	get : function() {
 		return atn;
 	}
 });
 
-InstructionSetParser.EOF = antlr4.Token.EOF;
-InstructionSetParser.T__0 = 1;
-InstructionSetParser.T__1 = 2;
-InstructionSetParser.T__2 = 3;
-InstructionSetParser.T__3 = 4;
-InstructionSetParser.T__4 = 5;
-InstructionSetParser.T__5 = 6;
-InstructionSetParser.T__6 = 7;
-InstructionSetParser.T__7 = 8;
-InstructionSetParser.T__8 = 9;
-InstructionSetParser.T__9 = 10;
-InstructionSetParser.T__10 = 11;
-InstructionSetParser.T__11 = 12;
-InstructionSetParser.T__12 = 13;
-InstructionSetParser.T__13 = 14;
-InstructionSetParser.T__14 = 15;
-InstructionSetParser.T__15 = 16;
-InstructionSetParser.T__16 = 17;
-InstructionSetParser.T__17 = 18;
-InstructionSetParser.T__18 = 19;
-InstructionSetParser.T__19 = 20;
-InstructionSetParser.T__20 = 21;
-InstructionSetParser.T__21 = 22;
-InstructionSetParser.T__22 = 23;
-InstructionSetParser.T__23 = 24;
-InstructionSetParser.T__24 = 25;
-InstructionSetParser.T__25 = 26;
-InstructionSetParser.T__26 = 27;
-InstructionSetParser.T__27 = 28;
-InstructionSetParser.T__28 = 29;
-InstructionSetParser.LABEL = 30;
-InstructionSetParser.NUMBER = 31;
-InstructionSetParser.LITERAL = 32;
-InstructionSetParser.SYMBOL = 33;
-InstructionSetParser.EOL = 34;
-InstructionSetParser.SPACE = 35;
+DocumentParser.EOF = antlr4.Token.EOF;
+DocumentParser.T__0 = 1;
+DocumentParser.T__1 = 2;
+DocumentParser.T__2 = 3;
+DocumentParser.T__3 = 4;
+DocumentParser.T__4 = 5;
+DocumentParser.T__5 = 6;
+DocumentParser.T__6 = 7;
+DocumentParser.T__7 = 8;
+DocumentParser.T__8 = 9;
+DocumentParser.T__9 = 10;
+DocumentParser.T__10 = 11;
+DocumentParser.T__11 = 12;
+DocumentParser.T__12 = 13;
+DocumentParser.T__13 = 14;
+DocumentParser.T__14 = 15;
+DocumentParser.T__15 = 16;
+DocumentParser.T__16 = 17;
+DocumentParser.T__17 = 18;
+DocumentParser.T__18 = 19;
+DocumentParser.T__19 = 20;
+DocumentParser.T__20 = 21;
+DocumentParser.T__21 = 22;
+DocumentParser.T__22 = 23;
+DocumentParser.T__23 = 24;
+DocumentParser.T__24 = 25;
+DocumentParser.T__25 = 26;
+DocumentParser.T__26 = 27;
+DocumentParser.T__27 = 28;
+DocumentParser.T__28 = 29;
+DocumentParser.LABEL = 30;
+DocumentParser.NUMBER = 31;
+DocumentParser.LITERAL = 32;
+DocumentParser.SYMBOL = 33;
+DocumentParser.EOL = 34;
+DocumentParser.SPACE = 35;
 
-InstructionSetParser.RULE_document = 0;
-InstructionSetParser.RULE_instructions = 1;
-InstructionSetParser.RULE_step = 2;
-InstructionSetParser.RULE_label = 3;
-InstructionSetParser.RULE_variable = 4;
-InstructionSetParser.RULE_instruction = 5;
-InstructionSetParser.RULE_skipInstruction = 6;
-InstructionSetParser.RULE_jumpInstruction = 7;
-InstructionSetParser.RULE_pushInstruction = 8;
-InstructionSetParser.RULE_popInstruction = 9;
-InstructionSetParser.RULE_loadInstruction = 10;
-InstructionSetParser.RULE_storeInstruction = 11;
-InstructionSetParser.RULE_invokeInstruction = 12;
-InstructionSetParser.RULE_sendInstruction = 13;
-InstructionSetParser.RULE_handleInstruction = 14;
+DocumentParser.RULE_document = 0;
+DocumentParser.RULE_instructions = 1;
+DocumentParser.RULE_step = 2;
+DocumentParser.RULE_label = 3;
+DocumentParser.RULE_variable = 4;
+DocumentParser.RULE_instruction = 5;
+DocumentParser.RULE_skipInstruction = 6;
+DocumentParser.RULE_jumpInstruction = 7;
+DocumentParser.RULE_pushInstruction = 8;
+DocumentParser.RULE_popInstruction = 9;
+DocumentParser.RULE_loadInstruction = 10;
+DocumentParser.RULE_storeInstruction = 11;
+DocumentParser.RULE_invokeInstruction = 12;
+DocumentParser.RULE_sendInstruction = 13;
+DocumentParser.RULE_handleInstruction = 14;
 
 function DocumentContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -232,7 +232,7 @@ function DocumentContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_document;
+    this.ruleIndex = DocumentParser.RULE_document;
     return this;
 }
 
@@ -244,7 +244,7 @@ DocumentContext.prototype.instructions = function() {
 };
 
 DocumentContext.prototype.EOF = function() {
-    return this.getToken(InstructionSetParser.EOF, 0);
+    return this.getToken(DocumentParser.EOF, 0);
 };
 
 DocumentContext.prototype.EOL = function(i) {
@@ -252,27 +252,27 @@ DocumentContext.prototype.EOL = function(i) {
 		i = null;
 	}
     if(i===null) {
-        return this.getTokens(InstructionSetParser.EOL);
+        return this.getTokens(DocumentParser.EOL);
     } else {
-        return this.getToken(InstructionSetParser.EOL, i);
+        return this.getToken(DocumentParser.EOL, i);
     }
 };
 
 
 DocumentContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterDocument(this);
 	}
 };
 
 DocumentContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitDocument(this);
 	}
 };
 
 DocumentContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitDocument(this);
     } else {
         return visitor.visitChildren(this);
@@ -282,12 +282,12 @@ DocumentContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.DocumentContext = DocumentContext;
+DocumentParser.DocumentContext = DocumentContext;
 
-InstructionSetParser.prototype.document = function() {
+DocumentParser.prototype.document = function() {
 
     var localctx = new DocumentContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 0, InstructionSetParser.RULE_document);
+    this.enterRule(localctx, 0, DocumentParser.RULE_document);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
@@ -297,7 +297,7 @@ InstructionSetParser.prototype.document = function() {
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
                 this.state = 30;
-                this.match(InstructionSetParser.EOL); 
+                this.match(DocumentParser.EOL); 
             }
             this.state = 35;
             this._errHandler.sync(this);
@@ -309,15 +309,15 @@ InstructionSetParser.prototype.document = function() {
         this.state = 40;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===InstructionSetParser.EOL) {
+        while(_la===DocumentParser.EOL) {
             this.state = 37;
-            this.match(InstructionSetParser.EOL);
+            this.match(DocumentParser.EOL);
             this.state = 42;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
         this.state = 43;
-        this.match(InstructionSetParser.EOF);
+        this.match(DocumentParser.EOF);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -341,7 +341,7 @@ function InstructionsContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_instructions;
+    this.ruleIndex = DocumentParser.RULE_instructions;
     return this;
 }
 
@@ -364,27 +364,27 @@ InstructionsContext.prototype.EOL = function(i) {
 		i = null;
 	}
     if(i===null) {
-        return this.getTokens(InstructionSetParser.EOL);
+        return this.getTokens(DocumentParser.EOL);
     } else {
-        return this.getToken(InstructionSetParser.EOL, i);
+        return this.getToken(DocumentParser.EOL, i);
     }
 };
 
 
 InstructionsContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterInstructions(this);
 	}
 };
 
 InstructionsContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitInstructions(this);
 	}
 };
 
 InstructionsContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitInstructions(this);
     } else {
         return visitor.visitChildren(this);
@@ -394,12 +394,12 @@ InstructionsContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.InstructionsContext = InstructionsContext;
+DocumentParser.InstructionsContext = InstructionsContext;
 
-InstructionSetParser.prototype.instructions = function() {
+DocumentParser.prototype.instructions = function() {
 
     var localctx = new InstructionsContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 2, InstructionSetParser.RULE_instructions);
+    this.enterRule(localctx, 2, DocumentParser.RULE_instructions);
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 45;
@@ -410,7 +410,7 @@ InstructionSetParser.prototype.instructions = function() {
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
                 this.state = 46;
-                this.match(InstructionSetParser.EOL);
+                this.match(DocumentParser.EOL);
                 this.state = 47;
                 this.step(); 
             }
@@ -442,7 +442,7 @@ function StepContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_step;
+    this.ruleIndex = DocumentParser.RULE_step;
     return this;
 }
 
@@ -458,19 +458,19 @@ StepContext.prototype.label = function() {
 };
 
 StepContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterStep(this);
 	}
 };
 
 StepContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitStep(this);
 	}
 };
 
 StepContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitStep(this);
     } else {
         return visitor.visitChildren(this);
@@ -480,19 +480,19 @@ StepContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.StepContext = StepContext;
+DocumentParser.StepContext = StepContext;
 
-InstructionSetParser.prototype.step = function() {
+DocumentParser.prototype.step = function() {
 
     var localctx = new StepContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 4, InstructionSetParser.RULE_step);
+    this.enterRule(localctx, 4, DocumentParser.RULE_step);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 54;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        if(_la===InstructionSetParser.LABEL || _la===InstructionSetParser.EOL) {
+        if(_la===DocumentParser.LABEL || _la===DocumentParser.EOL) {
             this.state = 53;
             this.label();
         }
@@ -522,7 +522,7 @@ function LabelContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_label;
+    this.ruleIndex = DocumentParser.RULE_label;
     return this;
 }
 
@@ -530,7 +530,7 @@ LabelContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 LabelContext.prototype.constructor = LabelContext;
 
 LabelContext.prototype.LABEL = function() {
-    return this.getToken(InstructionSetParser.LABEL, 0);
+    return this.getToken(DocumentParser.LABEL, 0);
 };
 
 LabelContext.prototype.EOL = function(i) {
@@ -538,27 +538,27 @@ LabelContext.prototype.EOL = function(i) {
 		i = null;
 	}
     if(i===null) {
-        return this.getTokens(InstructionSetParser.EOL);
+        return this.getTokens(DocumentParser.EOL);
     } else {
-        return this.getToken(InstructionSetParser.EOL, i);
+        return this.getToken(DocumentParser.EOL, i);
     }
 };
 
 
 LabelContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterLabel(this);
 	}
 };
 
 LabelContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitLabel(this);
 	}
 };
 
 LabelContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitLabel(this);
     } else {
         return visitor.visitChildren(this);
@@ -568,29 +568,29 @@ LabelContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.LabelContext = LabelContext;
+DocumentParser.LabelContext = LabelContext;
 
-InstructionSetParser.prototype.label = function() {
+DocumentParser.prototype.label = function() {
 
     var localctx = new LabelContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 6, InstructionSetParser.RULE_label);
+    this.enterRule(localctx, 6, DocumentParser.RULE_label);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 59;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        if(_la===InstructionSetParser.EOL) {
+        if(_la===DocumentParser.EOL) {
             this.state = 58;
-            this.match(InstructionSetParser.EOL);
+            this.match(DocumentParser.EOL);
         }
 
         this.state = 61;
-        this.match(InstructionSetParser.LABEL);
+        this.match(DocumentParser.LABEL);
         this.state = 62;
-        this.match(InstructionSetParser.T__0);
+        this.match(DocumentParser.T__0);
         this.state = 63;
-        this.match(InstructionSetParser.EOL);
+        this.match(DocumentParser.EOL);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -614,7 +614,7 @@ function VariableContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_variable;
+    this.ruleIndex = DocumentParser.RULE_variable;
     return this;
 }
 
@@ -622,23 +622,23 @@ VariableContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 VariableContext.prototype.constructor = VariableContext;
 
 VariableContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+    return this.getToken(DocumentParser.SYMBOL, 0);
 };
 
 VariableContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterVariable(this);
 	}
 };
 
 VariableContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitVariable(this);
 	}
 };
 
 VariableContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitVariable(this);
     } else {
         return visitor.visitChildren(this);
@@ -648,16 +648,16 @@ VariableContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.VariableContext = VariableContext;
+DocumentParser.VariableContext = VariableContext;
 
-InstructionSetParser.prototype.variable = function() {
+DocumentParser.prototype.variable = function() {
 
     var localctx = new VariableContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 8, InstructionSetParser.RULE_variable);
+    this.enterRule(localctx, 8, DocumentParser.RULE_variable);
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 65;
-        this.match(InstructionSetParser.SYMBOL);
+        this.match(DocumentParser.SYMBOL);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -681,7 +681,7 @@ function InstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_instruction;
+    this.ruleIndex = DocumentParser.RULE_instruction;
     return this;
 }
 
@@ -725,19 +725,19 @@ InstructionContext.prototype.handleInstruction = function() {
 };
 
 InstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterInstruction(this);
 	}
 };
 
 InstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitInstruction(this);
 	}
 };
 
 InstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -747,57 +747,57 @@ InstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.InstructionContext = InstructionContext;
+DocumentParser.InstructionContext = InstructionContext;
 
-InstructionSetParser.prototype.instruction = function() {
+DocumentParser.prototype.instruction = function() {
 
     var localctx = new InstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 10, InstructionSetParser.RULE_instruction);
+    this.enterRule(localctx, 10, DocumentParser.RULE_instruction);
     try {
         this.state = 76;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
-        case InstructionSetParser.T__1:
+        case DocumentParser.T__1:
             this.enterOuterAlt(localctx, 1);
             this.state = 67;
             this.skipInstruction();
             break;
-        case InstructionSetParser.T__2:
+        case DocumentParser.T__2:
             this.enterOuterAlt(localctx, 2);
             this.state = 68;
             this.jumpInstruction();
             break;
-        case InstructionSetParser.T__8:
+        case DocumentParser.T__8:
             this.enterOuterAlt(localctx, 3);
             this.state = 69;
             this.pushInstruction();
             break;
-        case InstructionSetParser.T__13:
+        case DocumentParser.T__13:
             this.enterOuterAlt(localctx, 4);
             this.state = 70;
             this.popInstruction();
             break;
-        case InstructionSetParser.T__15:
+        case DocumentParser.T__15:
             this.enterOuterAlt(localctx, 5);
             this.state = 71;
             this.loadInstruction();
             break;
-        case InstructionSetParser.T__20:
+        case DocumentParser.T__20:
             this.enterOuterAlt(localctx, 6);
             this.state = 72;
             this.storeInstruction();
             break;
-        case InstructionSetParser.T__21:
+        case DocumentParser.T__21:
             this.enterOuterAlt(localctx, 7);
             this.state = 73;
             this.invokeInstruction();
             break;
-        case InstructionSetParser.T__25:
+        case DocumentParser.T__25:
             this.enterOuterAlt(localctx, 8);
             this.state = 74;
             this.sendInstruction();
             break;
-        case InstructionSetParser.T__26:
+        case DocumentParser.T__26:
             this.enterOuterAlt(localctx, 9);
             this.state = 75;
             this.handleInstruction();
@@ -828,7 +828,7 @@ function SkipInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_skipInstruction;
+    this.ruleIndex = DocumentParser.RULE_skipInstruction;
     return this;
 }
 
@@ -837,19 +837,19 @@ SkipInstructionContext.prototype.constructor = SkipInstructionContext;
 
 
 SkipInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterSkipInstruction(this);
 	}
 };
 
 SkipInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitSkipInstruction(this);
 	}
 };
 
 SkipInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitSkipInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -859,16 +859,16 @@ SkipInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.SkipInstructionContext = SkipInstructionContext;
+DocumentParser.SkipInstructionContext = SkipInstructionContext;
 
-InstructionSetParser.prototype.skipInstruction = function() {
+DocumentParser.prototype.skipInstruction = function() {
 
     var localctx = new SkipInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 12, InstructionSetParser.RULE_skipInstruction);
+    this.enterRule(localctx, 12, DocumentParser.RULE_skipInstruction);
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 78;
-        this.match(InstructionSetParser.T__1);
+        this.match(DocumentParser.T__1);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -892,7 +892,7 @@ function JumpInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_jumpInstruction;
+    this.ruleIndex = DocumentParser.RULE_jumpInstruction;
     return this;
 }
 
@@ -900,23 +900,23 @@ JumpInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.protot
 JumpInstructionContext.prototype.constructor = JumpInstructionContext;
 
 JumpInstructionContext.prototype.LABEL = function() {
-    return this.getToken(InstructionSetParser.LABEL, 0);
+    return this.getToken(DocumentParser.LABEL, 0);
 };
 
 JumpInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterJumpInstruction(this);
 	}
 };
 
 JumpInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitJumpInstruction(this);
 	}
 };
 
 JumpInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitJumpInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -926,12 +926,12 @@ JumpInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.JumpInstructionContext = JumpInstructionContext;
+DocumentParser.JumpInstructionContext = JumpInstructionContext;
 
-InstructionSetParser.prototype.jumpInstruction = function() {
+DocumentParser.prototype.jumpInstruction = function() {
 
     var localctx = new JumpInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 14, InstructionSetParser.RULE_jumpInstruction);
+    this.enterRule(localctx, 14, DocumentParser.RULE_jumpInstruction);
     try {
         this.state = 98;
         this._errHandler.sync(this);
@@ -940,53 +940,53 @@ InstructionSetParser.prototype.jumpInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 80;
-            this.match(InstructionSetParser.T__2);
+            this.match(DocumentParser.T__2);
             this.state = 81;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 82;
-            this.match(InstructionSetParser.LABEL);
+            this.match(DocumentParser.LABEL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 83;
-            this.match(InstructionSetParser.T__2);
+            this.match(DocumentParser.T__2);
             this.state = 84;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 85;
-            this.match(InstructionSetParser.LABEL);
+            this.match(DocumentParser.LABEL);
             this.state = 86;
-            this.match(InstructionSetParser.T__4);
+            this.match(DocumentParser.T__4);
             this.state = 87;
-            this.match(InstructionSetParser.T__5);
+            this.match(DocumentParser.T__5);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 88;
-            this.match(InstructionSetParser.T__2);
+            this.match(DocumentParser.T__2);
             this.state = 89;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 90;
-            this.match(InstructionSetParser.LABEL);
+            this.match(DocumentParser.LABEL);
             this.state = 91;
-            this.match(InstructionSetParser.T__4);
+            this.match(DocumentParser.T__4);
             this.state = 92;
-            this.match(InstructionSetParser.T__6);
+            this.match(DocumentParser.T__6);
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 93;
-            this.match(InstructionSetParser.T__2);
+            this.match(DocumentParser.T__2);
             this.state = 94;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 95;
-            this.match(InstructionSetParser.LABEL);
+            this.match(DocumentParser.LABEL);
             this.state = 96;
-            this.match(InstructionSetParser.T__4);
+            this.match(DocumentParser.T__4);
             this.state = 97;
-            this.match(InstructionSetParser.T__7);
+            this.match(DocumentParser.T__7);
             break;
 
         }
@@ -1013,7 +1013,7 @@ function PushInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_pushInstruction;
+    this.ruleIndex = DocumentParser.RULE_pushInstruction;
     return this;
 }
 
@@ -1021,31 +1021,31 @@ PushInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.protot
 PushInstructionContext.prototype.constructor = PushInstructionContext;
 
 PushInstructionContext.prototype.LABEL = function() {
-    return this.getToken(InstructionSetParser.LABEL, 0);
+    return this.getToken(DocumentParser.LABEL, 0);
 };
 
 PushInstructionContext.prototype.LITERAL = function() {
-    return this.getToken(InstructionSetParser.LITERAL, 0);
+    return this.getToken(DocumentParser.LITERAL, 0);
 };
 
 PushInstructionContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+    return this.getToken(DocumentParser.SYMBOL, 0);
 };
 
 PushInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterPushInstruction(this);
 	}
 };
 
 PushInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitPushInstruction(this);
 	}
 };
 
 PushInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitPushInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1055,12 +1055,12 @@ PushInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.PushInstructionContext = PushInstructionContext;
+DocumentParser.PushInstructionContext = PushInstructionContext;
 
-InstructionSetParser.prototype.pushInstruction = function() {
+DocumentParser.prototype.pushInstruction = function() {
 
     var localctx = new PushInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 16, InstructionSetParser.RULE_pushInstruction);
+    this.enterRule(localctx, 16, DocumentParser.RULE_pushInstruction);
     try {
         this.state = 112;
         this._errHandler.sync(this);
@@ -1069,41 +1069,41 @@ InstructionSetParser.prototype.pushInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 100;
-            this.match(InstructionSetParser.T__8);
+            this.match(DocumentParser.T__8);
             this.state = 101;
-            this.match(InstructionSetParser.T__9);
+            this.match(DocumentParser.T__9);
             this.state = 102;
-            this.match(InstructionSetParser.LABEL);
+            this.match(DocumentParser.LABEL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 103;
-            this.match(InstructionSetParser.T__8);
+            this.match(DocumentParser.T__8);
             this.state = 104;
-            this.match(InstructionSetParser.T__10);
+            this.match(DocumentParser.T__10);
             this.state = 105;
-            this.match(InstructionSetParser.LITERAL);
+            this.match(DocumentParser.LITERAL);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 106;
-            this.match(InstructionSetParser.T__8);
+            this.match(DocumentParser.T__8);
             this.state = 107;
-            this.match(InstructionSetParser.T__11);
+            this.match(DocumentParser.T__11);
             this.state = 108;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 109;
-            this.match(InstructionSetParser.T__8);
+            this.match(DocumentParser.T__8);
             this.state = 110;
-            this.match(InstructionSetParser.T__12);
+            this.match(DocumentParser.T__12);
             this.state = 111;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             break;
 
         }
@@ -1130,7 +1130,7 @@ function PopInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_popInstruction;
+    this.ruleIndex = DocumentParser.RULE_popInstruction;
     return this;
 }
 
@@ -1139,19 +1139,19 @@ PopInstructionContext.prototype.constructor = PopInstructionContext;
 
 
 PopInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterPopInstruction(this);
 	}
 };
 
 PopInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitPopInstruction(this);
 	}
 };
 
 PopInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitPopInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1161,12 +1161,12 @@ PopInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.PopInstructionContext = PopInstructionContext;
+DocumentParser.PopInstructionContext = PopInstructionContext;
 
-InstructionSetParser.prototype.popInstruction = function() {
+DocumentParser.prototype.popInstruction = function() {
 
     var localctx = new PopInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 18, InstructionSetParser.RULE_popInstruction);
+    this.enterRule(localctx, 18, DocumentParser.RULE_popInstruction);
     try {
         this.state = 118;
         this._errHandler.sync(this);
@@ -1175,17 +1175,17 @@ InstructionSetParser.prototype.popInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 114;
-            this.match(InstructionSetParser.T__13);
+            this.match(DocumentParser.T__13);
             this.state = 115;
-            this.match(InstructionSetParser.T__9);
+            this.match(DocumentParser.T__9);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 116;
-            this.match(InstructionSetParser.T__13);
+            this.match(DocumentParser.T__13);
             this.state = 117;
-            this.match(InstructionSetParser.T__14);
+            this.match(DocumentParser.T__14);
             break;
 
         }
@@ -1212,7 +1212,7 @@ function LoadInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_loadInstruction;
+    this.ruleIndex = DocumentParser.RULE_loadInstruction;
     return this;
 }
 
@@ -1224,19 +1224,19 @@ LoadInstructionContext.prototype.variable = function() {
 };
 
 LoadInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterLoadInstruction(this);
 	}
 };
 
 LoadInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitLoadInstruction(this);
 	}
 };
 
 LoadInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitLoadInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1246,12 +1246,12 @@ LoadInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.LoadInstructionContext = LoadInstructionContext;
+DocumentParser.LoadInstructionContext = LoadInstructionContext;
 
-InstructionSetParser.prototype.loadInstruction = function() {
+DocumentParser.prototype.loadInstruction = function() {
 
     var localctx = new LoadInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 20, InstructionSetParser.RULE_loadInstruction);
+    this.enterRule(localctx, 20, DocumentParser.RULE_loadInstruction);
     try {
         this.state = 132;
         this._errHandler.sync(this);
@@ -1260,9 +1260,9 @@ InstructionSetParser.prototype.loadInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 120;
-            this.match(InstructionSetParser.T__15);
+            this.match(DocumentParser.T__15);
             this.state = 121;
-            this.match(InstructionSetParser.T__16);
+            this.match(DocumentParser.T__16);
             this.state = 122;
             this.variable();
             break;
@@ -1270,9 +1270,9 @@ InstructionSetParser.prototype.loadInstruction = function() {
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 123;
-            this.match(InstructionSetParser.T__15);
+            this.match(DocumentParser.T__15);
             this.state = 124;
-            this.match(InstructionSetParser.T__17);
+            this.match(DocumentParser.T__17);
             this.state = 125;
             this.variable();
             break;
@@ -1280,9 +1280,9 @@ InstructionSetParser.prototype.loadInstruction = function() {
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 126;
-            this.match(InstructionSetParser.T__15);
+            this.match(DocumentParser.T__15);
             this.state = 127;
-            this.match(InstructionSetParser.T__18);
+            this.match(DocumentParser.T__18);
             this.state = 128;
             this.variable();
             break;
@@ -1290,9 +1290,9 @@ InstructionSetParser.prototype.loadInstruction = function() {
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 129;
-            this.match(InstructionSetParser.T__15);
+            this.match(DocumentParser.T__15);
             this.state = 130;
-            this.match(InstructionSetParser.T__19);
+            this.match(DocumentParser.T__19);
             this.state = 131;
             this.variable();
             break;
@@ -1321,7 +1321,7 @@ function StoreInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_storeInstruction;
+    this.ruleIndex = DocumentParser.RULE_storeInstruction;
     return this;
 }
 
@@ -1333,19 +1333,19 @@ StoreInstructionContext.prototype.variable = function() {
 };
 
 StoreInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterStoreInstruction(this);
 	}
 };
 
 StoreInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitStoreInstruction(this);
 	}
 };
 
 StoreInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitStoreInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1355,12 +1355,12 @@ StoreInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.StoreInstructionContext = StoreInstructionContext;
+DocumentParser.StoreInstructionContext = StoreInstructionContext;
 
-InstructionSetParser.prototype.storeInstruction = function() {
+DocumentParser.prototype.storeInstruction = function() {
 
     var localctx = new StoreInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 22, InstructionSetParser.RULE_storeInstruction);
+    this.enterRule(localctx, 22, DocumentParser.RULE_storeInstruction);
     try {
         this.state = 146;
         this._errHandler.sync(this);
@@ -1369,9 +1369,9 @@ InstructionSetParser.prototype.storeInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 134;
-            this.match(InstructionSetParser.T__20);
+            this.match(DocumentParser.T__20);
             this.state = 135;
-            this.match(InstructionSetParser.T__16);
+            this.match(DocumentParser.T__16);
             this.state = 136;
             this.variable();
             break;
@@ -1379,9 +1379,9 @@ InstructionSetParser.prototype.storeInstruction = function() {
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 137;
-            this.match(InstructionSetParser.T__20);
+            this.match(DocumentParser.T__20);
             this.state = 138;
-            this.match(InstructionSetParser.T__17);
+            this.match(DocumentParser.T__17);
             this.state = 139;
             this.variable();
             break;
@@ -1389,9 +1389,9 @@ InstructionSetParser.prototype.storeInstruction = function() {
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 140;
-            this.match(InstructionSetParser.T__20);
+            this.match(DocumentParser.T__20);
             this.state = 141;
-            this.match(InstructionSetParser.T__18);
+            this.match(DocumentParser.T__18);
             this.state = 142;
             this.variable();
             break;
@@ -1399,9 +1399,9 @@ InstructionSetParser.prototype.storeInstruction = function() {
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 143;
-            this.match(InstructionSetParser.T__20);
+            this.match(DocumentParser.T__20);
             this.state = 144;
-            this.match(InstructionSetParser.T__19);
+            this.match(DocumentParser.T__19);
             this.state = 145;
             this.variable();
             break;
@@ -1430,7 +1430,7 @@ function InvokeInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_invokeInstruction;
+    this.ruleIndex = DocumentParser.RULE_invokeInstruction;
     return this;
 }
 
@@ -1438,27 +1438,27 @@ InvokeInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.prot
 InvokeInstructionContext.prototype.constructor = InvokeInstructionContext;
 
 InvokeInstructionContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+    return this.getToken(DocumentParser.SYMBOL, 0);
 };
 
 InvokeInstructionContext.prototype.NUMBER = function() {
-    return this.getToken(InstructionSetParser.NUMBER, 0);
+    return this.getToken(DocumentParser.NUMBER, 0);
 };
 
 InvokeInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterInvokeInstruction(this);
 	}
 };
 
 InvokeInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitInvokeInstruction(this);
 	}
 };
 
 InvokeInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitInvokeInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1468,12 +1468,12 @@ InvokeInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.InvokeInstructionContext = InvokeInstructionContext;
+DocumentParser.InvokeInstructionContext = InvokeInstructionContext;
 
-InstructionSetParser.prototype.invokeInstruction = function() {
+DocumentParser.prototype.invokeInstruction = function() {
 
     var localctx = new InvokeInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 24, InstructionSetParser.RULE_invokeInstruction);
+    this.enterRule(localctx, 24, DocumentParser.RULE_invokeInstruction);
     try {
         this.state = 160;
         this._errHandler.sync(this);
@@ -1482,37 +1482,37 @@ InstructionSetParser.prototype.invokeInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 148;
-            this.match(InstructionSetParser.T__21);
+            this.match(DocumentParser.T__21);
             this.state = 149;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 150;
-            this.match(InstructionSetParser.T__21);
+            this.match(DocumentParser.T__21);
             this.state = 151;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 152;
-            this.match(InstructionSetParser.T__22);
+            this.match(DocumentParser.T__22);
             this.state = 153;
-            this.match(InstructionSetParser.T__23);
+            this.match(DocumentParser.T__23);
             this.state = 154;
-            this.match(InstructionSetParser.T__12);
+            this.match(DocumentParser.T__12);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 155;
-            this.match(InstructionSetParser.T__21);
+            this.match(DocumentParser.T__21);
             this.state = 156;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 157;
-            this.match(InstructionSetParser.T__22);
+            this.match(DocumentParser.T__22);
             this.state = 158;
-            this.match(InstructionSetParser.NUMBER);
+            this.match(DocumentParser.NUMBER);
             this.state = 159;
-            this.match(InstructionSetParser.T__24);
+            this.match(DocumentParser.T__24);
             break;
 
         }
@@ -1539,7 +1539,7 @@ function SendInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_sendInstruction;
+    this.ruleIndex = DocumentParser.RULE_sendInstruction;
     return this;
 }
 
@@ -1547,23 +1547,23 @@ SendInstructionContext.prototype = Object.create(antlr4.ParserRuleContext.protot
 SendInstructionContext.prototype.constructor = SendInstructionContext;
 
 SendInstructionContext.prototype.SYMBOL = function() {
-    return this.getToken(InstructionSetParser.SYMBOL, 0);
+    return this.getToken(DocumentParser.SYMBOL, 0);
 };
 
 SendInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterSendInstruction(this);
 	}
 };
 
 SendInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitSendInstruction(this);
 	}
 };
 
 SendInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitSendInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1573,12 +1573,12 @@ SendInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.SendInstructionContext = SendInstructionContext;
+DocumentParser.SendInstructionContext = SendInstructionContext;
 
-InstructionSetParser.prototype.sendInstruction = function() {
+DocumentParser.prototype.sendInstruction = function() {
 
     var localctx = new SendInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 26, InstructionSetParser.RULE_sendInstruction);
+    this.enterRule(localctx, 26, DocumentParser.RULE_sendInstruction);
     try {
         this.state = 182;
         this._errHandler.sync(this);
@@ -1587,57 +1587,57 @@ InstructionSetParser.prototype.sendInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 162;
-            this.match(InstructionSetParser.T__25);
+            this.match(DocumentParser.T__25);
             this.state = 163;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 164;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 165;
-            this.match(InstructionSetParser.T__14);
+            this.match(DocumentParser.T__14);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 166;
-            this.match(InstructionSetParser.T__25);
+            this.match(DocumentParser.T__25);
             this.state = 167;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 168;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 169;
-            this.match(InstructionSetParser.T__14);
+            this.match(DocumentParser.T__14);
             this.state = 170;
-            this.match(InstructionSetParser.T__22);
+            this.match(DocumentParser.T__22);
             this.state = 171;
-            this.match(InstructionSetParser.T__24);
+            this.match(DocumentParser.T__24);
             break;
 
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 172;
-            this.match(InstructionSetParser.T__25);
+            this.match(DocumentParser.T__25);
             this.state = 173;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 174;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 175;
-            this.match(InstructionSetParser.T__19);
+            this.match(DocumentParser.T__19);
             break;
 
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 176;
-            this.match(InstructionSetParser.T__25);
+            this.match(DocumentParser.T__25);
             this.state = 177;
-            this.match(InstructionSetParser.SYMBOL);
+            this.match(DocumentParser.SYMBOL);
             this.state = 178;
-            this.match(InstructionSetParser.T__3);
+            this.match(DocumentParser.T__3);
             this.state = 179;
-            this.match(InstructionSetParser.T__19);
+            this.match(DocumentParser.T__19);
             this.state = 180;
-            this.match(InstructionSetParser.T__22);
+            this.match(DocumentParser.T__22);
             this.state = 181;
-            this.match(InstructionSetParser.T__24);
+            this.match(DocumentParser.T__24);
             break;
 
         }
@@ -1664,7 +1664,7 @@ function HandleInstructionContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = InstructionSetParser.RULE_handleInstruction;
+    this.ruleIndex = DocumentParser.RULE_handleInstruction;
     return this;
 }
 
@@ -1673,19 +1673,19 @@ HandleInstructionContext.prototype.constructor = HandleInstructionContext;
 
 
 HandleInstructionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.enterHandleInstruction(this);
 	}
 };
 
 HandleInstructionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof InstructionSetListener ) {
+    if(listener instanceof DocumentListener ) {
         listener.exitHandleInstruction(this);
 	}
 };
 
 HandleInstructionContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof InstructionSetVisitor ) {
+    if ( visitor instanceof DocumentVisitor ) {
         return visitor.visitHandleInstruction(this);
     } else {
         return visitor.visitChildren(this);
@@ -1695,12 +1695,12 @@ HandleInstructionContext.prototype.accept = function(visitor) {
 
 
 
-InstructionSetParser.HandleInstructionContext = HandleInstructionContext;
+DocumentParser.HandleInstructionContext = HandleInstructionContext;
 
-InstructionSetParser.prototype.handleInstruction = function() {
+DocumentParser.prototype.handleInstruction = function() {
 
     var localctx = new HandleInstructionContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 28, InstructionSetParser.RULE_handleInstruction);
+    this.enterRule(localctx, 28, DocumentParser.RULE_handleInstruction);
     try {
         this.state = 188;
         this._errHandler.sync(this);
@@ -1709,17 +1709,17 @@ InstructionSetParser.prototype.handleInstruction = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 184;
-            this.match(InstructionSetParser.T__26);
+            this.match(DocumentParser.T__26);
             this.state = 185;
-            this.match(InstructionSetParser.T__27);
+            this.match(DocumentParser.T__27);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 186;
-            this.match(InstructionSetParser.T__26);
+            this.match(DocumentParser.T__26);
             this.state = 187;
-            this.match(InstructionSetParser.T__28);
+            this.match(DocumentParser.T__28);
             break;
 
         }
@@ -1738,4 +1738,4 @@ InstructionSetParser.prototype.handleInstruction = function() {
 };
 
 
-exports.InstructionSetParser = InstructionSetParser;
+exports.DocumentParser = DocumentParser;
