@@ -12,7 +12,7 @@ LABEL: (NUMBER '.')+ IDENTIFIER;
 
 NUMBER: '1'..'9' ('0'..'9')*;
 
-LITERAL: '`' ('\\`' | ~'`')*? '`';
+LITERAL: '`' ('\\`' | CHARACTER)*? '`';
 
 SYMBOL: '$' IDENTIFIER ('-' NUMBER)?;
 
@@ -23,3 +23,7 @@ SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN);
 
 fragment
 IDENTIFIER: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*;
+
+fragment
+CHARACTER: .;
+
