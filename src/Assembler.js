@@ -73,7 +73,7 @@ function AssemblingVisitor(type, method, debug) {
     this.intrinsics = require('./Intrinsics').api(this.debug);
     this.literals = type.getValue('$literals');
     this.constants = type.getValue('$constants');
-    this.arguments = method.getValue('$arguments');
+    this.argumentz = method.getValue('$arguments');
     this.variables = method.getValue('$variables');
     this.messages = method.getValue('$messages');
     this.addresses = method.getValue('$addresses');
@@ -193,7 +193,7 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
             value = this.constants.getKeys().getIndex(value);
             break;
         case types.ARGUMENT:
-            value = this.arguments.getIndex(value);
+            value = this.argumentz.getIndex(value);
             break;
     }
     const word = this.decoder.encodeInstruction(types.PUSH, modifier, value);

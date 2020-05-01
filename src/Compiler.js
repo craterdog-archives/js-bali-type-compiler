@@ -76,8 +76,8 @@ Compiler.prototype.cleanType = async function(type) {
  */
 Compiler.prototype.cleanMethod = async function(method) {
     method.removeValue('$instructions');
-    method.removeValue('$bytecode');
     method.removeValue('$addresses');
+    method.removeValue('$bytecode');
     method.removeValue('$arguments');
     method.removeValue('$variables');
     method.removeValue('$messages');
@@ -123,24 +123,9 @@ Compiler.prototype.compileType = async function(type) {
  * @param {Catalog} method The method to be compiled.
  */
 Compiler.prototype.compileMethod = function(type, method) {
-    const procedure = method.getValue('$procedure');
-
-    // extract the argument names for the procedure
-    const args = bali.set();
-    if (procedure.isParameterized()) {
-        args.addItems(Object.keys(procedure.getParameters()));
-    }
-
-    // add the compilation context to the method
-    method.setValue('$instructions', bali.pattern.NONE);
-    method.setValue('$bytecode', bali.pattern.NONE);
-    method.setValue('$addresses', bali.catalog());
-    method.setValue('$arguments', args);
-    method.setValue('$variables', bali.set(['$target']));
-    method.setValue('$messages', bali.set());
-
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, this.debug);
+    const procedure = method.getValue('$procedure');
     procedure.getStatements().acceptVisitor(visitor);
 
     // format the instructions and add to the compiled method
@@ -1417,7 +1402,7 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     const variable = '$' + identifier.toString();
-    if (this.builder.arguments.containsItem(variable)) {
+    if (this.builder.argumentz.containsItem(variable)) {
         // arguments take precedence over local variables and global constants
         this.builder.insertPushInstruction('ARGUMENT', variable);
     } else if (this.builder.constants.getValue(variable)) {
@@ -1621,15 +1606,31 @@ function getSubclauses(statement) {
  */
 function InstructionBuilder(type, method, debug) {
     this.debug = debug || false;
+
+    // setup the compilation context
     this.literals = type.getValue('$literals') || bali.set;
     this.constants = type.getValue('$constants') || bali.catalog();
-    this.arguments = method.getValue('$arguments') || bali.catalog();
-    this.variables = method.getValue('$variables') || bali.set();
-    this.messages = method.getValue('$messages') || bali.set;
-    this.addresses = method.getValue('$addresses') || bali.catalog;
+    this.constants.setValue('$target', bali.pattern.NONE);
+    this.argumentz = bali.set();
+    const parameters = method.getValue('$parameters');
+    if (parameters) this.argumentz.addItems(parameters.getKeys());
+    this.variables = bali.set();
+    this.messages = bali.set();
+    this.instructions = '';
+    this.addresses = bali.catalog();
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
-    this.instructions = '';
+
+    // add the compilation context to the type and method
+    type.setValue('$literals', this.literals);
+    type.setValue('$constants', this.constants);
+    method.setValue('$instructions', bali.pattern.NONE);
+    method.setValue('$addresses', this.addresses);
+    method.setValue('$bytecode', bali.pattern.NONE);
+    method.setValue('$arguments', this.argumentz);
+    method.setValue('$variables', this.variables);
+    method.setValue('$messages', this.messages);
+
     return this;
 }
 InstructionBuilder.prototype.constructor = InstructionBuilder;
