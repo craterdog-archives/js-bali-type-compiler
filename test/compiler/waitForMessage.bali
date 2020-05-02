@@ -23,22 +23,23 @@
         LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '2801280280036803800160022803B0862804280580046804B87E6005E000'(
-        $encoding: $base16
-        $mediatype: "application/bcod"
-    )
     $addresses: [
         "1.WaitStatement": 1
         "2.WaitStatement": 6
     ]
-    $arguments: [ ]($type: /bali/collections/Set/v1)
+    $bytecode: '2801280280036803800160022803B0862804280580046804B87E6005E000'(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $arguments: [
+        $target
+    ]
     $variables: [
         $message
         $messages
         $queue-2
         $queue-3
         $result-1
-        $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]

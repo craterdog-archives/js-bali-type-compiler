@@ -1610,8 +1610,7 @@ function InstructionBuilder(type, method, debug) {
     // setup the compilation context
     this.literals = type.getValue('$literals') || bali.set;
     this.constants = type.getValue('$constants') || bali.catalog();
-    this.constants.setValue('$target', bali.pattern.NONE);
-    this.argumentz = bali.set();
+    this.argumentz = bali.list(['$target']);
     const parameters = method.getValue('$parameters');
     if (parameters) this.argumentz.addItems(parameters.getKeys());
     this.variables = bali.set();
@@ -1623,7 +1622,6 @@ function InstructionBuilder(type, method, debug) {
 
     // add the compilation context to the type and method
     type.setValue('$literals', this.literals);
-    type.setValue('$constants', this.constants);
     method.setValue('$instructions', bali.pattern.NONE);
     method.setValue('$addresses', this.addresses);
     method.setValue('$bytecode', bali.pattern.NONE);

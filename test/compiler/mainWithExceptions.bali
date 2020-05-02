@@ -72,14 +72,6 @@
         LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '
-        20082801800360028803400000260000800160016001A01428022803B00B
-        B001B02518174800280480040026800160016001A01428022806B00BB001
-        B02518254800280780040026E8006004E000
-    '(
-        $encoding: $base16
-        $mediatype: "application/bcod"
-    )
     $addresses: [
         "1.PostStatement": 1
         "1.PostStatementDone": 6
@@ -93,13 +85,22 @@
         "1.PostStatementFailed": 37
         "1.PostStatementSucceeded": 38
     ]
-    $arguments: [ ]($type: /bali/collections/Set/v1)
+    $bytecode: '
+        20082801800360028803400000260000800160016001A01428022803B00B
+        B001B02518174800280480040026800160016001A01428022806B00BB001
+        B02518254800280780040026E8006004E000
+    '(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $arguments: [
+        $target
+    ]
     $variables: [
         $error
         $message
         $queue-2
         $result-1
-        $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]

@@ -60,14 +60,6 @@
         LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '
-        280128028004780480012802800560019005280280066001980660026003
-        280280077807B87E2802800860026003B08690082802800960026003B086
-        98092802800A2809900A600BE000
-    '(
-        $encoding: $base16
-        $mediatype: "application/bcod"
-    )
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 6
@@ -77,7 +69,17 @@
         "6.CommitStatement": 26
         "7.DiscardStatement": 32
     ]
-    $arguments: [ ]($type: /bali/collections/Set/v1)
+    $bytecode: '
+        280128028004780480012802800560019005280280066001980660026003
+        280280077807B87E2802800860026003B08690082802800960026003B086
+        98092802800A2809900A600BE000
+    '(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $arguments: [
+        $target
+    ]
     $variables: [
         $document
         $documents
@@ -90,7 +92,6 @@
         $location-7
         $location-8
         $result-1
-        $target
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]

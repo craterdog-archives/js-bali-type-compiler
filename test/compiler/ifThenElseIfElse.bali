@@ -48,13 +48,6 @@
         LOAD VARIABLE $result-1
         HANDLE RESULT
     "($mediatype: "application/basm")
-    $bytecode: '
-        0000280118076004800200102802180C6001800200100000280380020000
-        6002E000
-    '(
-        $encoding: $base16
-        $mediatype: "application/bcod"
-    )
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
@@ -68,11 +61,19 @@
         "1.3.ElseClauseDone": 15
         "1.IfStatementDone": 16
     ]
-    $arguments: [ ]($type: /bali/collections/Set/v1)
+    $bytecode: '
+        0000280118076003800200102802180C6001800200100000280380020000
+        6002E000
+    '(
+        $encoding: $base16
+        $mediatype: "application/bcod"
+    )
+    $arguments: [
+        $target
+    ]
     $variables: [
         $no
         $result-1
-        $target
         $yes
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
