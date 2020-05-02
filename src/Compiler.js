@@ -93,8 +93,6 @@ Compiler.prototype.cleanMethod = async function(method) {
 Compiler.prototype.compileType = async function(type) {
     var methods = type.getValue('$methods');
     if (methods) {
-        type.setValue('$literals', bali.set());
-
         // compile each method
         const iterator = methods.getIterator();
         while (iterator.hasNext()) {
@@ -1608,7 +1606,7 @@ function InstructionBuilder(type, method, debug) {
     this.debug = debug || false;
 
     // setup the compilation context
-    this.literals = type.getValue('$literals') || bali.set;
+    this.literals = type.getValue('$literals') || bali.set();
     this.constants = type.getValue('$constants') || bali.catalog();
     this.argumentz = bali.list(['$target']);
     const parameters = method.getValue('$parameters');
