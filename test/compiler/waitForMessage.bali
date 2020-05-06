@@ -27,7 +27,7 @@
         "1.WaitStatement": 1
         "2.WaitStatement": 6
     ]
-    $bytecode: '2801280280036803800160022803B0862804280580046804B87E6005E000'(
+    $bytecode: '2801280280036803800160022803B0882804280580046804B8806005E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

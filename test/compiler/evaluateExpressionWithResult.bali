@@ -18,7 +18,7 @@
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
     ]
-    $bytecode: '600180022801B87E6003E000'(
+    $bytecode: '600180022801B8806003E000'(
         $encoding: $base16
         $mediatype: "application/bcod"
     )

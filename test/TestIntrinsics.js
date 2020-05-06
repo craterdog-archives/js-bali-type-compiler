@@ -46,6 +46,39 @@ const iterator = list.getIterator();
 const procedure = bali.procedure(statements, {$foo: 'bar'});
 const array = [];
 const object = {};
+const dirtyType = bali.catalog({
+    $methods: bali.catalog({
+        $dummy: bali.catalog({
+            $procedure: bali.component('{\n    none\n}'),
+            $instructions: bali.component('"\n' +
+                '    1.EvaluateStatement:\n' +
+                '    PUSH LITERAL `none`\n' +
+                '    STORE VARIABLE $result-1\n' +
+                '    LOAD VARIABLE $result-1\n' +
+                '    HANDLE RESULT\n' +
+                '"($mediatype: "application/basm")'
+            ),
+            $addresses: bali.catalog({
+                '"1.EvaluateStatement"': 1
+            }),
+            $bytecode: bali.component("'280180016001E000'(\n" +
+                '    $encoding: $base16\n' +
+                '    $mediatype: "application/bcod"\n' +
+                ')'),
+            $arguments: bali.list(['$target']),
+            $variables: bali.set(['$result-1']),
+            $messages: bali.set()
+        })
+    }),
+    $literals: bali.set(['none'])
+});
+const cleanType = bali.catalog({
+    $methods: bali.catalog({
+        $dummy: bali.catalog({
+            $procedure: bali.component('{\n    none\n}')
+        })
+    })
+});
 
 describe('Bali Intrinsic Functions', function() {
 
@@ -516,6 +549,12 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $cleanType intrinsic function', function() {
+            const index = intrinsics.index('$cleanType');
+            const clean = intrinsics.invoke(index, dirtyType.duplicate());
+            expect(clean.isEqualTo(cleanType)).to.equal(true);
+        });
+
         it('should invoke $coinToss intrinsic function', function() {
             const index = intrinsics.index('$coinToss');
             intrinsics.invoke(index, probability);
@@ -561,6 +600,12 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, 5, 6);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $compileType intrinsic function', function() {
+            const index = intrinsics.index('$compileType');
+            const compiled = intrinsics.invoke(index, cleanType.duplicate());
+            expect(compiled.isEqualTo(dirtyType)).to.equal(true);
         });
 
         it('should invoke $complement intrinsic function', function() {

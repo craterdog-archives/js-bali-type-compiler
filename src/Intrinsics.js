@@ -19,9 +19,7 @@
  *  3. Functions that ask a question return a boolean value.
  * </pre>
  */
-const bali = require('bali-component-framework').api();
-const validator = bali.validator();
-const generator = bali.generator();
+const Compiler = require('./Compiler').Compiler;
 
 // This private constant sets the POSIX end of line character
 const EOL = '\n';
@@ -43,6 +41,10 @@ const EOL = '\n';
  */
 exports.api = function(debug) {
     if (debug === null || debug === undefined) debug = 0;  // default is off
+    const bali = require('bali-component-framework').api(debug);
+    const compiler = new Compiler(debug);
+    const validator = bali.validator(debug);
+    const generator = bali.generator(debug);
 
     // PUBLIC FUNCTIONS
 
@@ -340,6 +342,12 @@ exports.api = function(debug) {
             return bali.catalog(items, parameters);
         },
 
+        $cleanType: function(type) {
+            validateTypeArgument('$cleanType', '/bali/collections/Catalog', type);
+            compiler.cleanType(type);
+            return type;
+        },
+
         $coinToss: function(probability) {
             validateTypeArgument('$coinToss', '/bali/elements/Probability', probability);
             return bali.probability(generator.flipCoin(probability.toNumber()));
@@ -349,6 +357,12 @@ exports.api = function(debug) {
             validateTypeArgument('$comparison', '/bali/types/Component', first);
             validateTypeArgument('$comparison', '/bali/types/Component', second);
             return bali.number(first.comparedTo(second));
+        },
+
+        $compileType: function(type) {
+            validateTypeArgument('$compileType', '/bali/collections/Catalog', type);
+            compiler.compileType(type);
+            return type;
         },
 
         $complement: function(angle) {
