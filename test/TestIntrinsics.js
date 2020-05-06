@@ -59,7 +59,7 @@ const dirtyType = bali.catalog({
                 '"($mediatype: "application/basm")'
             ),
             $addresses: bali.catalog({
-                '"1.EvaluateStatement"': 1
+                '1.EvaluateStatement': 1
             }),
             $bytecode: bali.component("'280180016001E000'(\n" +
                 '    $encoding: $base16\n' +
