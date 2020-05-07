@@ -56,14 +56,14 @@ const dirtyType = bali.catalog({
                 '    STORE VARIABLE $result-1\n' +
                 '    LOAD VARIABLE $result-1\n' +
                 '    HANDLE RESULT\n' +
-                '"($mediatype: "application/basm")'
+                '"($mediaType: "application/basm")'
             ),
             $addresses: bali.catalog({
                 '1.EvaluateStatement': 1
             }),
             $bytecode: bali.component("'280180016001E000'(\n" +
                 '    $encoding: $base16\n' +
-                '    $mediatype: "application/bcod"\n' +
+                '    $mediaType: "application/bcod"\n' +
                 ')'),
             $arguments: bali.list(['$target']),
             $variables: bali.set(['$result-1']),

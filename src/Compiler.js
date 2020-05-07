@@ -131,7 +131,7 @@ Compiler.prototype.compileMethod = function(type, method) {
     const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
-    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediatype: 'application/basm'});
+    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediaType: 'application/basm'});
     method.setValue('$instructions', instructions);
 };
 

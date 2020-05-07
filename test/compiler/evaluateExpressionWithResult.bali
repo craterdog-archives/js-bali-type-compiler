@@ -13,14 +13,14 @@
         INVOKE $setSubcomponent WITH 3 ARGUMENTS
         LOAD VARIABLE $result-1
         HANDLE RESULT
-    "($mediatype: "application/basm")
+    "($mediaType: "application/basm")
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
     ]
     $bytecode: '600180022801B8806003E000'(
         $encoding: $base16
-        $mediatype: "application/bcod"
+        $mediaType: "application/bcod"
     )
     $arguments: [
         $target

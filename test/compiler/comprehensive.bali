@@ -300,7 +300,7 @@
         2.WhileStatementDone:
         LOAD VARIABLE $result-1
         HANDLE RESULT
-    "($mediatype: "application/basm")
+    "($mediaType: "application/basm")
     $addresses: [
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
@@ -371,7 +371,7 @@
         005D600BE000
     '(
         $encoding: $base16
-        $mediatype: "application/bcod"
+        $mediaType: "application/bcod"
     )
     $arguments: [
         $target
