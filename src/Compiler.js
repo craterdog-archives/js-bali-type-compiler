@@ -34,7 +34,7 @@ const EOL = '\n';  // POSIX end of line character
  * @returns {Compiler} The new document compiler.
  */
 function Compiler(debug) {
-    this.debug = debug || false;
+    this.debug = debug || 0;
     return this;
 }
 Compiler.prototype.constructor = Compiler;
@@ -46,7 +46,7 @@ exports.Compiler = Compiler;
  *
  * @param {Catalog} type The type definition to be cleaned.
  */
-Compiler.prototype.cleanType = async function(type) {
+Compiler.prototype.cleanType = function(type) {
     type.removeValue('$literals');
 
     // create the methods catalog if necessary
@@ -74,7 +74,7 @@ Compiler.prototype.cleanType = async function(type) {
  *
  * @param {Catalog} method The method definition to be cleaned.
  */
-Compiler.prototype.cleanMethod = async function(method) {
+Compiler.prototype.cleanMethod = function(method) {
     method.removeValue('$instructions');
     method.removeValue('$addresses');
     method.removeValue('$bytecode');
@@ -90,7 +90,7 @@ Compiler.prototype.cleanMethod = async function(method) {
  *
  * @param {Catalog} type The type definition to be compiled.
  */
-Compiler.prototype.compileType = async function(type) {
+Compiler.prototype.compileType = function(type) {
     var methods = type.getValue('$methods');
     if (methods) {
         // compile each method
@@ -146,7 +146,7 @@ Compiler.prototype.compileMethod = function(type, method) {
  */
 function CompilingVisitor(type, method, debug) {
     Visitor.call(this);
-    this.debug = debug || false;
+    this.debug = debug || 0;
     this.builder = new InstructionBuilder(type, method);
     this.temporaryVariableCount = 2;  // skip the $result-1 temporary variable
     return this;
@@ -1010,13 +1010,15 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
 
         // the VM places each parameter on the component stack and then adds them to the catalog
         this.depth++;
-        const keys = Object.keys(parameters);
-        keys.forEach(function(key) {
-            this.builder.insertPushInstruction('LITERAL', key);
-            const value = parameters[key];
+        const keys = parameters.getKeys();
+        const iterator = keys.getIterator();
+        while (iterator.hasNext()) {
+            const key = iterator.getNext();
+            this.builder.insertPushInstruction('LITERAL', key.toLiteral());
+            const value = parameters.getValue(key);
             value.acceptVisitor(this);
             this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
-        }, this);
+        }
         this.depth--;
         // the parameter list remains on the component stack
     }
