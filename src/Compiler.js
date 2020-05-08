@@ -321,7 +321,8 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
  */
 // collection: list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
-    var numberOfArguments = collection.isParameterized() ? 1 : 0;
+    const parameters = collection.getParameters();
+    const numberOfArguments = parameters ? 1 : 0;
     // the VM replaces any parameters on the component stack with a new parameterized collection
     var type = collection.getType().split('/')[3];
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
@@ -336,6 +337,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
         this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(collection, item)
     }
     this.depth--;
+    this.visitParameters(parameters);
     // the parameterized collection remains on the component stack
 };
 
@@ -575,9 +577,12 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 CompilingVisitor.prototype.visitElement = function(element) {
     // TODO: add instructions to process procedure blocks embedded within text
 
-    // the VM loads the element value onto the top of the component stack
-    const literal = element.toBDN();
-    this.builder.insertPushInstruction('LITERAL', literal);
+    // the VM loads the literal value of the element onto the top of the component stack
+    this.builder.insertPushInstruction('LITERAL', element.toLiteral());
+
+    // the VM adds any parameters to the element
+    const parameters = element.getParameters();
+    this.visitParameters(parameters);
 };
 
 
@@ -1067,8 +1072,11 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
 // procedure: '{' statements '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     // the VM places the procedure on top of the component stack
-    const literal = procedure.toBDN();
-    this.builder.insertPushInstruction('LITERAL', literal);
+    this.builder.insertPushInstruction('LITERAL', procedure.toLiteral());
+
+    // the VM adds any parameters to the element
+    const parameters = procedure.getParameters();
+    this.visitParameters(parameters);
 };
 
 

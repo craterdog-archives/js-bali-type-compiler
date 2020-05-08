@@ -766,7 +766,7 @@ exports.api = function(debug) {
 
         $parameters: function(component) {
             validateTypeArgument('$parameters', '/bali/types/Component', component);
-            return bali.catalog(component.getParameters());
+            return component.getParameters();
         },
 
         $parent: function(tree) {

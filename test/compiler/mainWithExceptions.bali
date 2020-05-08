@@ -4,7 +4,7 @@
             $type: "bad"
         ] with {
             any
-        } handle $error matching [
+        } matching [
             $type: "horrid"
         ] with {
             none
@@ -35,7 +35,7 @@
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
         INVOKE $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.2.HandleClause ON FALSE
+        JUMP TO 1.PostStatementFailed ON FALSE
         POP COMPONENT
         
         1.1.1.EvaluateStatement:
@@ -43,26 +43,6 @@
         STORE VARIABLE $result-1
         
         1.1.HandleClauseDone:
-        JUMP TO 1.PostStatementSucceeded
-        
-        1.2.HandleClause:
-        STORE VARIABLE $error
-        LOAD VARIABLE $error
-        LOAD VARIABLE $error
-        INVOKE $catalog
-        PUSH LITERAL `$type`
-        PUSH LITERAL `"horrid"`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        INVOKE $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.PostStatementFailed ON FALSE
-        POP COMPONENT
-        
-        1.2.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        STORE VARIABLE $result-1
-        
-        1.2.HandleClauseDone:
         JUMP TO 1.PostStatementSucceeded
         
         1.PostStatementFailed:
@@ -79,16 +59,12 @@
         "1.1.HandleClause": 9
         "1.1.1.EvaluateStatement": 20
         "1.1.HandleClauseDone": 22
-        "1.2.HandleClause": 23
-        "1.2.1.EvaluateStatement": 34
-        "1.2.HandleClauseDone": 36
-        "1.PostStatementFailed": 37
-        "1.PostStatementSucceeded": 38
+        "1.PostStatementFailed": 23
+        "1.PostStatementSucceeded": 24
     ]
     $bytecode: '
-        20082801800360028803400000260000800160016001A01428022803B00B
-        B001B02718174800280480040026800160016001A01428022806B00BB001
-        B02718254800280780040026E8006004E000
+        20082801800360028803400000180000800160016001A01428022803B00B
+        B001B02718174800280480040018E8006004E000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
