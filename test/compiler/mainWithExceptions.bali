@@ -12,7 +12,7 @@
     }
     $instructions: "
         1.PostStatement:
-        PUSH HANDLER 1.PostStatementHandlers
+        PUSH HANDLER 1.PostStatementHandler
         PUSH LITERAL `<bali:/queues/myqueue>`
         STORE VARIABLE $queue-2
         LOAD VARIABLE $message
@@ -22,12 +22,10 @@
         POP HANDLER
         JUMP TO 1.PostStatementSucceeded
         
-        1.PostStatementHandlers:
-        SKIP INSTRUCTION
-        
-        1.1.HandleClause:
+        1.PostStatementHandler:
         STORE VARIABLE $error
-        LOAD VARIABLE $error
+        
+        1.1.HandleBlock:
         LOAD VARIABLE $error
         INVOKE $catalog
         PUSH LITERAL `$type`
@@ -35,17 +33,34 @@
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
         INVOKE $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.PostStatementFailed ON FALSE
-        POP COMPONENT
+        JUMP TO 1.2.HandleBlock ON FALSE
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `any`
         STORE VARIABLE $result-1
         
-        1.1.HandleClauseDone:
+        1.1.HandleBlockDone:
+        JUMP TO 1.PostStatementSucceeded
+        
+        1.2.HandleBlock:
+        LOAD VARIABLE $error
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `"horrid"`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $doesMatch WITH 2 ARGUMENTS
+        JUMP TO 1.PostStatementFailed ON FALSE
+        
+        1.2.1.EvaluateStatement:
+        PUSH LITERAL `none`
+        STORE VARIABLE $result-1
+        
+        1.2.HandleBlockDone:
         JUMP TO 1.PostStatementSucceeded
         
         1.PostStatementFailed:
+        LOAD VARIABLE $error
         HANDLE EXCEPTION
         
         1.PostStatementSucceeded:
@@ -55,16 +70,20 @@
     $addresses: [
         "1.PostStatement": 1
         "1.PostStatementDone": 6
-        "1.PostStatementHandlers": 8
-        "1.1.HandleClause": 9
-        "1.1.1.EvaluateStatement": 20
-        "1.1.HandleClauseDone": 22
-        "1.PostStatementFailed": 23
-        "1.PostStatementSucceeded": 24
+        "1.PostStatementHandler": 8
+        "1.1.HandleBlock": 9
+        "1.1.1.EvaluateStatement": 17
+        "1.1.HandleBlockDone": 19
+        "1.2.HandleBlock": 20
+        "1.2.1.EvaluateStatement": 28
+        "1.2.HandleBlockDone": 30
+        "1.PostStatementFailed": 31
+        "1.PostStatementSucceeded": 33
     ]
     $bytecode: '
-        20082801800360028803400000180000800160016001A01428022803B00B
-        B001B02718174800280480040018E8006004E000
+        200828018003600288034000002180016001A01428022803B00BB001B027
+        18142804800400216001A01428022806B00BB001B027181F280780040021
+        6001E8006004E000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

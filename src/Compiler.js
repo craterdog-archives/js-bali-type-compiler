@@ -703,46 +703,52 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
  * match the value of the template expression or the VM will jump to the next
  * handler or the end of the exception clauses if there isn't another one.
  */
-// handleClause: 'handle' symbol 'matching' expression 'with' block
+// handleClause: 'handle' symbol ('matching' expression 'with' block)+
 CompilingVisitor.prototype.visitHandleClause = function(tree) {
-    const symbol = tree.getItem(1);
-    const template = tree.getItem(2);
-    const block = tree.getItem(3);
-
-    // setup the labels
-    const statement = this.builder.getStatementContext();
-    const clausePrefix = this.builder.getClausePrefix();
-    const handleLabel = clausePrefix + 'HandleClause';
-    this.builder.insertLabel(handleLabel);
+    const iterator = tree.getIterator();
 
     // the VM stores the exception that is on top of the component stack in the variable
+    const symbol = iterator.getNext();
     const exception = symbol.toString();
     this.builder.insertStoreInstruction('VARIABLE', exception);
 
-    // the VM loads the exception back on top of the component stack for the next handler
-    this.builder.insertLoadInstruction('VARIABLE', exception);
+    const statement = this.builder.getStatementContext();
+    while (iterator.hasNext()) {
+        // setup the labels
+        const statement = this.builder.getStatementContext();
+        const clausePrefix = this.builder.getBlockPrefix();
+        const handleLabel = clausePrefix + 'HandleBlock';
+        this.builder.insertLabel(handleLabel);
 
-    // the VM compares the template expression with the actual exception
-    this.builder.insertLoadInstruction('VARIABLE', exception);
-    template.acceptVisitor(this);
-    this.builder.insertInvokeInstruction('$doesMatch', 2);  // matches(symbol, pattern)
+        // the VM compares the template expression with the actual exception
+        this.builder.insertLoadInstruction('VARIABLE', exception);
+        const template = iterator.getNext();
+        template.acceptVisitor(this);
+        this.builder.insertInvokeInstruction('$doesMatch', 2);  // matches(symbol, pattern)
 
-    // if the template and exception did not match the VM jumps past this exception handler
-    var nextLabel = this.builder.getNextClausePrefix() + 'HandleClause';
-    if (statement.clauseNumber === statement.clauseCount) {
-        nextLabel = statement.failureLabel;
+        // if the template and exception did not match the VM jumps past this exception handler
+        var nextLabel = this.builder.getNextBlockPrefix() + 'HandleBlock';
+        if (statement.blockNumber === statement.blockCount) {
+            nextLabel = statement.failureLabel;
+        }
+        this.builder.insertJumpInstruction(nextLabel, 'ON FALSE');
+
+        // the VM executes the handler block
+        const block = iterator.getNext();
+        block.acceptVisitor(this);
+
+        // the exception was handled successfully
+        this.builder.insertLabel(clausePrefix + 'HandleBlockDone');
+        this.builder.insertJumpInstruction(statement.successLabel);
     }
-    this.builder.insertJumpInstruction(nextLabel, 'ON FALSE');
 
-    // the VM pops the exception off the component stack since this handler will handle it
-    this.builder.insertPopInstruction('COMPONENT');
+    // none of the exception handlers matched so the VM must try the parent handlers
+    this.builder.insertLabel(statement.failureLabel);
+    this.builder.insertLoadInstruction('VARIABLE', exception);
+    this.builder.insertHandleInstruction('EXCEPTION');
 
-    // the VM executes the handler block
-    block.acceptVisitor(this);
-
-    // the exception was handled successfully
-    this.builder.insertLabel(clausePrefix + 'HandleClauseDone');
-    this.builder.insertJumpInstruction(statement.successLabel);
+    // the VM encountered no exceptions or was able to handle them
+    this.builder.insertLabel(statement.successLabel);
 };
 
 
@@ -770,7 +776,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
     while (iterator.hasNext()) {
         var condition = iterator.getNext();
         var block = iterator.getNext();
-        clausePrefix = this.builder.getClausePrefix();
+        clausePrefix = this.builder.getBlockPrefix();
         var conditionLabel = clausePrefix + 'ConditionClause';
         this.builder.insertLabel(conditionLabel);
 
@@ -778,7 +784,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
         condition.acceptVisitor(this);
 
         // determine what the next label will be
-        var nextLabel = this.builder.getNextClausePrefix();
+        var nextLabel = this.builder.getNextBlockPrefix();
         if (!iterator.hasNext()) {
             // we are on the last condition
             if (elseBlock) {
@@ -806,7 +812,7 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
 
     // the VM executes the optional else block
     if (elseBlock) {
-        clausePrefix = this.builder.getClausePrefix();
+        clausePrefix = this.builder.getBlockPrefix();
         const elseLabel = clausePrefix + 'ElseClause';
         this.builder.insertLabel(elseLabel);
         elseBlock.acceptVisitor(this);
@@ -1195,7 +1201,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     while (iterator.hasNext()) {
         var option = iterator.getNext();
         var block = iterator.getNext();
-        clausePrefix = this.builder.getClausePrefix();
+        clausePrefix = this.builder.getBlockPrefix();
         var optionLabel = clausePrefix + 'OptionClause';
         this.builder.insertLabel(optionLabel);
 
@@ -1209,7 +1215,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         this.builder.insertInvokeInstruction('$doesMatch', 2);  // matches(selector, option)
 
         // determine what the next label will be
-        var nextLabel = this.builder.getNextClausePrefix();
+        var nextLabel = this.builder.getNextBlockPrefix();
         if (!iterator.hasNext()) {
             // we are on the last option
             if (elseBlock) {
@@ -1237,7 +1243,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 
     // the VM executes the optional else block
     if (elseBlock) {
-        clausePrefix = this.builder.getClausePrefix();
+        clausePrefix = this.builder.getBlockPrefix();
         const elseLabel = clausePrefix + 'ElseClause';
         this.builder.insertLabel(elseLabel);
         elseBlock.acceptVisitor(this);
@@ -1285,14 +1291,14 @@ CompilingVisitor.prototype.visitStatements = function(statements) {
  * a main clause and then if any exceptions are thrown attempts to handle
  * them using a sequence of handle clauses.
  */
-// statement: mainClause handleClause*
+// statement: mainClause handleClause?
 CompilingVisitor.prototype.visitStatement = function(tree) {
     // initialize the context for this statement
     const statement = this.builder.pushStatementContext(tree);
     this.builder.insertLabel(statement.startLabel);
 
     // the VM pushes any exception handlers onto the exception handler stack
-    if (this.builder.hasHandlers()) {
+    if (this.builder.hasHandler()) {
         this.builder.insertPushInstruction('HANDLER', statement.handlerLabel);
     }
 
@@ -1300,11 +1306,11 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
     statement.mainClause.acceptVisitor(this);
 
     // the VM made it through the main clause without any exceptions
-    if (this.builder.hasClauses()) {
+    if (this.builder.hasBlocks()) {
         // need a label for subclauses to jump to when done
         this.builder.insertLabel(statement.doneLabel);
 
-        if (this.builder.hasHandlers()) {
+        if (this.builder.hasHandler()) {
             // the exception handlers are no longer needed
             this.builder.insertPopInstruction('HANDLER');
 
@@ -1314,18 +1320,9 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
             // the VM will direct any exceptions from the main clause here to be handled
             this.builder.insertLabel(statement.handlerLabel);
 
-            // the VM tries each handler for the exception
-            const handlers = statement.handleClauses;
-            handlers.forEach(function(handler) {
-                handler.acceptVisitor(this);
-            }, this);
-
-            // none of the exception handlers matched so the VM must try the parent handlers
-            this.builder.insertLabel(statement.failureLabel);
-            this.builder.insertHandleInstruction('EXCEPTION');
-
-            // the VM encountered no exceptions or was able to handle them
-            this.builder.insertLabel(statement.successLabel);
+            // the VM tries each handler block for the exception
+            const handleClause = statement.handleClause;
+            handleClause.acceptVisitor(this);
         }
     }
 
@@ -1468,7 +1465,7 @@ CompilingVisitor.prototype.visitWaitClause = function(tree) {
 CompilingVisitor.prototype.visitWhileClause = function(tree) {
     const condition = tree.getItem(1);
     const block = tree.getItem(2);
-    const clausePrefix = this.builder.getClausePrefix();
+    const clausePrefix = this.builder.getBlockPrefix();
 
     // construct the loop and done labels
     const statement = this.builder.getStatementContext();
@@ -1501,7 +1498,7 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     const variable = tree.getSize() > 2 ? tree.getItem(1).toString() : this.createTemporaryVariable('item');
     const sequence = tree.getItem(-2);
     const block = tree.getItem(-1);
-    const clausePrefix = this.builder.getClausePrefix();
+    const clausePrefix = this.builder.getBlockPrefix();
 
     // construct the loop and done labels
     const statement = this.builder.getStatementContext();
@@ -1584,21 +1581,23 @@ Array.prototype.peek = function() {
 
 
 /*
- * This function returns the subclauses of a statement in an array.
+ * This function returns the number of blocks in a clause.
  *
- * @param {Object} statement The statement containing zero or more subclauses.
- * @returns {Array} An array containing the subclauses for the statement.
+ * @param {Object} clause The clause containing zero or more blocks.
+ * @returns {Number} The number of blocks in the clause.
  */
-function getSubclauses(statement) {
-    const subClauses = [];
-    const iterator = statement.getIterator();
-    while (iterator.hasNext()) {
-        var item = iterator.getNext();
-        if (item.isType('/bali/structures/Block')) {
-            subClauses.push(item);
+function countBlocks(clause) {
+    var count = 0;
+    if (clause) {
+        const iterator = clause.getIterator();
+        while (iterator.hasNext()) {
+            var item = iterator.getNext();
+            if (item.isType('/bali/structures/Block')) {
+                count++;
+            }
         }
     }
-    return subClauses;
+    return count;
 }
 
 
@@ -1653,9 +1652,9 @@ InstructionBuilder.prototype.pushProcedureContext = function(procedure) {
         this.stack.push({
             statementNumber: 1,
             statementCount: statementCount,
-            prefix: parent.prefix + parent.statementNumber + '.' + parent.statement.clauseNumber + '.'
+            prefix: parent.prefix + parent.statementNumber + '.' + parent.statement.blockNumber + '.'
         });
-        parent.statement.clauseNumber++;
+        parent.statement.blockNumber++;
     } else {
         this.stack.push({
             statementNumber: 1,
@@ -1681,28 +1680,26 @@ InstructionBuilder.prototype.popProcedureContext = function() {
  */
 InstructionBuilder.prototype.pushStatementContext = function(tree) {
     const mainClause = tree.getItem(1);
-    const subClauses = getSubclauses(mainClause);
-    const handleClauses = tree.toArray().slice(1);
-    const clauseCount = subClauses.length + handleClauses.length;
-    const procedure = this.stack.peek();
-    procedure.statement = {
+    const handleClause = tree.getSize() > 1 ? tree.getItem(2) : undefined;
+    const blockCount = countBlocks(mainClause) + countBlocks(handleClause);
+    const statement = {
         mainClause: mainClause,
-        subClauses: subClauses,
-        handleClauses: handleClauses,
-        clauseCount: clauseCount,
-        clauseNumber: 1
+        handleClause: handleClause,
+        blockCount: blockCount,
+        blockNumber: 1
     };
 
     // initialize the procedure configuration for this statement
-    const statement = procedure.statement;
+    const procedure = this.stack.peek();
+    procedure.statement = statement;
     const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
-    if (statement.clauseCount > 0) {
+    if (statement.blockCount > 0) {
         statement.doneLabel = prefix + type + 'StatementDone';
     }
-    if (statement.handleClauses.length > 0) {
-        statement.handlerLabel = prefix + type + 'StatementHandlers';
+    if (statement.handleClause) {
+        statement.handlerLabel = prefix + type + 'StatementHandler';
         statement.failureLabel = prefix + type + 'StatementFailed';
         statement.successLabel = prefix + type + 'StatementSucceeded';
     }
@@ -1723,18 +1720,18 @@ InstructionBuilder.prototype.popStatementContext = function() {
 /*
  * This method determines whether or not the current statement contains clauses.
  */
-InstructionBuilder.prototype.hasClauses = function() {
+InstructionBuilder.prototype.hasBlocks = function() {
     const statement = this.stack.peek().statement;
-    return statement.clauseCount > 0;
+    return statement.blockCount > 0;
 };
 
 
 /*
  * This method determines whether or not the current statement contains handlers.
  */
-InstructionBuilder.prototype.hasHandlers = function() {
+InstructionBuilder.prototype.hasHandler = function() {
     const statement = this.stack.peek().statement;
-    return statement.handleClauses.length > 0;
+    return statement.handleClause !== undefined;
 };
 
 
@@ -1744,9 +1741,9 @@ InstructionBuilder.prototype.hasHandlers = function() {
  * and the 'else' clause would be the second clause. Exception clauses and final clauses
  * are also included in the numbering.
  */
-InstructionBuilder.prototype.getClauseNumber = function() {
+InstructionBuilder.prototype.getBlockNumber = function() {
     const procedure = this.stack.peek();
-    const number = procedure.statement.clauseNumber;
+    const number = procedure.statement.blockNumber;
     return number;
 };
 
@@ -1805,9 +1802,9 @@ InstructionBuilder.prototype.getStatementContext = function() {
  * This method returns the label prefix for the current clause within the current
  * procedure context.
  */
-InstructionBuilder.prototype.getClausePrefix = function() {
+InstructionBuilder.prototype.getBlockPrefix = function() {
     const procedure = this.stack.peek();
-    const prefix = procedure.prefix + procedure.statementNumber + '.' + procedure.statement.clauseNumber + '.';
+    const prefix = procedure.prefix + procedure.statementNumber + '.' + procedure.statement.blockNumber + '.';
     return prefix;
 };
 
@@ -1816,9 +1813,9 @@ InstructionBuilder.prototype.getClausePrefix = function() {
  * This method returns the label prefix for the next clause within the current
  * procedure context.
  */
-InstructionBuilder.prototype.getNextClausePrefix = function() {
+InstructionBuilder.prototype.getNextBlockPrefix = function() {
     const procedure = this.stack.peek();
-    const prefix = procedure.prefix + procedure.statementNumber + '.' + (procedure.statement.clauseNumber + 1) + '.';
+    const prefix = procedure.prefix + procedure.statementNumber + '.' + (procedure.statement.blockNumber + 1) + '.';
     return prefix;
 };
 

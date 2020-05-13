@@ -51,7 +51,7 @@
     }($string: /bali/elements/Text/v1)
     $instructions: "
         1.IfStatement:
-        PUSH HANDLER 1.IfStatementHandlers
+        PUSH HANDLER 1.IfStatementHandler
         
         1.1.ConditionClause:
         LOAD VARIABLE $a
@@ -125,12 +125,10 @@
         POP HANDLER
         JUMP TO 1.IfStatementSucceeded
         
-        1.IfStatementHandlers:
-        SKIP INSTRUCTION
-        
-        1.4.HandleClause:
+        1.IfStatementHandler:
         STORE VARIABLE $exception
-        LOAD VARIABLE $exception
+        
+        1.4.HandleBlock:
         LOAD VARIABLE $exception
         INVOKE $catalog
         PUSH LITERAL `$type`
@@ -138,8 +136,7 @@
         INVOKE $association WITH 2 ARGUMENTS
         INVOKE $addItem WITH 2 ARGUMENTS
         INVOKE $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.IfStatementFailed ON FALSE
-        POP COMPONENT
+        JUMP TO 1.5.HandleBlock ON FALSE
         
         1.4.1.EvaluateStatement:
         LOAD VARIABLE $count
@@ -159,10 +156,40 @@
         INVOKE $addItem WITH 2 ARGUMENTS
         STORE VARIABLE $result-1
         
-        1.4.HandleClauseDone:
+        1.4.HandleBlockDone:
+        JUMP TO 1.IfStatementSucceeded
+        
+        1.5.HandleBlock:
+        LOAD VARIABLE $exception
+        INVOKE $catalog
+        PUSH LITERAL `$type`
+        PUSH LITERAL `$moderate`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        INVOKE $doesMatch WITH 2 ARGUMENTS
+        JUMP TO 1.IfStatementFailed ON FALSE
+        
+        1.5.1.EvaluateStatement:
+        INVOKE $catalog
+        PUSH LITERAL `$message`
+        PUSH LITERAL `"Something serious happened."`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        PUSH LITERAL `$exception`
+        PUSH LITERAL `$bigOops`
+        INVOKE $association WITH 2 ARGUMENTS
+        INVOKE $addItem WITH 2 ARGUMENTS
+        STORE VARIABLE $exception
+        
+        1.5.2.ThrowStatement:
+        LOAD VARIABLE $exception
+        HANDLE EXCEPTION
+        
+        1.5.HandleBlockDone:
         JUMP TO 1.IfStatementSucceeded
         
         1.IfStatementFailed:
+        LOAD VARIABLE $exception
         HANDLE EXCEPTION
         
         1.IfStatementSucceeded:
@@ -287,50 +314,55 @@
         "1.3.3.ReturnStatement": 34
         "1.3.ElseClauseDone": 36
         "1.IfStatementDone": 37
-        "1.IfStatementHandlers": 39
-        "1.4.HandleClause": 40
-        "1.4.1.EvaluateStatement": 51
-        "1.4.2.EvaluateStatement": 55
-        "1.4.HandleClauseDone": 65
-        "1.IfStatementFailed": 66
-        "1.IfStatementSucceeded": 67
-        "2.WhileStatement": 68
-        "2.1.ConditionClause": 69
-        "2.1.1.EvaluateStatement": 71
-        "2.1.2.IfStatement": 73
-        "2.1.2.1.ConditionClause": 74
-        "2.1.2.1.1.BreakStatement": 76
-        "2.1.2.1.ConditionClauseDone": 77
-        "2.1.2.2.ElseClause": 78
-        "2.1.2.2.1.WithStatement": 79
-        "2.1.2.2.1.1.ConditionClause": 82
-        "2.1.2.2.1.1.1.SelectStatement": 88
-        "2.1.2.2.1.1.1.1.OptionClause": 90
-        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 94
-        "2.1.2.2.1.1.1.1.OptionClauseDone": 96
-        "2.1.2.2.1.1.1.2.OptionClause": 97
-        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 101
-        "2.1.2.2.1.1.1.2.OptionClauseDone": 103
-        "2.1.2.2.1.1.1.3.ElseClause": 104
-        "2.1.2.2.1.1.1.3.1.ContinueStatement": 105
-        "2.1.2.2.1.1.1.3.ElseClauseDone": 106
-        "2.1.2.2.1.1.1.SelectStatementDone": 107
-        "2.1.2.2.1.ConditionRepeat": 108
-        "2.1.2.2.1.WithStatementDone": 109
-        "2.1.2.2.ElseClauseDone": 110
-        "2.1.2.IfStatementDone": 111
-        "2.ConditionRepeat": 112
-        "2.WhileStatementDone": 113
+        "1.IfStatementHandler": 39
+        "1.4.HandleBlock": 40
+        "1.4.1.EvaluateStatement": 48
+        "1.4.2.EvaluateStatement": 52
+        "1.4.HandleBlockDone": 62
+        "1.5.HandleBlock": 63
+        "1.5.1.EvaluateStatement": 71
+        "1.5.2.ThrowStatement": 81
+        "1.5.HandleBlockDone": 83
+        "1.IfStatementFailed": 84
+        "1.IfStatementSucceeded": 86
+        "2.WhileStatement": 87
+        "2.1.ConditionClause": 88
+        "2.1.1.EvaluateStatement": 90
+        "2.1.2.IfStatement": 92
+        "2.1.2.1.ConditionClause": 93
+        "2.1.2.1.1.BreakStatement": 95
+        "2.1.2.1.ConditionClauseDone": 96
+        "2.1.2.2.ElseClause": 97
+        "2.1.2.2.1.WithStatement": 98
+        "2.1.2.2.1.1.ConditionClause": 101
+        "2.1.2.2.1.1.1.SelectStatement": 107
+        "2.1.2.2.1.1.1.1.OptionClause": 109
+        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 113
+        "2.1.2.2.1.1.1.1.OptionClauseDone": 115
+        "2.1.2.2.1.1.1.2.OptionClause": 116
+        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 120
+        "2.1.2.2.1.1.1.2.OptionClauseDone": 122
+        "2.1.2.2.1.1.1.3.ElseClause": 123
+        "2.1.2.2.1.1.1.3.1.ContinueStatement": 124
+        "2.1.2.2.1.1.1.3.ElseClauseDone": 125
+        "2.1.2.2.1.1.1.SelectStatementDone": 126
+        "2.1.2.2.1.ConditionRepeat": 127
+        "2.1.2.2.1.WithStatementDone": 128
+        "2.1.2.2.ElseClauseDone": 129
+        "2.1.2.IfStatementDone": 130
+        "2.ConditionRepeat": 131
+        "2.WhileStatementDone": 132
     ]
     $bytecode: '
         202760016002B040180D60028001280180026007E800002560012802B041
         18192802800B6002A82D80046004E000002500006002A04F600FB001C801
-        80062804800B2805E0000000400000430000800760076007A01428062807
-        B00BB001B0271842480060052808B0898005A0142809280AB00BB001280B
-        280CB00BB001800B0043E80000000000280818716003800800006008184E
-        0071006F0000600EC003800A600AC002186D600AC0048009600C800D600D
-        280EB02718612808800B006B600D2810B02718682802800B006B00000052
-        006B000000520000000000000045600BE000
+        80062804800B2805E00000004000005680076007A01428062807B00BB001
+        B027183F60052808B0898005A0142809280AB00BB001280B280CB00BB001
+        800B00566007A0142806280EB00BB001B0271854A01428092810B00BB001
+        280B2812B00BB00180076007E80000566007E80000000000280818846003
+        8008000060081861008400820000600EC003800A600AC0021880600AC004
+        8009600C800D600D2814B02718742808800B007E600D2816B027187B2802
+        800B007E00000065007E000000650000000000000058600BE000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
