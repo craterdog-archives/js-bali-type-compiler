@@ -137,6 +137,17 @@ exports.api = function(debug) {
         },
 
         /**
+         * This function determines whether or not the specified Bali Virtual Machine™ instruction
+         * is valid.
+         *
+         * @param {Number} instruction The instruction to be validated.
+         * @return {Boolean} Whether or not the instruction is valid.
+         */
+        isValid: function(instruction) {
+            return decoder.instructionIsValid(instruction);
+        },
+
+        /**
          * This function decodes the operation for a Bali Virtual Machine™ instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
@@ -167,13 +178,14 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function takes an operation, a modifier and an operand and
-         * encodes them into the corresponding instruction as a two byte number.
+         * This function takes an operation, a modifier and an operand associated with a
+         * Bali Virtual Machine™ instruction and encodes them into the corresponding
+         * instruction as a two byte number.
          *
-         * @param {Number} operation The operation for the bytecode.
-         * @param {Number} modifier The modifier for the bytecode.
-         * @param {Number} operand The optional operand associated with the operation.
-         * @return {Number} The bytecode for the instruction.
+         * @param {Number} operation The operation for the instruction.
+         * @param {Number} modifier The modifier for the instruction.
+         * @param {Number} operand The optional operand associated with the instruction.
+         * @return {Number} The resulting bytecode for the instruction.
          */
         instruction: function(operation, modifier, operand) {
             return decoder.encodeInstruction(operation, modifier, operand);
@@ -182,11 +194,13 @@ exports.api = function(debug) {
         /**
          * This function returns a string version of the specified Bali Virtual Machine™ instruction.
          *
-         * @param {Number} instruction The instruction to be formatted.
+         * @param {Number} operation The operation for the instruction.
+         * @param {Number} modifier The modifier for the instruction.
+         * @param {Number} operand The optional operand associated with the instruction.
          * @return {String} A string version of the instruction.
          */
-        string: function(instruction) {
-            return decoder.instructionToString(instruction);
+        string: function(operation, modifier, operand) {
+            return decoder.instructionToString(operation, modifier, operand);
         },
 
         /**
