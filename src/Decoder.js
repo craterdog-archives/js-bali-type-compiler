@@ -65,7 +65,7 @@ const Decoder = function(debug) {
      * @param {Number} address The virtual machine address.
      * @returns {String} The canonical string representation of the address.
      */
-    const addressAsString = function(address) {
+    const addressToString = function(address) {
         var string = address.toString(16).toUpperCase();
         while (string.length < 3) string = '0' + string;
         string = '[' + string + ']';
@@ -76,6 +76,41 @@ const Decoder = function(debug) {
     // PUBLIC FUNCTIONS
 
     return {
+
+        instructionToString: function(operation, modifier, operandString) {
+            if (!operation && !modifier && operandString === '0') return 'SKIP INSTRUCTION';
+            var string = types.operationString(operation) + ' ';
+            switch (operation) {
+                case types.JUMP:
+                    string += 'TO ' + operandString;
+                    if (modifier > 0) string += ' ' + types.jumpModifierString(modifier);
+                    break;
+                case types.PUSH:
+                    string += types.pushModifierString(modifier) + ' ' + operandString;
+                    break;
+                case types.POP:
+                    string += types.popModifierString(modifier);
+                    break;
+                case types.LOAD:
+                    string += types.loadModifierString(modifier) + ' ' + operandString;
+                    break;
+                case types.STORE:
+                    string += types.storeModifierString(modifier) + ' ' + operandString;
+                    break;
+                case types.INVOKE:
+                    string += operandString;
+                    if (modifier > 0) string += ' WITH ' + modifier + ' ARGUMENT';
+                    if (modifier > 1) string += 'S';
+                    break;
+                case types.SEND:
+                    string += operandString + ' ' + types.sendModifierString(modifier);
+                    break;
+                case types.HANDLE:
+                    string += types.handleModifierString(modifier);
+                    break;
+            }
+            return string;
+        },
 
         /**
          * This function takes an operation, a modifier and an operand and
@@ -279,62 +314,25 @@ const Decoder = function(debug) {
             var string = ' Addr     Bytes   Bytecode                 Instruction\n';
             string += '-------------------------------------------------------------------\n';
             bytecode.forEach(function(instruction, index) {
+                // format the address
                 var address = index + 1;  // Bali ordinal based indexing
-                address = addressAsString(address);
-                const operation = this.decodeOperation(instruction);
-                const modifier = this.decodeModifier(instruction);
-                var operand = this.decodeOperand(instruction);
-                if (this.operandIsAddress(instruction)) {
-                    operand = addressAsString(operand);
-                } else {
-                    operand = indexToString(operand);
-                }
+                address = addressToString(address);
 
                 // format the instruction as hexadecimal bytes
                 var bytes = instruction.toString(16).toUpperCase();
                 while (bytes.length < 4) bytes = '0' + bytes;
 
                 // format the description
-                var description = types.operationString(operation) + ' ';
-                switch (operation) {
-                    case types.SKIP:
-                    case types.JUMP:
-                        if (instruction === 0) {
-                            description = 'SKIP INSTRUCTION';
-                        } else {
-                            description += 'TO ' + operand;
-                            if (modifier > 0) description += ' ' + types.jumpModifierString(modifier);
-                        }
-                        break;
-                    case types.PUSH:
-                        description += types.pushModifierString(modifier) + ' ' + operand;
-                        break;
-                    case types.POP:
-                        description += types.popModifierString(modifier);
-                        break;
-                    case types.LOAD:
-                        description += types.loadModifierString(modifier) + ' ' + operand;
-                        break;
-                    case types.STORE:
-                        description += types.storeModifierString(modifier) + ' ' + operand;
-                        break;
-                    case types.INVOKE:
-                        description += operand;
-                        if (modifier > 0) description += ' WITH ' + modifier + ' ARGUMENT';
-                        if (modifier > 1) description += 'S';
-                        break;
-                    case types.SEND:
-                        description += operand + ' ' + types.sendModifierString(modifier);
-                        break;
-                    case types.HANDLE:
-                        description += types.handleModifierString(modifier);
-                        break;
-                }
+                const operation = this.decodeOperation(instruction);
+                const modifier = this.decodeModifier(instruction);
+                const operand = this.decodeOperand(instruction);
+                var operandString = this.operandIsAddress(instruction) ? addressToString(operand) : indexToString(operand);
+                const description = this.instructionToString(operation, modifier, operandString);
 
-                // format the bytecode (must be done last!)
-                while (operand.length < 4) operand = ' ' + operand;  // pad an index operand with leading spaces
-                if (operand.length < 5) operand += ' ';  // pad an index operand with a single trailing space
-                const bytecode = '' + operation + modifier + ' ' + operand;
+                // format the bytecode (must happen last)
+                while (operandString.length < 4) operandString = ' ' + operandString;  // pad an index operand with leading spaces
+                if (operandString.length < 5) operandString += ' ';  // pad an index operand with a single trailing space
+                const bytecode = '' + operation + modifier + ' ' + operandString;
 
                 // put them all together
                 string += address + ':    ' + bytes + '    ' + bytecode + '    ' + description + EOL;

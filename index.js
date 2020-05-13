@@ -63,7 +63,7 @@ exports.api = function(debug) {
 
         /**
          * This function compiles the Bali Nebula™ source code for a method into a compilation
-         * context containing the corresponding Bali Nebula™ virtual machine instructions.
+         * context containing the corresponding Bali Virtual Machine™ instructions.
          *
          * @param {Catalog} type A catalog containing the type context for the method being
          * compiled.
@@ -75,7 +75,7 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function assembles the Bali Nebula™ virtual machine instructions contained in
+         * This function assembles the Bali Virtual Machine™ instructions contained in
          * a compiled method context into the corresponding bytecode which is added to the
          * compiled method context.
          *
@@ -89,7 +89,7 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function formats a list of Bali Nebula™ virtual machine instructions into a
+         * This function formats a list of Bali Virtual Machine™ instructions into a
          * JavaScript string containing the corresponding Bali Nebula™ assembly code. An optional
          * indentation level may be specified that causes the formatter to indent each line by
          * that many additional levels.  Each level is four spaces and the default is zero levels.
@@ -105,10 +105,10 @@ exports.api = function(debug) {
 
         /**
          * This function parses a string containing Bali Nebula™ assembly code. It generates
-         * the corresponding list of Bali Nebula™ virtual machine instructions.
+         * the corresponding list of Bali Virtual Machine™ instructions.
          *
          * @param {String} assembly A string containing Bali Nebula™ assembly code.
-         * @returns {List} A list containing the corresponding Bali Nebula™ virtual machine
+         * @returns {List} A list containing the corresponding Bali Virtual Machine™
          * instructions.
          */
         parseInstructions: function(assembly) {
@@ -137,7 +137,7 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function decodes the operation for a Bali Nebula™ virtual machine instruction.
+         * This function decodes the operation for a Bali Virtual Machine™ instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded operation.
@@ -147,7 +147,7 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function decodes the modifier for a Bali Nebula™ virtual machine instruction.
+         * This function decodes the modifier for a Bali Virtual Machine™ instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded modifier.
@@ -157,13 +157,36 @@ exports.api = function(debug) {
         },
 
         /**
-         * This function decodes the operand for a Bali Nebula™ virtual machine instruction.
+         * This function decodes the operand for a Bali Virtual Machine™ instruction.
          *
          * @param {Number} instruction The instruction to be decoded.
          * @return {Number} The decoded operand.
          */
         operand: function(instruction) {
             return decoder.decodeOperand(instruction);
+        },
+
+        /**
+         * This function takes an operation, a modifier and an operand and
+         * encodes them into the corresponding instruction as a two byte number.
+         *
+         * @param {Number} operation The operation for the bytecode.
+         * @param {Number} modifier The modifier for the bytecode.
+         * @param {Number} operand The optional operand associated with the operation.
+         * @return {Number} The bytecode for the instruction.
+         */
+        instruction: function(operation, modifier, operand) {
+            return decoder.encodeInstruction(operation, modifier, operand);
+        },
+
+        /**
+         * This function returns a string version of the specified Bali Virtual Machine™ instruction.
+         *
+         * @param {Number} instruction The instruction to be formatted.
+         * @return {String} A string version of the instruction.
+         */
+        string: function(instruction) {
+            return decoder.instructionToString(instruction);
         },
 
         /**
