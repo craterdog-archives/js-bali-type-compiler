@@ -83,7 +83,10 @@ const Decoder = function(debug) {
 
     // PUBLIC FUNCTIONS
 
-    this.instructionToString = function(operation, modifier, operand) {
+    this.instructionToString = function(instruction) {
+        const operation = this.decodeOperation(instruction);
+        const modifier = this.decodeModifier(instruction);
+        const operand = this.decodeOperand(instruction);
         if (!operation && !modifier && !operand) return 'SKIP INSTRUCTION';
         const operandString = operandToString(operation, modifier, operand);
         var string = types.operationString(operation) + ' ';
@@ -274,12 +277,12 @@ const Decoder = function(debug) {
             while (bytes.length < 4) bytes = '0' + bytes;
 
             // format the description
+            const description = this.instructionToString(instruction);
+
+            // format the bytecode (must happen last)
             const operation = this.decodeOperation(instruction);
             const modifier = this.decodeModifier(instruction);
             const operand = this.decodeOperand(instruction);
-            const description = this.instructionToString(operation, modifier, operand);
-
-            // format the bytecode (must happen last)
             var operandString = operandToString(operation, modifier, operand);
             while (operandString.length < 4) operandString = ' ' + operandString;  // pad an index operand with leading spaces
             if (operandString.length < 5) operandString += ' ';  // pad an index operand with a single trailing space

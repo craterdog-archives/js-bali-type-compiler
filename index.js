@@ -194,13 +194,11 @@ exports.api = function(debug) {
         /**
          * This function returns a string version of the specified Bali Virtual Machine™ instruction.
          *
-         * @param {Number} operation The operation for the instruction.
-         * @param {Number} modifier The modifier for the instruction.
-         * @param {Number} operand The optional operand associated with the instruction.
+         * @param {Number} instruction The instruction.
          * @return {String} A string version of the instruction.
          */
-        string: function(operation, modifier, operand) {
-            return decoder.instructionToString(operation, modifier, operand);
+        string: function(instruction) {
+            return decoder.instructionToString(instruction);
         },
 
         /**

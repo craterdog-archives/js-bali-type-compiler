@@ -136,9 +136,11 @@ exports.api = function(debug) {
     };
 
     const validateOptionalTypeArgument = function(procedure, type, argument) {
-        if (argument !== undefined && argument !== null && !(argument.isComponent && argument.isEqualTo(bali.pattern.NONE))) {
+        if (bali.pattern.NONE.isEqualTo(argument)) return undefined;
+        if (argument !== undefined) {
             validateTypeArgument(procedure, type, argument);
         }
+        return argument;
     };
 
     const validateInterfaceArgument = function(procedure, iface, argument) {
@@ -293,7 +295,7 @@ exports.api = function(debug) {
 
         $base2: function(binary, indentation) {
             validateTypeArgument('$base2', '/bali/elements/Binary', binary);
-            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
@@ -305,7 +307,7 @@ exports.api = function(debug) {
 
         $base16: function(binary, indentation) {
             validateTypeArgument('$base16', '/bali/elements/Binary', binary);
-            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
@@ -317,7 +319,7 @@ exports.api = function(debug) {
 
         $base32: function(binary, indentation) {
             validateTypeArgument('$base32', '/bali/elements/Binary', binary);
-            validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
+            indentation = validateOptionalTypeArgument('$base2', '/bali/elements/Number', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
@@ -329,7 +331,7 @@ exports.api = function(debug) {
 
         $base64: function(binary, indentation) {
             validateTypeArgument('$base64', '/bali/elements/Binary', binary);
-            validateOptionalTypeArgument('$base64', '/bali/elements/Number', indentation);
+            indentation = validateOptionalTypeArgument('$base64', '/bali/elements/Number', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toNumber();
@@ -341,7 +343,7 @@ exports.api = function(debug) {
 
         $binary: function(number, parameters) {
             validateTypeArgument('$binary', '/bali/elements/Number', number);
-            validateOptionalTypeArgument('$binary', '/bali/collections/Catalog', parameters);
+            parameters = validateOptionalTypeArgument('$binary', '/bali/collections/Catalog', parameters);
             number = number.toNumber();
             validateIndex('$binary', 1024, number);
             const bytes = generator.generateBytes(number);
@@ -359,8 +361,8 @@ exports.api = function(debug) {
         },
 
         $catalog: function(items, parameters) {
-            validateOptionalTypeArgument('$catalog', '/bali/types/Collection', items);
-            validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
+            items = validateOptionalTypeArgument('$catalog', '/bali/types/Collection', items);
+            parameters = validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
             return bali.catalog(items, parameters);
         },
 
@@ -462,7 +464,7 @@ exports.api = function(debug) {
 
         $document: function(component, indentation) {
             validateTypeArgument('$document', '/bali/types/Component', component);
-            validateOptionalTypeArgument('$document', '/bali/elements/Number', indentation);
+            indentation = validateOptionalTypeArgument('$document', '/bali/elements/Number', indentation);
             if (indentation) {
                 indentation = indentation.toNumber();
                 validateIndex('$document', 20, indentation);
@@ -699,8 +701,8 @@ exports.api = function(debug) {
         },
 
         $list: function(items, parameters) {
-            validateOptionalTypeArgument('$list', '/bali/types/Collection', items);
-            validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
+            items = validateOptionalTypeArgument('$list', '/bali/types/Collection', items);
+            parameters = validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
             return bali.list(items, parameters);
         },
 
@@ -816,7 +818,7 @@ exports.api = function(debug) {
 
         $procedure: function(statements, parameters) {
             validateTypeArgument('$procedure', '/bali/structures/Statements', statements);
-            validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
+            parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(statements, parameters);
         },
 
@@ -832,8 +834,8 @@ exports.api = function(debug) {
         },
 
         $queue: function(items, parameters) {
-            validateOptionalTypeArgument('$queue', '/bali/types/Collection', items);
-            validateOptionalTypeArgument('$queue', '/bali/collections/Catalog', parameters);
+            items = validateOptionalTypeArgument('$queue', '/bali/types/Collection', items);
+            parameters = validateOptionalTypeArgument('$queue', '/bali/collections/Catalog', parameters);
             return bali.queue(items, parameters);
         },
 
@@ -849,9 +851,9 @@ exports.api = function(debug) {
         },
 
         $range: function(first, last, parameters) {
-            validateOptionalTypeArgument('$range', '/bali/elements/Number', first);
-            validateOptionalTypeArgument('$range', '/bali/elements/Number', last);
-            validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
+            first = validateOptionalTypeArgument('$range', '/bali/elements/Number', first);
+            last = validateOptionalTypeArgument('$range', '/bali/elements/Number', last);
+            parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             if (first) first = first.toNumber();
             if (last) last = last.toNumber();
             return bali.range(first, last, parameters);
@@ -968,8 +970,8 @@ exports.api = function(debug) {
         },
 
         $set: function(items, parameters) {
-            validateOptionalTypeArgument('$set', '/bali/types/Collection', items);
-            validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
+            items = validateOptionalTypeArgument('$set', '/bali/types/Collection', items);
+            parameters = validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
             return bali.set(items, parameters);
         },
 
@@ -1022,8 +1024,8 @@ exports.api = function(debug) {
         },
 
         $stack: function(items, parameters) {
-            validateOptionalTypeArgument('$stack', '/bali/types/Collection', items);
-            validateOptionalTypeArgument('$stack', '/bali/collections/Catalog', parameters);
+            items = validateOptionalTypeArgument('$stack', '/bali/types/Collection', items);
+            parameters = validateOptionalTypeArgument('$stack', '/bali/collections/Catalog', parameters);
             return bali.stack(items, parameters);
         },
 
@@ -1057,7 +1059,7 @@ exports.api = function(debug) {
         },
 
         $tag: function(size) {
-            validateOptionalTypeArgument('$tag', '/bali/elements/Number', size);
+            size = validateOptionalTypeArgument('$tag', '/bali/elements/Number', size);
             size = size.toNumber();
             validateIndex('$tag', 1024, size);
             return bali.tag(size);
@@ -1094,7 +1096,7 @@ exports.api = function(debug) {
 
         $tree: function(type, children) {
             validateTypeArgument('$tree', '/bali/elements/Name', type);
-            validateOptionalTypeArgument('$tree', '/bali/types/Collection', children);
+            children = validateOptionalTypeArgument('$tree', '/bali/types/Collection', children);
             return bali.tree(type.toString(), children);
         },
 

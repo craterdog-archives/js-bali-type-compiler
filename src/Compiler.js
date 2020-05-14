@@ -322,12 +322,15 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 // collection: list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
     const parameters = collection.getParameters();
-    this.visitParameters(parameters);
+    const numberOfArguments = parameters ? 2 : 0;
+    if (numberOfArguments) {
+        this.builder.insertPushInstruction('LITERAL', 'none');
+        this.visitParameters(parameters);
+    }
 
     // the VM replaces any parameters on the component stack with a new parameterized collection
     var type = collection.getType().split('/')[3];
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-    const numberOfArguments = parameters ? 1 : 0;
     this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
 
     // the VM adds each expression to the collection
@@ -1027,7 +1030,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
             this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
         }
         this.depth--;
-        // the parameter list remains on the component stack
+        // the parameter catalog remains on the component stack
     }
 };
 
