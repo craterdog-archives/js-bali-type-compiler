@@ -51,6 +51,28 @@ exports.api = function(debug) {
     /**
      * This function returns the virtual machine index for the specified intrinsic function name.
      *
+     * @param {Number} index The index of the intrinsic function.
+     * @returns {String} The name of the corresponding intrinsic function.
+     */
+    const name = function(index) {
+        const result = names[index];
+        if (!result) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Intrinsics',
+                $procedure: '$name',
+                $exception: '$invalidIndex',
+                $name: name,
+                $text: 'Attempted to retrieve the name of an invalid intrinsic function.'
+            });
+            if (debug > 0) console.error(exception.toString());
+            throw exception;
+        }
+        return result;
+    };
+
+    /**
+     * This function returns the virtual machine index for the specified intrinsic function name.
+     *
      * @param {String} name The name of the intrinsic function.
      * @returns {Number} The index of the corresponding intrinsic function.
      */
@@ -1131,6 +1153,7 @@ exports.api = function(debug) {
 
     // return the actual API
     return {
+        name: name,
         index: index,
         invoke: invoke
     };
