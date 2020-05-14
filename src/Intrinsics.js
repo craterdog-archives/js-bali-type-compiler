@@ -472,7 +472,7 @@ exports.api = function(debug) {
 
         $doesMatch: function(component, pattern) {
             validateTypeArgument('$doesMatch', '/bali/types/Component', component);
-            validateTypeArgument('$doesMatch', '/bali/elements/Pattern', pattern);
+            validateTypeArgument('$doesMatch', '/bali/types/Component', pattern);
             return bali.probability(component.isMatchedBy(pattern));
         },
 
