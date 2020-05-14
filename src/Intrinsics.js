@@ -75,10 +75,12 @@ exports.api = function(debug) {
      * the specified arguments.
      *
      * @param {Number} index The index of the intrinsic function to invoke.
-     * @param {Array} args The arguments to be passed to the function invocation.
+     * @param {Component} argument1 The first argument.
+     * @param {Component} argument2 The second argument.
+     * @param {Component} argument3 The second argument.
      * @returns {Object} The result of the intrinsic function invocation.
      */
-    const invoke = function(index, ...args) {
+    const invoke = function(index, argument1, argument2, argument3) {
         if (index < 1 || index >= names.length) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Intrinsics',
@@ -90,7 +92,7 @@ exports.api = function(debug) {
             if (debug > 0) console.error(exception.toString());
             throw exception;
         }
-        return functions[index](args[0], args[1], args[2]);
+        return functions[index](argument1, argument2, argument3);
     };
 
 
@@ -321,7 +323,6 @@ exports.api = function(debug) {
             number = number.toNumber();
             validateIndex('$binary', 1024, number);
             const bytes = generator.generateBytes(number);
-            if (parameters) parameters = parameters.toObject();
             return bali.binary(bytes, parameters);
         },
 
@@ -338,7 +339,6 @@ exports.api = function(debug) {
         $catalog: function(items, parameters) {
             validateOptionalTypeArgument('$catalog', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.catalog(items, parameters);
         },
 
@@ -679,7 +679,6 @@ exports.api = function(debug) {
         $list: function(items, parameters) {
             validateOptionalTypeArgument('$list', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.list(items, parameters);
         },
 
@@ -796,7 +795,6 @@ exports.api = function(debug) {
         $procedure: function(statements, parameters) {
             validateTypeArgument('$procedure', '/bali/structures/Statements', statements);
             validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.procedure(statements, parameters);
         },
 
@@ -814,7 +812,6 @@ exports.api = function(debug) {
         $queue: function(items, parameters) {
             validateOptionalTypeArgument('$queue', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$queue', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.queue(items, parameters);
         },
 
@@ -835,7 +832,6 @@ exports.api = function(debug) {
             validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             if (first) first = first.toNumber();
             if (last) last = last.toNumber();
-            if (parameters) parameters = parameters.toObject();
             return bali.range(first, last, parameters);
         },
 
@@ -952,7 +948,6 @@ exports.api = function(debug) {
         $set: function(items, parameters) {
             validateOptionalTypeArgument('$set', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.set(items, parameters);
         },
 
@@ -1007,7 +1002,6 @@ exports.api = function(debug) {
         $stack: function(items, parameters) {
             validateOptionalTypeArgument('$stack', '/bali/types/Collection', items);
             validateOptionalTypeArgument('$stack', '/bali/collections/Catalog', parameters);
-            if (parameters) parameters = parameters.toObject();
             return bali.stack(items, parameters);
         },
 

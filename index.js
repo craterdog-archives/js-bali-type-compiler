@@ -219,11 +219,13 @@ exports.api = function(debug) {
          * the specified arguments.
          *
          * @param {Number} index The index of the intrinsic function to invoke.
-         * @param {Array} args The arguments to be passed to the function invocation.
+         * @param {Component} argument1 The first argument.
+         * @param {Component} argument2 The second argument.
+         * @param {Component} argument3 The second argument.
          * @returns {Object} The result of the intrinsic function invocation.
          */
-        invoke: function(index, ...args) {
-            return intrinsics.invoke(index, args);
+        invoke: function(index, argument1, argument2, argument3) {
+            return intrinsics.invoke(index, argument1, argument2, argument3);
         }
 
     };
