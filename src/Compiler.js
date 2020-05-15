@@ -287,28 +287,27 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 
 
 /*
- * This method compiles the instructions needed to checkout from the Bali Nebula™
- * a persistent document and assign it to a recipient. The recipient may be either
+ * This method compiles the instructions needed to checkout from the Bali Document Repository™
+ * a committed document and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a collection component.
  */
 // checkoutClause: 'checkout' recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const recipient = tree.getItem(1);
-    const reference = tree.getItem(2);
+    const expression = tree.getItem(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
 
-    // the VM places the value of the reference to the location of the document
-    // on top of the component stack
-    reference.acceptVisitor(this);
+    // the VM places the name of the document on top of the component stack
+    expression.acceptVisitor(this);
 
-    // the VM stores the value of the reference to the location into a temporary variable
-    const location = this.createTemporaryVariable('location');
-    this.builder.insertStoreInstruction('VARIABLE', location);
+    // the VM stores the name of the document into a temporary variable
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertStoreInstruction('VARIABLE', name);
 
-    // the VM loads the document from the remote location onto the top of the component stack
-    this.builder.insertLoadInstruction('DOCUMENT', location);
+    // the VM loads the named document in the repository onto the top of the component stack
+    this.builder.insertLoadInstruction('DOCUMENT', name);
 
     // the VM sets the value of the recipient to the value on the top of the component stack
     this.setRecipient(recipient);
@@ -347,28 +346,26 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
 
 
 /*
- * This method inserts the instructions needed to commit to the Bali Nebula™
- * a document that is on top of the component stack. A reference to
- * the location of the persistent document is evaluated by the VM.
+ * This method inserts the instructions needed to commit to the Bali Document Repository™
+ * a named document that is on top of the component stack.
  */
 // commitClause: 'commit' expression 'to' expression
 CompilingVisitor.prototype.visitCommitClause = function(tree) {
     const document = tree.getItem(1);
-    const reference = tree.getItem(2);
+    const expression = tree.getItem(2);
 
-    // the VM loads the value of the reference to the location of the persistent
-    // document onto the top of the component stack
-    reference.acceptVisitor(this);
+    // the VM loads the name of the document onto the top of the component stack
+    expression.acceptVisitor(this);
 
-    // the VM stores the value of the reference to the location into a temporary variable
-    const location = this.createTemporaryVariable('location');
-    this.builder.insertStoreInstruction('VARIABLE', location);
+    // the VM stores the name into a temporary variable
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertStoreInstruction('VARIABLE', name);
 
-    // the VM loads the value of the document onto the top of the component stack
+    // the VM loads the document onto the top of the component stack
     document.acceptVisitor(this);
 
-    // the VM stores the document on top of the component stack into the remote location
-    this.builder.insertStoreInstruction('DOCUMENT', location);
+    // the VM stores the named document into the remote repository
+    this.builder.insertStoreInstruction('DOCUMENT', name);
 };
 
 
@@ -509,47 +506,45 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
 
 
 /*
- * This method inserts the instructions that cause the VM to replace the
- * value of the reference expression that is on top of the component stack
- * with the value that it references.
+ * This method inserts the instructions that cause the VM to replace the name of the
+ * document that is on top of the component stack with the named document.
  */
 // dereferenceExpression: '@' expression
 CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
-    const reference = tree.getItem(1);
+    const expression = tree.getItem(1);
 
-    // the VM loads the value of the reference to the location onto the top of the component stack
-    reference.acceptVisitor(this);
+    // the VM loads name of the document onto the top of the component stack
+    expression.acceptVisitor(this);
 
-    // the VM stores the value of the reference to the location into a temporary variable
-    const location = this.createTemporaryVariable('location');
-    this.builder.insertStoreInstruction('VARIABLE', location);
+    // the VM stores the name into a temporary variable
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertStoreInstruction('VARIABLE', name);
 
-    // the VM loads the document from the remote location onto the top of the component stack
-    this.builder.insertLoadInstruction('DOCUMENT', location);
+    // the VM loads the named document onto the top of the component stack
+    this.builder.insertLoadInstruction('DOCUMENT', name);
 
     // the referenced document remains on top of the component stack
 };
 
 
 /*
- * This method inserts the instructions needed to discard from the Bali Nebula™
- * a persistent draft of a document. A reference to the location of the persistent
- * draft is evaluated by the VM.
+ * This method inserts the instructions needed to discard from the Bali Document Repository™
+ * the named draft document.
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    const reference = tree.getItem(1);
+    const expression = tree.getItem(1);
 
-    // the VM loads the value of the reference to the location onto the top of the component stack
-    reference.acceptVisitor(this);  // reference expression
+    // the VM loads the name of the draft document onto the top of the component stack
+    expression.acceptVisitor(this);  // reference expression
 
-    // the VM stores the value of the reference to the location into a temporary variable
-    const location = this.createTemporaryVariable('location');
-    this.builder.insertStoreInstruction('VARIABLE', location);
+    // the VM stores the name into a temporary variable
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertStoreInstruction('VARIABLE', name);
 
-    // the VM stores no document into the remote location
+    // the VM removes the named draft from the repository
     this.builder.insertPushInstruction('LITERAL', 'none');
-    this.builder.insertStoreInstruction('DRAFT', location);
+    this.builder.insertStoreInstruction('DRAFT', name);
 };
 
 
@@ -1050,7 +1045,7 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
 /*
  * This method inserts the instructions that cause the VM to evaluate a
  * message expression and then place the resulting message on a message
- * queue in the Bali Nebula™. The reference to the message
+ * queue in the Bali Document Repository™. The reference to the message
  * queue is another expression that the VM evaluates as well.
  */
 // postClause: 'post' expression 'on' expression
@@ -1095,7 +1090,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 /*
  * This method inserts the instructions that cause the VM to evaluate an
  * expression and then publish the resulting value that is on top of the
- * component stack to the global event queue in the Bali Nebula™.
+ * component stack to the global event queue in the Bali Document Repository™.
  */
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
@@ -1151,27 +1146,26 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 
 
 /*
- * This method inserts the instructions that cause the VM to evaluate an
- * expression and then store the resulting component that is on top of
- * the component stack persistently in the Bali Nebula™. The
- * reference to the document location is another expression that the VM
- * evaluates as well.
+ * This method inserts the instructions that cause the VM to save the named
+ * draft document into the Bali Document Repository™.
  */
 // saveClause: 'save' expression 'to' expression
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const draft = tree.getItem(1);
-    const reference = tree.getItem(2);
+    const expression = tree.getItem(2);
 
-    // the VM stores the value of the reference to the location into a temporary variable
-    reference.acceptVisitor(this);
-    const location = this.createTemporaryVariable('location');
-    this.builder.insertStoreInstruction('VARIABLE', location);
+    // the VM loads the name of the draft document onto the top of the component stack
+    expression.acceptVisitor(this);
 
-    // the VM loads the value of the draft onto the top of the component stack
+    // the VM stores the name into a temporary variable
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertStoreInstruction('VARIABLE', name);
+
+    // the VM loads the draft document onto the top of the component stack
     draft.acceptVisitor(this);
 
-    // the VM stores the document on top of the component stack into the remote location
-    this.builder.insertStoreInstruction('DRAFT', location);
+    // the VM stores the named draft document into the repository
+    this.builder.insertStoreInstruction('DRAFT', name);
 };
 
 
@@ -1432,7 +1426,7 @@ CompilingVisitor.prototype.visitVersion = function(version) {
 
 /*
  * This method compiles the instructions needed to wait for a message from a
- * queue in the Bali Nebula™. The resulting message is assigned
+ * queue in the Bali Document Repository™. The resulting message is assigned
  * to a recipient. The recipient may be either a variable or an indexed child
  * of a collection component.
  */
