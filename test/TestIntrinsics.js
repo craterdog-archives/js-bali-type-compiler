@@ -46,6 +46,16 @@ const iterator = list.getIterator();
 const procedure = bali.procedure(statements, {$foo: 'bar'});
 const array = [];
 const object = {};
+const document = bali.catalog({
+    $foo: 'bar'
+}, {
+    $type: '/bali/examples/Type/v1',
+    $tag: '#8QP2XF6AXHTQJQJWH0BPR79KWM37XD8C',
+    $version: 'v1',
+    $permissions: '/bali/permissions/public/v1',
+    $previous: 'none'
+});
+const digest = bali.component("'FBA3LC32TXJ3X32CFA4159YV4LV1S1M03XQWNBBTPZ30Q5FLNKSLYDBM1S5WH97FTLJGWDXVW69A7294RBFGPRYG6DXM8A5FZ2HYPK0'");
 const dirtyType = bali.catalog({
     $methods: bali.catalog({
         $dummy: bali.catalog({
@@ -547,6 +557,12 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, catalog, type);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $citation intrinsic function', function() {
+            const index = intrinsics.index('$citation');
+            const citation = intrinsics.invoke(index, document);
+            expect(digest.isEqualTo(citation.getValue('$digest'))).to.equal(true);
         });
 
         it('should invoke $cleanType intrinsic function', function() {
@@ -1323,6 +1339,13 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, catalog, two, stack);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $instance intrinsic function', function() {
+            const index = intrinsics.index('$instance');
+            const type = bali.component('/bali/examples/Type/v1');
+            const attributes = bali.catalog({$foo: 'bar'});
+            const document = intrinsics.invoke(index, type, attributes);
         });
 
         it('should invoke $interfaces intrinsic function', function() {
@@ -2535,6 +2558,13 @@ describe('Bali Intrinsic Functions', function() {
                     intrinsics.invoke(index, bali.set([0, 1, 2]), two, probability);
                 }
             ).to.throw();
+        });
+
+        it('should invoke $setParameter intrinsic function', function() {
+            const index = intrinsics.index('$setParameter');
+            const key = bali.component('$version');
+            const value = bali.component('v2');
+            intrinsics.invoke(index, document, key, value);
         });
 
         it('should invoke $setSubcomponent intrinsic function', function() {

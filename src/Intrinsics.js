@@ -215,9 +215,8 @@ exports.api = function(debug) {
 
     const citeDocument = function(document) {
         // extract the required attributes
-        const content = document.getValue('$content');
-        const tag = content.getParameter('$tag');
-        const version = content.getParameter('$version');
+        const tag = document.getParameter('$tag');
+        const version = document.getParameter('$version');
 
         // generate a digest of the document
         const bytes = Buffer.from(document.toString(), 'utf8');
