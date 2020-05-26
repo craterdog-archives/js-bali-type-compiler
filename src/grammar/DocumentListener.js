@@ -47,15 +47,6 @@ DocumentListener.prototype.exitLabel = function(ctx) {
 };
 
 
-// Enter a parse tree produced by DocumentParser#variable.
-DocumentListener.prototype.enterVariable = function(ctx) {
-};
-
-// Exit a parse tree produced by DocumentParser#variable.
-DocumentListener.prototype.exitVariable = function(ctx) {
-};
-
-
 // Enter a parse tree produced by DocumentParser#instruction.
 DocumentListener.prototype.enterInstruction = function(ctx) {
 };
@@ -92,12 +83,12 @@ DocumentListener.prototype.exitPushInstruction = function(ctx) {
 };
 
 
-// Enter a parse tree produced by DocumentParser#popInstruction.
-DocumentListener.prototype.enterPopInstruction = function(ctx) {
+// Enter a parse tree produced by DocumentParser#pullInstruction.
+DocumentListener.prototype.enterPullInstruction = function(ctx) {
 };
 
-// Exit a parse tree produced by DocumentParser#popInstruction.
-DocumentListener.prototype.exitPopInstruction = function(ctx) {
+// Exit a parse tree produced by DocumentParser#pullInstruction.
+DocumentListener.prototype.exitPullInstruction = function(ctx) {
 };
 
 
@@ -110,21 +101,30 @@ DocumentListener.prototype.exitLoadInstruction = function(ctx) {
 };
 
 
-// Enter a parse tree produced by DocumentParser#storeInstruction.
-DocumentListener.prototype.enterStoreInstruction = function(ctx) {
+// Enter a parse tree produced by DocumentParser#saveInstruction.
+DocumentListener.prototype.enterSaveInstruction = function(ctx) {
 };
 
-// Exit a parse tree produced by DocumentParser#storeInstruction.
-DocumentListener.prototype.exitStoreInstruction = function(ctx) {
+// Exit a parse tree produced by DocumentParser#saveInstruction.
+DocumentListener.prototype.exitSaveInstruction = function(ctx) {
 };
 
 
-// Enter a parse tree produced by DocumentParser#invokeInstruction.
-DocumentListener.prototype.enterInvokeInstruction = function(ctx) {
+// Enter a parse tree produced by DocumentParser#dropInstruction.
+DocumentListener.prototype.enterDropInstruction = function(ctx) {
 };
 
-// Exit a parse tree produced by DocumentParser#invokeInstruction.
-DocumentListener.prototype.exitInvokeInstruction = function(ctx) {
+// Exit a parse tree produced by DocumentParser#dropInstruction.
+DocumentListener.prototype.exitDropInstruction = function(ctx) {
+};
+
+
+// Enter a parse tree produced by DocumentParser#callInstruction.
+DocumentListener.prototype.enterCallInstruction = function(ctx) {
+};
+
+// Exit a parse tree produced by DocumentParser#callInstruction.
+DocumentListener.prototype.exitCallInstruction = function(ctx) {
 };
 
 
@@ -134,15 +134,6 @@ DocumentListener.prototype.enterSendInstruction = function(ctx) {
 
 // Exit a parse tree produced by DocumentParser#sendInstruction.
 DocumentListener.prototype.exitSendInstruction = function(ctx) {
-};
-
-
-// Enter a parse tree produced by DocumentParser#handleInstruction.
-DocumentListener.prototype.enterHandleInstruction = function(ctx) {
-};
-
-// Exit a parse tree produced by DocumentParser#handleInstruction.
-DocumentListener.prototype.exitHandleInstruction = function(ctx) {
 };
 
 

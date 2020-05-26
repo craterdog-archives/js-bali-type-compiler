@@ -34,180 +34,180 @@
     }
     $instructions: "
         1.EvaluateStatement:
-        INVOKE $catalog
+        CALL $catalog
         PUSH LITERAL `$foo`
         PUSH LITERAL `$bar`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
         PUSH LITERAL `$baz`
         PUSH LITERAL `5`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         2.EvaluateStatement:
         LOAD VARIABLE $variable
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         3.EvaluateStatement:
         PUSH LITERAL `13`
-        INVOKE $isZero WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $isZero WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         4.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $sum WITH 2 ARGUMENTS
+        CALL $sum WITH 2 ARGUMENTS
         LOAD VARIABLE $c
-        INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $product WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         5.EvaluateStatement:
         LOAD VARIABLE $reference
-        STORE VARIABLE $name-2
+        SAVE VARIABLE $name-2
         LOAD DOCUMENT $name-2
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         6.EvaluateStatement:
         LOAD VARIABLE $customer
         PUSH LITERAL `$order`
-        INVOKE $subcomponent WITH 2 ARGUMENTS
+        CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `$item`
-        INVOKE $subcomponent WITH 2 ARGUMENTS
+        CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
-        INVOKE $subcomponent WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $subcomponent WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         7.EvaluateStatement:
         LOAD VARIABLE $list
-        INVOKE $list
+        CALL $list
         LOAD VARIABLE $item
-        INVOKE $addItem WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
         SEND $addItem TO COMPONENT WITH ARGUMENTS
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         8.EvaluateStatement:
         PUSH LITERAL `23`
-        INVOKE $factorial WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $factorial WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         9.EvaluateStatement:
         PUSH LITERAL `2`
         PUSH LITERAL `8`
-        INVOKE $exponential WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $exponential WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         10.EvaluateStatement:
         PUSH LITERAL `π`
-        INVOKE $inverse WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $inverse WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         11.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        INVOKE $conjugate WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $conjugate WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         12.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
-        INVOKE $product WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $product WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         13.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $quotient WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $quotient WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         14.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
-        INVOKE $remainder WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $remainder WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         15.EvaluateStatement:
         LOAD VARIABLE $x
         LOAD VARIABLE $y
-        INVOKE $sum WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $sum WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         16.EvaluateStatement:
         LOAD VARIABLE $w
         LOAD VARIABLE $z
-        INVOKE $difference WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $difference WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         17.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        INVOKE $magnitude WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $magnitude WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         18.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $isLess WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $isLess WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         19.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
-        INVOKE $areEqual WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $areEqual WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         20.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
-        INVOKE $isMore WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $isMore WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         21.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
-        INVOKE $areSame WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $areSame WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         22.EvaluateStatement:
         LOAD VARIABLE $k
         LOAD VARIABLE $m
-        INVOKE $doesMatch WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $doesMatch WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         23.EvaluateStatement:
         LOAD VARIABLE $p
-        INVOKE $not WITH 1 ARGUMENT
-        STORE VARIABLE $result-1
+        CALL $not WITH 1 ARGUMENT
+        SAVE VARIABLE $result-1
         
         24.EvaluateStatement:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $and WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $and WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         25.EvaluateStatement:
         LOAD VARIABLE $c
         LOAD VARIABLE $d
-        INVOKE $sans WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $sans WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         26.EvaluateStatement:
         LOAD VARIABLE $f
         LOAD VARIABLE $g
-        INVOKE $xor WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $xor WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         27.EvaluateStatement:
         LOAD VARIABLE $h
         LOAD VARIABLE $j
-        INVOKE $or WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $or WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         28.EvaluateStatement:
         LOAD VARIABLE $foo
         PUSH LITERAL `5`
-        INVOKE $default WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $default WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         LOAD VARIABLE $result-1
-        HANDLE RESULT
+        PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [
         "1.EvaluateStatement": 1
@@ -240,14 +240,14 @@
         "28.EvaluateStatement": 115
     ]
     $bytecode: '
-        A01428012802B00BB00128032804B00BB0018012601380122805A8458012
-        60016002B0896003B06680126011800F780F801260042806B0882807B088
-        2804B0888012600DA04F600AB001C80180122809A82D8012280A280BB02B
-        8012280CA83D8012280DA81C801260156016B066801260016002B0698012
-        60036005B06E801260156016B089801260146017B0258012280DA8518012
-        60016002B040801260036005B008801260066008B04180126009600BB009
-        8012600C600EB02780126010A85A801260016002B004801260036005B079
-        801260066008B09780126009600BB05D801260072804B02380126012E000
+        C01428012802D00BD00128032804D00BD0018012601380122805C8478012
+        60016002D08C6003D06880126011800F780F801260042806D08B2807D08B
+        2804D08B8012600DC051600AD001E80180122809C82E8012280A280BD02C
+        8012280CC83F8012280DC81D801260156016D068801260016002D06B8012
+        60036005D070801260156016D08C801260146017D0268012280DC8538012
+        60016002D042801260036005D008801260066008D04380126009600BD009
+        8012600C600ED02880126010C85C801260016002D004801260036005D07B
+        801260066008D09A80126009600BD05F801260072804D024801260125000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

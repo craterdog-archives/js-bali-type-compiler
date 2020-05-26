@@ -19,6 +19,7 @@
  *  3. Functions that ask a question return a boolean value.
  * </pre>
  */
+const hasher = require('crypto');
 const Compiler = require('./Compiler').Compiler;
 
 // This private constant sets the POSIX end of line character
@@ -212,6 +213,31 @@ exports.api = function(debug) {
         }
     };
 
+    const citeDocument = function(document) {
+        // extract the required attributes
+        const content = document.getValue('$content');
+        const tag = content.getParameter('$tag');
+        const version = content.getParameter('$version');
+
+        // generate a digest of the document
+        const bytes = Buffer.from(document.toString(), 'utf8');
+        const hash = hasher.createHash('sha512');
+        hash.update(bytes);
+        const digest = bali.binary(hash.digest());
+
+        // create the citation
+        const citation = bali.catalog({
+            $protocol: 'v2',
+            $tag: tag,
+            $version: version,
+            $digest: digest
+        }, {
+            $type: '/bali/notary/Citation/v1'
+        });
+
+        return citation;
+    };
+
 
     /*
      * The list of intrinsic functions supported by the virtual machine.
@@ -364,6 +390,11 @@ exports.api = function(debug) {
             items = validateOptionalTypeArgument('$catalog', '/bali/types/Collection', items);
             parameters = validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
             return bali.catalog(items, parameters);
+        },
+
+        $citation: function(catalog) {
+            validateTypeArgument('$citation', '/bali/collections/Catalog', catalog);
+            return citeDocument(catalog);
         },
 
         $cleanType: function(type) {
@@ -595,6 +626,12 @@ exports.api = function(debug) {
             return list;
         },
 
+        $instance: function(type, attributes) {
+            validateTypeArgument('$instance', '/bali/elements/Name', type);
+            validateTypeArgument('$instance', '/bali/collections/Catalog', attributes);
+            return bali.instance(type, attributes);
+        },
+
         $interfaces: function(component) {
             validateTypeArgument('$interfaces', '/bali/types/Component', component);
             return bali.list(component.getInterfaces());
@@ -668,7 +705,7 @@ exports.api = function(debug) {
         },
 
         $key: function(association) {
-            validateTypeArgument('$key', '/bali/structures/Association', association);
+            validateTypeArgument('$key', '/bali/composites/Association', association);
             return association.getKey();
         },
 
@@ -817,7 +854,7 @@ exports.api = function(debug) {
         },
 
         $procedure: function(statements, parameters) {
-            validateTypeArgument('$procedure', '/bali/structures/Statements', statements);
+            validateTypeArgument('$procedure', '/bali/composites/Statements', statements);
             parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(statements, parameters);
         },
@@ -985,6 +1022,13 @@ exports.api = function(debug) {
             return list;
         },
 
+        $setParameter: function(component, key, value) {
+            validateTypeArgument('$setParameter', '/bali/types/Component', component);
+            validateTypeArgument('$setParameter', '/bali/types/Element', key);
+            validateTypeArgument('$setParameter', '/bali/types/Component', value);
+            return component.setParameter(key, value);
+        },
+
         $setSubcomponent: function(composite, element, subcomponent) {
             validateInterfaceArgument('$setSubcomponent', '/bali/interfaces/Composite', composite);
             validateTypeArgument('$setSubcomponent', '/bali/types/Element', element);
@@ -1030,7 +1074,7 @@ exports.api = function(debug) {
         },
 
         $statements: function(procedure) {
-            validateTypeArgument('$statements', '/bali/structures/Procedure', procedure);
+            validateTypeArgument('$statements', '/bali/composites/Procedure', procedure);
             return procedure.getStatements();
         },
 
@@ -1106,7 +1150,7 @@ exports.api = function(debug) {
         },
 
         $value: function(association) {
-            validateTypeArgument('$value', '/bali/structures/Association', association);
+            validateTypeArgument('$value', '/bali/composites/Association', association);
             return association.getValue();
         },
 

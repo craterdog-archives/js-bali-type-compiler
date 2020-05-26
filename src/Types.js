@@ -18,14 +18,15 @@
 // PUBLIC CONSTANTS
 
 exports.SKIP = 0;
+
 exports.JUMP = 0;
 exports.PUSH = 1;
-exports.POP = 2;
+exports.PULL = 2;
 exports.LOAD = 3;
-exports.STORE = 4;
-exports.INVOKE = 5;
-exports.SEND = 6;
-exports.HANDLE = 7;
+exports.SAVE = 4;
+exports.DROP = 5;
+exports.CALL = 6;
+exports.SEND = 7;
 
 exports.ON_ANY = 0;
 exports.ON_NONE = 1;
@@ -33,10 +34,13 @@ exports.ON_TRUE = 2;
 exports.ON_FALSE = 3;
 
 exports.HANDLER = 0;
-exports.COMPONENT = 1;
 exports.LITERAL = 1;
 exports.CONSTANT = 2;
 exports.ARGUMENT = 3;
+
+exports.COMPONENT = 1;
+exports.RESULT = 2;
+exports.EXCEPTION = 3;
 
 exports.VARIABLE = 0;
 exports.MESSAGE = 1;
@@ -47,9 +51,6 @@ exports.TO_COMPONENT = 0;
 exports.TO_COMPONENT_WITH_ARGUMENTS = 1;
 exports.TO_DOCUMENT = 2;
 exports.TO_DOCUMENT_WITH_ARGUMENTS = 3;
-
-exports.RESULT = 0;
-exports.EXCEPTION = 1;
 
 
 // PUBLIC FUNCTIONS
@@ -81,12 +82,12 @@ exports.pushModifierValue = function(string) {
 };
 
 
-exports.popModifierString = function(value) {
-    return POP_MODIFIERS[value];
+exports.pullModifierString = function(value) {
+    return PULL_MODIFIERS[value];
 };
 
-exports.popModifierValue = function(string) {
-    return POP_MODIFIERS.indexOf(string);
+exports.pullModifierValue = function(string) {
+    return PULL_MODIFIERS.indexOf(string);
 };
 
 
@@ -99,12 +100,21 @@ exports.loadModifierValue = function(string) {
 };
 
 
-exports.storeModifierString = function(value) {
-    return STORE_MODIFIERS[value];
+exports.saveModifierString = function(value) {
+    return SAVE_MODIFIERS[value];
 };
 
-exports.storeModifierValue = function(string) {
-    return STORE_MODIFIERS.indexOf(string);
+exports.saveModifierValue = function(string) {
+    return SAVE_MODIFIERS.indexOf(string);
+};
+
+
+exports.dropModifierString = function(value) {
+    return DROP_MODIFIERS[value];
+};
+
+exports.dropModifierValue = function(string) {
+    return DROP_MODIFIERS.indexOf(string);
 };
 
 
@@ -117,26 +127,17 @@ exports.sendModifierValue = function(string) {
 };
 
 
-exports.handleModifierString = function(value) {
-    return HANDLE_MODIFIERS[value];
-};
-
-exports.handleModifierValue = function(string) {
-    return HANDLE_MODIFIERS.indexOf(string);
-};
-
-
 // PRIVATE ATTRIBUTES
 
 const OPERATIONS = [
     'JUMP',
     'PUSH',
-    'POP',
+    'PULL',
     'LOAD',
-    'STORE',
-    'INVOKE',
-    'SEND',
-    'HANDLE'
+    'SAVE',
+    'DROP',
+    'CALL',
+    'SEND'
 ];
 
 const JUMP_MODIFIERS = [
@@ -153,9 +154,11 @@ const PUSH_MODIFIERS = [
     'ARGUMENT'
 ];
 
-const POP_MODIFIERS = [
+const PULL_MODIFIERS = [
     'HANDLER',
-    'COMPONENT'
+    'COMPONENT',
+    'RESULT',
+    'EXCEPTION'
 ];
 
 const LOAD_MODIFIERS = [
@@ -165,7 +168,14 @@ const LOAD_MODIFIERS = [
     'DOCUMENT'
 ];
 
-const STORE_MODIFIERS = [
+const SAVE_MODIFIERS = [
+    'VARIABLE',
+    'MESSAGE',
+    'DRAFT',
+    'DOCUMENT'
+];
+
+const DROP_MODIFIERS = [
     'VARIABLE',
     'MESSAGE',
     'DRAFT',
@@ -177,9 +187,4 @@ const SEND_MODIFIERS = [
     'TO COMPONENT WITH ARGUMENTS',
     'TO DOCUMENT',
     'TO DOCUMENT WITH ARGUMENTS'
-];
-
-const HANDLE_MODIFIERS = [
-    'RESULT',
-    'EXCEPTION'
 ];

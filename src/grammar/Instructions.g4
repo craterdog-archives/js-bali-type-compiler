@@ -7,18 +7,16 @@ step: label? instruction;
 
 label: EOL? LABEL ':' EOL;
 
-variable: SYMBOL;
-
 instruction:
     skipInstruction |
     jumpInstruction |
     pushInstruction |
-    popInstruction |
+    pullInstruction |
     loadInstruction |
-    storeInstruction |
-    invokeInstruction |
-    sendInstruction |
-    handleInstruction
+    saveInstruction |
+    dropInstruction |
+    callInstruction |
+    sendInstruction
 ;
 
 // Skip this instruction and continue with the next instruction.
@@ -49,16 +47,18 @@ pushInstruction:
     )
 ;
 
-// Pop the component or handler address that is currently on top of it
-// stack off of it.
-popInstruction:
-    'POP' (
+// Pull whatever is currently on top of the handler or component stack off
+// and either discard it or use it accordingly.
+pullInstruction:
+    'PULL' (
         'HANDLER' |
-        'COMPONENT'
+        'COMPONENT' |
+        'RESULT' |
+        'EXCEPTION'
     )
 ;
 
-// Load the value from a variable, message queue, draft or document onto
+// Load the value from a local variable, message queue, draft or document onto
 // the top of the component stack.
 loadInstruction:
     'LOAD' (
@@ -66,25 +66,36 @@ loadInstruction:
         'MESSAGE' |
         'DRAFT' |
         'DOCUMENT'
-    ) variable
+    ) SYMBOL
 ;
 
-// Store the value that is on the top of the component stack into the
+// Save the value that is on the top of the component stack in the
 // local variable, message queue, draft or document.
-storeInstruction:
-    'STORE' (
+saveInstruction:
+    'SAVE' (
         'VARIABLE' |
         'MESSAGE' |
         'DRAFT' |
         'DOCUMENT'
-    ) variable
+    ) SYMBOL
 ;
 
-// Invoke the specified intrinsic function using the [0..3] arguments that
+// Drop the value that is currently associated with the local variable,
+// message queue, draft or document.
+dropInstruction:
+    'DROP' (
+        'VARIABLE' |
+        'MESSAGE' |
+        'DRAFT' |
+        'DOCUMENT'
+    ) SYMBOL
+;
+
+// Call the specified intrinsic function using the [0..3] arguments that
 // are on the component stack. The resulting value of the invocation
 // replaces the arguments that were on the top of the component stack.
-invokeInstruction:
-    'INVOKE' SYMBOL (
+callInstruction:
+    'CALL' SYMBOL (
         'WITH' (
             '1' 'ARGUMENT' |
             NUMBER 'ARGUMENTS'
@@ -109,15 +120,3 @@ sendInstruction:
         'DOCUMENT' ('WITH' 'ARGUMENTS')?
     )
 ;
-
-// Pop the result that is currently on top of the component stack off
-// and return it to the calling procedure as the result.  Or, pop the
-// handler address that is currently on top of the handler stack off
-// and transfer control to the first exception handler at that address.
-handleInstruction:
-    'HANDLE' (
-        'EXCEPTION' |
-        'RESULT'
-    )
-;
-

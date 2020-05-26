@@ -210,23 +210,23 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
     switch (operator) {
         case '*':
             // the VM places the product of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$product', 2);  // product(x, y)
+            this.builder.insertCallInstruction('$product', 2);  // product(x, y)
             break;
         case '/':
             // the VM places the quotient of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$quotient', 2);  // quotient(x, y)
+            this.builder.insertCallInstruction('$quotient', 2);  // quotient(x, y)
             break;
         case '//':
             // the VM places the remainder of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$remainder', 2);  // remainder(x, y)
+            this.builder.insertCallInstruction('$remainder', 2);  // remainder(x, y)
             break;
         case '+':
             // the VM places the sum of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$sum', 2);  // sum(x, y)
+            this.builder.insertCallInstruction('$sum', 2);  // sum(x, y)
             break;
         case '-':
             // the VM places the difference of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$difference', 2);  // difference(x,y)
+            this.builder.insertCallInstruction('$difference', 2);  // difference(x,y)
             break;
     }
 
@@ -243,7 +243,7 @@ CompilingVisitor.prototype.visitAssociation = function(association) {
     association.getValue().acceptVisitor(this);
 
     // the VM replaces the arguments on the component stack with a new association
-    this.builder.insertInvokeInstruction('$association', 2);  // association(key, value)
+    this.builder.insertCallInstruction('$association', 2);  // association(key, value)
 };
 
 
@@ -291,25 +291,42 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
  * a committed document and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a collection component.
  */
-// checkoutClause: 'checkout' recipient 'from' expression
+// checkoutClause: 'checkout' ('level' expression 'of')? recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
-    const recipient = tree.getItem(1);
-    const expression = tree.getItem(2);
+    var index = 1;
+    const level = (tree.getSize() === 3) ? tree.getItem(index++) : bali.number();
+    const recipient = tree.getItem(index++);
+    const expression = tree.getItem(index);
 
-    // the VM processes the recipient as needed
-    recipient.acceptVisitor(this);
-
-    // the VM places the name of the document on top of the component stack
+    // the VM evaluates the name expression and saves it in a temporary variable
     expression.acceptVisitor(this);
-
-    // the VM stores the name of the document into a temporary variable
     const name = this.createTemporaryVariable('name');
-    this.builder.insertStoreInstruction('VARIABLE', name);
+    this.builder.insertSaveInstruction('VARIABLE', name);
 
-    // the VM loads the named document in the repository onto the top of the component stack
+    // the VM saves a draft copy of the named document in a temporary variable
     this.builder.insertLoadInstruction('DOCUMENT', name);
+    this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
+    const draft = this.createTemporaryVariable('draft');
+    this.builder.insertSaveInstruction('VARIABLE', draft);
+
+    // the VM saves the new version string for the draft document in a temporary variable
+    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertPushInstruction('LITERAL', '$version');
+    this.builder.insertCallInstruction('$parameter', 2);  // parameter(draft, key)
+    level.acceptVisitor(this);
+    this.builder.insertCallInstruction('$nextVersion', 2);  // nextVersion(version, level)
+    const version = this.createTemporaryVariable('version');
+    this.builder.insertSaveInstruction('VARIABLE', version);
+
+    // the VM sets the version parameter for the draft document to the new version string
+    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertPushInstruction('LITERAL', '$version');
+    this.builder.insertLoadInstruction('VARIABLE', version);
+    this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(draft, key, value)
 
     // the VM sets the value of the recipient to the value on the top of the component stack
+    recipient.acceptVisitor(this);
+    this.builder.insertLoadInstruction('VARIABLE', draft);
     this.setRecipient(recipient);
 };
 
@@ -330,7 +347,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     // the VM replaces any parameters on the component stack with a new parameterized collection
     var type = collection.getType().split('/')[3];
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-    this.builder.insertInvokeInstruction(type, numberOfArguments);  // <type>(parameters)
+    this.builder.insertCallInstruction(type, numberOfArguments);  // <type>(parameters)
 
     // the VM adds each expression to the collection
     this.depth++;
@@ -338,7 +355,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     while (iterator.hasNext()) {
         var item = iterator.getNext();
         item.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(collection, item)
+        this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
     }
     this.depth--;
     // the parameterized collection remains on the component stack
@@ -354,18 +371,16 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
     const document = tree.getItem(1);
     const expression = tree.getItem(2);
 
-    // the VM loads the name of the document onto the top of the component stack
+    // the VM evaluates the name expression and saves it in a temporary variable
     expression.acceptVisitor(this);
-
-    // the VM stores the name into a temporary variable
     const name = this.createTemporaryVariable('name');
-    this.builder.insertStoreInstruction('VARIABLE', name);
+    this.builder.insertSaveInstruction('VARIABLE', name);
 
     // the VM loads the document onto the top of the component stack
     document.acceptVisitor(this);
 
-    // the VM stores the named document into the remote repository
-    this.builder.insertStoreInstruction('DOCUMENT', name);
+    // the VM saves the named document into the repository
+    this.builder.insertSaveInstruction('DOCUMENT', name);
 };
 
 
@@ -390,23 +405,23 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     switch (operator) {
         case '<':
             // determine whether or not the first value is less than the second value
-            this.builder.insertInvokeInstruction('$isLess', 2);  // less(x, y)
+            this.builder.insertCallInstruction('$isLess', 2);  // less(x, y)
             break;
         case '=':
             // determine whether or not the first value is equal to the second value
-            this.builder.insertInvokeInstruction('$areEqual', 2);  // equal(x, y)
+            this.builder.insertCallInstruction('$areEqual', 2);  // equal(x, y)
             break;
         case '>':
             // determine whether or not the first value is more than the second value
-            this.builder.insertInvokeInstruction('$isMore', 2);  // more(x, y)
+            this.builder.insertCallInstruction('$isMore', 2);  // more(x, y)
             break;
         case 'IS':
             // determine whether or not the first value is the same value as the second value
-            this.builder.insertInvokeInstruction('$areSame', 2);  // same(this, that)
+            this.builder.insertCallInstruction('$areSame', 2);  // same(this, that)
             break;
         case 'MATCHES':
             // determine whether or not the first value matches the second value
-            this.builder.insertInvokeInstruction('$doesMatch', 2);  // doesMatch(component, pattern)
+            this.builder.insertCallInstruction('$doesMatch', 2);  // doesMatch(component, pattern)
             break;
     }
 };
@@ -425,7 +440,7 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM finds the logical complement of the top value on the component stack
-    this.builder.insertInvokeInstruction('$not', 1);  // not(p)
+    this.builder.insertCallInstruction('$not', 1);  // not(p)
 };
 
 
@@ -446,7 +461,7 @@ CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM places the product of the two values on top of the component stack
-    this.builder.insertInvokeInstruction('$concatenation', 2);  // concatenation(a, b)
+    this.builder.insertCallInstruction('$concatenation', 2);  // concatenation(a, b)
 
     // the resulting value remains on the top of the component stack
 };
@@ -501,7 +516,7 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
     defaultValue.acceptVisitor(this);
 
     // the VM leaves the actual value on the top of the component stack
-    this.builder.insertInvokeInstruction('$default', 2);  // default(value, defaultValue)
+    this.builder.insertCallInstruction('$default', 2);  // default(value, defaultValue)
 };
 
 
@@ -516,9 +531,9 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
     // the VM loads name of the document onto the top of the component stack
     expression.acceptVisitor(this);
 
-    // the VM stores the name into a temporary variable
+    // the VM saves the name into a temporary variable
     const name = this.createTemporaryVariable('name');
-    this.builder.insertStoreInstruction('VARIABLE', name);
+    this.builder.insertSaveInstruction('VARIABLE', name);
 
     // the VM loads the named document onto the top of the component stack
     this.builder.insertLoadInstruction('DOCUMENT', name);
@@ -533,18 +548,17 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    const expression = tree.getItem(1);
+    // the VM loads the draft document onto the top of the component stack
+    const draft = tree.getItem(1);
+    draft.acceptVisitor(this);
 
-    // the VM loads the name of the draft document onto the top of the component stack
-    expression.acceptVisitor(this);  // reference expression
+    // the VM saves a citation to the draft document in a temporary variable
+    this.builder.insertCallInstruction('$citation', 1);  // citation(document)
+    const citation = this.createTemporaryVariable('citation');
+    this.builder.insertSaveInstruction('VARIABLE', citation);
 
-    // the VM stores the name into a temporary variable
-    const name = this.createTemporaryVariable('name');
-    this.builder.insertStoreInstruction('VARIABLE', name);
-
-    // the VM removes the named draft from the repository
-    this.builder.insertPushInstruction('LITERAL', 'none');
-    this.builder.insertStoreInstruction('DRAFT', name);
+    // the VM drops the cited draft from the repository
+    this.builder.insertDropInstruction('DRAFT', citation);
 };
 
 
@@ -598,7 +612,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // TODO: revisit this as it is currently awkward, it shouldn't require a check
         // the VM processes the recipient as needed
         const recipient = tree.getItem(1);
-        if (recipient.isType('/bali/structures/SubcomponentExpression')) {
+        if (recipient.isType('/bali/composites/SubcomponentExpression')) {
             recipient.acceptVisitor(this);
         }
 
@@ -611,8 +625,8 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         // the VM places the value of the expression on top of the component stack
         expression.acceptVisitor(this);
 
-        // the VM stores the value of the expression in the temporary result variable
-        this.builder.insertStoreInstruction('VARIABLE', '$result-1');
+        // the VM saves the value of the expression in the temporary result variable
+        this.builder.insertSaveInstruction('VARIABLE', '$result-1');
     }
 };
 
@@ -634,7 +648,7 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
     secondOperand.acceptVisitor(this);
 
     // the VM leaves the result of raising the base to the exponent on top of the component stack
-    this.builder.insertInvokeInstruction('$exponential', 2);  // exponential(x, power)
+    this.builder.insertCallInstruction('$exponential', 2);  // exponential(x, power)
 };
 
 
@@ -651,7 +665,7 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM leaves the result of the factorial of the value on top of the component stack
-    this.builder.insertInvokeInstruction('$factorial', 1);  // factorial(x)
+    this.builder.insertCallInstruction('$factorial', 1);  // factorial(x)
 };
 
 
@@ -690,7 +704,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
     this.depth--;
 
     // the VM replaces the arguments on the component stack with the result of the function
-    this.builder.insertInvokeInstruction(functionName, numberOfArguments);  // <function>(arguments...)
+    this.builder.insertCallInstruction(functionName, numberOfArguments);  // <function>(arguments...)
 
     // the result of the executed function remains on top of the component stack
 };
@@ -706,10 +720,10 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
 CompilingVisitor.prototype.visitHandleClause = function(tree) {
     const iterator = tree.getIterator();
 
-    // the VM stores the exception that is on top of the component stack in the variable
+    // the VM saves the exception that is on top of the component stack in the variable
     const symbol = iterator.getNext();
     const exception = symbol.toString();
-    this.builder.insertStoreInstruction('VARIABLE', exception);
+    this.builder.insertSaveInstruction('VARIABLE', exception);
 
     const statement = this.builder.getStatementContext();
     while (iterator.hasNext()) {
@@ -723,7 +737,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
         this.builder.insertLoadInstruction('VARIABLE', exception);
         const template = iterator.getNext();
         template.acceptVisitor(this);
-        this.builder.insertInvokeInstruction('$doesMatch', 2);  // matches(symbol, pattern)
+        this.builder.insertCallInstruction('$doesMatch', 2);  // matches(symbol, pattern)
 
         // if the template and exception did not match the VM jumps past this exception handler
         var nextLabel = this.builder.getNextBlockPrefix() + 'HandleBlock';
@@ -744,7 +758,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     // none of the exception handlers matched so the VM must try the parent handlers
     this.builder.insertLabel(statement.failureLabel);
     this.builder.insertLoadInstruction('VARIABLE', exception);
-    this.builder.insertHandleInstruction('EXCEPTION');
+    this.builder.insertPullInstruction('EXCEPTION');
 
     // the VM encountered no exceptions or was able to handle them
     this.builder.insertLabel(statement.successLabel);
@@ -838,7 +852,7 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
         iterator.getNext().acceptVisitor(this);
 
         // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertInvokeInstruction('$subcomponent', 2);  // subcomponent(composite, index)
+        this.builder.insertCallInstruction('$subcomponent', 2);  // subcomponent(composite, index)
         // the parent and index have been replaced by the value of the subcomponent
     }
 
@@ -866,15 +880,15 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
     switch (operator) {
         case '-':
             // take the additive inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$inverse', 1);  // inverse(x)
+            this.builder.insertCallInstruction('$inverse', 1);  // inverse(x)
             break;
         case '/':
             // take the multiplicative inverse of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$reciprocal', 1);  // reciprocal(x)
+            this.builder.insertCallInstruction('$reciprocal', 1);  // reciprocal(x)
             break;
         case '*':
             // take the complex conjugate of the value on top of the component stack
-            this.builder.insertInvokeInstruction('$conjugate', 1);  // conjugate(x)
+            this.builder.insertCallInstruction('$conjugate', 1);  // conjugate(x)
             break;
     }
 };
@@ -901,19 +915,19 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
     switch (operator) {
         case 'AND':
             // find the logical AND of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$and', 2);  // and(p, q)
+            this.builder.insertCallInstruction('$and', 2);  // and(p, q)
             break;
         case 'SANS':
             // find the logical SANS of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$sans', 2);  // sans(p, q)
+            this.builder.insertCallInstruction('$sans', 2);  // sans(p, q)
             break;
         case 'OR':
             // find the logical OR of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$or', 2);  // or(p, q)
+            this.builder.insertCallInstruction('$or', 2);  // or(p, q)
             break;
         case 'XOR':
             // find the logical XOR of the two values on top of the component stack
-            this.builder.insertInvokeInstruction('$xor', 2);  // xor(p, q)
+            this.builder.insertCallInstruction('$xor', 2);  // xor(p, q)
             break;
     }
 };
@@ -932,7 +946,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
     operand.acceptVisitor(this);
 
     // the VM replaces the value on top of the component stack with its magnitude
-    this.builder.insertInvokeInstruction('$magnitude', 1);  // magnitude(x)
+    this.builder.insertCallInstruction('$magnitude', 1);  // magnitude(x)
     // the value has been replaced by its magnitude
 };
 
@@ -942,7 +956,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
  * procedure associated with the specified message for the value of the
  * expression, first placing the arguments on the component stack in
  * a list. If the value of the expression is a name, the message and
- * its arguments are placed in a queue to be sent to the named document
+ * its arguments are placed in a bag to be sent to the named document
  * in a separate process. Otherwise, the result of the executed procedure
  * is placed on the stack.
  */
@@ -963,14 +977,14 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     // if there are arguments then compile accordingly
     if (numberOfArguments > 0) {
         // the VM places an empty list on top of the component stack
-        this.builder.insertInvokeInstruction('$list', 0);  // list()
+        this.builder.insertCallInstruction('$list', 0);  // list()
 
         // the VM places adds each argument to the list on top of the component stack
         const iterator = args.getIterator();
         while (iterator.hasNext()) {
             var argument = iterator.getNext();
             argument.acceptVisitor(this);
-            this.builder.insertInvokeInstruction('$addItem', 2);  // addItem(list, argument)
+            this.builder.insertCallInstruction('$addItem', 2);  // addItem(list, argument)
         }
 
         // the VM sends the message including a list of arguments to the recipient
@@ -1011,7 +1025,7 @@ CompilingVisitor.prototype.visitNumber = function(number) {
 CompilingVisitor.prototype.visitParameters = function(parameters) {
     if (parameters) {
         // the VM creates a new catalog on the component stack to hold the parameters
-        this.builder.insertInvokeInstruction('$catalog', 0);  // catalog()
+        this.builder.insertCallInstruction('$catalog', 0);  // catalog()
 
         // the VM places each parameter on the component stack and then adds them to the catalog
         this.depth++;
@@ -1022,7 +1036,7 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
             this.builder.insertPushInstruction('LITERAL', key.toLiteral());
             const value = parameters.getValue(key);
             value.acceptVisitor(this);
-            this.builder.insertInvokeInstruction('$setValue', 3);  // setValue(catalog, key, value)
+            this.builder.insertCallInstruction('$setValue', 3);  // setValue(catalog, key, value)
         }
         this.depth--;
         // the parameter catalog remains on the component stack
@@ -1044,23 +1058,23 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
 
 /*
  * This method inserts the instructions that cause the VM to evaluate a
- * message expression and then place the resulting message on a message
- * queue in the Bali Document Repository™. The reference to the message
- * queue is another expression that the VM evaluates as well.
+ * message expression and then place the resulting message in a message
+ * bag in the Bali Document Repository™. The name of the message bag
+ * is another expression that the VM evaluates as well.
  */
 // postClause: 'post' expression 'on' expression
 CompilingVisitor.prototype.visitPostClause = function(tree) {
     const message = tree.getItem(1);
-    const reference = tree.getItem(2);
+    const name = tree.getItem(2);
 
-    // the VM stores the reference to the queue in a temporary variable
-    reference.acceptVisitor(this);
-    const queue = this.createTemporaryVariable('queue');
-    this.builder.insertStoreInstruction('VARIABLE', queue);
+    // the VM saves the name of the bag in a temporary variable
+    name.acceptVisitor(this);
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    // the VM stores the message on the message queue
+    // the VM saves the message on the message bag
     message.acceptVisitor(this);
-    this.builder.insertStoreInstruction('MESSAGE', queue);
+    this.builder.insertSaveInstruction('MESSAGE', bag);
 };
 
 
@@ -1090,7 +1104,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 /*
  * This method inserts the instructions that cause the VM to evaluate an
  * expression and then publish the resulting value that is on top of the
- * component stack to the global event queue in the Bali Document Repository™.
+ * component stack to the global event bag in the Bali Document Repository™.
  */
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
@@ -1099,13 +1113,13 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
     // the VM places the value of the event expression onto the top of the component stack
     event.acceptVisitor(this);
 
-    // the VM stores the name of the global event queue in a temporary variable
-    this.builder.insertPushInstruction('LITERAL', '/bali/events/queue');
-    const queue = this.createTemporaryVariable('queue');
-    this.builder.insertStoreInstruction('VARIABLE', queue);
+    // the VM saves the name of the global event bag in a temporary variable
+    this.builder.insertPushInstruction('LITERAL', '/bali/events/bag');
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    // the VM stores the event on the event queue
-    this.builder.insertStoreInstruction('MESSAGE', queue);
+    // the VM saves the event on the event bag
+    this.builder.insertSaveInstruction('MESSAGE', bag);
 };
 
 
@@ -1140,32 +1154,28 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
     }
 
     // the VM returns the result to the calling procedure
-    this.builder.insertHandleInstruction('RESULT');
+    this.builder.insertPullInstruction('RESULT');
     this.builder.requiresFinalization = false;
 };
 
 
 /*
- * This method inserts the instructions that cause the VM to save the named
- * draft document into the Bali Document Repository™.
+ * This method inserts the instructions that cause the VM to save the draft document into
+ * the Bali Document Repository™.
  */
-// saveClause: 'save' expression 'to' expression
+// saveClause: 'save' expression
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
-    const draft = tree.getItem(1);
-    const expression = tree.getItem(2);
-
-    // the VM loads the name of the draft document onto the top of the component stack
-    expression.acceptVisitor(this);
-
-    // the VM stores the name into a temporary variable
-    const name = this.createTemporaryVariable('name');
-    this.builder.insertStoreInstruction('VARIABLE', name);
-
     // the VM loads the draft document onto the top of the component stack
+    const draft = tree.getItem(1);
     draft.acceptVisitor(this);
 
-    // the VM stores the named draft document into the repository
-    this.builder.insertStoreInstruction('DRAFT', name);
+    // the VM saves a citation to the draft document in a temporary variable
+    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(document)
+    const citation = this.createTemporaryVariable('citation');
+    this.builder.insertSaveInstruction('VARIABLE', citation);
+
+    // the VM saves the cited draft in the repository
+    this.builder.insertSaveInstruction('DRAFT', citation);
 };
 
 
@@ -1191,7 +1201,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     // the VM saves the value of the selector expression in a temporary variable
     selector.acceptVisitor(this);
     const selectorVariable = this.createTemporaryVariable('selector');
-    this.builder.insertStoreInstruction('VARIABLE', selectorVariable);
+    this.builder.insertSaveInstruction('VARIABLE', selectorVariable);
 
     // check each option
     const list = bali.list(array);
@@ -1210,7 +1220,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         option.acceptVisitor(this);
 
         // the VM checks to see if the selector and option match and places the result on the component stack
-        this.builder.insertInvokeInstruction('$doesMatch', 2);  // matches(selector, option)
+        this.builder.insertCallInstruction('$doesMatch', 2);  // matches(selector, option)
 
         // determine what the next label will be
         var nextLabel = this.builder.getNextBlockPrefix();
@@ -1310,7 +1320,7 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
 
         if (this.builder.hasHandler()) {
             // the exception handlers are no longer needed
-            this.builder.insertPopInstruction('HANDLER');
+            this.builder.insertPullInstruction('HANDLER');
 
             // jump over the exception handlers
             this.builder.insertJumpInstruction(statement.successLabel);
@@ -1356,7 +1366,7 @@ CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     indices.acceptVisitor(this);
 
     // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertInvokeInstruction('$subcomponent', 2);  // subcomponent(composite, index)
+    this.builder.insertCallInstruction('$subcomponent', 2);  // subcomponent(composite, index)
     // the parent and index have been replaced by the value of the subcomponent
 };
 
@@ -1392,7 +1402,7 @@ CompilingVisitor.prototype.visitThrowClause = function(tree) {
     exception.acceptVisitor(this);
 
     // the VM jumps to the handler clauses for the current context
-    this.builder.insertHandleInstruction('EXCEPTION');
+    this.builder.insertPullInstruction('EXCEPTION');
     this.builder.requiresFinalization = false;
 };
 
@@ -1425,30 +1435,29 @@ CompilingVisitor.prototype.visitVersion = function(version) {
 
 
 /*
- * This method compiles the instructions needed to wait for a message from a
- * queue in the Bali Document Repository™. The resulting message is assigned
+ * This method compiles the instructions needed to receive a message from a
+ * bag in the Bali Document Repository™. The resulting message is assigned
  * to a recipient. The recipient may be either a variable or an indexed child
  * of a collection component.
  */
 // waitClause: 'wait' 'for' recipient 'from' expression
 CompilingVisitor.prototype.visitWaitClause = function(tree) {
     const recipient = tree.getItem(1);
-    const reference = tree.getItem(2);
+    const name = tree.getItem(2);
 
     // the VM processes the recipient as needed
     recipient.acceptVisitor(this);
 
-    // the VM places the value of the reference to the queue
-    // on top of the component stack
-    reference.acceptVisitor(this);
+    // the VM places the name of the bag on top of the component stack
+    name.acceptVisitor(this);
 
-    // the VM stores the value of the reference to the queue into a temporary variable
-    const queue = this.createTemporaryVariable('queue');
-    this.builder.insertStoreInstruction('VARIABLE', queue);
+    // the VM saves the name of the bag into a temporary variable
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    // the VM loads the next message from the remote queue onto the top of the component stack
-    // NOTE: this call blocks until a message is available on the queue
-    this.builder.insertLoadInstruction('MESSAGE', queue);
+    // the VM loads the next message from the remote bag onto the top of the component stack
+    // NOTE: this call blocks until a message is available in the bag
+    this.builder.insertLoadInstruction('MESSAGE', bag);
 
     // the VM sets the value of the recipient to the value on the top of the component stack
     this.setRecipient(recipient);
@@ -1508,9 +1517,9 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     // the VM replaces the sequence on the component stack with an iterator to it
     this.builder.insertSendInstruction('$iterator', 'TO COMPONENT');
 
-    // The VM stores the iterater in a temporary variable
+    // The VM saves the iterater in a temporary variable
     const iterator = this.createTemporaryVariable('iterator');
-    this.builder.insertStoreInstruction('VARIABLE', iterator);
+    this.builder.insertSaveInstruction('VARIABLE', iterator);
 
     // label the start of the loop
     this.builder.insertLabel(statement.loopLabel);
@@ -1526,8 +1535,8 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
     // the VM replaces the iterator on the component stack with the next item from the sequence
     this.builder.insertSendInstruction('$next', 'TO COMPONENT');
 
-    // the VM stores the item that is on top of the component stack in the variable
-    this.builder.insertStoreInstruction('VARIABLE', variable);
+    // the VM saves the item that is on top of the component stack in the variable
+    this.builder.insertSaveInstruction('VARIABLE', variable);
 
     // the VM executes the block using the item if needed
     block.acceptVisitor(this);
@@ -1557,12 +1566,12 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.isType('/bali/elements/Symbol')) {
-        // the VM stores the value that is on top of the component stack in the variable
+        // the VM saves the value that is on top of the component stack in the variable
         const symbol = recipient.toString();
-        this.builder.insertStoreInstruction('VARIABLE', symbol);
+        this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
         // the VM sets the value of the subcomponent at the given index of the parent component
-        this.builder.insertInvokeInstruction('$setSubcomponent', 3);
+        this.builder.insertCallInstruction('$setSubcomponent', 3);
     }
 };
 
@@ -1590,7 +1599,7 @@ function countBlocks(clause) {
         const iterator = clause.getIterator();
         while (iterator.hasNext()) {
             var item = iterator.getNext();
-            if (item.isType('/bali/structures/Block')) {
+            if (item.isType('/bali/composites/Block')) {
                 count++;
             }
         }
@@ -1690,7 +1699,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
     // initialize the procedure configuration for this statement
     const procedure = this.stack.peek();
     procedure.statement = statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.blockCount > 0) {
@@ -1782,7 +1791,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
     return type;
 };
 
@@ -1896,10 +1905,10 @@ InstructionBuilder.prototype.insertPushInstruction = function(type, value) {
 
 
 /*
- * This method inserts a 'pop' instruction into the assembly code.
+ * This method inserts a 'pull' instruction into the assembly code.
  */
-InstructionBuilder.prototype.insertPopInstruction = function(type) {
-    const instruction = 'POP ' + type;
+InstructionBuilder.prototype.insertPullInstruction = function(type) {
+    const instruction = 'PULL ' + type;
     this.insertInstruction(instruction);
 };
 
@@ -1915,20 +1924,30 @@ InstructionBuilder.prototype.insertLoadInstruction = function(type, symbol) {
 
 
 /*
- * This method inserts a 'store' instruction into the assembly code.
+ * This method inserts a 'save' instruction into the assembly code.
  */
-InstructionBuilder.prototype.insertStoreInstruction = function(type, symbol) {
-    const instruction = 'STORE ' + type + ' ' + symbol;
+InstructionBuilder.prototype.insertSaveInstruction = function(type, symbol) {
+    const instruction = 'SAVE ' + type + ' ' + symbol;
     this.insertInstruction(instruction);
     this.variables.addItem(symbol);
 };
 
 
 /*
- * This method inserts an 'invoke' instruction into the assembly code.
+ * This method inserts a 'drop' instruction into the assembly code.
  */
-InstructionBuilder.prototype.insertInvokeInstruction = function(intrinsic, numberOfArguments) {
-    var instruction = 'INVOKE ' + intrinsic;
+InstructionBuilder.prototype.insertDropInstruction = function(type, symbol) {
+    const instruction = 'DROP ' + type + ' ' + symbol;
+    this.insertInstruction(instruction);
+    this.variables.addItem(symbol);
+};
+
+
+/*
+ * This method inserts an 'call' instruction into the assembly code.
+ */
+InstructionBuilder.prototype.insertCallInstruction = function(intrinsic, numberOfArguments) {
+    var instruction = 'CALL ' + intrinsic;
     switch (numberOfArguments) {
         case undefined:
         case 0:
@@ -1954,19 +1973,10 @@ InstructionBuilder.prototype.insertSendInstruction = function(message, context) 
 
 
 /*
- * This method inserts a 'handle' instruction into the assembly code.
- */
-InstructionBuilder.prototype.insertHandleInstruction = function(context) {
-    const instruction = 'HANDLE ' + context;
-    this.insertInstruction(instruction);
-};
-
-
-/*
  * This method finalizes the builder by adding instructions to handle the
  * result if not handled earlier.
  */
 InstructionBuilder.prototype.finalize = function() {
     this.insertLoadInstruction('VARIABLE', '$result-1');
-    this.insertHandleInstruction('RESULT');
+    this.insertPullInstruction('RESULT');
 };

@@ -187,54 +187,71 @@ ParsingVisitor.prototype.visitPushInstruction = function(ctx) {
 };
 
 
-// popInstruction:
-//     'POP' 'HANDLER' |
-//     'POP' 'COMPONENT'
-ParsingVisitor.prototype.visitPopInstruction = function(ctx) {
+// pullInstruction:
+//     'PULL' 'HANDLER' |
+//     'PULL' 'COMPONENT' |
+//     'PULL' 'RESULT' |
+//     'PULL' 'EXCEPTION'
+ParsingVisitor.prototype.visitPullInstruction = function(ctx) {
     const instruction = bali.catalog();
-    instruction.setValue('$operation', types.POP);
-    instruction.setValue('$modifier', types.popModifierValue(ctx.children[1].getText()));
+    instruction.setValue('$operation', types.PULL);
+    instruction.setValue('$modifier', types.pullModifierValue(ctx.children[1].getText()));
     this.result = instruction;
 };
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' variable |
-//     'LOAD' 'MESSAGE' variable |
-//     'LOAD' 'DRAFT' variable |
-//     'LOAD' 'DOCUMENT' variable
+//     'LOAD' 'VARIABLE' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL |
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL
 ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.LOAD);
     instruction.setValue('$modifier', types.loadModifierValue(ctx.children[1].getText()));
-    const variable = ctx.children[2].getText();
-    instruction.setValue('$operand', bali.component(variable));
+    const symbol = ctx.children[2].getText();
+    instruction.setValue('$operand', bali.component(symbol));
     this.result = instruction;
 };
 
 
-// storeInstruction:
-//     'STORE' 'VARIABLE' variable |
-//     'STORE' 'MESSAGE' variable |
-//     'STORE' 'DRAFT' variable |
-//     'STORE' 'DOCUMENT' variable
-ParsingVisitor.prototype.visitStoreInstruction = function(ctx) {
+// saveInstruction:
+//     'SAVE' 'VARIABLE' SYMBOL |
+//     'SAVE' 'MESSAGE' SYMBOL |
+//     'SAVE' 'DRAFT' SYMBOL |
+//     'SAVE' 'DOCUMENT' SYMBOL
+ParsingVisitor.prototype.visitSaveInstruction = function(ctx) {
     const instruction = bali.catalog();
-    instruction.setValue('$operation', types.STORE);
-    instruction.setValue('$modifier', types.storeModifierValue(ctx.children[1].getText()));
-    const variable = ctx.children[2].getText();
-    instruction.setValue('$operand', bali.component(variable));
+    instruction.setValue('$operation', types.SAVE);
+    instruction.setValue('$modifier', types.saveModifierValue(ctx.children[1].getText()));
+    const symbol = ctx.children[2].getText();
+    instruction.setValue('$operand', bali.component(symbol));
     this.result = instruction;
 };
 
 
-// invokeInstruction:
-//     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
-//     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
-ParsingVisitor.prototype.visitInvokeInstruction = function(ctx) {
+// dropInstruction:
+//     'DROP' 'VARIABLE' SYMBOL |
+//     'DROP' 'MESSAGE' SYMBOL |
+//     'DROP' 'DRAFT' SYMBOL |
+//     'DROP' 'DOCUMENT' SYMBOL
+ParsingVisitor.prototype.visitDropInstruction = function(ctx) {
     const instruction = bali.catalog();
-    instruction.setValue('$operation', types.INVOKE);
+    instruction.setValue('$operation', types.DROP);
+    instruction.setValue('$modifier', types.dropModifierValue(ctx.children[1].getText()));
+    const symbol = ctx.children[2].getText();
+    instruction.setValue('$operand', bali.component(symbol));
+    this.result = instruction;
+};
+
+
+// callInstruction:
+//     'CALL' SYMBOL |
+//     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
+//     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
+ParsingVisitor.prototype.visitCallInstruction = function(ctx) {
+    const instruction = bali.catalog();
+    instruction.setValue('$operation', types.CALL);
     var modifier = 0;
     if (ctx.children.length === 5) modifier = Number(ctx.children[3].getText());
     instruction.setValue('$modifier', modifier);
@@ -259,17 +276,6 @@ ParsingVisitor.prototype.visitSendInstruction = function(ctx) {
     const modifier = types.sendModifierValue(string);
     instruction.setValue('$modifier', modifier);
     instruction.setValue('$operand', bali.component(ctx.SYMBOL().getText()));
-    this.result = instruction;
-};
-
-
-// handleInstruction:
-//     'HANDLE' 'EXCEPTION' |
-//     'HANDLE' 'RESULT'
-ParsingVisitor.prototype.visitHandleInstruction = function(ctx) {
-    const instruction = bali.catalog();
-    instruction.setValue('$operation', types.HANDLE);
-    instruction.setValue('$modifier', types.handleModifierValue(ctx.children[1].getText()));
     this.result = instruction;
 };
 

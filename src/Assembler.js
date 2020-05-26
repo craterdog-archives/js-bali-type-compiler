@@ -120,23 +120,23 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
         case types.PUSH:
             this.visitPushInstruction(step);
             break;
-        case types.POP:
-            this.visitPopInstruction(step);
+        case types.PULL:
+            this.visitPullInstruction(step);
             break;
         case types.LOAD:
             this.visitLoadInstruction(step);
             break;
-        case types.STORE:
-            this.visitStoreInstruction(step);
+        case types.SAVE:
+            this.visitSaveInstruction(step);
             break;
-        case types.INVOKE:
-            this.visitInvokeInstruction(step);
+        case types.DROP:
+            this.visitDropInstruction(step);
+            break;
+        case types.CALL:
+            this.visitCallInstruction(step);
             break;
         case types.SEND:
             this.visitSendInstruction(step);
-            break;
-        case types.HANDLE:
-            this.visitHandleInstruction(step);
             break;
         default:
             const exception = bali.exception({
@@ -201,21 +201,23 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
 };
 
 
-// popInstruction:
-//     'POP' 'HANDLER' |
-//     'POP' 'COMPONENT'
-AssemblingVisitor.prototype.visitPopInstruction = function(instruction) {
+// pullInstruction:
+//     'PULL' 'HANDLER' |
+//     'PULL' 'COMPONENT' |
+//     'PULL' 'RESULT' |
+//     'PULL' 'EXCEPTION'
+AssemblingVisitor.prototype.visitPullInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
-    const word = this.decoder.encodeInstruction(types.POP, modifier);
+    const word = this.decoder.encodeInstruction(types.PULL, modifier);
     this.bytecode.push(word);
 };
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' variable |
-//     'LOAD' 'MESSAGE' variable |
-//     'LOAD' 'DRAFT' variable |
-//     'LOAD' 'DOCUMENT' variable
+//     'LOAD' 'VARIABLE' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL |
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL
 AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
@@ -225,29 +227,43 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
 };
 
 
-// storeInstruction:
-//     'STORE' 'VARIABLE' variable |
-//     'STORE' 'MESSAGE' variable |
-//     'STORE' 'DRAFT' variable |
-//     'STORE' 'DOCUMENT' variable
-AssemblingVisitor.prototype.visitStoreInstruction = function(instruction) {
+// saveInstruction:
+//     'SAVE' 'VARIABLE' SYMBOL |
+//     'SAVE' 'MESSAGE' SYMBOL |
+//     'SAVE' 'DRAFT' SYMBOL |
+//     'SAVE' 'DOCUMENT' SYMBOL
+AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
-    const word = this.decoder.encodeInstruction(types.STORE, modifier, index);
+    const word = this.decoder.encodeInstruction(types.SAVE, modifier, index);
     this.bytecode.push(word);
 };
 
 
-// invokeInstruction:
-//     'INVOKE' SYMBOL |
-//     'INVOKE' SYMBOL 'WITH' '1' 'ARGUMENT' |
-//     'INVOKE' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
-AssemblingVisitor.prototype.visitInvokeInstruction = function(instruction) {
+// dropInstruction:
+//     'DROP' 'VARIABLE' SYMBOL |
+//     'DROP' 'MESSAGE' SYMBOL |
+//     'DROP' 'DRAFT' SYMBOL |
+//     'DROP' 'DOCUMENT' SYMBOL
+AssemblingVisitor.prototype.visitDropInstruction = function(instruction) {
+    const modifier = instruction.getValue('$modifier').toNumber();
+    const symbol = instruction.getValue('$operand');
+    const index = this.variables.getIndex(symbol);
+    const word = this.decoder.encodeInstruction(types.DROP, modifier, index);
+    this.bytecode.push(word);
+};
+
+
+// callInstruction:
+//     'CALL' SYMBOL |
+//     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
+//     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
+AssemblingVisitor.prototype.visitCallInstruction = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.intrinsics.index(symbol.toString());
-    const word = this.decoder.encodeInstruction(types.INVOKE, count, index);
+    const word = this.decoder.encodeInstruction(types.CALL, count, index);
     this.bytecode.push(word);
 };
 
@@ -262,15 +278,5 @@ AssemblingVisitor.prototype.visitSendInstruction = function(instruction) {
     const symbol = instruction.getValue('$operand');
     const index = this.messages.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.SEND, modifier, index);
-    this.bytecode.push(word);
-};
-
-
-// handleInstruction:
-//     'HANDLE' 'EXCEPTION' |
-//     'HANDLE' 'RESULT'
-AssemblingVisitor.prototype.visitHandleInstruction = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    const word = this.decoder.encodeInstruction(types.HANDLE, modifier);
     this.bytecode.push(word);
 };

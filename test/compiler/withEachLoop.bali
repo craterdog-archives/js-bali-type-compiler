@@ -13,7 +13,7 @@
         1.WithStatement:
         LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        STORE VARIABLE $iterator-2
+        SAVE VARIABLE $iterator-2
         
         1.1.ConditionClause:
         LOAD VARIABLE $iterator-2
@@ -21,11 +21,11 @@
         JUMP TO 1.WithStatementDone ON FALSE
         LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
-        STORE VARIABLE $symbol
+        SAVE VARIABLE $symbol
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
-        STORE VARIABLE $x
+        SAVE VARIABLE $x
         
         1.1.2.IfStatement:
         SKIP INSTRUCTION
@@ -36,7 +36,7 @@
         
         1.1.2.1.1.EvaluateStatement:
         PUSH LITERAL `none`
-        STORE VARIABLE $y
+        SAVE VARIABLE $y
         
         1.1.2.1.2.ContinueStatement:
         JUMP TO 1.1.ConditionClause
@@ -46,14 +46,14 @@
         
         1.1.3.EvaluateStatement:
         PUSH LITERAL `any`
-        STORE VARIABLE $z
+        SAVE VARIABLE $z
         
         1.ConditionRepeat:
         JUMP TO 1.1.ConditionClause
         
         1.WithStatementDone:
         LOAD VARIABLE $result-1
-        HANDLE RESULT
+        PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [
         "1.WithStatement": 1
@@ -69,8 +69,8 @@
         "1.WithStatementDone": 22
     ]
     $bytecode: '
-        6003C00280016001C00118166001C0038004280180050000600518122802
-        8006000400002803800700046002E000
+        6003E00280016001E00118166001E0038004280180050000600518122802
+        80060004000028038007000460025000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

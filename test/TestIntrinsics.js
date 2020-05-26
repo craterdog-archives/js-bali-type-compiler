@@ -38,7 +38,7 @@ const range = bali.range(1, 4);
 const set = bali.set([2,4,6,8,10,12]);
 const stack = bali.stack([2,4,6,8,10,12]);
 const symbol = bali.component('$type');
-const statements = bali.tree('/bali/structures/Statements');
+const statements = bali.tree('/bali/composites/Statements');
 const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3, 4]);
@@ -53,15 +53,15 @@ const dirtyType = bali.catalog({
             $instructions: bali.component('"\n' +
                 '    1.EvaluateStatement:\n' +
                 '    PUSH LITERAL `none`\n' +
-                '    STORE VARIABLE $result-1\n' +
+                '    SAVE VARIABLE $result-1\n' +
                 '    LOAD VARIABLE $result-1\n' +
-                '    HANDLE RESULT\n' +
+                '    PULL RESULT\n' +
                 '"($mediaType: "application/basm")'
             ),
             $addresses: bali.catalog({
                 '1.EvaluateStatement': 1
             }),
-            $bytecode: bali.component("'280180016001E000'(\n" +
+            $bytecode: bali.component("'2801800160015000'(\n" +
                 '    $encoding: $base16\n' +
                 '    $mediaType: "application/bcod"\n' +
                 ')'),

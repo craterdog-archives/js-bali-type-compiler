@@ -98,25 +98,25 @@ const Decoder = function(debug) {
             case types.PUSH:
                 string += types.pushModifierString(modifier) + ' ' + operandString;
                 break;
-            case types.POP:
-                string += types.popModifierString(modifier);
+            case types.PULL:
+                string += types.pullModifierString(modifier);
                 break;
             case types.LOAD:
                 string += types.loadModifierString(modifier) + ' ' + operandString;
                 break;
-            case types.STORE:
-                string += types.storeModifierString(modifier) + ' ' + operandString;
+            case types.SAVE:
+                string += types.saveModifierString(modifier) + ' ' + operandString;
                 break;
-            case types.INVOKE:
+            case types.DROP:
+                string += types.dropModifierString(modifier) + ' ' + operandString;
+                break;
+            case types.CALL:
                 string += intrinsics.name(operand);
                 if (modifier > 0) string += ' WITH ' + modifier + ' ARGUMENT';
                 if (modifier > 1) string += 'S';
                 break;
             case types.SEND:
                 string += operandString + ' ' + types.sendModifierString(modifier);
-                break;
-            case types.HANDLE:
-                string += types.handleModifierString(modifier);
                 break;
         }
         return string;
@@ -188,40 +188,15 @@ const Decoder = function(debug) {
                 // the SKIP INSTRUCTION is the only one allowed to have a zero operand
                 // and only if the modifier is also zero
                 return operand > 0 || modifier === 0;
+            case types.PULL:
+                return operand === 0;
             case types.PUSH:
-                switch (modifier) {
-                    case types.HANDLER:
-                    case types.LITERAL:
-                    case types.CONSTANT:
-                    case types.ARGUMENT:
-                        return operand > 0;
-                    default:
-                        return false;
-                }
-                break;
-            case types.POP:
-                switch (modifier) {
-                    case types.HANDLER:
-                    case types.COMPONENT:
-                        return operand === 0;
-                    default:
-                        return false;
-                }
-                break;
             case types.LOAD:
-            case types.STORE:
-            case types.INVOKE:
+            case types.SAVE:
+            case types.DROP:
+            case types.CALL:
             case types.SEND:
                 return operand > 0;
-            case types.HANDLE:
-                switch (modifier) {
-                    case types.EXCEPTION:
-                    case types.RESULT:
-                        return operand === 0;
-                    default:
-                        return false;
-                }
-                break;
             default:
                 return false;
         }

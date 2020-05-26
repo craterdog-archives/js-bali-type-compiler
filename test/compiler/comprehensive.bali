@@ -56,23 +56,23 @@
         1.1.ConditionClause:
         LOAD VARIABLE $a
         LOAD VARIABLE $b
-        INVOKE $isLess WITH 2 ARGUMENTS
+        CALL $isLess WITH 2 ARGUMENTS
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
         LOAD VARIABLE $b
-        STORE VARIABLE $a
+        SAVE VARIABLE $a
         
         1.1.2.EvaluateStatement:
         PUSH LITERAL `{
             $foo := bar
             $bar := baz
         }`
-        STORE VARIABLE $b
+        SAVE VARIABLE $b
         
         1.1.3.ThrowStatement:
         LOAD VARIABLE $exception
-        HANDLE EXCEPTION
+        PULL EXCEPTION
         
         1.1.ConditionClauseDone:
         JUMP TO 1.IfStatementDone
@@ -80,21 +80,21 @@
         1.2.ConditionClause:
         LOAD VARIABLE $a
         PUSH LITERAL `0`
-        INVOKE $isMore WITH 2 ARGUMENTS
+        CALL $isMore WITH 2 ARGUMENTS
         JUMP TO 1.3.ElseClause ON FALSE
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         1.2.2.EvaluateStatement:
         LOAD VARIABLE $b
-        INVOKE $factorial WITH 1 ARGUMENT
-        STORE VARIABLE $c
+        CALL $factorial WITH 1 ARGUMENT
+        SAVE VARIABLE $c
         
         1.2.3.ReturnStatement:
         LOAD VARIABLE $c
-        HANDLE RESULT
+        PULL RESULT
         
         1.2.ConditionClauseDone:
         JUMP TO 1.IfStatementDone
@@ -104,93 +104,93 @@
         
         1.3.1.EvaluateStatement:
         LOAD VARIABLE $b
-        INVOKE $list
+        CALL $list
         LOAD VARIABLE $tag
-        INVOKE $addItem WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
         SEND $find TO COMPONENT WITH ARGUMENTS
-        STORE VARIABLE $d
+        SAVE VARIABLE $d
         
         1.3.2.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         1.3.3.ReturnStatement:
         PUSH LITERAL `none`
-        HANDLE RESULT
+        PULL RESULT
         
         1.3.ElseClauseDone:
         SKIP INSTRUCTION
         
         1.IfStatementDone:
-        POP HANDLER
+        PULL HANDLER
         JUMP TO 1.IfStatementSucceeded
         
         1.IfStatementHandler:
-        STORE VARIABLE $exception
+        SAVE VARIABLE $exception
         
         1.4.HandleBlock:
         LOAD VARIABLE $exception
-        INVOKE $catalog
+        CALL $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$warning`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        INVOKE $doesMatch WITH 2 ARGUMENTS
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 1.5.HandleBlock ON FALSE
         
         1.4.1.EvaluateStatement:
         LOAD VARIABLE $count
         PUSH LITERAL `1`
-        INVOKE $sum WITH 2 ARGUMENTS
-        STORE VARIABLE $count
+        CALL $sum WITH 2 ARGUMENTS
+        SAVE VARIABLE $count
         
         1.4.2.EvaluateStatement:
-        INVOKE $catalog
+        CALL $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something not too serious happened."`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
         PUSH LITERAL `$exception`
         PUSH LITERAL `$oops`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $result-1
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        SAVE VARIABLE $result-1
         
         1.4.HandleBlockDone:
         JUMP TO 1.IfStatementSucceeded
         
         1.5.HandleBlock:
         LOAD VARIABLE $exception
-        INVOKE $catalog
+        CALL $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `$moderate`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        INVOKE $doesMatch WITH 2 ARGUMENTS
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 1.IfStatementFailed ON FALSE
         
         1.5.1.EvaluateStatement:
-        INVOKE $catalog
+        CALL $catalog
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something serious happened."`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
         PUSH LITERAL `$exception`
         PUSH LITERAL `$bigOops`
-        INVOKE $association WITH 2 ARGUMENTS
-        INVOKE $addItem WITH 2 ARGUMENTS
-        STORE VARIABLE $exception
+        CALL $association WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        SAVE VARIABLE $exception
         
         1.5.2.ThrowStatement:
         LOAD VARIABLE $exception
-        HANDLE EXCEPTION
+        PULL EXCEPTION
         
         1.5.HandleBlockDone:
         JUMP TO 1.IfStatementSucceeded
         
         1.IfStatementFailed:
         LOAD VARIABLE $exception
-        HANDLE EXCEPTION
+        PULL EXCEPTION
         
         1.IfStatementSucceeded:
         SKIP INSTRUCTION
@@ -204,7 +204,7 @@
         
         2.1.1.EvaluateStatement:
         LOAD VARIABLE $bar
-        STORE VARIABLE $foo
+        SAVE VARIABLE $foo
         
         2.1.2.IfStatement:
         SKIP INSTRUCTION
@@ -225,7 +225,7 @@
         2.1.2.2.1.WithStatement:
         LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        STORE VARIABLE $iterator-2
+        SAVE VARIABLE $iterator-2
         
         2.1.2.2.1.1.ConditionClause:
         LOAD VARIABLE $iterator-2
@@ -233,21 +233,21 @@
         JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
         LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
-        STORE VARIABLE $item
+        SAVE VARIABLE $item
         
         2.1.2.2.1.1.1.SelectStatement:
         LOAD VARIABLE $selection
-        STORE VARIABLE $selector-3
+        SAVE VARIABLE $selector-3
         
         2.1.2.2.1.1.1.1.OptionClause:
         LOAD VARIABLE $selector-3
         PUSH LITERAL `$first`
-        INVOKE $doesMatch WITH 2 ARGUMENTS
+        CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
         
         2.1.2.2.1.1.1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         2.1.2.2.1.1.1.1.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
@@ -255,12 +255,12 @@
         2.1.2.2.1.1.1.2.OptionClause:
         LOAD VARIABLE $selector-3
         PUSH LITERAL `$second`
-        INVOKE $doesMatch WITH 2 ARGUMENTS
+        CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
         
         2.1.2.2.1.1.1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        STORE VARIABLE $result-1
+        SAVE VARIABLE $result-1
         
         2.1.2.2.1.1.1.2.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
@@ -294,7 +294,7 @@
         
         2.WhileStatementDone:
         LOAD VARIABLE $result-1
-        HANDLE RESULT
+        PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [
         "1.IfStatement": 1
@@ -354,15 +354,15 @@
         "2.WhileStatementDone": 132
     ]
     $bytecode: '
-        202760016002B040180D60028001280180026007E800002560012802B041
-        18192802800B6002A82D80046004E000002500006002A04F600FB001C801
-        80062804800B2805E00000004000005680076007A01428062807B00BB001
-        B027183F60052808B0898005A0142809280AB00BB001280B280CB00BB001
-        800B00566007A0142806280EB00BB001B0271854A01428092810B00BB001
-        280B2812B00BB00180076007E80000566007E80000000000280818846003
-        8008000060081861008400820000600EC003800A600AC0021880600AC004
-        8009600C800D600D2814B02718742808800B007E600D2816B027187B2802
-        800B007E00000065007E000000650000000000000058600BE000
+        202760016002D042180D600280012801800260075800002560012802D043
+        18192802800B6002C82E800460045000002500006002C051600FD001E801
+        80062804800B2805500000004000005680076007C01428062807D00BD001
+        D028183F60052808D08C8005C0142809280AD00BD001280B280CD00BD001
+        800B00566007C0142806280ED00BD001D0281854C01428092810D00BD001
+        280B2812D00BD00180076007580000566007580000000000280818846003
+        8008000060081861008400820000600EE003800A600AE0021880600AE004
+        8009600C800D600D2814D02818742808800B007E600D2816D028187B2802
+        800B007E00000065007E000000650000000000000058600B5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

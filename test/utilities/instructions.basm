@@ -2,12 +2,12 @@ SKIP INSTRUCTION
 
 1.jump:
 JUMP TO 2.push
-JUMP TO 3.pop ON NONE
+JUMP TO 3.pull ON NONE
 JUMP TO 4.load ON TRUE
-JUMP TO 5.store ON FALSE
+JUMP TO 5.save ON FALSE
 
 2.push:
-PUSH HANDLER 8.handle
+PUSH HANDLER 6.drop
 PUSH LITERAL `"This is a literal text string\ncontaining an \` and spanning multiple lines."`
 PUSH LITERAL `{
     $foo := bar
@@ -17,34 +17,38 @@ PUSH LITERAL `{
 PUSH CONSTANT $constant
 PUSH ARGUMENT $argument
 
-3.pop:
-POP HANDLER
-POP COMPONENT
+3.pull:
+PULL HANDLER
+PULL COMPONENT
+PULL RESULT
+PULL EXCEPTION
 
 4.load:
 LOAD VARIABLE $variable
 LOAD MESSAGE $queue
-LOAD DRAFT $reference
-LOAD DOCUMENT $reference
+LOAD DRAFT $citation
+LOAD DOCUMENT $name
 
-5.store:
-STORE VARIABLE $variable
-STORE MESSAGE $queue
-STORE DRAFT $reference
-STORE DOCUMENT $reference
+5.save:
+SAVE VARIABLE $variable
+SAVE MESSAGE $queue
+SAVE DRAFT $citation
+SAVE DOCUMENT $name
 
-6.invoke:
-INVOKE $random
-INVOKE $factorial WITH 1 ARGUMENT
-INVOKE $sum WITH 2 ARGUMENTS
-INVOKE $sort WITH 3 ARGUMENTS
+6.drop:
+DROP VARIABLE $variable
+DROP MESSAGE $queue
+DROP DRAFT $citation
+DROP DOCUMENT $name
 
-7.send:
+7.call:
+CALL $random
+CALL $factorial WITH 1 ARGUMENT
+CALL $sum WITH 2 ARGUMENTS
+CALL $sort WITH 3 ARGUMENTS
+
+8.send:
 SEND $discard TO DOCUMENT
 SEND $compile TO DOCUMENT WITH ARGUMENTS
 SEND $hasNext TO COMPONENT
 SEND $addItem TO COMPONENT WITH ARGUMENTS
-
-8.handle:
-HANDLE RESULT
-HANDLE EXCEPTION
