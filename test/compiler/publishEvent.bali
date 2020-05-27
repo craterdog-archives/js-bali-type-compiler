@@ -8,6 +8,10 @@
     }
     $instructions: "
         1.PublishStatement:
+        ---- Save the name of the global event bag.
+        PUSH LITERAL `/bali/events/bag`
+        SAVE VARIABLE $bag-2
+        ---- Publish an event to the global event bag.
         CALL $catalog
         ---- Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -24,8 +28,6 @@
         PUSH LITERAL `5`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        PUSH LITERAL `/bali/events/bag`
-        SAVE VARIABLE $bag-2
         SAVE MESSAGE $bag-2
         LOAD VARIABLE $result-1
         PULL RESULT
@@ -34,7 +36,7 @@
         "1.PublishStatement": 1
     ]
     $bytecode: '
-        C01428012802D00BD00128032804D00BD00128052806D00BD00128078001
+        28018001C01428022803D00BD00128042805D00BD00128062807D00BD001
         880160025000
     '(
         $encoding: $base16

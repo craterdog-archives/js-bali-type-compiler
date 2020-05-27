@@ -1,78 +1,92 @@
 [
     $procedure: {
-        receive $message from /acme/messages/inbound/v1.2.3
+        post $message to /acme/messages/v1.2.3
+        receive $message from /acme/messages/v1.2.3
         reject message
-        receive messages[$foo, 5] from /acme/messages/outbound/v2.3.4
+        receive messages[$foo, 5] from /acme/messages/v1.2.3
         accept message
     }
     $instructions: "
-        1.ReceiveStatement:
-        PUSH LITERAL `/acme/messages/inbound/v1.2.3`
+        1.PostStatement:
+        ---- Save the name of the message bag.
+        PUSH LITERAL `/acme/messages/v1.2.3`
         SAVE VARIABLE $bag-2
-        LOAD MESSAGE $bag-2
+        ---- Post a message to the named message bag.
+        PUSH LITERAL `$message`
+        SAVE MESSAGE $bag-2
+        
+        2.ReceiveStatement:
+        ---- Save the name of the message bag.
+        PUSH LITERAL `/acme/messages/v1.2.3`
+        SAVE VARIABLE $bag-3
+        ---- Place a message from the message bag on the stack.
+        LOAD MESSAGE $bag-3
         SAVE VARIABLE $message
         
-        2.RejectStatement:
+        3.RejectStatement:
         ---- Save the message to be rejected.
         LOAD VARIABLE $message
-        SAVE VARIABLE $message-3
+        SAVE VARIABLE $message-4
         ---- Extract and save the name of the message bag.
-        LOAD VARIABLE $message-3
+        LOAD VARIABLE $message-4
         PUSH LITERAL `$bag`
         CALL $keyValue WITH 2 ARGUMENTS
-        SAVE VARIABLE $bag-4
+        SAVE VARIABLE $bag-5
         ---- Extract and save the version string for the message.
-        LOAD VARIABLE $message-3
+        LOAD VARIABLE $message-4
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         CALL $nextVersion WITH 1 ARGUMENT
-        SAVE VARIABLE $version-5
+        SAVE VARIABLE $version-6
         ---- Set the new version string parameter for the message.
-        LOAD VARIABLE $message-3
+        LOAD VARIABLE $message-4
         PUSH LITERAL `$version`
-        LOAD VARIABLE $version-5
+        LOAD VARIABLE $version-6
         CALL $setParameter WITH 3 ARGUMENTS
         ---- Post the new version of the message to the named message bag.
-        LOAD VARIABLE $message-3
-        SAVE MESSAGE $bag-4
+        LOAD VARIABLE $message-4
+        SAVE MESSAGE $bag-5
         
-        3.ReceiveStatement:
+        4.ReceiveStatement:
+        ---- Save the name of the message bag.
+        PUSH LITERAL `/acme/messages/v1.2.3`
+        SAVE VARIABLE $bag-7
         ---- Place the recipient and the index of its subcomponent on the stack.
         LOAD VARIABLE $messages
         PUSH LITERAL `$foo`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
+        ---- Place a message from the message bag on the stack.
+        LOAD MESSAGE $bag-7
         ---- Assign the result as the value of the subcomponent.
-        PUSH LITERAL `/acme/messages/outbound/v2.3.4`
-        SAVE VARIABLE $bag-6
-        LOAD MESSAGE $bag-6
         CALL $setSubcomponent WITH 3 ARGUMENTS
         
-        4.AcceptStatement:
+        5.AcceptStatement:
         ---- Save the message to be accepted.
         LOAD VARIABLE $message
-        SAVE VARIABLE $message-7
+        SAVE VARIABLE $message-8
         ---- Extract and save the name of the message bag.
-        LOAD VARIABLE $message-7
+        LOAD VARIABLE $message-8
         PUSH LITERAL `$bag`
         CALL $keyValue WITH 2 ARGUMENTS
-        SAVE VARIABLE $bag-8
+        SAVE VARIABLE $bag-9
         ---- Drop the message from the named message bag.
-        LOAD VARIABLE $message-7
-        DROP MESSAGE $bag-8
+        LOAD VARIABLE $message-8
+        DROP MESSAGE $bag-9
         LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [
-        "1.ReceiveStatement": 1
-        "2.RejectStatement": 5
-        "3.ReceiveStatement": 22
-        "4.AcceptStatement": 30
+        "1.PostStatement": 1
+        "2.ReceiveStatement": 5
+        "3.RejectStatement": 9
+        "4.ReceiveStatement": 26
+        "5.AcceptStatement": 34
     ]
     $bytecode: '
-        28018001680180056005800660062802D04D800260062803D060C85B800A
-        60062803600AD8826006880260082805D08B2806280780036803D8836005
-        800760072802D04D80046007A80460095000
+        280180012802880128018002680280066006800760072804D04D80036007
+        2805D060C85B800B60072805600BD882600788032801800460092808D08B
+        28096804D8836006800860082804D04D80056008A805600A5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -82,15 +96,16 @@
     ]
     $variables: [
         $bag-2
-        $bag-4
-        $bag-6
-        $bag-8
+        $bag-3
+        $bag-5
+        $bag-7
+        $bag-9
         $message
-        $message-3
-        $message-7
+        $message-4
+        $message-8
         $messages
         $result-1
-        $version-5
+        $version-6
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]

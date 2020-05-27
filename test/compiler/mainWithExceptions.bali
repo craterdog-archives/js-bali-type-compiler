@@ -13,8 +13,10 @@
     $instructions: "
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandler
+        ---- Save the name of the message bag.
         PUSH LITERAL `/acme/blog/v1.3`
         SAVE VARIABLE $bag-2
+        ---- Post a message to the named message bag.
         LOAD VARIABLE $message
         SAVE MESSAGE $bag-2
         

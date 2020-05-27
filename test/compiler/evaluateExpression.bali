@@ -53,8 +53,9 @@
         SAVE VARIABLE $result-1
         
         2.EvaluateStatement:
-        ---- Place a parameterized set on the stack.
+        ---- Place an empty parameterized set on the stack.
         PUSH LITERAL `none`
+        ---- Place a catalog of the parameters on the stack.
         CALL $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `/bali/collections/Set/v1`

@@ -21,7 +21,7 @@ EOL: '\r'? '\n';
 // remove white space
 SPACE: ('\t'..'\r' | ' ') -> channel(HIDDEN);
 
-COMMENT: '----' ~[\r\n]*;
+COMMENT: '--' ~[\r\n]*;
 
 fragment
 IDENTIFIER: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*;

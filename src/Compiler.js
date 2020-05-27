@@ -172,8 +172,9 @@ CompilingVisitor.prototype.getInstructions = function() {
  */
 // acceptClause: 'accept' expression
 CompilingVisitor.prototype.visitAcceptClause = function(tree) {
-    this.builder.insertComment('Save the message to be accepted.');
     const expression = tree.getItem(1);
+
+    this.builder.insertComment('Save the message to be accepted.');
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
     this.builder.insertSaveInstruction('VARIABLE', message);
@@ -349,7 +350,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     const parameters = collection.getParameters();
     const numberOfArguments = parameters ? 2 : 0;
     if (numberOfArguments) {
-        this.builder.insertComment('Place a parameterized ' + type.slice(1) + ' on the stack.');
+        this.builder.insertComment('Place an empty parameterized ' + type.slice(1) + ' on the stack.');
         this.builder.insertPushInstruction('LITERAL', 'none');  // no items to add yet
         this.visitParameters(parameters);
     }
@@ -357,7 +358,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     var count = 0;
     const iterator = collection.getIterator();
     while (iterator.hasNext()) {
-        this.builder.insertComment('Add ' + (count++ ? 'another' : 'an') + ' item to the ' + type.slice(1) + '.');
+        this.builder.insertComment('Add an' + (count++ ? 'other' : '') + ' item to the ' + type.slice(1) + '.');
         var item = iterator.getNext();
         item.acceptVisitor(this);
         this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
@@ -911,10 +912,8 @@ CompilingVisitor.prototype.visitNumber = function(number) {
 // parameters: '(' catalog ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
     if (parameters) {
-        // the VM creates a new catalog on the component stack to hold the parameters
+        this.builder.insertComment('Place a catalog of the parameters on the stack.');
         this.builder.insertCallInstruction('$catalog', 0);  // catalog()
-
-        // the VM places each parameter on the component stack and then adds them to the catalog
         const keys = parameters.getKeys();
         const iterator = keys.getIterator();
         while (iterator.hasNext()) {
@@ -924,7 +923,6 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
             value.acceptVisitor(this);
             this.builder.insertCallInstruction('$setValue', 3);  // setValue(catalog, key, value)
         }
-        // the parameter catalog remains on the component stack
     }
 };
 
@@ -951,13 +949,11 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
 CompilingVisitor.prototype.visitPostClause = function(tree) {
     const message = tree.getItem(1);
     const name = tree.getItem(2);
-
-    // the VM saves the name of the bag in a temporary variable
+    this.builder.insertComment('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
-
-    // the VM saves the message on the message bag
+    this.builder.insertComment('Post a message to the named message bag.');
     message.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
@@ -977,10 +973,7 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
  */
 // procedure: '{' statements '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
-    // the VM places the procedure on top of the component stack
     this.builder.insertPushInstruction('LITERAL', procedure.toLiteral());
-
-    // the VM adds any parameters to the element
     const parameters = procedure.getParameters();
     this.visitParameters(parameters);
 };
@@ -994,16 +987,12 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
     const event = tree.getItem(1);
-
-    // the VM places the value of the event expression onto the top of the component stack
-    event.acceptVisitor(this);
-
-    // the VM saves the name of the global event bag in a temporary variable
+    this.builder.insertComment('Save the name of the global event bag.');
     this.builder.insertPushInstruction('LITERAL', '/bali/events/bag');
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
-
-    // the VM saves the event on the event bag
+    this.builder.insertComment('Publish an event to the global event bag.');
+    event.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
 
@@ -1025,21 +1014,16 @@ CompilingVisitor.prototype.visitReceiveClause = function(tree) {
     const recipient = tree.getItem(1);
     const name = tree.getItem(2);
 
-    // the VM processes the recipient as needed
-    this.visitRecipient(recipient);
-
-    // the VM places the name of the bag on top of the component stack
+    this.builder.insertComment('Save the name of the message bag.');
     name.acceptVisitor(this);
-
-    // the VM saves the name of the bag into a temporary variable
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    // the VM loads the next message from the remote bag onto the top of the component stack
-    // NOTE: this call blocks until a message is available in the bag
-    this.builder.insertLoadInstruction('MESSAGE', bag);
+    this.visitRecipient(recipient);
 
-    // the VM sets the value of the recipient to the value on the top of the component stack
+    // NOTE: this call blocks until a message is available from the bag
+    this.builder.insertComment('Place a message from the message bag on the stack.');
+    this.builder.insertLoadInstruction('MESSAGE', bag);
     this.setRecipient(recipient);
 };
 
@@ -1049,7 +1033,6 @@ CompilingVisitor.prototype.visitRecipient = function(recipient) {
     if (recipient.isType('/bali/composites/Subcomponent')) {
         this.builder.insertComment('Place the recipient and the index of its subcomponent on the stack.');
         recipient.acceptVisitor(this);
-        this.builder.insertComment('Assign the result as the value of the subcomponent.');
     }
 };
 
@@ -1130,16 +1113,21 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
  */
 // saveClause: 'save' expression
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
-    // the VM loads the draft document onto the top of the component stack
-    const draft = tree.getItem(1);
-    draft.acceptVisitor(this);
+    const expression = tree.getItem(1);
 
-    // the VM saves a citation to the draft document in a temporary variable
-    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(document)
+    this.builder.insertComment('Save the draft document.');
+    expression.acceptVisitor(this);
+    const draft = this.createTemporaryVariable('draft');
+    this.builder.insertSaveInstruction('VARIABLE', draft);
+
+    this.builder.insertComment('Save a citation to the draft document.');
+    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(draft)
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('VARIABLE', citation);
 
-    // the VM saves the cited draft in the repository
+    this.builder.insertComment('Save the cited draft document to the repository.');
+    this.builder.insertLoadInstruction('VARIABLE', draft);
     this.builder.insertSaveInstruction('DRAFT', citation);
 };
 
@@ -1503,6 +1491,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         const symbol = recipient.toString();
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
+        this.builder.insertComment('Assign the result as the value of the subcomponent.');
         this.builder.insertCallInstruction('$setSubcomponent', 3);
     }
 };

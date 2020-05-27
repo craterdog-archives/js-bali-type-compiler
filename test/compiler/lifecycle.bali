@@ -34,64 +34,76 @@
         SAVE VARIABLE $document
         
         2.SaveStatement:
+        ---- Save the draft document.
         LOAD VARIABLE $document
+        SAVE VARIABLE $draft-5
+        ---- Save a citation to the draft document.
+        LOAD VARIABLE $draft-5
         CALL $citation WITH 1 ARGUMENT
-        SAVE VARIABLE $citation-5
-        SAVE DRAFT $citation-5
+        SAVE VARIABLE $citation-6
+        ---- Save the cited draft document to the repository.
+        LOAD VARIABLE $draft-5
+        SAVE DRAFT $citation-6
         
         3.CommitStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3`
-        SAVE VARIABLE $name-6
+        SAVE VARIABLE $name-7
         ---- Commit the named document to the repository.
         LOAD VARIABLE $document
-        SAVE DOCUMENT $name-6
+        SAVE DOCUMENT $name-7
         
         4.CheckoutStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3`
-        SAVE VARIABLE $name-7
+        SAVE VARIABLE $name-8
         ---- Load a draft copy of the named document from the repository.
-        LOAD DOCUMENT $name-7
+        LOAD DOCUMENT $name-8
         CALL $duplicate WITH 1 ARGUMENT
-        SAVE VARIABLE $draft-8
+        SAVE VARIABLE $draft-9
         ---- Calculate the new version string for the draft and save it.
-        LOAD VARIABLE $draft-8
+        LOAD VARIABLE $draft-9
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
-        SAVE VARIABLE $version-9
+        SAVE VARIABLE $version-10
         ---- Set the new version string parameter for the draft document.
-        LOAD VARIABLE $draft-8
+        LOAD VARIABLE $draft-9
         PUSH LITERAL `$version`
-        LOAD VARIABLE $version-9
+        LOAD VARIABLE $version-10
         CALL $setParameter WITH 3 ARGUMENTS
         ---- Set the new draft document as the value of the recipient.
         ---- Place the recipient and the index of its subcomponent on the stack.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
+        LOAD VARIABLE $draft-9
         ---- Assign the result as the value of the subcomponent.
-        LOAD VARIABLE $draft-8
         CALL $setSubcomponent WITH 3 ARGUMENTS
         
         5.SaveStatement:
+        ---- Save the draft document.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
+        SAVE VARIABLE $draft-11
+        ---- Save a citation to the draft document.
+        LOAD VARIABLE $draft-11
         CALL $citation WITH 1 ARGUMENT
-        SAVE VARIABLE $citation-10
-        SAVE DRAFT $citation-10
+        SAVE VARIABLE $citation-12
+        ---- Save the cited draft document to the repository.
+        LOAD VARIABLE $draft-11
+        SAVE DRAFT $citation-12
         
         6.CommitStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
-        SAVE VARIABLE $name-11
+        SAVE VARIABLE $name-13
         ---- Commit the named document to the repository.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        SAVE DOCUMENT $name-11
+        SAVE DOCUMENT $name-13
         
         7.DiscardStatement:
         ---- Save a citation to the draft document.
@@ -99,27 +111,27 @@
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
         CALL $citation WITH 1 ARGUMENT
-        SAVE VARIABLE $citation-12
+        SAVE VARIABLE $citation-14
         ---- Drop the cited draft document from the repository.
-        DROP DRAFT $citation-12
+        DROP DRAFT $citation-14
         LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 18
-        "3.CommitStatement": 22
-        "4.CheckoutStatement": 26
-        "5.SaveStatement": 45
-        "6.CommitStatement": 51
-        "7.DiscardStatement": 57
+        "3.CommitStatement": 25
+        "4.CheckoutStatement": 29
+        "5.SaveStatement": 48
+        "6.CommitStatement": 57
+        "7.DiscardStatement": 63
     ]
     $bytecode: '
-        2801800A780AC829800660062802D0602803D05B800E60062802600ED882
-        600680046004C815800390032805800B6004980B2805800C780CC8298007
-        60072802D0602808D05B800F60072802600FD882600560086007D8836005
-        6008D08BC81580019001280A800960056008D08B980960056008D08BC815
-        8002B002600D5000
+        2801800C780CC829800760072802D0602803D05B8011600728026011D882
+        60078004600480086008C8158003600890032805800D6004980D2805800E
+        780EC829800960092802D0602808D05B8010600928026010D8826005600A
+        6009D8836005600AD08B80066006C815800160069001280A800B6005600A
+        D08B980B6005600AD08BC8158002B002600F5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -128,21 +140,23 @@
         $target
     ]
     $variables: [
-        $citation-10
         $citation-12
-        $citation-5
+        $citation-14
+        $citation-6
         $document
         $documents
+        $draft-11
         $draft-3
-        $draft-8
+        $draft-5
+        $draft-9
         $index
-        $name-11
+        $name-13
         $name-2
-        $name-6
         $name-7
+        $name-8
         $result-1
+        $version-10
         $version-4
-        $version-9
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]

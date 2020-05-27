@@ -16,8 +16,8 @@
         PUSH LITERAL `$order`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `3`
-        ---- Assign the result as the value of the subcomponent.
         PUSH LITERAL `5`
+        ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         LOAD VARIABLE $result-1
         PULL RESULT
