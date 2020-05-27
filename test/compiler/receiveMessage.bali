@@ -20,6 +20,7 @@
         PUSH LITERAL `/acme/messages/v1.2.3`
         SAVE VARIABLE $bag-3
         ---- Place a message from the message bag on the stack.
+        ---- NOTE: this call blocks until a message is available from the bag.
         LOAD MESSAGE $bag-3
         SAVE VARIABLE $message
         
@@ -57,6 +58,7 @@
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
         ---- Place a message from the message bag on the stack.
+        ---- NOTE: this call blocks until a message is available from the bag.
         LOAD MESSAGE $bag-7
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS

@@ -1013,16 +1013,13 @@ CompilingVisitor.prototype.visitRange = function(range) {
 CompilingVisitor.prototype.visitReceiveClause = function(tree) {
     const recipient = tree.getItem(1);
     const name = tree.getItem(2);
-
     this.builder.insertComment('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
-
     this.visitRecipient(recipient);
-
-    // NOTE: this call blocks until a message is available from the bag
     this.builder.insertComment('Place a message from the message bag on the stack.');
+    this.builder.insertComment('NOTE: this call blocks until a message is available from the bag.');
     this.builder.insertLoadInstruction('MESSAGE', bag);
     this.setRecipient(recipient);
 };
@@ -1093,14 +1090,10 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
 CompilingVisitor.prototype.visitReturnClause = function(tree) {
     if (tree.getSize() > 0) {
         const result = tree.getItem(1);
-
-        // the VM places the value of the result expression on top of the component stack
         result.acceptVisitor(this);
     } else {
-        // the VM places a 'none' value on top of the component stack
         this.builder.insertPushInstruction('LITERAL', 'none');
     }
-
     // the VM returns the result to the calling procedure
     this.builder.insertPullInstruction('RESULT');
     this.builder.requiresFinalization = false;
@@ -1309,13 +1302,10 @@ CompilingVisitor.prototype.visitSubcomponent = function(tree) {
 CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
     const component = tree.getItem(1);
     const indices = tree.getItem(2);
-
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
-
     // the VM replaces the value on the component stack with the parent and index of the subcomponent
     indices.acceptVisitor(this);
-
     // the VM retrieves the value of the subcomponent at the given index of the parent component
     this.builder.insertCallInstruction('$subcomponent', 2);  // subcomponent(composite, index)
     // the parent and index have been replaced by the value of the subcomponent
@@ -1336,7 +1326,7 @@ CompilingVisitor.prototype.visitTag = function(tag) {
 
 // text: TEXT | TEXT_BLOCK
 CompilingVisitor.prototype.visitText = function(text) {
-    // TODO: add instructions to process procedure blocks embedded within text
+    // TODO: add instructions to first process procedure blocks embedded within text
     this.visitElement(text);
 };
 
@@ -1349,10 +1339,8 @@ CompilingVisitor.prototype.visitText = function(text) {
 // throwClause: 'throw' expression
 CompilingVisitor.prototype.visitThrowClause = function(tree) {
     const exception = tree.getItem(1);
-
     // the VM places the value of the exception expression on top of the component stack
     exception.acceptVisitor(this);
-
     // the VM jumps to the handler clauses for the current context
     this.builder.insertPullInstruction('EXCEPTION');
     this.builder.requiresFinalization = false;
