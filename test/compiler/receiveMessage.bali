@@ -7,18 +7,25 @@
     }
     $instructions: "
         1.ReceiveStatement:
-        PUSH LITERAL `$message`
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
+        SAVE VARIABLE $bag-2
+        LOAD MESSAGE $bag-2
+        SAVE VARIABLE $message
         
         2.RejectStatement:
         LOAD VARIABLE $message
         
         3.ReceiveStatement:
+        ---- Place the recipient and the index of its subcomponent on the stack.
         LOAD VARIABLE $messages
         PUSH LITERAL `$foo`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
+        ---- Assign the result as the value of the subcomponent.
         PUSH LITERAL `/acme/messages/outbound/v2.3.4`
+        SAVE VARIABLE $bag-3
+        LOAD MESSAGE $bag-3
+        CALL $setSubcomponent WITH 3 ARGUMENTS
         
         4.AcceptStatement:
         LOAD VARIABLE $message
@@ -27,11 +34,14 @@
     "($mediaType: "application/basm")
     $addresses: [
         "1.ReceiveStatement": 1
-        "2.RejectStatement": 3
-        "3.ReceiveStatement": 4
-        "4.AcceptStatement": 9
+        "2.RejectStatement": 5
+        "3.ReceiveStatement": 6
+        "4.AcceptStatement": 14
     ]
-    $bytecode: '28012802600160022803D08B28042805600160035000'(
+    $bytecode: '
+        2801800168018003600360042802D08B2803280480026802D88360036005
+        5000
+    '(
         $encoding: $base16
         $mediaType: "application/bcod"
     )
@@ -39,6 +49,8 @@
         $target
     ]
     $variables: [
+        $bag-2
+        $bag-3
         $message
         $messages
         $result-1

@@ -271,7 +271,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 /*
  * This method compiles the instructions needed to checkout from the Bali Document Repository™
  * a committed document and assign it to a recipient. The recipient may be either
- * a variable or an indexed child of a collection component.
+ * a variable or an indexed child of a composite component.
  */
 // checkoutClause: 'checkout' ('level' expression 'of')? recipient 'from' expression
 CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
@@ -922,7 +922,7 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
  * bag in the Bali Document Repository™. The name of the message bag
  * is another expression that the VM evaluates as well.
  */
-// postClause: 'post' expression 'on' expression
+// postClause: 'post' expression 'to' expression
 CompilingVisitor.prototype.visitPostClause = function(tree) {
     const message = tree.getItem(1);
     const name = tree.getItem(2);
@@ -1307,10 +1307,10 @@ CompilingVisitor.prototype.visitVersion = function(version) {
  * This method compiles the instructions needed to receive a message from a
  * bag in the Bali Document Repository™. The resulting message is assigned
  * to a recipient. The recipient may be either a variable or an indexed child
- * of a collection component.
+ * of a composite component.
  */
-// waitClause: 'wait' 'for' recipient 'from' expression
-CompilingVisitor.prototype.visitWaitClause = function(tree) {
+// receiveClause: 'receive' recipient 'from' expression
+CompilingVisitor.prototype.visitReceiveClause = function(tree) {
     const recipient = tree.getItem(1);
     const name = tree.getItem(2);
 
