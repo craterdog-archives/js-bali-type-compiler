@@ -39,7 +39,6 @@ describe('Bali Method Compiler', function() {
             const formatter = new Formatter(1);
             const formatted = formatter.formatInstructions(procedure);
             const expected = source.replace(/^/gm, '    ').replace(/^    $/g, '');
-            console.log('formatted: ' + formatted);
             expect(formatted).to.equal(expected);  // add POSIX compliant <EOL>
         });
 

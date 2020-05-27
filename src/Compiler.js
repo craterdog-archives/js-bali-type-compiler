@@ -129,10 +129,9 @@ Compiler.prototype.compileMethod = function(type, method) {
     // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
     const parser = new Parser(this.debug);
-    console.log('instructions: ' + instructions);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
-    instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediaType: 'application/basm'});
+    instructions = bali.text(formatter.formatInstructions(instructions), {$mediaType: 'application/basm'});
     method.setValue('$instructions', instructions);
 };
 
@@ -200,50 +199,33 @@ CompilingVisitor.prototype.visitArguments = function(tree) {
 CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
     const firstOperand = tree.getItem(1);
     const secondOperand = tree.getItem(2);
-
-    // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
-
-    // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
-
     const operator = tree.operator;
     switch (operator) {
         case '*':
-            // the VM places the product of the two values on top of the component stack
             this.builder.insertCallInstruction('$product', 2);  // product(x, y)
             break;
         case '/':
-            // the VM places the quotient of the two values on top of the component stack
             this.builder.insertCallInstruction('$quotient', 2);  // quotient(x, y)
             break;
         case '//':
-            // the VM places the remainder of the two values on top of the component stack
             this.builder.insertCallInstruction('$remainder', 2);  // remainder(x, y)
             break;
         case '+':
-            // the VM places the sum of the two values on top of the component stack
             this.builder.insertCallInstruction('$sum', 2);  // sum(x, y)
             break;
         case '-':
-            // the VM places the difference of the two values on top of the component stack
             this.builder.insertCallInstruction('$difference', 2);  // difference(x,y)
             break;
     }
-
-    // the resulting value remains on the top of the component stack
 };
 
 
 // association: component ':' expression
 CompilingVisitor.prototype.visitAssociation = function(association) {
-    // the VM places the association key on top of the component stack
     association.getKey().acceptVisitor(this);
-
-    // the VM places the association value on top of the component stack
     association.getValue().acceptVisitor(this);
-
-    // the VM replaces the arguments on the component stack with a new association
     this.builder.insertCallInstruction('$association', 2);  // association(key, value)
 };
 
@@ -269,7 +251,6 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
         loopLabel = procedure.statement.loopLabel;
         if (loopLabel) {
             const doneLabel = procedure.statement.doneLabel;
-            // the VM jumps out of the enclosing loop
             this.builder.insertJumpInstruction(doneLabel);
             return;
         }
@@ -299,12 +280,12 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const recipient = tree.getItem(index++);
     const expression = tree.getItem(index);
 
-    this.builder.insertComment('Evaluate the name expression and save it.');
+    this.builder.insertComment('Save the name of the document.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('VARIABLE', name);
 
-    this.builder.insertComment('Load a draft copy of the named document and save it.');
+    this.builder.insertComment('Load a draft copy of the named document from the repository.');
     this.builder.insertLoadInstruction('DOCUMENT', name);
     this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
     const draft = this.createTemporaryVariable('draft');
@@ -341,16 +322,14 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     const parameters = collection.getParameters();
     const numberOfArguments = parameters ? 2 : 0;
     if (numberOfArguments) {
-        this.builder.insertPushInstruction('LITERAL', 'none');
+        this.builder.insertComment('Place no items and some parameters on the stack.');
+        this.builder.insertPushInstruction('LITERAL', 'none');  // no items to add yet
         this.visitParameters(parameters);
     }
-
-    // the VM replaces any parameters on the component stack with a new parameterized collection
     var type = collection.getType().split('/')[3];
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-    this.builder.insertCallInstruction(type, numberOfArguments);  // <type>(parameters)
-
-    // the VM adds each expression to the collection
+    this.builder.insertComment('Create a new parameterized ' + type + ' and add any items.');
+    this.builder.insertCallInstruction(type, numberOfArguments);  // <type>(items, parameters)
     this.depth++;
     const iterator = collection.getIterator();
     while (iterator.hasNext()) {
@@ -359,7 +338,6 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
         this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
     }
     this.depth--;
-    // the parameterized collection remains on the component stack
 };
 
 
@@ -372,15 +350,13 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
     const document = tree.getItem(1);
     const expression = tree.getItem(2);
 
-    // the VM evaluates the name expression and saves it in a temporary variable
+    this.builder.insertComment('Save the name of the document.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('VARIABLE', name);
 
-    // the VM loads the document onto the top of the component stack
+    this.builder.insertComment('Commit the named document to the repository.');
     document.acceptVisitor(this);
-
-    // the VM saves the named document into the repository
     this.builder.insertSaveInstruction('DOCUMENT', name);
 };
 
@@ -394,34 +370,23 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
 CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
     const firstOperand = tree.getItem(1);
     const secondOperand = tree.getItem(2);
-
-    // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
-
-    // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
-
-    // the VM performs the comparison operation
     const operator = tree.operator;
     switch (operator) {
         case '<':
-            // determine whether or not the first value is less than the second value
             this.builder.insertCallInstruction('$isLess', 2);  // less(x, y)
             break;
         case '=':
-            // determine whether or not the first value is equal to the second value
             this.builder.insertCallInstruction('$areEqual', 2);  // equal(x, y)
             break;
         case '>':
-            // determine whether or not the first value is more than the second value
             this.builder.insertCallInstruction('$isMore', 2);  // more(x, y)
             break;
         case 'IS':
-            // determine whether or not the first value is the same value as the second value
             this.builder.insertCallInstruction('$areSame', 2);  // same(this, that)
             break;
         case 'MATCHES':
-            // determine whether or not the first value matches the second value
             this.builder.insertCallInstruction('$doesMatch', 2);  // doesMatch(component, pattern)
             break;
     }
@@ -436,11 +401,7 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
 // complementExpression: 'NOT' expression
 CompilingVisitor.prototype.visitComplementExpression = function(tree) {
     const operand = tree.getItem(1);
-
-    // the VM places the value of the expression on top of the component stack
     operand.acceptVisitor(this);
-
-    // the VM finds the logical complement of the top value on the component stack
     this.builder.insertCallInstruction('$not', 1);  // not(p)
 };
 
@@ -454,17 +415,9 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
 CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
     const firstOperand = tree.getItem(1);
     const secondOperand = tree.getItem(2);
-
-    // the VM places the result of the first operand expression on top of the component stack
     firstOperand.acceptVisitor(this);
-
-    // the VM places the result of the second operand expression on top of the component stack
     secondOperand.acceptVisitor(this);
-
-    // the VM places the product of the two values on top of the component stack
     this.builder.insertCallInstruction('$concatenation', 2);  // concatenation(a, b)
-
-    // the resulting value remains on the top of the component stack
 };
 
 
@@ -482,7 +435,7 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
         procedure = procedures[numberOfProcedures - i - 1];  // work backwards
         loopLabel = procedure.statement.loopLabel;
         if (loopLabel) {
-            // the VM jumps to the beginning of the enclosing loop
+            this.builder.insertComment('Jump to the beginning of the enclosing loop.');
             this.builder.insertJumpInstruction(loopLabel);
             return;
         }
@@ -509,14 +462,8 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
 CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
     const proposedValue = tree.getItem(1);
     const defaultValue = tree.getItem(2);
-
-    // the VM places the value of the proposed expression on top of the component stack
     proposedValue.acceptVisitor(this);
-
-    // the VM places the value of the default expression on top of the component stack
     defaultValue.acceptVisitor(this);
-
-    // the VM leaves the actual value on the top of the component stack
     this.builder.insertCallInstruction('$default', 2);  // default(value, defaultValue)
 };
 
@@ -529,17 +476,13 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
 CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
     const expression = tree.getItem(1);
 
-    // the VM loads name of the document onto the top of the component stack
+    this.builder.insertComment('Save the name of the document.');
     expression.acceptVisitor(this);
-
-    // the VM saves the name into a temporary variable
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('VARIABLE', name);
 
-    // the VM loads the named document onto the top of the component stack
+    this.builder.insertComment('Load the named document from the repository.');
     this.builder.insertLoadInstruction('DOCUMENT', name);
-
-    // the referenced document remains on top of the component stack
 };
 
 
@@ -549,16 +492,16 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    // the VM loads the draft document onto the top of the component stack
+    this.builder.insertComment('Place the draft document on the stack.');
     const draft = tree.getItem(1);
     draft.acceptVisitor(this);
 
-    // the VM saves a citation to the draft document in a temporary variable
+    this.builder.insertComment('Save a citation to the draft document.');
     this.builder.insertCallInstruction('$citation', 1);  // citation(document)
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('VARIABLE', citation);
 
-    // the VM drops the cited draft from the repository
+    this.builder.insertComment('Drop the cited draft document from the repository.');
     this.builder.insertDropInstruction('DRAFT', citation);
 };
 
@@ -589,12 +532,7 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 //     text |
 //     version
 CompilingVisitor.prototype.visitElement = function(element) {
-    // TODO: add instructions to process procedure blocks embedded within text
-
-    // the VM loads the literal value of the element onto the top of the component stack
     this.builder.insertPushInstruction('LITERAL', element.toLiteral());
-
-    // the VM adds any parameters to the element
     const parameters = element.getParameters();
     this.visitParameters(parameters);
 };
@@ -608,25 +546,17 @@ CompilingVisitor.prototype.visitElement = function(element) {
 // evaluateClause: (recipient ':=')? expression
 CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
     const expression = tree.getItem(-1);
-
     if (tree.getSize() > 1) {
-        // TODO: revisit this as it is currently awkward, it shouldn't require a check
-        // the VM processes the recipient as needed
+        this.builder.insertComment('Place the recipient on the stack.');
         const recipient = tree.getItem(1);
-        if (recipient.isType('/bali/composites/SubcomponentExpression')) {
-            recipient.acceptVisitor(this);
-        }
+        recipient.acceptVisitor(this);
 
-        // the VM places the value of the expression on top of the component stack
+        this.builder.insertComment('Place the evaluated expression on the stack.');
         expression.acceptVisitor(this);
-
-        // the VM sets the value of the recipient to the value on the top of the component stack
         this.setRecipient(recipient);
     } else {
-        // the VM places the value of the expression on top of the component stack
+        this.builder.insertComment('Make the evaluated expression the default result.');
         expression.acceptVisitor(this);
-
-        // the VM saves the value of the expression in the temporary result variable
         this.builder.insertSaveInstruction('VARIABLE', '$result-1');
     }
 };
@@ -1386,6 +1316,7 @@ CompilingVisitor.prototype.visitTag = function(tag) {
 
 // text: TEXT | TEXT_BLOCK
 CompilingVisitor.prototype.visitText = function(text) {
+    // TODO: add instructions to process procedure blocks embedded within text
     this.visitElement(text);
 };
 
@@ -1567,11 +1498,11 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.isType('/bali/elements/Symbol')) {
-        // the VM saves the value that is on top of the component stack in the variable
+        this.builder.insertComment('Save the value of the expression in a variable.');
         const symbol = recipient.toString();
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
-        // the VM sets the value of the subcomponent at the given index of the parent component
+        this.builder.insertComment('Set the subcomponent at the given index to the value of the expression.');
         this.builder.insertCallInstruction('$setSubcomponent', 3);
     }
 };

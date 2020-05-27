@@ -9,7 +9,6 @@
         }
     }
     $instructions: "
-        
         1.SelectStatement:
         PUSH LITERAL `$selection`
         SAVE VARIABLE $selector-2
@@ -21,6 +20,7 @@
         JUMP TO 1.2.OptionClause ON FALSE
         
         1.1.1.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `none`
         SAVE VARIABLE $result-1
         
@@ -34,6 +34,7 @@
         JUMP TO 1.3.OptionClause ON FALSE
         
         1.2.1.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `none`
         SAVE VARIABLE $result-1
         
@@ -47,13 +48,13 @@
         JUMP TO 1.SelectStatementDone ON FALSE
         
         1.3.1.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `none`
         SAVE VARIABLE $result-1
         
         1.SelectStatementDone:
         LOAD VARIABLE $result-1
         PULL RESULT
-        
     "($mediaType: "application/basm")
     $addresses: [
         "1.SelectStatement": 1

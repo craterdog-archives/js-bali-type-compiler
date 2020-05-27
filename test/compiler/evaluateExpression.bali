@@ -33,8 +33,9 @@
         foo ? 5
     }
     $instructions: "
-        
         1.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
+        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
         PUSH LITERAL `$foo`
         PUSH LITERAL `$bar`
@@ -47,15 +48,18 @@
         SAVE VARIABLE $result-1
         
         2.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $variable
         SAVE VARIABLE $result-1
         
         3.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `13`
         CALL $isZero WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         4.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         CALL $sum WITH 2 ARGUMENTS
@@ -64,12 +68,16 @@
         SAVE VARIABLE $result-1
         
         5.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
+        ---- Save the name of the document.
         LOAD VARIABLE $reference
         SAVE VARIABLE $name-2
+        ---- Load the named document from the repository.
         LOAD DOCUMENT $name-2
         SAVE VARIABLE $result-1
         
         6.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $customer
         PUSH LITERAL `$order`
         CALL $subcomponent WITH 2 ARGUMENTS
@@ -80,6 +88,7 @@
         SAVE VARIABLE $result-1
         
         7.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $list
         CALL $list
         LOAD VARIABLE $item
@@ -88,128 +97,148 @@
         SAVE VARIABLE $result-1
         
         8.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `23`
         CALL $factorial WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         9.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `2`
         PUSH LITERAL `8`
         CALL $exponential WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         10.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `π`
         CALL $inverse WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         11.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `(3, 4i)`
         CALL $conjugate WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         12.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         CALL $product WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         13.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         CALL $quotient WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         14.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         CALL $remainder WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         15.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $x
         LOAD VARIABLE $y
         CALL $sum WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         16.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $w
         LOAD VARIABLE $z
         CALL $difference WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         17.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         PUSH LITERAL `(3, 4i)`
         CALL $magnitude WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         18.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         CALL $isLess WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         19.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         CALL $areEqual WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         20.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         CALL $isMore WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         21.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         CALL $areSame WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         22.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $k
         LOAD VARIABLE $m
         CALL $doesMatch WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         23.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $p
         CALL $not WITH 1 ARGUMENT
         SAVE VARIABLE $result-1
         
         24.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $a
         LOAD VARIABLE $b
         CALL $and WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         25.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $c
         LOAD VARIABLE $d
         CALL $sans WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         26.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $f
         LOAD VARIABLE $g
         CALL $xor WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         27.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $h
         LOAD VARIABLE $j
         CALL $or WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         
         28.EvaluateStatement:
+        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $foo
         PUSH LITERAL `5`
         CALL $default WITH 2 ARGUMENTS
         SAVE VARIABLE $result-1
         LOAD VARIABLE $result-1
         PULL RESULT
-        
     "($mediaType: "application/basm")
     $addresses: [
         "1.EvaluateStatement": 1
