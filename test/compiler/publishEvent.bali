@@ -7,6 +7,7 @@
         ]
     }
     $instructions: "
+        
         1.PublishStatement:
         CALL $catalog
         PUSH LITERAL `$type`
@@ -26,6 +27,7 @@
         SAVE MESSAGE $bag-2
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.PublishStatement": 1

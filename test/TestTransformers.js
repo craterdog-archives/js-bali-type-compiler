@@ -27,7 +27,7 @@ describe('Bali Method Compiler', function() {
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new Formatter();
             const formatted = formatter.formatInstructions(procedure);
-            expect(formatted + '\n').to.equal(source);  // add POSIX compliant <EOL>
+            expect(formatted).to.equal(source);  // add POSIX compliant <EOL>
         });
 
         it('should parse and format the same instructions with indentation', function() {
@@ -38,8 +38,9 @@ describe('Bali Method Compiler', function() {
             expect(procedure).to.exist;  // jshint ignore:line
             const formatter = new Formatter(1);
             const formatted = formatter.formatInstructions(procedure);
-            const expected = source.replace(/^/gm, '    ').replace(/    $/g, '');
-            expect(formatted + '\n').to.equal(expected);  // add POSIX compliant <EOL>
+            const expected = source.replace(/^/gm, '    ').replace(/^    $/g, '');
+            console.log('formatted: ' + formatted);
+            expect(formatted).to.equal(expected);  // add POSIX compliant <EOL>
         });
 
     });

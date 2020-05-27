@@ -4,6 +4,7 @@
         document[$customer, $order, 3] := 5
     }
     $instructions: "
+        
         1.EvaluateStatement:
         LOAD VARIABLE $bar
         SAVE VARIABLE $foo
@@ -13,6 +14,7 @@
         CALL $setSubcomponent WITH 3 ARGUMENTS
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.EvaluateStatement": 1

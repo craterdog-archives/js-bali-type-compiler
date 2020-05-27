@@ -5,6 +5,7 @@
         ] to /acme/messages/inbound/v1.2.3
     }
     $instructions: "
+        
         1.PostStatement:
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
         SAVE VARIABLE $bag-2
@@ -16,6 +17,7 @@
         SAVE MESSAGE $bag-2
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.PostStatement": 1

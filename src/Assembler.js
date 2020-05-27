@@ -13,7 +13,6 @@
  * This module defines a class that assembles compiled methods into bytecode that
  * can run on the Bali Virtual Machine™.
  */
-const bali = require('bali-component-framework').api();
 const Decoder = require('./Decoder').Decoder;
 const types = require('./Types');
 const Parser = require('./Parser').Parser;
@@ -33,6 +32,7 @@ const EOL = '\n';  // POSIX end of line character
  */
 function Assembler(debug) {
     this.debug = debug || false;
+    this.bali = require('bali-component-framework').api(this.debug);
     this.decoder = new Decoder(this.debug);
     return this;
 }
@@ -52,15 +52,15 @@ Assembler.prototype.assembleMethod = function(type, method) {
 
     // assemble the instructions into bytecode
     var instructions = method.getValue('$instructions');
-    const parser = new Parser();
+    const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions.getValue());
     const visitor = new AssemblingVisitor(type, method, this.debug);
     instructions.acceptVisitor(visitor);
 
     // format the bytecode and add to the method context
     var bytecode = visitor.getBytecode();
-    const base16 = bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
-    bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
+    const base16 = this.bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
+    bytecode = this.bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
     method.setValue('$bytecode', bytecode);
 };
 
@@ -114,6 +114,9 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
     // can ignore the label at this stage since they don't show up in the bytecode
     const operation = step.getValue('$operation').toNumber();
     switch (operation) {
+        case types.NOTE:
+            this.visitComment(step);
+            break;
         case types.JUMP:
             this.visitJumpInstruction(step);
             break;
@@ -139,11 +142,11 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
             this.visitSendInstruction(step);
             break;
         default:
-            const exception = bali.exception({
+            const exception = this.bali.exception({
                 $module: '/bali/compiler/Assembler',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
-                $expected: bali.range(0, 7),
+                $expected: this.bali.range(0, 7),
                 $actual: operation,
                 $step: step,
                 $message: 'An invalid operation was found in a procedure step.'
@@ -151,6 +154,12 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
             if (this.debug) console.error(exception.toString());
             throw exception;
     }
+};
+
+
+// comment: COMMENT
+AssemblingVisitor.prototype.visitComment = function(instruction) {
+    // ignore comments
 };
 
 

@@ -14,7 +14,7 @@ const pfs = require('fs').promises;
 const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework').api(1);
+const bali = require('bali-component-framework').api(debug);
 const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
 const compiler = require('../index').api(debug);
 

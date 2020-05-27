@@ -11,6 +11,7 @@
         }
     }
     $instructions: "
+        
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandler
         PUSH LITERAL `/acme/blog/v1.3`
@@ -66,6 +67,7 @@
         1.PostStatementSucceeded:
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.PostStatement": 1

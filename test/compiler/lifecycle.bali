@@ -9,22 +9,28 @@
         discard documents[index]
     }
     $instructions: "
+        
         1.CheckoutStatement:
+        ---- Evaluate the name expression and save it.
         PUSH LITERAL `/acme/documents/example/v1.2`
         SAVE VARIABLE $name-2
+        ---- Load a draft copy of the named document and save it.
         LOAD DOCUMENT $name-2
         CALL $duplicate WITH 1 ARGUMENT
         SAVE VARIABLE $draft-3
+        ---- Calculate the new version string for the draft and save it.
         LOAD VARIABLE $draft-3
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `0`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE VARIABLE $version-4
+        ---- Set the new version string parameter for the draft document.
         LOAD VARIABLE $draft-3
         PUSH LITERAL `$version`
         LOAD VARIABLE $version-4
         CALL $setParameter WITH 3 ARGUMENTS
+        ---- Set the new draft document as the value of the recipient.
         PUSH LITERAL `$document`
         LOAD VARIABLE $draft-3
         SAVE VARIABLE $document
@@ -42,21 +48,26 @@
         SAVE DOCUMENT $name-6
         
         4.CheckoutStatement:
+        ---- Evaluate the name expression and save it.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE VARIABLE $name-7
+        ---- Load a draft copy of the named document and save it.
         LOAD DOCUMENT $name-7
         CALL $duplicate WITH 1 ARGUMENT
         SAVE VARIABLE $draft-8
+        ---- Calculate the new version string for the draft and save it.
         LOAD VARIABLE $draft-8
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE VARIABLE $version-9
+        ---- Set the new version string parameter for the draft document.
         LOAD VARIABLE $draft-8
         PUSH LITERAL `$version`
         LOAD VARIABLE $version-9
         CALL $setParameter WITH 3 ARGUMENTS
+        ---- Set the new draft document as the value of the recipient.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         LOAD VARIABLE $draft-8
@@ -87,6 +98,7 @@
         DROP DRAFT $citation-12
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.CheckoutStatement": 1

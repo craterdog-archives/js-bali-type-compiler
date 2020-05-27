@@ -94,31 +94,31 @@ FormattingVisitor.prototype.visitCollection = function(collection) {
 
 
 // document: EOL* instructions EOL* EOF
-// instructions: step (EOL step)*
+// instructions: (step EOL)*
 FormattingVisitor.prototype.visitList = function(procedure) {
     const iterator = procedure.getIterator();
-    var step = iterator.getNext();
-    step.acceptVisitor(this);
     while (iterator.hasNext()) {
-        this.appendNewline();
-        step = iterator.getNext();
+        const step = iterator.getNext();
         step.acceptVisitor(this);
+        this.appendNewline();
     }
 };
 
 
 // step: label? instruction
-// label: EOL? LABEL ':' EOL
+// label: EOL LABEL ':' EOL
 FormattingVisitor.prototype.visitCatalog = function(step) {
     const label = step.getValue('$label');
     if (label) {
-        // labels are preceded by a blank line unless they are part of the first step
-        if (this.source.length > 4 * this.indentation) this.appendNewline();
+        this.appendNewline();
         this.source += label.getValue() + ':';
         this.appendNewline();
     }
     const operation = step.getValue('$operation').toNumber();
     switch (operation) {
+        case types.NOTE:
+            this.visitComment(step);
+            break;
         case types.JUMP:
             this.visitJumpInstruction(step);
             break;
@@ -156,6 +156,13 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
             if (debug) console.error(exception.toString());
             throw exception;
     }
+};
+
+
+// comment: COMMENT
+FormattingVisitor.prototype.visitComment = function(instruction) {
+    const comment = instruction.getValue('$comment');
+    this.source += comment.getValue();
 };
 
 

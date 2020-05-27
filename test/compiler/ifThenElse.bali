@@ -7,6 +7,7 @@
         }
     }
     $instructions: "
+        
         1.IfStatement:
         SKIP INSTRUCTION
         
@@ -34,6 +35,7 @@
         1.IfStatementDone:
         LOAD VARIABLE $result-1
         PULL RESULT
+        
     "($mediaType: "application/basm")
     $addresses: [
         "1.IfStatement": 1

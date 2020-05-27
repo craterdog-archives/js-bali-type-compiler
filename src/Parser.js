@@ -16,7 +16,7 @@
  */
 const antlr = require('antlr4');
 const ErrorStrategy = require('antlr4/error/ErrorStrategy');
-const bali = require('bali-component-framework').api();
+const bali = require('bali-component-framework').api(1);
 const grammar = require('./grammar');
 const types = require('./Types');
 const EOL = '\n';  // POSIX end of line character
@@ -129,6 +129,16 @@ ParsingVisitor.prototype.visitStep = function(ctx) {
 // label: EOL? LABEL ':' EOL
 ParsingVisitor.prototype.visitLabel = function(ctx) {
     this.result = bali.text(ctx.LABEL().getText());
+};
+
+
+// comment: COMMENT
+ParsingVisitor.prototype.visitComment = function(ctx) {
+    const instruction = bali.catalog();
+    instruction.setValue('$operation', types.NOTE);
+    const comment = ctx.children[0].getText();
+    instruction.setValue('$comment', comment);
+    this.result = instruction;
 };
 
 
@@ -354,18 +364,15 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
     }
     message = addContext(recognizer, message);
 
-    // log the error message if in debug mode
-    if (this.debug) {
-        console.error(message);
-    }
-
     // stop the processing
     const exception = bali.exception({
         $module: '/bali/compiler/Parser',
         $procedure: '$parseAssembly',
         $exception: '$syntaxError',
-        $message: '"' + message + '"'
+        $message: message
     });
+
+    // log the error message if in debug mode
     if (this.debug) console.error(exception.toString());
     throw exception;
 };

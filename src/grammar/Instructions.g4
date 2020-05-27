@@ -1,13 +1,14 @@
 grammar Instructions;
 import Tokens;
 
-instructions: step (EOL step)*;
+instructions: (step EOL)*;
 
 step: label? instruction;
 
-label: EOL? LABEL ':' EOL;
+label: EOL LABEL ':' EOL;
 
 instruction:
+    comment |
     skipInstruction |
     jumpInstruction |
     pushInstruction |
@@ -18,6 +19,8 @@ instruction:
     callInstruction |
     sendInstruction
 ;
+
+comment: COMMENT;
 
 // Skip this instruction and continue with the next instruction.
 skipInstruction: 'SKIP' 'INSTRUCTION';

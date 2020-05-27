@@ -129,6 +129,7 @@ Compiler.prototype.compileMethod = function(type, method) {
     // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
     const parser = new Parser(this.debug);
+    console.log('instructions: ' + instructions);
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
     instructions = bali.text(EOL + formatter.formatInstructions(instructions) + EOL, {$mediaType: 'application/basm'});
@@ -298,18 +299,18 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const recipient = tree.getItem(index++);
     const expression = tree.getItem(index);
 
-    // the VM evaluates the name expression and saves it in a temporary variable
+    this.builder.insertComment('Evaluate the name expression and save it.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('VARIABLE', name);
 
-    // the VM saves a draft copy of the named document in a temporary variable
+    this.builder.insertComment('Load a draft copy of the named document and save it.');
     this.builder.insertLoadInstruction('DOCUMENT', name);
     this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
     const draft = this.createTemporaryVariable('draft');
     this.builder.insertSaveInstruction('VARIABLE', draft);
 
-    // the VM saves the new version string for the draft document in a temporary variable
+    this.builder.insertComment('Calculate the new version string for the draft and save it.');
     this.builder.insertLoadInstruction('VARIABLE', draft);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertCallInstruction('$parameter', 2);  // parameter(draft, key)
@@ -318,13 +319,13 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const version = this.createTemporaryVariable('version');
     this.builder.insertSaveInstruction('VARIABLE', version);
 
-    // the VM sets the version parameter for the draft document to the new version string
+    this.builder.insertComment('Set the new version string parameter for the draft document.');
     this.builder.insertLoadInstruction('VARIABLE', draft);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertLoadInstruction('VARIABLE', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(draft, key, value)
 
-    // the VM sets the value of the recipient to the value on the top of the component stack
+    this.builder.insertComment('Set the new draft document as the value of the recipient.');
     recipient.acceptVisitor(this);
     this.builder.insertLoadInstruction('VARIABLE', draft);
     this.setRecipient(recipient);
@@ -1850,12 +1851,23 @@ InstructionBuilder.prototype.insertLabel = function(label) {
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
         this.addresses.setValue(this.nextLabel, this.address);
-        if (this.instructions !== '') this.instructions += EOL;  // not the first instruction
+        this.instructions += EOL;
         this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
     }
     this.instructions += instruction + EOL;
     this.address++;
+};
+
+
+InstructionBuilder.prototype.insertComment = function(comment) {
+    if (this.nextLabel) {
+        this.addresses.setValue(this.nextLabel, this.address);
+        this.instructions += EOL;
+        this.instructions += this.nextLabel + ':' + EOL;
+        this.nextLabel = undefined;
+    }
+    this.instructions += '---- ' + comment + EOL;
 };
 
 
