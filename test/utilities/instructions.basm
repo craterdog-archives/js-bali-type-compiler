@@ -25,19 +25,19 @@ PULL EXCEPTION
 
 4.load:
 LOAD VARIABLE $variable
-LOAD MESSAGE $queue
+LOAD MESSAGE $bag
 LOAD DRAFT $citation
 LOAD DOCUMENT $name
 
 5.save:
 SAVE VARIABLE $variable
-SAVE MESSAGE $queue
+SAVE MESSAGE $bag
 SAVE DRAFT $citation
 SAVE DOCUMENT $name
 
 6.drop:
 DROP VARIABLE $variable
-DROP MESSAGE $queue
+DROP MESSAGE $bag
 DROP DRAFT $citation
 DROP DOCUMENT $name
 

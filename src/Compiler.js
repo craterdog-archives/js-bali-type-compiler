@@ -166,6 +166,26 @@ CompilingVisitor.prototype.getInstructions = function() {
 };
 
 
+/*
+ * This method inserts the instructions that cause the VM to accept a message from
+ * the Bali Document Repository™.
+ */
+// acceptClause: 'accept' expression
+CompilingVisitor.prototype.visitRejectClause = function(tree) {
+    // the VM loads the message onto the top of the component stack
+    const message = tree.getItem(1);
+    message.acceptVisitor(this);
+
+    // the VM saves a citation to the message in a temporary variable
+    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(message)
+    const citation = this.createTemporaryVariable('citation');
+    this.builder.insertSaveInstruction('VARIABLE', citation);
+
+    // the VM drops the cited message from the repository
+    this.builder.insertDropInstruction('MESSAGE', citation);
+};
+
+
 // angle: ANGLE
 CompilingVisitor.prototype.visitAngle = function(angle) {
     this.visitElement(angle);
@@ -989,6 +1009,36 @@ CompilingVisitor.prototype.visitRange = function(range) {
 };
 
 
+/*
+ * This method compiles the instructions needed to receive a message from a
+ * bag in the Bali Document Repository™. The resulting message is assigned
+ * to a recipient. The recipient may be either a variable or an indexed child
+ * of a composite component.
+ */
+// receiveClause: 'receive' recipient 'from' expression
+CompilingVisitor.prototype.visitReceiveClause = function(tree) {
+    const recipient = tree.getItem(1);
+    const name = tree.getItem(2);
+
+    // the VM processes the recipient as needed
+    this.visitRecipient(recipient);
+
+    // the VM places the name of the bag on top of the component stack
+    name.acceptVisitor(this);
+
+    // the VM saves the name of the bag into a temporary variable
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
+
+    // the VM loads the next message from the remote bag onto the top of the component stack
+    // NOTE: this call blocks until a message is available in the bag
+    this.builder.insertLoadInstruction('MESSAGE', bag);
+
+    // the VM sets the value of the recipient to the value on the top of the component stack
+    this.setRecipient(recipient);
+};
+
+
 // recipient: symbol | subcomponent
 CompilingVisitor.prototype.visitRecipient = function(recipient) {
     if (recipient.isType('/bali/composites/Subcomponent')) {
@@ -1002,6 +1052,31 @@ CompilingVisitor.prototype.visitRecipient = function(recipient) {
 // reference: RESOURCE
 CompilingVisitor.prototype.visitReference = function(reference) {
     this.visitElement(reference);
+};
+
+
+/*
+ * This method inserts the instructions that cause the VM to reject a message from
+ * the Bali Document Repository™.
+ */
+// rejectClause: 'reject' expression
+CompilingVisitor.prototype.visitRejectClause = function(tree) {
+    this.builder.insertComment('Save the message to be rejected.');
+    const expression = tree.getItem(1);
+    expression.acceptVisitor(this);
+    const message = this.createTemporaryVariable('message');
+    this.builder.insertSaveInstruction('VARIABLE', message);
+
+    this.builder.insertComment('Extract and save the name of the message bag.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertPushInstruction('LITERAL', '$bag');
+    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
+
+    this.builder.insertComment('Drop the message from the named message bag.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertDropInstruction('MESSAGE', bag);
 };
 
 
@@ -1300,36 +1375,6 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
 // version: VERSION
 CompilingVisitor.prototype.visitVersion = function(version) {
     this.visitElement(version);
-};
-
-
-/*
- * This method compiles the instructions needed to receive a message from a
- * bag in the Bali Document Repository™. The resulting message is assigned
- * to a recipient. The recipient may be either a variable or an indexed child
- * of a composite component.
- */
-// receiveClause: 'receive' recipient 'from' expression
-CompilingVisitor.prototype.visitReceiveClause = function(tree) {
-    const recipient = tree.getItem(1);
-    const name = tree.getItem(2);
-
-    // the VM processes the recipient as needed
-    this.visitRecipient(recipient);
-
-    // the VM places the name of the bag on top of the component stack
-    name.acceptVisitor(this);
-
-    // the VM saves the name of the bag into a temporary variable
-    const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
-
-    // the VM loads the next message from the remote bag onto the top of the component stack
-    // NOTE: this call blocks until a message is available in the bag
-    this.builder.insertLoadInstruction('MESSAGE', bag);
-
-    // the VM sets the value of the recipient to the value on the top of the component stack
-    this.setRecipient(recipient);
 };
 
 

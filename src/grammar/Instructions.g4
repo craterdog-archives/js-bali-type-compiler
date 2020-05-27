@@ -61,7 +61,7 @@ pullInstruction:
     )
 ;
 
-// Load the value from a local variable, message queue, draft or document onto
+// Load the value from a local variable, message bag, draft or document onto
 // the top of the component stack.
 loadInstruction:
     'LOAD' (
@@ -73,7 +73,7 @@ loadInstruction:
 ;
 
 // Save the value that is on the top of the component stack in the
-// local variable, message queue, draft or document.
+// local variable, message bag, draft or document.
 saveInstruction:
     'SAVE' (
         'VARIABLE' |
@@ -84,7 +84,7 @@ saveInstruction:
 ;
 
 // Drop the value that is currently associated with the local variable,
-// message queue, draft or document.
+// message bag, draft or document.
 dropInstruction:
     'DROP' (
         'VARIABLE' |
@@ -109,7 +109,7 @@ callInstruction:
 // Send a message with an optional list of arguments to the component or
 // committed document name that is on top of the component stack. If the
 // recipient is a named document, a new procedure context containing the
-// message, arguments, and document name is placed on a queue to be executed
+// message, arguments, and document name is placed in a bag to be executed
 // by the next available processor. Otherwise, the current processor loads the
 // bytecode for the procedure associated with the message defined in the
 // component's type definition into a new procedure context and begins

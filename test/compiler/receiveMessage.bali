@@ -13,7 +13,17 @@
         SAVE VARIABLE $message
         
         2.RejectStatement:
+        ---- Save the message to be rejected.
         LOAD VARIABLE $message
+        SAVE VARIABLE $message-3
+        ---- Extract and save the name of the message bag.
+        LOAD VARIABLE $message-3
+        PUSH LITERAL `$bag`
+        CALL $keyValue WITH 2 ARGUMENTS
+        SAVE VARIABLE $bag-4
+        ---- Drop the message from the named message bag.
+        LOAD VARIABLE $message-3
+        DROP MESSAGE $bag-4
         
         3.ReceiveStatement:
         ---- Place the recipient and the index of its subcomponent on the stack.
@@ -23,8 +33,8 @@
         PUSH LITERAL `5`
         ---- Assign the result as the value of the subcomponent.
         PUSH LITERAL `/acme/messages/outbound/v2.3.4`
-        SAVE VARIABLE $bag-3
-        LOAD MESSAGE $bag-3
+        SAVE VARIABLE $bag-5
+        LOAD MESSAGE $bag-5
         CALL $setSubcomponent WITH 3 ARGUMENTS
         
         4.AcceptStatement:
@@ -35,12 +45,12 @@
     $addresses: [
         "1.ReceiveStatement": 1
         "2.RejectStatement": 5
-        "3.ReceiveStatement": 6
-        "4.AcceptStatement": 14
+        "3.ReceiveStatement": 13
+        "4.AcceptStatement": 21
     ]
     $bytecode: '
-        2801800168018003600360042802D08B2803280480026802D88360036005
-        5000
+        28018001680180046004800560052802D04D80026005A80260062803D08B
+        2804280580036803D883600460075000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -50,8 +60,10 @@
     ]
     $variables: [
         $bag-2
-        $bag-3
+        $bag-4
+        $bag-5
         $message
+        $message-3
         $messages
         $result-1
     ]($type: /bali/collections/Set/v1)
