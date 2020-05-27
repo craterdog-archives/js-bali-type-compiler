@@ -13,7 +13,6 @@
         JUMP TO 1.IfStatementDone ON FALSE
         
         1.1.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $yes
         SAVE VARIABLE $result-1
         

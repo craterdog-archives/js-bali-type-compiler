@@ -8,8 +8,8 @@
         1.PostStatement:
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
         SAVE VARIABLE $bag-2
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$foo`
         PUSH LITERAL `"bar"`
         CALL $association WITH 2 ARGUMENTS

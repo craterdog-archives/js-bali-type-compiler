@@ -15,7 +15,6 @@
         JUMP TO 1.2.ElseClause ON FALSE
         
         1.1.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $yes
         SAVE VARIABLE $result-1
         
@@ -26,7 +25,6 @@
         SKIP INSTRUCTION
         
         1.2.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         LOAD VARIABLE $no
         SAVE VARIABLE $result-1
         

@@ -17,11 +17,7 @@
         JUMP TO 1.WhileStatementDone ON FALSE
         
         1.1.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$a`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $b
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $a
         
         1.1.2.IfStatement:
@@ -38,11 +34,7 @@
         SKIP INSTRUCTION
         
         1.1.3.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$a`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $c
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $a
         
         1.ConditionRepeat:
@@ -56,18 +48,15 @@
         "1.WhileStatement": 1
         "1.1.ConditionClause": 2
         "1.1.1.EvaluateStatement": 4
-        "1.1.2.IfStatement": 7
-        "1.1.2.1.ConditionClause": 8
-        "1.1.2.1.1.BreakStatement": 10
-        "1.1.2.IfStatementDone": 11
-        "1.1.3.EvaluateStatement": 12
-        "1.ConditionRepeat": 15
-        "1.WhileStatementDone": 16
+        "1.1.2.IfStatement": 6
+        "1.1.2.1.ConditionClause": 7
+        "1.1.2.1.1.BreakStatement": 9
+        "1.1.2.IfStatementDone": 10
+        "1.1.3.EvaluateStatement": 11
+        "1.ConditionRepeat": 13
+        "1.WhileStatementDone": 14
     ]
-    $bytecode: '
-        00006004181028016002800100006001180B001000002801600380010002
-        60055000
-    '(
+    $bytecode: '00006004180E6002800100006001180A000E000060038001000260055000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )

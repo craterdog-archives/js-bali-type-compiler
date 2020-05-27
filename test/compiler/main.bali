@@ -4,7 +4,6 @@
     }
     $instructions: "
         1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `none`
         SAVE VARIABLE $result-1
         LOAD VARIABLE $result-1

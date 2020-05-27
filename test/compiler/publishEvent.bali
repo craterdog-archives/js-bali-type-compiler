@@ -8,16 +8,18 @@
     }
     $instructions: "
         1.PublishStatement:
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$changeEvent`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
+        ---- Add another item to the catalog.
         PUSH LITERAL `$key`
         PUSH LITERAL `$foo`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
+        ---- Add another item to the catalog.
         PUSH LITERAL `$value`
         PUSH LITERAL `5`
         CALL $association WITH 2 ARGUMENTS

@@ -62,7 +62,6 @@ const dirtyType = bali.catalog({
             $procedure: bali.component('{\n    none\n}'),
             $instructions: bali.component('"\n' +
                 '    1.EvaluateStatement:\n' +
-                '    ---- Make the evaluated expression the default result.\n' +
                 '    PUSH LITERAL `none`\n' +
                 '    SAVE VARIABLE $result-1\n' +
                 '    LOAD VARIABLE $result-1\n' +

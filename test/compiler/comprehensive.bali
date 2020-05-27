@@ -60,22 +60,14 @@
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$a`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $b
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $a
         
         1.1.2.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$b`
-        ---- Place the evaluated expression on the stack.
         PUSH LITERAL `{
             $foo := bar
             $bar := baz
         }`
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $b
         
         1.1.3.ThrowStatement:
@@ -92,17 +84,12 @@
         JUMP TO 1.3.ElseClause ON FALSE
         
         1.2.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `false`
         SAVE VARIABLE $result-1
         
         1.2.2.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$c`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $b
         CALL $factorial WITH 1 ARGUMENT
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $c
         
         1.2.3.ReturnStatement:
@@ -116,19 +103,16 @@
         SKIP INSTRUCTION
         
         1.3.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$d`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $b
+        ---- Place a list of the message arguments on the stack.
         CALL $list
         LOAD VARIABLE $tag
         CALL $addItem WITH 2 ARGUMENTS
+        ---- Send the message with its arguments to the recipient.
         SEND $find TO COMPONENT WITH ARGUMENTS
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $d
         
         1.3.2.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `(3, 4i)`
         SAVE VARIABLE $result-1
         
@@ -148,8 +132,8 @@
         
         1.4.HandleBlock:
         LOAD VARIABLE $exception
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$warning`
         CALL $association WITH 2 ARGUMENTS
@@ -158,23 +142,19 @@
         JUMP TO 1.5.HandleBlock ON FALSE
         
         1.4.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$count`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $count
         PUSH LITERAL `1`
         CALL $sum WITH 2 ARGUMENTS
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $count
         
         1.4.2.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something not too serious happened."`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
+        ---- Add another item to the catalog.
         PUSH LITERAL `$exception`
         PUSH LITERAL `$oops`
         CALL $association WITH 2 ARGUMENTS
@@ -186,8 +166,8 @@
         
         1.5.HandleBlock:
         LOAD VARIABLE $exception
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$moderate`
         CALL $association WITH 2 ARGUMENTS
@@ -196,20 +176,17 @@
         JUMP TO 1.IfStatementFailed ON FALSE
         
         1.5.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$exception`
-        ---- Place the evaluated expression on the stack.
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something serious happened."`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
+        ---- Add another item to the catalog.
         PUSH LITERAL `$exception`
         PUSH LITERAL `$bigOops`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $exception
         
         1.5.2.ThrowStatement:
@@ -234,11 +211,7 @@
         JUMP TO 2.WhileStatementDone ON FALSE
         
         2.1.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$foo`
-        ---- Place the evaluated expression on the stack.
         LOAD VARIABLE $bar
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $foo
         
         2.1.2.IfStatement:
@@ -281,7 +254,6 @@
         JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
         
         2.1.2.2.1.1.1.1.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `true`
         SAVE VARIABLE $result-1
         
@@ -295,7 +267,6 @@
         JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
         
         2.1.2.2.1.1.1.2.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `false`
         SAVE VARIABLE $result-1
         
@@ -306,7 +277,6 @@
         SKIP INSTRUCTION
         
         2.1.2.2.1.1.1.3.1.ContinueStatement:
-        ---- Jump to the beginning of the enclosing loop.
         JUMP TO 2.1.2.2.1.1.ConditionClause
         
         2.1.2.2.1.1.1.3.ElseClauseDone:
@@ -338,70 +308,69 @@
         "1.IfStatement": 1
         "1.1.ConditionClause": 2
         "1.1.1.EvaluateStatement": 6
-        "1.1.2.EvaluateStatement": 9
-        "1.1.3.ThrowStatement": 12
-        "1.1.ConditionClauseDone": 14
-        "1.2.ConditionClause": 15
-        "1.2.1.EvaluateStatement": 19
-        "1.2.2.EvaluateStatement": 21
-        "1.2.3.ReturnStatement": 25
-        "1.2.ConditionClauseDone": 27
-        "1.3.ElseClause": 28
-        "1.3.1.EvaluateStatement": 29
-        "1.3.2.EvaluateStatement": 36
-        "1.3.3.ReturnStatement": 38
-        "1.3.ElseClauseDone": 40
-        "1.IfStatementDone": 41
-        "1.IfStatementHandler": 43
-        "1.4.HandleBlock": 44
-        "1.4.1.EvaluateStatement": 52
-        "1.4.2.EvaluateStatement": 57
-        "1.4.HandleBlockDone": 67
-        "1.5.HandleBlock": 68
-        "1.5.1.EvaluateStatement": 76
-        "1.5.2.ThrowStatement": 87
-        "1.5.HandleBlockDone": 89
-        "1.IfStatementFailed": 90
-        "1.IfStatementSucceeded": 92
-        "2.WhileStatement": 93
-        "2.1.ConditionClause": 94
-        "2.1.1.EvaluateStatement": 96
-        "2.1.2.IfStatement": 99
-        "2.1.2.1.ConditionClause": 100
-        "2.1.2.1.1.BreakStatement": 102
-        "2.1.2.1.ConditionClauseDone": 103
-        "2.1.2.2.ElseClause": 104
-        "2.1.2.2.1.WithStatement": 105
-        "2.1.2.2.1.1.ConditionClause": 108
-        "2.1.2.2.1.1.1.SelectStatement": 114
-        "2.1.2.2.1.1.1.1.OptionClause": 116
-        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 120
-        "2.1.2.2.1.1.1.1.OptionClauseDone": 122
-        "2.1.2.2.1.1.1.2.OptionClause": 123
-        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 127
-        "2.1.2.2.1.1.1.2.OptionClauseDone": 129
-        "2.1.2.2.1.1.1.3.ElseClause": 130
-        "2.1.2.2.1.1.1.3.1.ContinueStatement": 131
-        "2.1.2.2.1.1.1.3.ElseClauseDone": 132
-        "2.1.2.2.1.1.1.SelectStatementDone": 133
-        "2.1.2.2.1.ConditionRepeat": 134
-        "2.1.2.2.1.WithStatementDone": 135
-        "2.1.2.2.ElseClauseDone": 136
-        "2.1.2.IfStatementDone": 137
-        "2.ConditionRepeat": 138
-        "2.WhileStatementDone": 139
+        "1.1.2.EvaluateStatement": 8
+        "1.1.3.ThrowStatement": 10
+        "1.1.ConditionClauseDone": 12
+        "1.2.ConditionClause": 13
+        "1.2.1.EvaluateStatement": 17
+        "1.2.2.EvaluateStatement": 19
+        "1.2.3.ReturnStatement": 22
+        "1.2.ConditionClauseDone": 24
+        "1.3.ElseClause": 25
+        "1.3.1.EvaluateStatement": 26
+        "1.3.2.EvaluateStatement": 32
+        "1.3.3.ReturnStatement": 34
+        "1.3.ElseClauseDone": 36
+        "1.IfStatementDone": 37
+        "1.IfStatementHandler": 39
+        "1.4.HandleBlock": 40
+        "1.4.1.EvaluateStatement": 48
+        "1.4.2.EvaluateStatement": 52
+        "1.4.HandleBlockDone": 62
+        "1.5.HandleBlock": 63
+        "1.5.1.EvaluateStatement": 71
+        "1.5.2.ThrowStatement": 81
+        "1.5.HandleBlockDone": 83
+        "1.IfStatementFailed": 84
+        "1.IfStatementSucceeded": 86
+        "2.WhileStatement": 87
+        "2.1.ConditionClause": 88
+        "2.1.1.EvaluateStatement": 90
+        "2.1.2.IfStatement": 92
+        "2.1.2.1.ConditionClause": 93
+        "2.1.2.1.1.BreakStatement": 95
+        "2.1.2.1.ConditionClauseDone": 96
+        "2.1.2.2.ElseClause": 97
+        "2.1.2.2.1.WithStatement": 98
+        "2.1.2.2.1.1.ConditionClause": 101
+        "2.1.2.2.1.1.1.SelectStatement": 107
+        "2.1.2.2.1.1.1.1.OptionClause": 109
+        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 113
+        "2.1.2.2.1.1.1.1.OptionClauseDone": 115
+        "2.1.2.2.1.1.1.2.OptionClause": 116
+        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 120
+        "2.1.2.2.1.1.1.2.OptionClauseDone": 122
+        "2.1.2.2.1.1.1.3.ElseClause": 123
+        "2.1.2.2.1.1.1.3.1.ContinueStatement": 124
+        "2.1.2.2.1.1.1.3.ElseClauseDone": 125
+        "2.1.2.2.1.1.1.SelectStatementDone": 126
+        "2.1.2.2.1.ConditionRepeat": 127
+        "2.1.2.2.1.WithStatementDone": 128
+        "2.1.2.2.ElseClauseDone": 129
+        "2.1.2.IfStatementDone": 130
+        "2.ConditionRepeat": 131
+        "2.WhileStatementDone": 132
     ]
     $bytecode: '
-        202B60016002D042180F2801600280012802280380026007580000296001
-        2804D043181C2804800B28066002C82E8004600450000029000028076002
-        C051600FD001E80180062808800B2809500000004000005C80076007C014
-        280A280BD00BD001D0281844280C6005280DD08C8005C014280E280FD00B
-        D00128102811D00BD001800B005C6007C014280A2813D00BD001D028185A
-        2810C014280E2816D00BD00128102818D00BD001800760075800005C6007
-        580000000000280D188B281A60038008000060081868008B00890000600E
-        E003800A600AE0021887600AE0048009600C800D600D281BD028187B280D
-        800B0085600D281DD02818822804800B00850000006C00850000006C0000
-        00000000005E600B5000
+        202760016002D042180D600280012801800260075800002560012802D043
+        18192802800B6002C82E800460045000002500006002C051600FD001E801
+        80062804800B2805500000004000005680076007C01428062807D00BD001
+        D028183F60052808D08C8005C0142809280AD00BD001280B280CD00BD001
+        800B00566007C0142806280ED00BD001D0281854C01428092810D00BD001
+        280B2812D00BD00180076007580000566007580000000000280818846003
+        8008000060081861008400820000600EE003800A600AE0021880600AE004
+        8009600C800D600D2814D02818742808800B007E600D2816D028187B2802
+        800B007E00000065007E000000650000000000000058600B5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

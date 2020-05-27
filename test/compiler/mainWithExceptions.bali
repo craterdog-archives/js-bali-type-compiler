@@ -27,8 +27,8 @@
         
         1.1.HandleBlock:
         LOAD VARIABLE $error
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `"bad"`
         CALL $association WITH 2 ARGUMENTS
@@ -37,7 +37,6 @@
         JUMP TO 1.2.HandleBlock ON FALSE
         
         1.1.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `any`
         SAVE VARIABLE $result-1
         
@@ -46,8 +45,8 @@
         
         1.2.HandleBlock:
         LOAD VARIABLE $error
-        ---- Create a new parameterized $catalog and add any items.
         CALL $catalog
+        ---- Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `"horrid"`
         CALL $association WITH 2 ARGUMENTS
@@ -56,7 +55,6 @@
         JUMP TO 1.PostStatementFailed ON FALSE
         
         1.2.1.EvaluateStatement:
-        ---- Make the evaluated expression the default result.
         PUSH LITERAL `none`
         SAVE VARIABLE $result-1
         

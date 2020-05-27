@@ -24,11 +24,7 @@
         SAVE VARIABLE $symbol
         
         1.1.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$x`
-        ---- Place the evaluated expression on the stack.
         PUSH LITERAL `true`
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $x
         
         1.1.2.IfStatement:
@@ -39,26 +35,17 @@
         JUMP TO 1.1.2.IfStatementDone ON FALSE
         
         1.1.2.1.1.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$y`
-        ---- Place the evaluated expression on the stack.
         PUSH LITERAL `none`
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $y
         
         1.1.2.1.2.ContinueStatement:
-        ---- Jump to the beginning of the enclosing loop.
         JUMP TO 1.1.ConditionClause
         
         1.1.2.IfStatementDone:
         SKIP INSTRUCTION
         
         1.1.3.EvaluateStatement:
-        ---- Place the recipient on the stack.
-        PUSH LITERAL `$z`
-        ---- Place the evaluated expression on the stack.
         PUSH LITERAL `any`
-        ---- Save the value of the expression in a variable.
         SAVE VARIABLE $z
         
         1.ConditionRepeat:
@@ -72,18 +59,18 @@
         "1.WithStatement": 1
         "1.1.ConditionClause": 4
         "1.1.1.EvaluateStatement": 10
-        "1.1.2.IfStatement": 13
-        "1.1.2.1.ConditionClause": 14
-        "1.1.2.1.1.EvaluateStatement": 16
-        "1.1.2.1.2.ContinueStatement": 19
-        "1.1.2.IfStatementDone": 20
-        "1.1.3.EvaluateStatement": 21
-        "1.ConditionRepeat": 24
-        "1.WithStatementDone": 25
+        "1.1.2.IfStatement": 12
+        "1.1.2.1.ConditionClause": 13
+        "1.1.2.1.1.EvaluateStatement": 15
+        "1.1.2.1.2.ContinueStatement": 17
+        "1.1.2.IfStatementDone": 18
+        "1.1.3.EvaluateStatement": 19
+        "1.ConditionRepeat": 21
+        "1.WithStatementDone": 22
     ]
     $bytecode: '
-        6003E00280016001E00118196001E0038004280128028005000060051814
-        28032804800600040000280528068007000460025000
+        6003E00280016001E00118166001E0038004280180050000600518122802
+        80060004000028038007000460025000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
