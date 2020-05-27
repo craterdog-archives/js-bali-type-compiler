@@ -167,22 +167,27 @@ CompilingVisitor.prototype.getInstructions = function() {
 
 
 /*
- * This method inserts the instructions that cause the VM to accept a message from
- * the Bali Document Repository™.
+ * This method inserts the instructions that cause the VM to accept a message that
+ * was received from a message bag.
  */
 // acceptClause: 'accept' expression
-CompilingVisitor.prototype.visitRejectClause = function(tree) {
-    // the VM loads the message onto the top of the component stack
-    const message = tree.getItem(1);
-    message.acceptVisitor(this);
+CompilingVisitor.prototype.visitAcceptClause = function(tree) {
+    this.builder.insertComment('Save the message to be accepted.');
+    const expression = tree.getItem(1);
+    expression.acceptVisitor(this);
+    const message = this.createTemporaryVariable('message');
+    this.builder.insertSaveInstruction('VARIABLE', message);
 
-    // the VM saves a citation to the message in a temporary variable
-    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(message)
-    const citation = this.createTemporaryVariable('citation');
-    this.builder.insertSaveInstruction('VARIABLE', citation);
+    this.builder.insertComment('Extract and save the name of the message bag.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertPushInstruction('LITERAL', '$bag');
+    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    // the VM drops the cited message from the repository
-    this.builder.insertDropInstruction('MESSAGE', citation);
+    this.builder.insertComment('Drop the message from the named message bag.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertDropInstruction('MESSAGE', bag);
 };
 
 
@@ -1056,8 +1061,9 @@ CompilingVisitor.prototype.visitReference = function(reference) {
 
 
 /*
- * This method inserts the instructions that cause the VM to reject a message from
- * the Bali Document Repository™.
+ * This method inserts the instructions that cause the VM to reject a message that
+ * was received from a message bag.  A new version of the message will be posted to
+ * the message bag.
  */
 // rejectClause: 'reject' expression
 CompilingVisitor.prototype.visitRejectClause = function(tree) {
@@ -1074,9 +1080,23 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
 
-    this.builder.insertComment('Drop the message from the named message bag.');
+    this.builder.insertComment('Extract and save the version string for the message.');
     this.builder.insertLoadInstruction('VARIABLE', message);
-    this.builder.insertDropInstruction('MESSAGE', bag);
+    this.builder.insertPushInstruction('LITERAL', '$version');
+    this.builder.insertCallInstruction('$parameter', 2);  // parameter(message, key)
+    this.builder.insertCallInstruction('$nextVersion', 1);  // nextVersion(version)
+    const version = this.createTemporaryVariable('version');
+    this.builder.insertSaveInstruction('VARIABLE', version);
+
+    this.builder.insertComment('Set the new version string parameter for the message.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertPushInstruction('LITERAL', '$version');
+    this.builder.insertLoadInstruction('VARIABLE', version);
+    this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(message, key, value)
+
+    this.builder.insertComment('Post the new version of the message to the named message bag.');
+    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertSaveInstruction('MESSAGE', bag);
 };
 
 

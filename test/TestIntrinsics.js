@@ -1890,15 +1890,11 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $nextVersion intrinsic function', function() {
             const index = intrinsics.index('$nextVersion');
+            intrinsics.invoke(index, version);
             intrinsics.invoke(index, version, two);
             expect(
                 function() {
                     intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, version);
                 }
             ).to.throw();
             expect(

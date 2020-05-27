@@ -790,9 +790,11 @@ exports.api = function(debug) {
 
         $nextVersion: function(version, level) {
             validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
-            validateTypeArgument('$nextVersion', '/bali/elements/Number', level);
-            level = level.toNumber();
-            validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
+            validateOptionalTypeArgument('$nextVersion', '/bali/elements/Number', level);
+            if (level !== undefined) {
+                level = level.toNumber();
+                validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
+            }
             return bali.version.nextVersion(version, level);
         },
 
