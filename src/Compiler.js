@@ -1027,7 +1027,7 @@ CompilingVisitor.prototype.visitReceiveClause = function(tree) {
 
 // recipient: symbol | subcomponent
 CompilingVisitor.prototype.visitRecipient = function(recipient) {
-    if (recipient.isType('/bali/composites/Subcomponent')) {
+    if (recipient.isType('/bali/structures/Subcomponent')) {
         this.builder.insertComment('Place the recipient and the index of its subcomponent on the stack.');
         recipient.acceptVisitor(this);
     }
@@ -1508,7 +1508,7 @@ function countBlocks(clause) {
         const iterator = clause.getIterator();
         while (iterator.hasNext()) {
             var item = iterator.getNext();
-            if (item.isType('/bali/composites/Block')) {
+            if (item.isType('/bali/structures/Block')) {
                 count++;
             }
         }
@@ -1608,7 +1608,7 @@ InstructionBuilder.prototype.pushStatementContext = function(tree) {
     // initialize the procedure configuration for this statement
     const procedure = this.stack.peek();
     procedure.statement = statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.blockCount > 0) {
@@ -1700,7 +1700,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/structures/' and 'Clause'
     return type;
 };
 

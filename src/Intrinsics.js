@@ -704,7 +704,7 @@ exports.api = function(debug) {
         },
 
         $key: function(association) {
-            validateTypeArgument('$key', '/bali/composites/Association', association);
+            validateTypeArgument('$key', '/bali/structures/Association', association);
             return association.getKey();
         },
 
@@ -855,7 +855,7 @@ exports.api = function(debug) {
         },
 
         $procedure: function(statements, parameters) {
-            validateTypeArgument('$procedure', '/bali/composites/Statements', statements);
+            validateTypeArgument('$procedure', '/bali/structures/Statements', statements);
             parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(statements, parameters);
         },
@@ -1075,7 +1075,7 @@ exports.api = function(debug) {
         },
 
         $statements: function(procedure) {
-            validateTypeArgument('$statements', '/bali/composites/Procedure', procedure);
+            validateTypeArgument('$statements', '/bali/structures/Procedure', procedure);
             return procedure.getStatements();
         },
 
@@ -1151,7 +1151,7 @@ exports.api = function(debug) {
         },
 
         $value: function(association) {
-            validateTypeArgument('$value', '/bali/composites/Association', association);
+            validateTypeArgument('$value', '/bali/structures/Association', association);
             return association.getValue();
         },
 
