@@ -44,9 +44,9 @@ exports.RESULT = 2;
 exports.EXCEPTION = 3;
 
 exports.VARIABLE = 0;
-exports.MESSAGE = 1;
-exports.DRAFT = 2;
-exports.DOCUMENT = 3;
+exports.DRAFT = 1;
+exports.DOCUMENT = 2;
+exports.MESSAGE = 3;
 
 exports.TO_COMPONENT = 0;
 exports.TO_COMPONENT_WITH_ARGUMENTS = 1;
@@ -164,23 +164,23 @@ const PULL_MODIFIERS = [
 
 const LOAD_MODIFIERS = [
     'VARIABLE',
-    'MESSAGE',
     'DRAFT',
-    'DOCUMENT'
+    'DOCUMENT',
+    'MESSAGE'
 ];
 
 const SAVE_MODIFIERS = [
     'VARIABLE',
-    'MESSAGE',
     'DRAFT',
-    'DOCUMENT'
+    'DOCUMENT',
+    'MESSAGE'
 ];
 
 const DROP_MODIFIERS = [
     'VARIABLE',
-    'MESSAGE',
     'DRAFT',
-    'DOCUMENT'
+    'DOCUMENT',
+    'MESSAGE'
 ];
 
 const SEND_MODIFIERS = [

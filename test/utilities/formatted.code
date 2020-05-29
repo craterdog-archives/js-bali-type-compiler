@@ -14,17 +14,17 @@
 [00C]:    5000    22    0     PULL RESULT
 [00D]:    5800    23    0     PULL EXCEPTION
 [00E]:    600D    30   13     LOAD VARIABLE 13
-[00F]:    680E    31   14     LOAD MESSAGE 14
-[010]:    700F    32   15     LOAD DRAFT 15
-[011]:    7810    33   16     LOAD DOCUMENT 16
+[00F]:    680E    31   14     LOAD DRAFT 14
+[010]:    700F    32   15     LOAD DOCUMENT 15
+[011]:    7810    33   16     LOAD MESSAGE 16
 [012]:    8011    40   17     SAVE VARIABLE 17
-[013]:    8812    41   18     SAVE MESSAGE 18
-[014]:    9013    42   19     SAVE DRAFT 19
-[015]:    9814    43   20     SAVE DOCUMENT 20
+[013]:    8812    41   18     SAVE DRAFT 18
+[014]:    9013    42   19     SAVE DOCUMENT 19
+[015]:    9814    43   20     SAVE MESSAGE 20
 [016]:    A015    50   21     DROP VARIABLE 21
-[017]:    A816    51   22     DROP MESSAGE 22
-[018]:    B017    52   23     DROP DRAFT 23
-[019]:    B818    53   24     DROP DOCUMENT 24
+[017]:    A816    51   22     DROP DRAFT 22
+[018]:    B017    52   23     DROP DOCUMENT 23
+[019]:    B818    53   24     DROP MESSAGE 24
 [01A]:    C019    60   25     CALL $compileType
 [01B]:    C81A    61   26     CALL $complement WITH 1 ARGUMENT
 [01C]:    D01B    62   27     CALL $component WITH 2 ARGUMENTS

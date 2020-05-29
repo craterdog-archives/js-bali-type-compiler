@@ -224,9 +224,9 @@ AssemblingVisitor.prototype.visitPullInstruction = function(instruction) {
 
 // loadInstruction:
 //     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL |
 //     'LOAD' 'DRAFT' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
@@ -238,9 +238,9 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
 
 // saveInstruction:
 //     'SAVE' 'VARIABLE' SYMBOL |
-//     'SAVE' 'MESSAGE' SYMBOL |
-//     'SAVE' 'DRAFT' SYMBOL |
-//     'SAVE' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
@@ -252,9 +252,9 @@ AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
 
 // dropInstruction:
 //     'DROP' 'VARIABLE' SYMBOL |
-//     'DROP' 'MESSAGE' SYMBOL |
-//     'DROP' 'DRAFT' SYMBOL |
-//     'DROP' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitDropInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');

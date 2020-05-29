@@ -66,9 +66,9 @@ pullInstruction:
 loadInstruction:
     'LOAD' (
         'VARIABLE' |
-        'MESSAGE' |
         'DRAFT' |
-        'DOCUMENT'
+        'DOCUMENT' |
+        'MESSAGE'
     ) SYMBOL
 ;
 
@@ -77,9 +77,9 @@ loadInstruction:
 saveInstruction:
     'SAVE' (
         'VARIABLE' |
-        'MESSAGE' |
         'DRAFT' |
-        'DOCUMENT'
+        'DOCUMENT' |
+        'MESSAGE'
     ) SYMBOL
 ;
 
@@ -88,9 +88,9 @@ saveInstruction:
 dropInstruction:
     'DROP' (
         'VARIABLE' |
-        'MESSAGE' |
         'DRAFT' |
-        'DOCUMENT'
+        'DOCUMENT' |
+        'MESSAGE'
     ) SYMBOL
 ;
 

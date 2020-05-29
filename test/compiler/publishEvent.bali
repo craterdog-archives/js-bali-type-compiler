@@ -37,7 +37,7 @@
     ]
     $bytecode: '
         28018001C01428022803D00BD00128042805D00BD00128062807D00BD001
-        880160025000
+        980160025000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

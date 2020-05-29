@@ -30,34 +30,34 @@ PULL EXCEPTION
 4.load:
 ---- Loads an item from the environment onto a stack.
 LOAD VARIABLE $variable
-LOAD MESSAGE $bag
 LOAD DRAFT $citation
 LOAD DOCUMENT $name
+LOAD MESSAGE $bag
 
 5.save:
 ---- Saves the top item from a stack into the environment.
 SAVE VARIABLE $variable
-SAVE MESSAGE $bag
 SAVE DRAFT $citation
 SAVE DOCUMENT $name
+SAVE MESSAGE $bag
 
 6.drop:
 ---- Drops an item from the environment.
 DROP VARIABLE $variable
-DROP MESSAGE $citation
 DROP DRAFT $citation
 DROP DOCUMENT $name
+DROP MESSAGE $citation
 
 7.call:
----- Calls an intrinsic function with optional arguments.
-CALL $random
+---- Calls an intrinsic function with 0 to 3 arguments.
+CALL $now
 CALL $factorial WITH 1 ARGUMENT
 CALL $sum WITH 2 ARGUMENTS
-CALL $sort WITH 3 ARGUMENTS
+CALL $range WITH 3 ARGUMENTS
 
 8.send:
 ---- Sends a message to a target component with optional arguments.
-SEND $discard TO DOCUMENT
-SEND $compile TO DOCUMENT WITH ARGUMENTS
-SEND $hasNext TO COMPONENT
-SEND $addItem TO COMPONENT WITH ARGUMENTS
+SEND $getKeys TO DOCUMENT
+SEND $setValue TO DOCUMENT WITH ARGUMENTS
+SEND $getAncestry TO COMPONENT
+SEND $setParameter TO COMPONENT WITH ARGUMENTS

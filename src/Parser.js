@@ -212,9 +212,9 @@ ParsingVisitor.prototype.visitPullInstruction = function(ctx) {
 
 // loadInstruction:
 //     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL |
 //     'LOAD' 'DRAFT' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.LOAD);
@@ -227,9 +227,9 @@ ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
 
 // saveInstruction:
 //     'SAVE' 'VARIABLE' SYMBOL |
-//     'SAVE' 'MESSAGE' SYMBOL |
-//     'SAVE' 'DRAFT' SYMBOL |
-//     'SAVE' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitSaveInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.SAVE);
@@ -242,9 +242,9 @@ ParsingVisitor.prototype.visitSaveInstruction = function(ctx) {
 
 // dropInstruction:
 //     'DROP' 'VARIABLE' SYMBOL |
-//     'DROP' 'MESSAGE' SYMBOL |
-//     'DROP' 'DRAFT' SYMBOL |
-//     'DROP' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitDropInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.DROP);

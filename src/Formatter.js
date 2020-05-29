@@ -229,9 +229,9 @@ FormattingVisitor.prototype.visitPullInstruction = function(instruction) {
 
 // loadInstruction:
 //     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'MESSAGE' SYMBOL |
 //     'LOAD' 'DRAFT' SYMBOL |
-//     'LOAD' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     this.source += 'LOAD ';
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -244,9 +244,9 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
 
 // saveInstruction:
 //     'SAVE' 'VARIABLE' SYMBOL |
-//     'SAVE' 'MESSAGE' SYMBOL |
-//     'SAVE' 'DRAFT' SYMBOL |
-//     'SAVE' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
     this.source += 'SAVE ';
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -259,9 +259,9 @@ FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
 
 // dropInstruction:
 //     'DROP' 'VARIABLE' SYMBOL |
-//     'DROP' 'MESSAGE' SYMBOL |
-//     'DROP' 'DRAFT' SYMBOL |
-//     'DROP' 'DOCUMENT' SYMBOL
+//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitDropInstruction = function(instruction) {
     this.source += 'DROP ';
     const modifier = instruction.getValue('$modifier').toNumber();

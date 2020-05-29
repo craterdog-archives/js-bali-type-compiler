@@ -82,7 +82,7 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u008b\u0007\u0007\u0002\u0002\u0081\u0084\u0007\u0012\u0002\u0002\u0082",
     "\u0083\u0007\u001d\u0002\u0002\u0083\u0085\u0007\u001f\u0002\u0002\u0084",
     "\u0082\u0003\u0002\u0002\u0002\u0084\u0085\u0003\u0002\u0002\u0002\u0085",
-    "\u008c\u0003\u0002\u0002\u0002\u0086\u0089\u0007\u0019\u0002\u0002\u0087",
+    "\u008c\u0003\u0002\u0002\u0002\u0086\u0089\u0007\u0018\u0002\u0002\u0087",
     "\u0088\u0007\u001d\u0002\u0002\u0088\u008a\u0007\u001f\u0002\u0002\u0089",
     "\u0087\u0003\u0002\u0002\u0002\u0089\u008a\u0003\u0002\u0002\u0002\u008a",
     "\u008c\u0003\u0002\u0002\u0002\u008b\u0081\u0003\u0002\u0002\u0002\u008b",
@@ -100,7 +100,7 @@ var literalNames = [ null, "':'", "'SKIP'", "'INSTRUCTION'", "'JUMP'", "'TO'",
                      "'ON'", "'NONE'", "'TRUE'", "'FALSE'", "'PUSH'", "'HANDLER'", 
                      "'LITERAL'", "'CONSTANT'", "'ARGUMENT'", "'PULL'", 
                      "'COMPONENT'", "'RESULT'", "'EXCEPTION'", "'LOAD'", 
-                     "'VARIABLE'", "'MESSAGE'", "'DRAFT'", "'DOCUMENT'", 
+                     "'VARIABLE'", "'DRAFT'", "'DOCUMENT'", "'MESSAGE'", 
                      "'SAVE'", "'DROP'", "'CALL'", "'WITH'", "'1'", "'ARGUMENTS'", 
                      "'SEND'" ];
 
@@ -1530,9 +1530,9 @@ DocumentParser.prototype.sendInstruction = function() {
             }
 
             break;
-        case DocumentParser.T__22:
+        case DocumentParser.T__21:
             this.state = 132;
-            this.match(DocumentParser.T__22);
+            this.match(DocumentParser.T__21);
             this.state = 135;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
