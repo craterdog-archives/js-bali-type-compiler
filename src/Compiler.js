@@ -331,6 +331,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertLoadInstruction('VARIABLE', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(draft, key, value)
+    this.builder.insertPullInstruction('COMPONENT');  // remove the draft from the stack
 
     this.builder.insertComment('Set the new draft document as the value of the recipient.');
     this.visitRecipient(recipient);
@@ -988,7 +989,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
     const event = tree.getItem(1);
     this.builder.insertComment('Save the name of the global event bag.');
-    this.builder.insertPushInstruction('LITERAL', '/bali/events/bag');
+    this.builder.insertPushInstruction('LITERAL', '/bali/vm/events/v1');
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
     this.builder.insertComment('Publish an event to the global event bag.');

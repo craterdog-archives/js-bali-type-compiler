@@ -791,9 +791,9 @@ exports.api = function(debug) {
         $nextVersion: function(version, level) {
             validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
             validateOptionalTypeArgument('$nextVersion', '/bali/elements/Number', level);
-            if (level !== undefined) {
+            if (level) {
                 level = level.toNumber();
-                validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
+                if (level) validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
             }
             return bali.version.nextVersion(version, level);
         },
@@ -1027,7 +1027,8 @@ exports.api = function(debug) {
             validateTypeArgument('$setParameter', '/bali/types/Component', component);
             validateTypeArgument('$setParameter', '/bali/types/Element', key);
             validateTypeArgument('$setParameter', '/bali/types/Component', value);
-            return component.setParameter(key, value);
+            component.setParameter(key, value);
+            return component;
         },
 
         $setSubcomponent: function(composite, element, subcomponent) {
