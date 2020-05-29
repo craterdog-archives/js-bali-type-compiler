@@ -1105,7 +1105,7 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
  * This method inserts the instructions that cause the VM to save the draft document into
  * the Bali Document Repository™.
  */
-// saveClause: 'save' expression
+// saveClause: 'save' expression ('as' recipient)?
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const expression = tree.getItem(1);
 
@@ -1123,6 +1123,13 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
     this.builder.insertComment('Save the cited draft document to the repository.');
     this.builder.insertLoadInstruction('VARIABLE', draft);
     this.builder.insertSaveInstruction('DRAFT', citation);
+
+    if (tree.getSize() > 1) {
+        const recipient = tree.getItem(2);
+        this.visitRecipient(recipient);
+        this.builder.insertLoadInstruction('VARIABLE', citation);
+        this.setRecipient(recipient);
+    }
 };
 
 
@@ -1482,6 +1489,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
     } else {
         this.builder.insertComment('Assign the result as the value of the subcomponent.');
         this.builder.insertCallInstruction('$setSubcomponent', 3);
+        this.builder.insertPullInstruction('COMPONENT');
     }
 };
 

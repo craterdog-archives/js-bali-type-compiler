@@ -19,6 +19,7 @@
         PUSH LITERAL `5`
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
+        PULL COMPONENT
         LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
@@ -26,7 +27,7 @@
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
     ]
-    $bytecode: '6001800360022801D08B2802D08B28032804D88360045000'(
+    $bytecode: '6001800360022801D08B2802D08B28032804D883480060045000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )

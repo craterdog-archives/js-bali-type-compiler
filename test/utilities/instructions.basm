@@ -1,12 +1,15 @@
+---- Skips to the next instruction.
 SKIP INSTRUCTION
 
 1.jump:
+---- Jumps to a new address (conditionally).
 JUMP TO 2.push
 JUMP TO 3.pull ON NONE
 JUMP TO 4.load ON TRUE
 JUMP TO 5.save ON FALSE
 
 2.push:
+---- Pushes an item onto a stack.
 PUSH HANDLER 6.drop
 PUSH LITERAL `"This is a literal text string\ncontaining an \` and spanning multiple lines."`
 PUSH LITERAL `{
@@ -18,36 +21,42 @@ PUSH CONSTANT $constant
 PUSH ARGUMENT $argument
 
 3.pull:
+---- Pulls the top item from a stack.
 PULL HANDLER
 PULL COMPONENT
 PULL RESULT
 PULL EXCEPTION
 
 4.load:
+---- Loads an item from the environment onto a stack.
 LOAD VARIABLE $variable
 LOAD MESSAGE $bag
 LOAD DRAFT $citation
 LOAD DOCUMENT $name
 
 5.save:
+---- Saves the top item from a stack into the environment.
 SAVE VARIABLE $variable
 SAVE MESSAGE $bag
 SAVE DRAFT $citation
 SAVE DOCUMENT $name
 
 6.drop:
+---- Drops an item from the environment.
 DROP VARIABLE $variable
-DROP MESSAGE $bag
+DROP MESSAGE $citation
 DROP DRAFT $citation
 DROP DOCUMENT $name
 
 7.call:
+---- Calls an intrinsic function with optional arguments.
 CALL $random
 CALL $factorial WITH 1 ARGUMENT
 CALL $sum WITH 2 ARGUMENTS
 CALL $sort WITH 3 ARGUMENTS
 
 8.send:
+---- Sends a message to a target component with optional arguments.
 SEND $discard TO DOCUMENT
 SEND $compile TO DOCUMENT WITH ARGUMENTS
 SEND $hasNext TO COMPONENT

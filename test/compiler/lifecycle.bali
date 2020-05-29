@@ -1,12 +1,12 @@
 [
     $procedure: {
-        checkout $document from /acme/documents/example/v1.2
-        save document
-        commit document to /acme/documents/example/v1.3
-        checkout level 3 of documents[index] from /acme/documents/example/v1.3
-        save documents[index]
-        commit documents[index] to /acme/documents/example/v1.3.1
-        discard documents[index]
+        checkout $draft from /acme/documents/example/v1.2
+        save draft
+        commit draft to /acme/documents/example/v1.3
+        checkout level 3 of drafts[index] from /acme/documents/example/v1.3
+        save drafts[index] as citations[index]
+        commit drafts[index] to /acme/documents/example/v1.3.1
+        discard drafts[index]
     }
     $instructions: "
         1.CheckoutStatement:
@@ -32,11 +32,11 @@
         PULL COMPONENT
         ---- Set the new draft document as the value of the recipient.
         LOAD VARIABLE $draft-3
-        SAVE VARIABLE $document
+        SAVE VARIABLE $draft
         
         2.SaveStatement:
         ---- Save the draft document.
-        LOAD VARIABLE $document
+        LOAD VARIABLE $draft
         SAVE VARIABLE $draft-5
         ---- Save a citation to the draft document.
         LOAD VARIABLE $draft-5
@@ -51,7 +51,7 @@
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE VARIABLE $name-7
         ---- Commit the named document to the repository.
-        LOAD VARIABLE $document
+        LOAD VARIABLE $draft
         SAVE DOCUMENT $name-7
         
         4.CheckoutStatement:
@@ -77,15 +77,16 @@
         PULL COMPONENT
         ---- Set the new draft document as the value of the recipient.
         ---- Place the recipient and the index of its subcomponent on the stack.
-        LOAD VARIABLE $documents
+        LOAD VARIABLE $drafts
         LOAD VARIABLE $index
         LOAD VARIABLE $draft-9
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
+        PULL COMPONENT
         
         5.SaveStatement:
         ---- Save the draft document.
-        LOAD VARIABLE $documents
+        LOAD VARIABLE $drafts
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE VARIABLE $draft-11
@@ -96,20 +97,27 @@
         ---- Save the cited draft document to the repository.
         LOAD VARIABLE $draft-11
         SAVE DRAFT $citation-12
+        ---- Place the recipient and the index of its subcomponent on the stack.
+        LOAD VARIABLE $citations
+        LOAD VARIABLE $index
+        LOAD VARIABLE $citation-12
+        ---- Assign the result as the value of the subcomponent.
+        CALL $setSubcomponent WITH 3 ARGUMENTS
+        PULL COMPONENT
         
         6.CommitStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
         SAVE VARIABLE $name-13
         ---- Commit the named document to the repository.
-        LOAD VARIABLE $documents
+        LOAD VARIABLE $drafts
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE DOCUMENT $name-13
         
         7.DiscardStatement:
         ---- Save a citation to the draft document.
-        LOAD VARIABLE $documents
+        LOAD VARIABLE $drafts
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
         CALL $citation WITH 1 ARGUMENT
@@ -124,16 +132,17 @@
         "2.SaveStatement": 19
         "3.CommitStatement": 26
         "4.CheckoutStatement": 30
-        "5.SaveStatement": 50
-        "6.CommitStatement": 59
-        "7.DiscardStatement": 65
+        "5.SaveStatement": 51
+        "6.CommitStatement": 65
+        "7.DiscardStatement": 71
     ]
     $bytecode: '
-        2801800C780CC829800760072802D0602803D05B8011600728026011D882
-        480060078004600480086008C8158003600890032805800D6004980D2805
-        800E780EC829800960092802D0602808D05B8010600928026010D8824800
-        6005600A6009D8836005600AD08B80066006C815800160069001280A800B
-        6005600AD08B980B6005600AD08BC8158002B002600F5000
+        2801800D780DC829800760072802D0602803D05B8012600728026012D882
+        480060078005600580086008C8158003600890032805800E6005980E2805
+        800F780FC829800960092802D0602808D05B8011600928026011D8824800
+        600A600B6009D8834800600A600BD08B80066006C8158001600690016004
+        600B6001D8834800280A800C600A600BD08B980C600A600BD08BC8158002
+        B00260105000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -145,12 +154,13 @@
         $citation-12
         $citation-14
         $citation-6
-        $document
-        $documents
+        $citations
+        $draft
         $draft-11
         $draft-3
         $draft-5
         $draft-9
+        $drafts
         $index
         $name-13
         $name-2
