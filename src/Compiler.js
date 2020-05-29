@@ -1109,18 +1109,11 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const expression = tree.getItem(1);
 
-    this.builder.insertComment('Save the draft document.');
+    this.builder.insertComment('Place the draft document on the stack.');
     expression.acceptVisitor(this);
-    const draft = this.createTemporaryVariable('draft');
-    this.builder.insertSaveInstruction('VARIABLE', draft);
 
-    this.builder.insertComment('Save the draft document and a citation to it.');
-    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertComment('Save the draft document to the repository and a citation to it.');
     const citation = this.createTemporaryVariable('citation');
-    this.builder.insertSaveInstruction('VARIABLE', citation);
-
-    this.builder.insertComment('Save the cited draft document to the repository.');
-    this.builder.insertLoadInstruction('VARIABLE', draft);
     this.builder.insertSaveInstruction('DRAFT', citation);
 
     if (tree.getSize() > 1) {
