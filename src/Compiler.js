@@ -1114,9 +1114,8 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const draft = this.createTemporaryVariable('draft');
     this.builder.insertSaveInstruction('VARIABLE', draft);
 
-    this.builder.insertComment('Save a citation to the draft document.');
+    this.builder.insertComment('Save the draft document and a citation to it.');
     this.builder.insertLoadInstruction('VARIABLE', draft);
-    this.builder.insertCallInstruction('$citation', 1);  // citeDocument(draft)
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('VARIABLE', citation);
 

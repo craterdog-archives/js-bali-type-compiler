@@ -38,9 +38,8 @@
         ---- Save the draft document.
         LOAD VARIABLE $draft
         SAVE VARIABLE $draft-5
-        ---- Save a citation to the draft document.
+        ---- Save the draft document and a citation to it.
         LOAD VARIABLE $draft-5
-        CALL $citation WITH 1 ARGUMENT
         SAVE VARIABLE $citation-6
         ---- Save the cited draft document to the repository.
         LOAD VARIABLE $draft-5
@@ -90,9 +89,8 @@
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE VARIABLE $draft-11
-        ---- Save a citation to the draft document.
+        ---- Save the draft document and a citation to it.
         LOAD VARIABLE $draft-11
-        CALL $citation WITH 1 ARGUMENT
         SAVE VARIABLE $citation-12
         ---- Save the cited draft document to the repository.
         LOAD VARIABLE $draft-11
@@ -130,19 +128,19 @@
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 19
-        "3.CommitStatement": 26
-        "4.CheckoutStatement": 30
-        "5.SaveStatement": 51
-        "6.CommitStatement": 65
-        "7.DiscardStatement": 71
+        "3.CommitStatement": 25
+        "4.CheckoutStatement": 29
+        "5.SaveStatement": 50
+        "6.CommitStatement": 63
+        "7.DiscardStatement": 69
     ]
     $bytecode: '
         2801800D700DC829800760072802D0602803D05B8012600728026012D882
-        480060078005600580086008C8158003600888032805800E6005900E2805
-        800F700FC829800960092802D0602808D05B8011600928026011D8824800
-        600A600B6009D8834800600A600BD08B80066006C8158001600688016004
-        600B6001D8834800280A800C600A600BD08B900C600A600BD08BC8158002
-        A80260105000
+        4800600780056005800860088003600888032805800E6005900E2805800F
+        700FC829800960092802D0602808D05B8011600928026011D8824800600A
+        600B6009D8834800600A600BD08B800660068001600688016004600B6001
+        D8834800280A800C600A600BD08B900C600A600BD08BC8158002A8026010
+        5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
