@@ -9,7 +9,7 @@
     $instructions: "
         1.PublishStatement:
         ---- Save the name of the global event bag.
-        PUSH LITERAL `/bali/events/bag`
+        PUSH LITERAL `/bali/vm/events/v1`
         SAVE VARIABLE $bag-2
         ---- Publish an event to the global event bag.
         CALL $catalog
