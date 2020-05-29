@@ -104,11 +104,10 @@
         SAVE DOCUMENT $name-11
         
         7.DiscardStatement:
-        ---- Save a citation to the draft document.
+        ---- Save the citation to the draft document.
         LOAD VARIABLE $drafts
         LOAD VARIABLE $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        CALL $citation WITH 1 ARGUMENT
         SAVE VARIABLE $citation-12
         ---- Drop the cited draft document from the repository.
         DROP DRAFT $citation-12
@@ -129,7 +128,7 @@
         480060068005600588032805800C6005900C2805800D700DC82980076007
         2802D0602808D05B8010600728026010D8824800600860096007D8834800
         60086009D08B8801600460096001D8834800280A800A60086009D08B900A
-        60086009D08BC8158002A802600E5000
+        60086009D08B8002A802600E5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

@@ -507,14 +507,13 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
 
 /*
  * This method inserts the instructions needed to discard from the Bali Document Repository™
- * the named draft document.
+ * the cited draft document.
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    this.builder.insertComment('Save a citation to the draft document.');
-    const draft = tree.getItem(1);
-    draft.acceptVisitor(this);
-    this.builder.insertCallInstruction('$citation', 1);  // citation(document)
+    this.builder.insertComment('Save the citation to the draft document.');
+    const expression = tree.getItem(1);
+    expression.acceptVisitor(this);
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('VARIABLE', citation);
     this.builder.insertComment('Drop the cited draft document from the repository.');
