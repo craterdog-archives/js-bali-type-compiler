@@ -1,9 +1,9 @@
 [
     $procedure: {
         post $message to /acme/messages/v1.2.3
-        receive $message from /acme/messages/v1.2.3
+        retrieve $message from /acme/messages/v1.2.3
         reject message
-        receive messages[$foo, 5] from /acme/messages/v1.2.3
+        retrieve messages[$foo, 5] from /acme/messages/v1.2.3
         accept message
     }
     $instructions: "
@@ -15,7 +15,7 @@
         PUSH LITERAL `$message`
         SAVE MESSAGE $bag-2
         
-        2.ReceiveStatement:
+        2.RetrieveStatement:
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/messages/v1.2.3`
         SAVE VARIABLE $bag-3
@@ -48,7 +48,7 @@
         LOAD VARIABLE $message-4
         SAVE MESSAGE $bag-5
         
-        4.ReceiveStatement:
+        4.RetrieveStatement:
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/messages/v1.2.3`
         SAVE VARIABLE $bag-7
@@ -81,9 +81,9 @@
     "($mediaType: "application/basm")
     $addresses: [
         "1.PostStatement": 1
-        "2.ReceiveStatement": 5
+        "2.RetrieveStatement": 5
         "3.RejectStatement": 9
-        "4.ReceiveStatement": 26
+        "4.RetrieveStatement": 26
         "5.AcceptStatement": 35
     ]
     $bytecode: '

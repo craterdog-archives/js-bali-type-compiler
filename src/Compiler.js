@@ -168,7 +168,7 @@ CompilingVisitor.prototype.getInstructions = function() {
 
 /*
  * This method inserts the instructions that cause the VM to accept a message that
- * was received from a message bag.
+ * was retrieved from a message bag.
  */
 // acceptClause: 'accept' expression
 CompilingVisitor.prototype.visitAcceptClause = function(tree) {
@@ -1004,13 +1004,13 @@ CompilingVisitor.prototype.visitRange = function(range) {
 
 
 /*
- * This method compiles the instructions needed to receive a message from a
+ * This method compiles the instructions needed to retrieve a message from a
  * bag in the Bali Document Repository™. The resulting message is assigned
  * to a recipient. The recipient may be either a variable or an indexed child
  * of a composite component.
  */
-// receiveClause: 'receive' recipient 'from' expression
-CompilingVisitor.prototype.visitReceiveClause = function(tree) {
+// retrieveClause: 'retrieve' recipient 'from' expression
+CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
     const recipient = tree.getItem(1);
     const name = tree.getItem(2);
     this.builder.insertComment('Save the name of the message bag.');
@@ -1042,7 +1042,7 @@ CompilingVisitor.prototype.visitReference = function(reference) {
 
 /*
  * This method inserts the instructions that cause the VM to reject a message that
- * was received from a message bag.  A new version of the message will be posted to
+ * was retrieved from a message bag.  A new version of the message will be posted to
  * the message bag.
  */
 // rejectClause: 'reject' expression
