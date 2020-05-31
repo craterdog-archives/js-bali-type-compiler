@@ -346,7 +346,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
  */
 // collection: list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
-    var type = collection.getType().split('/')[3];
+    var type = collection.constructor.name;
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
     const parameters = collection.getParameters();
     const numberOfArguments = parameters ? 2 : 0;
