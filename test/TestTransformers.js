@@ -8,6 +8,7 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
+const debug = 1;
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
@@ -17,7 +18,7 @@ const Formatter = require('../src/Formatter').Formatter;
 describe('Bali Method Compiler', function() {
 
     describe('Test Parser and Formatter', function() {
-        const parser = new Parser(true);
+        const parser = new Parser(debug);
 
         it('should parse and format the same instructions', function() {
             const file = 'test/utilities/instructions.basm';
@@ -25,7 +26,7 @@ describe('Bali Method Compiler', function() {
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            const formatter = new Formatter();
+            const formatter = new Formatter(0, debug);
             const formatted = formatter.formatInstructions(procedure);
             expect(formatted).to.equal(source);  // add POSIX compliant <EOL>
         });
@@ -36,7 +37,7 @@ describe('Bali Method Compiler', function() {
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
-            const formatter = new Formatter(1);
+            const formatter = new Formatter(1, debug);
             const formatted = formatter.formatInstructions(procedure);
             const expected = source.replace(/^/gm, '    ').replace(/^    $/g, '');
             expect(formatted).to.equal(expected);  // add POSIX compliant <EOL>

@@ -8,12 +8,13 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
+const debug = 1;
 const fs = require('fs');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework').api();
+const bali = require('bali-component-framework').api(debug);
 const Decoder = require('../src/Decoder').Decoder;
-const decoder = new Decoder(1);
+const decoder = new Decoder(debug);
 
 describe('Bali Method Compiler', function() {
 

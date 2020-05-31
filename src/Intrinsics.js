@@ -628,7 +628,7 @@ exports.api = function(debug) {
         $instance: function(type, attributes) {
             validateTypeArgument('$instance', '/bali/elements/Name', type);
             validateTypeArgument('$instance', '/bali/collections/Catalog', attributes);
-            return bali.instance(type, attributes);
+            return bali.instance(type.toString(), attributes);
         },
 
         $interfaces: function(component) {

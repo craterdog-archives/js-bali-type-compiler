@@ -59,7 +59,7 @@ Assembler.prototype.assembleMethod = function(type, method) {
 
     // format the bytecode and add to the method context
     var bytecode = visitor.getBytecode();
-    const base16 = this.bali.decoder('        ').base16Encode(this.decoder.bytecodeToBytes(bytecode));
+    const base16 = this.bali.decoder(2).base16Encode(this.decoder.bytecodeToBytes(bytecode));
     bytecode = this.bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
     method.setValue('$bytecode', bytecode);
 };
