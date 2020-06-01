@@ -306,36 +306,36 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const recipient = tree.getItem(index++);
     const expression = tree.getItem(index);
 
-    this.builder.insertComment('Save the name of the document.');
+    this.builder.insertComment('Save the name of the contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('REGISTER', name);
 
-    this.builder.insertComment('Load a draft copy of the named document from the repository.');
+    this.builder.insertComment('Load a copy of the named contract from the repository.');
     this.builder.insertLoadInstruction('CONTRACT', name);
-    this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
-    const draft = this.createTemporaryVariable('draft');
-    this.builder.insertSaveInstruction('REGISTER', draft);
+    this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(contract)
+    const document = this.createTemporaryVariable('document');
+    this.builder.insertSaveInstruction('REGISTER', document);
 
-    this.builder.insertComment('Calculate the new version string for the draft and save it.');
-    this.builder.insertLoadInstruction('REGISTER', draft);
+    this.builder.insertComment('Calculate the new version string for the new document and save it.');
+    this.builder.insertLoadInstruction('REGISTER', document);
     this.builder.insertPushInstruction('LITERAL', '$version');
-    this.builder.insertCallInstruction('$parameter', 2);  // parameter(draft, key)
+    this.builder.insertCallInstruction('$parameter', 2);  // parameter(document, key)
     level.acceptVisitor(this);
     this.builder.insertCallInstruction('$nextVersion', 2);  // nextVersion(version, level)
     const version = this.createTemporaryVariable('version');
     this.builder.insertSaveInstruction('REGISTER', version);
 
-    this.builder.insertComment('Set the new version string parameter for the draft document.');
-    this.builder.insertLoadInstruction('REGISTER', draft);
+    this.builder.insertComment('Set the new version string parameter for the new document.');
+    this.builder.insertLoadInstruction('REGISTER', document);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertLoadInstruction('REGISTER', version);
-    this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(draft, key, value)
-    this.builder.insertPullInstruction('COMPONENT');  // remove the draft from the stack
+    this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(document, key, value)
+    this.builder.insertPullInstruction('COMPONENT');  // remove the document from the stack
 
-    this.builder.insertComment('Set the new draft document as the value of the recipient.');
+    this.builder.insertComment('Set the new document as the value of the recipient.');
     this.visitRecipient(recipient);
-    this.builder.insertLoadInstruction('REGISTER', draft);
+    this.builder.insertLoadInstruction('REGISTER', document);
     this.setRecipient(recipient);
 };
 
@@ -369,18 +369,18 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
 
 /*
  * This method inserts the instructions needed to commit to the Bali Document Repository™
- * a named document that is on top of the component stack.
+ * a named contract that is on top of the component stack.
  */
 // commitClause: 'commit' expression 'to' expression
 CompilingVisitor.prototype.visitCommitClause = function(tree) {
-    const document = tree.getItem(1);
+    const contract = tree.getItem(1);
     const expression = tree.getItem(2);
-    this.builder.insertComment('Save the name of the document.');
+    this.builder.insertComment('Save the name of the new contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('REGISTER', name);
-    this.builder.insertComment('Commit the named document to the repository.');
-    document.acceptVisitor(this);
+    this.builder.insertComment('Commit the named contract to the repository.');
+    contract.acceptVisitor(this);
     this.builder.insertSaveInstruction('CONTRACT', name);
 };
 
@@ -507,16 +507,16 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
 
 /*
  * This method inserts the instructions needed to discard from the Bali Document Repository™
- * the cited draft document.
+ * the cited document.
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    this.builder.insertComment('Save the citation to the draft document.');
+    this.builder.insertComment('Save the citation to the document.');
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('REGISTER', citation);
-    this.builder.insertComment('Drop the cited draft document from the repository.');
+    this.builder.insertComment('Drop the cited document from the repository.');
     this.builder.insertDropInstruction('DOCUMENT', citation);
 };
 
@@ -1101,17 +1101,17 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 
 
 /*
- * This method inserts the instructions that cause the VM to save the draft document into
+ * This method inserts the instructions that cause the VM to save the document into
  * the Bali Document Repository™.
  */
 // saveClause: 'save' expression ('as' recipient)?
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const expression = tree.getItem(1);
 
-    this.builder.insertComment('Place the draft document on the stack.');
+    this.builder.insertComment('Place the document on the stack.');
     expression.acceptVisitor(this);
 
-    this.builder.insertComment('Save the draft document to the repository and a citation to it.');
+    this.builder.insertComment('Save the document to the repository and a citation to it.');
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('DOCUMENT', citation);
 

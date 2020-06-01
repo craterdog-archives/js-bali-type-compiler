@@ -1,89 +1,89 @@
 [
     $procedure: {
-        checkout $draft from /acme/documents/example/v1.2
-        save draft
-        commit draft to /acme/documents/example/v1.3
-        checkout level 3 of drafts[index] from /acme/documents/example/v1.3
-        save drafts[index] as citations[index]
-        commit drafts[index] to /acme/documents/example/v1.3.1
-        discard drafts[index]
+        checkout $document from /acme/documents/example/v1.2
+        save document
+        commit document to /acme/documents/example/v1.3
+        checkout level 3 of documents[index] from /acme/documents/example/v1.3
+        save documents[index] as citations[index]
+        commit documents[index] to /acme/documents/example/v1.3.1
+        discard documents[index]
     }
     $instructions: "
         1.CheckoutStatement:
-        ---- Save the name of the document.
+        ---- Save the name of the contract.
         PUSH LITERAL `/acme/documents/example/v1.2`
         SAVE REGISTER $name-2
-        ---- Load a draft copy of the named document from the repository.
+        ---- Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-2
         CALL $duplicate WITH 1 ARGUMENT
-        SAVE REGISTER $draft-3
-        ---- Calculate the new version string for the draft and save it.
-        LOAD REGISTER $draft-3
+        SAVE REGISTER $document-3
+        ---- Calculate the new version string for the new document and save it.
+        LOAD REGISTER $document-3
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `0`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE REGISTER $version-4
-        ---- Set the new version string parameter for the draft document.
-        LOAD REGISTER $draft-3
+        ---- Set the new version string parameter for the new document.
+        LOAD REGISTER $document-3
         PUSH LITERAL `$version`
         LOAD REGISTER $version-4
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
-        ---- Set the new draft document as the value of the recipient.
-        LOAD REGISTER $draft-3
-        SAVE REGISTER $draft
+        ---- Set the new document as the value of the recipient.
+        LOAD REGISTER $document-3
+        SAVE REGISTER $document
         
         2.SaveStatement:
-        ---- Place the draft document on the stack.
-        LOAD REGISTER $draft
-        ---- Save the draft document to the repository and a citation to it.
+        ---- Place the document on the stack.
+        LOAD REGISTER $document
+        ---- Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-5
         
         3.CommitStatement:
-        ---- Save the name of the document.
+        ---- Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE REGISTER $name-6
-        ---- Commit the named document to the repository.
-        LOAD REGISTER $draft
+        ---- Commit the named contract to the repository.
+        LOAD REGISTER $document
         SAVE CONTRACT $name-6
         
         4.CheckoutStatement:
-        ---- Save the name of the document.
+        ---- Save the name of the contract.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE REGISTER $name-7
-        ---- Load a draft copy of the named document from the repository.
+        ---- Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-7
         CALL $duplicate WITH 1 ARGUMENT
-        SAVE REGISTER $draft-8
-        ---- Calculate the new version string for the draft and save it.
-        LOAD REGISTER $draft-8
+        SAVE REGISTER $document-8
+        ---- Calculate the new version string for the new document and save it.
+        LOAD REGISTER $document-8
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE REGISTER $version-9
-        ---- Set the new version string parameter for the draft document.
-        LOAD REGISTER $draft-8
+        ---- Set the new version string parameter for the new document.
+        LOAD REGISTER $document-8
         PUSH LITERAL `$version`
         LOAD REGISTER $version-9
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
-        ---- Set the new draft document as the value of the recipient.
+        ---- Set the new document as the value of the recipient.
         ---- Place the recipient and the index of its subcomponent on the stack.
-        LOAD REGISTER $drafts
+        LOAD REGISTER $documents
         LOAD REGISTER $index
-        LOAD REGISTER $draft-8
+        LOAD REGISTER $document-8
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
         
         5.SaveStatement:
-        ---- Place the draft document on the stack.
-        LOAD REGISTER $drafts
+        ---- Place the document on the stack.
+        LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        ---- Save the draft document to the repository and a citation to it.
+        ---- Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-10
         ---- Place the recipient and the index of its subcomponent on the stack.
         LOAD REGISTER $citations
@@ -94,22 +94,22 @@
         PULL COMPONENT
         
         6.CommitStatement:
-        ---- Save the name of the document.
+        ---- Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
         SAVE REGISTER $name-11
-        ---- Commit the named document to the repository.
-        LOAD REGISTER $drafts
+        ---- Commit the named contract to the repository.
+        LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE CONTRACT $name-11
         
         7.DiscardStatement:
-        ---- Save the citation to the draft document.
-        LOAD REGISTER $drafts
+        ---- Save the citation to the document.
+        LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE REGISTER $citation-12
-        ---- Drop the cited draft document from the repository.
+        ---- Drop the cited document from the repository.
         DROP DOCUMENT $citation-12
         LOAD REGISTER $result-1
         PULL RESULT
@@ -141,10 +141,10 @@
         $citation-12
         $citation-5
         $citations
-        $draft
-        $draft-3
-        $draft-8
-        $drafts
+        $document
+        $document-3
+        $document-8
+        $documents
         $index
         $name-11
         $name-2

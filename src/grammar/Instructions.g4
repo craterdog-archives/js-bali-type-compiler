@@ -61,8 +61,7 @@ pullInstruction:
     )
 ;
 
-// Load the value from a local variable, message bag, draft or document onto
-// the top of the component stack.
+// Load onto the component stack a register value, message bag, document or contract
 loadInstruction:
     'LOAD' (
         'REGISTER' |
@@ -72,8 +71,7 @@ loadInstruction:
     ) SYMBOL
 ;
 
-// Save the value that is on the top of the component stack in the
-// local variable, message bag, draft or document.
+// Save the top of the component stack to a register, message bag, document or contract
 saveInstruction:
     'SAVE' (
         'REGISTER' |
@@ -83,8 +81,7 @@ saveInstruction:
     ) SYMBOL
 ;
 
-// Drop the value that is currently associated with the local variable,
-// message bag, draft or document.
+// Drop a register value, message bag, document or contract
 dropInstruction:
     'DROP' (
         'REGISTER' |
@@ -106,10 +103,10 @@ callInstruction:
     )?
 ;
 
-// Send a message with an optional list of arguments to the component or
-// committed document name that is on top of the component stack. If the
-// recipient is a named document, a new procedure context containing the
-// message, arguments, and document name is placed in a bag to be executed
+// Send a message with an optional list of arguments to the local component or
+// committed contract whose name is on top of the component stack. If the
+// recipient is a named contract, a new procedure context containing the
+// message, arguments, and contract name is placed in a bag to be executed
 // by the next available processor. Otherwise, the current processor loads the
 // bytecode for the procedure associated with the message defined in the
 // component's type definition into a new procedure context and begins
