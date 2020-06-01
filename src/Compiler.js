@@ -177,17 +177,17 @@ CompilingVisitor.prototype.visitAcceptClause = function(tree) {
     this.builder.insertComment('Save the message to be accepted.');
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
-    this.builder.insertSaveInstruction('VARIABLE', message);
+    this.builder.insertSaveInstruction('REGISTER', message);
 
     this.builder.insertComment('Extract and save the name of the message bag.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
     this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
     const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.builder.insertSaveInstruction('REGISTER', bag);
 
     this.builder.insertComment('Drop the message from the named message bag.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertDropInstruction('MESSAGE', bag);
 };
 
@@ -309,33 +309,33 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     this.builder.insertComment('Save the name of the document.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
-    this.builder.insertSaveInstruction('VARIABLE', name);
+    this.builder.insertSaveInstruction('REGISTER', name);
 
     this.builder.insertComment('Load a draft copy of the named document from the repository.');
-    this.builder.insertLoadInstruction('DOCUMENT', name);
+    this.builder.insertLoadInstruction('CONTRACT', name);
     this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
     const draft = this.createTemporaryVariable('draft');
-    this.builder.insertSaveInstruction('VARIABLE', draft);
+    this.builder.insertSaveInstruction('REGISTER', draft);
 
     this.builder.insertComment('Calculate the new version string for the draft and save it.');
-    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertLoadInstruction('REGISTER', draft);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertCallInstruction('$parameter', 2);  // parameter(draft, key)
     level.acceptVisitor(this);
     this.builder.insertCallInstruction('$nextVersion', 2);  // nextVersion(version, level)
     const version = this.createTemporaryVariable('version');
-    this.builder.insertSaveInstruction('VARIABLE', version);
+    this.builder.insertSaveInstruction('REGISTER', version);
 
     this.builder.insertComment('Set the new version string parameter for the draft document.');
-    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertLoadInstruction('REGISTER', draft);
     this.builder.insertPushInstruction('LITERAL', '$version');
-    this.builder.insertLoadInstruction('VARIABLE', version);
+    this.builder.insertLoadInstruction('REGISTER', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(draft, key, value)
     this.builder.insertPullInstruction('COMPONENT');  // remove the draft from the stack
 
     this.builder.insertComment('Set the new draft document as the value of the recipient.');
     this.visitRecipient(recipient);
-    this.builder.insertLoadInstruction('VARIABLE', draft);
+    this.builder.insertLoadInstruction('REGISTER', draft);
     this.setRecipient(recipient);
 };
 
@@ -378,10 +378,10 @@ CompilingVisitor.prototype.visitCommitClause = function(tree) {
     this.builder.insertComment('Save the name of the document.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
-    this.builder.insertSaveInstruction('VARIABLE', name);
+    this.builder.insertSaveInstruction('REGISTER', name);
     this.builder.insertComment('Commit the named document to the repository.');
     document.acceptVisitor(this);
-    this.builder.insertSaveInstruction('DOCUMENT', name);
+    this.builder.insertSaveInstruction('CONTRACT', name);
 };
 
 
@@ -500,8 +500,8 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
-    this.builder.insertSaveInstruction('VARIABLE', name);
-    this.builder.insertLoadInstruction('DOCUMENT', name);
+    this.builder.insertSaveInstruction('REGISTER', name);
+    this.builder.insertLoadInstruction('CONTRACT', name);
 };
 
 
@@ -515,9 +515,9 @@ CompilingVisitor.prototype.visitDiscardClause = function(tree) {
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const citation = this.createTemporaryVariable('citation');
-    this.builder.insertSaveInstruction('VARIABLE', citation);
+    this.builder.insertSaveInstruction('REGISTER', citation);
     this.builder.insertComment('Drop the cited draft document from the repository.');
-    this.builder.insertDropInstruction('DRAFT', citation);
+    this.builder.insertDropInstruction('DOCUMENT', citation);
 };
 
 
@@ -568,7 +568,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
         this.setRecipient(recipient);
     } else {
         expression.acceptVisitor(this);
-        this.builder.insertSaveInstruction('VARIABLE', '$result-1');
+        this.builder.insertSaveInstruction('REGISTER', '$result-1');
     }
 };
 
@@ -640,7 +640,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
     const iterator = tree.getIterator();
     const symbol = iterator.getNext();
     const exception = symbol.toString();
-    this.builder.insertSaveInstruction('VARIABLE', exception);
+    this.builder.insertSaveInstruction('REGISTER', exception);
 
     const statement = this.builder.getStatementContext();
     while (iterator.hasNext()) {
@@ -651,7 +651,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
         this.builder.insertLabel(handleLabel);
 
         // the VM compares the template expression with the actual exception
-        this.builder.insertLoadInstruction('VARIABLE', exception);
+        this.builder.insertLoadInstruction('REGISTER', exception);
         const template = iterator.getNext();
         template.acceptVisitor(this);
         this.builder.insertCallInstruction('$doesMatch', 2);  // matches(symbol, pattern)
@@ -674,7 +674,7 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
 
     // none of the exception handlers matched so the VM must try the parent handlers
     this.builder.insertLabel(statement.failureLabel);
-    this.builder.insertLoadInstruction('VARIABLE', exception);
+    this.builder.insertLoadInstruction('REGISTER', exception);
     this.builder.insertPullInstruction('EXCEPTION');
 
     // the VM encountered no exceptions or was able to handle them
@@ -855,7 +855,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
 // messageExpression: expression ('.' | '<-') message '(' arguments ')'
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     const target = tree.getItem(1);
-    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO DOCUMENT';
+    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO CONTRACT';
     const message = tree.getItem(2);
     const argumentz = tree.getItem(3);
     const numberOfArguments = argumentz.getSize();
@@ -952,7 +952,7 @@ CompilingVisitor.prototype.visitPostClause = function(tree) {
     this.builder.insertComment('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.builder.insertSaveInstruction('REGISTER', bag);
     this.builder.insertComment('Post a message to the named message bag.');
     message.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
@@ -990,7 +990,7 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
     this.builder.insertComment('Save the name of the global event bag.');
     this.builder.insertPushInstruction('LITERAL', '/bali/vm/events/v1');
     const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.builder.insertSaveInstruction('REGISTER', bag);
     this.builder.insertComment('Publish an event to the global event bag.');
     event.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
@@ -1016,7 +1016,7 @@ CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
     this.builder.insertComment('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.builder.insertSaveInstruction('REGISTER', bag);
     this.visitRecipient(recipient);
     this.builder.insertComment('Place a message from the message bag on the stack.');
     this.builder.insertComment('NOTE: this call blocks until a message is available from the bag.');
@@ -1051,31 +1051,31 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
-    this.builder.insertSaveInstruction('VARIABLE', message);
+    this.builder.insertSaveInstruction('REGISTER', message);
 
     this.builder.insertComment('Extract and save the name of the message bag.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
     this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
     const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.builder.insertSaveInstruction('REGISTER', bag);
 
     this.builder.insertComment('Extract and save the version string for the message.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertCallInstruction('$parameter', 2);  // parameter(message, key)
     this.builder.insertCallInstruction('$nextVersion', 1);  // nextVersion(version)
     const version = this.createTemporaryVariable('version');
-    this.builder.insertSaveInstruction('VARIABLE', version);
+    this.builder.insertSaveInstruction('REGISTER', version);
 
     this.builder.insertComment('Set the new version string parameter for the message.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$version');
-    this.builder.insertLoadInstruction('VARIABLE', version);
+    this.builder.insertLoadInstruction('REGISTER', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(message, key, value)
 
     this.builder.insertComment('Post the new version of the message to the named message bag.');
-    this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
 
@@ -1113,12 +1113,12 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
 
     this.builder.insertComment('Save the draft document to the repository and a citation to it.');
     const citation = this.createTemporaryVariable('citation');
-    this.builder.insertSaveInstruction('DRAFT', citation);
+    this.builder.insertSaveInstruction('DOCUMENT', citation);
 
     if (tree.getSize() > 1) {
         const recipient = tree.getItem(2);
         this.visitRecipient(recipient);
-        this.builder.insertLoadInstruction('VARIABLE', citation);
+        this.builder.insertLoadInstruction('REGISTER', citation);
         this.setRecipient(recipient);
     }
 };
@@ -1146,7 +1146,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
     // the VM saves the value of the selector expression in a temporary variable
     selector.acceptVisitor(this);
     const selectorVariable = this.createTemporaryVariable('selector');
-    this.builder.insertSaveInstruction('VARIABLE', selectorVariable);
+    this.builder.insertSaveInstruction('REGISTER', selectorVariable);
 
     // check each option
     const list = bali.list(array);
@@ -1159,7 +1159,7 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         this.builder.insertLabel(optionLabel);
 
         // the VM loads the selector value onto the top of the componencomponent stack
-        this.builder.insertLoadInstruction('VARIABLE', selectorVariable);
+        this.builder.insertLoadInstruction('REGISTER', selectorVariable);
 
         // the VM places the option value on top of the component stack
         option.acceptVisitor(this);
@@ -1362,7 +1362,7 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
         // it is a local variable
-        this.builder.insertLoadInstruction('VARIABLE', variable);
+        this.builder.insertLoadInstruction('REGISTER', variable);
     }
 };
 
@@ -1428,24 +1428,24 @@ CompilingVisitor.prototype.visitWithClause = function(tree) {
 
     // The VM saves the iterater in a temporary variable
     const iterator = this.createTemporaryVariable('iterator');
-    this.builder.insertSaveInstruction('VARIABLE', iterator);
+    this.builder.insertSaveInstruction('REGISTER', iterator);
 
     // label the start of the loop
     this.builder.insertLabel(statement.loopLabel);
 
     // the VM jumps past the end of the loop if the iterator has no more items
-    this.builder.insertLoadInstruction('VARIABLE', iterator);
+    this.builder.insertLoadInstruction('REGISTER', iterator);
     this.builder.insertSendInstruction('$hasNext', 'TO COMPONENT');
     this.builder.insertJumpInstruction(statement.doneLabel, 'ON FALSE');
 
     // the VM places the iterator back onto the component stack
-    this.builder.insertLoadInstruction('VARIABLE', iterator);
+    this.builder.insertLoadInstruction('REGISTER', iterator);
 
     // the VM replaces the iterator on the component stack with the next item from the sequence
     this.builder.insertSendInstruction('$next', 'TO COMPONENT');
 
     // the VM saves the item that is on top of the component stack in the variable
-    this.builder.insertSaveInstruction('VARIABLE', variable);
+    this.builder.insertSaveInstruction('REGISTER', variable);
 
     // the VM executes the block using the item if needed
     block.acceptVisitor(this);
@@ -1476,7 +1476,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.isType('/bali/elements/Symbol')) {
         const symbol = recipient.toString();
-        this.builder.insertSaveInstruction('VARIABLE', symbol);
+        this.builder.insertSaveInstruction('REGISTER', symbol);
     } else {
         this.builder.insertComment('Assign the result as the value of the subcomponent.');
         this.builder.insertCallInstruction('$setSubcomponent', 3);
@@ -1897,6 +1897,6 @@ InstructionBuilder.prototype.insertSendInstruction = function(message, context) 
  * result if not handled earlier.
  */
 InstructionBuilder.prototype.finalize = function() {
-    this.insertLoadInstruction('VARIABLE', '$result-1');
+    this.insertLoadInstruction('REGISTER', '$result-1');
     this.insertPullInstruction('RESULT');
 };

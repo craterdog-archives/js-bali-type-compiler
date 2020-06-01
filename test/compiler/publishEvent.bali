@@ -10,7 +10,7 @@
         1.PublishStatement:
         ---- Save the name of the global event bag.
         PUSH LITERAL `/bali/vm/events/v1`
-        SAVE VARIABLE $bag-2
+        SAVE REGISTER $bag-2
         ---- Publish an event to the global event bag.
         CALL $catalog
         ---- Add an item to the catalog.
@@ -29,7 +29,7 @@
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
         SAVE MESSAGE $bag-2
-        LOAD VARIABLE $result-1
+        LOAD REGISTER $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

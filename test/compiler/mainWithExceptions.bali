@@ -15,9 +15,9 @@
         PUSH HANDLER 1.PostStatementHandler
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/blog/v1.3`
-        SAVE VARIABLE $bag-2
+        SAVE REGISTER $bag-2
         ---- Post a message to the named message bag.
-        LOAD VARIABLE $message
+        LOAD REGISTER $message
         SAVE MESSAGE $bag-2
         
         1.PostStatementDone:
@@ -25,10 +25,10 @@
         JUMP TO 1.PostStatementSucceeded
         
         1.PostStatementHandler:
-        SAVE VARIABLE $error
+        SAVE REGISTER $error
         
         1.1.HandleBlock:
-        LOAD VARIABLE $error
+        LOAD REGISTER $error
         CALL $catalog
         ---- Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -40,13 +40,13 @@
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `any`
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         1.1.HandleBlockDone:
         JUMP TO 1.PostStatementSucceeded
         
         1.2.HandleBlock:
-        LOAD VARIABLE $error
+        LOAD REGISTER $error
         CALL $catalog
         ---- Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -58,17 +58,17 @@
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         1.2.HandleBlockDone:
         JUMP TO 1.PostStatementSucceeded
         
         1.PostStatementFailed:
-        LOAD VARIABLE $error
+        LOAD REGISTER $error
         PULL EXCEPTION
         
         1.PostStatementSucceeded:
-        LOAD VARIABLE $result-1
+        LOAD REGISTER $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

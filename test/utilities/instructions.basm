@@ -29,23 +29,23 @@ PULL EXCEPTION
 
 4.load:
 ---- Loads an item from the environment onto a stack.
-LOAD VARIABLE $variable
-LOAD DRAFT $citation
-LOAD DOCUMENT $name
+LOAD REGISTER $variable
+LOAD DOCUMENT $citation
+LOAD CONTRACT $name
 LOAD MESSAGE $bag
 
 5.save:
 ---- Saves the top item from a stack into the environment.
-SAVE VARIABLE $variable
-SAVE DRAFT $citation
-SAVE DOCUMENT $name
+SAVE REGISTER $variable
+SAVE DOCUMENT $citation
+SAVE CONTRACT $name
 SAVE MESSAGE $bag
 
 6.drop:
 ---- Drops an item from the environment.
-DROP VARIABLE $variable
-DROP DRAFT $citation
-DROP DOCUMENT $name
+DROP REGISTER $variable
+DROP DOCUMENT $citation
+DROP CONTRACT $name
 DROP MESSAGE $citation
 
 7.call:
@@ -57,7 +57,7 @@ CALL $range WITH 3 ARGUMENTS
 
 8.send:
 ---- Sends a message to a target component with optional arguments.
-SEND $getKeys TO DOCUMENT
-SEND $setValue TO DOCUMENT WITH ARGUMENTS
+SEND $getKeys TO CONTRACT
+SEND $setValue TO CONTRACT WITH ARGUMENTS
 SEND $getAncestry TO COMPONENT
 SEND $setParameter TO COMPONENT WITH ARGUMENTS

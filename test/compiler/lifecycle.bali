@@ -12,83 +12,83 @@
         1.CheckoutStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.2`
-        SAVE VARIABLE $name-2
+        SAVE REGISTER $name-2
         ---- Load a draft copy of the named document from the repository.
-        LOAD DOCUMENT $name-2
+        LOAD CONTRACT $name-2
         CALL $duplicate WITH 1 ARGUMENT
-        SAVE VARIABLE $draft-3
+        SAVE REGISTER $draft-3
         ---- Calculate the new version string for the draft and save it.
-        LOAD VARIABLE $draft-3
+        LOAD REGISTER $draft-3
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `0`
         CALL $nextVersion WITH 2 ARGUMENTS
-        SAVE VARIABLE $version-4
+        SAVE REGISTER $version-4
         ---- Set the new version string parameter for the draft document.
-        LOAD VARIABLE $draft-3
+        LOAD REGISTER $draft-3
         PUSH LITERAL `$version`
-        LOAD VARIABLE $version-4
+        LOAD REGISTER $version-4
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
         ---- Set the new draft document as the value of the recipient.
-        LOAD VARIABLE $draft-3
-        SAVE VARIABLE $draft
+        LOAD REGISTER $draft-3
+        SAVE REGISTER $draft
         
         2.SaveStatement:
         ---- Place the draft document on the stack.
-        LOAD VARIABLE $draft
+        LOAD REGISTER $draft
         ---- Save the draft document to the repository and a citation to it.
-        SAVE DRAFT $citation-5
+        SAVE DOCUMENT $citation-5
         
         3.CommitStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3`
-        SAVE VARIABLE $name-6
+        SAVE REGISTER $name-6
         ---- Commit the named document to the repository.
-        LOAD VARIABLE $draft
-        SAVE DOCUMENT $name-6
+        LOAD REGISTER $draft
+        SAVE CONTRACT $name-6
         
         4.CheckoutStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3`
-        SAVE VARIABLE $name-7
+        SAVE REGISTER $name-7
         ---- Load a draft copy of the named document from the repository.
-        LOAD DOCUMENT $name-7
+        LOAD CONTRACT $name-7
         CALL $duplicate WITH 1 ARGUMENT
-        SAVE VARIABLE $draft-8
+        SAVE REGISTER $draft-8
         ---- Calculate the new version string for the draft and save it.
-        LOAD VARIABLE $draft-8
+        LOAD REGISTER $draft-8
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
-        SAVE VARIABLE $version-9
+        SAVE REGISTER $version-9
         ---- Set the new version string parameter for the draft document.
-        LOAD VARIABLE $draft-8
+        LOAD REGISTER $draft-8
         PUSH LITERAL `$version`
-        LOAD VARIABLE $version-9
+        LOAD REGISTER $version-9
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
         ---- Set the new draft document as the value of the recipient.
         ---- Place the recipient and the index of its subcomponent on the stack.
-        LOAD VARIABLE $drafts
-        LOAD VARIABLE $index
-        LOAD VARIABLE $draft-8
+        LOAD REGISTER $drafts
+        LOAD REGISTER $index
+        LOAD REGISTER $draft-8
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
         
         5.SaveStatement:
         ---- Place the draft document on the stack.
-        LOAD VARIABLE $drafts
-        LOAD VARIABLE $index
+        LOAD REGISTER $drafts
+        LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
         ---- Save the draft document to the repository and a citation to it.
-        SAVE DRAFT $citation-10
+        SAVE DOCUMENT $citation-10
         ---- Place the recipient and the index of its subcomponent on the stack.
-        LOAD VARIABLE $citations
-        LOAD VARIABLE $index
-        LOAD VARIABLE $citation-10
+        LOAD REGISTER $citations
+        LOAD REGISTER $index
+        LOAD REGISTER $citation-10
         ---- Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
@@ -96,22 +96,22 @@
         6.CommitStatement:
         ---- Save the name of the document.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
-        SAVE VARIABLE $name-11
+        SAVE REGISTER $name-11
         ---- Commit the named document to the repository.
-        LOAD VARIABLE $drafts
-        LOAD VARIABLE $index
+        LOAD REGISTER $drafts
+        LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        SAVE DOCUMENT $name-11
+        SAVE CONTRACT $name-11
         
         7.DiscardStatement:
         ---- Save the citation to the draft document.
-        LOAD VARIABLE $drafts
-        LOAD VARIABLE $index
+        LOAD REGISTER $drafts
+        LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        SAVE VARIABLE $citation-12
+        SAVE REGISTER $citation-12
         ---- Drop the cited draft document from the repository.
-        DROP DRAFT $citation-12
-        LOAD VARIABLE $result-1
+        DROP DOCUMENT $citation-12
+        LOAD REGISTER $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

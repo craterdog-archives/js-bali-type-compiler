@@ -43,15 +43,15 @@ exports.COMPONENT = 1;
 exports.RESULT = 2;
 exports.EXCEPTION = 3;
 
-exports.VARIABLE = 0;
-exports.DRAFT = 1;
-exports.DOCUMENT = 2;
+exports.REGISTER = 0;
+exports.DOCUMENT = 1;
+exports.CONTRACT = 2;
 exports.MESSAGE = 3;
 
 exports.TO_COMPONENT = 0;
 exports.TO_COMPONENT_WITH_ARGUMENTS = 1;
-exports.TO_DOCUMENT = 2;
-exports.TO_DOCUMENT_WITH_ARGUMENTS = 3;
+exports.TO_CONTRACT = 2;
+exports.TO_CONTRACT_WITH_ARGUMENTS = 3;
 
 
 // PUBLIC FUNCTIONS
@@ -163,29 +163,29 @@ const PULL_MODIFIERS = [
 ];
 
 const LOAD_MODIFIERS = [
-    'VARIABLE',
-    'DRAFT',
+    'REGISTER',
     'DOCUMENT',
+    'CONTRACT',
     'MESSAGE'
 ];
 
 const SAVE_MODIFIERS = [
-    'VARIABLE',
-    'DRAFT',
+    'REGISTER',
     'DOCUMENT',
+    'CONTRACT',
     'MESSAGE'
 ];
 
 const DROP_MODIFIERS = [
-    'VARIABLE',
-    'DRAFT',
+    'REGISTER',
     'DOCUMENT',
+    'CONTRACT',
     'MESSAGE'
 ];
 
 const SEND_MODIFIERS = [
     'TO COMPONENT',
     'TO COMPONENT WITH ARGUMENTS',
-    'TO DOCUMENT',
-    'TO DOCUMENT WITH ARGUMENTS'
+    'TO CONTRACT',
+    'TO CONTRACT WITH ARGUMENTS'
 ];

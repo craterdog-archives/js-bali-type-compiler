@@ -223,9 +223,9 @@ AssemblingVisitor.prototype.visitPullInstruction = function(instruction) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -237,9 +237,9 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
 
 
 // saveInstruction:
-//     'SAVE' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'SAVE' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -251,9 +251,9 @@ AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
 
 
 // dropInstruction:
-//     'DROP' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'DROP' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitDropInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -280,8 +280,8 @@ AssemblingVisitor.prototype.visitCallInstruction = function(instruction) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'CONTRACT' |
+//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
 AssemblingVisitor.prototype.visitSendInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');

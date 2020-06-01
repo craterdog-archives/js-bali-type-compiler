@@ -100,7 +100,7 @@ var literalNames = [ null, "':'", "'SKIP'", "'INSTRUCTION'", "'JUMP'", "'TO'",
                      "'ON'", "'NONE'", "'TRUE'", "'FALSE'", "'PUSH'", "'HANDLER'", 
                      "'LITERAL'", "'CONSTANT'", "'ARGUMENT'", "'PULL'", 
                      "'COMPONENT'", "'RESULT'", "'EXCEPTION'", "'LOAD'", 
-                     "'VARIABLE'", "'DRAFT'", "'DOCUMENT'", "'MESSAGE'", 
+                     "'REGISTER'", "'DOCUMENT'", "'CONTRACT'", "'MESSAGE'", 
                      "'SAVE'", "'DROP'", "'CALL'", "'WITH'", "'1'", "'ARGUMENTS'", 
                      "'SEND'" ];
 

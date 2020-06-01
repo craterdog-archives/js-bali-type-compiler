@@ -228,9 +228,9 @@ FormattingVisitor.prototype.visitPullInstruction = function(instruction) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
     this.source += 'LOAD ';
@@ -243,9 +243,9 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
 
 
 // saveInstruction:
-//     'SAVE' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'SAVE' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
     this.source += 'SAVE ';
@@ -258,9 +258,9 @@ FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
 
 
 // dropInstruction:
-//     'DROP' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'DROP' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitDropInstruction = function(instruction) {
     this.source += 'DROP ';
@@ -292,8 +292,8 @@ FormattingVisitor.prototype.visitCallInstruction = function(instruction) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'CONTRACT' |
+//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
 FormattingVisitor.prototype.visitSendInstruction = function(instruction) {
     this.source += 'SEND ';
     this.source += instruction.getValue('$operand');

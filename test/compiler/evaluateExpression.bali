@@ -50,7 +50,7 @@
         PUSH LITERAL `5`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         2.EvaluateStatement:
         ---- Place an empty parameterized set on the stack.
@@ -70,172 +70,172 @@
         ---- Add another item to the set.
         PUSH LITERAL `"gamma"`
         CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         3.EvaluateStatement:
-        LOAD VARIABLE $variable
-        SAVE VARIABLE $result-1
+        LOAD REGISTER $variable
+        SAVE REGISTER $result-1
         
         4.EvaluateStatement:
         PUSH LITERAL `13`
         CALL $isZero WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         5.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
+        LOAD REGISTER $a
+        LOAD REGISTER $b
         CALL $sum WITH 2 ARGUMENTS
-        LOAD VARIABLE $c
+        LOAD REGISTER $c
         CALL $product WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         6.EvaluateStatement:
-        LOAD VARIABLE $reference
-        SAVE VARIABLE $name-2
-        LOAD DOCUMENT $name-2
-        SAVE VARIABLE $result-1
+        LOAD REGISTER $reference
+        SAVE REGISTER $name-2
+        LOAD CONTRACT $name-2
+        SAVE REGISTER $result-1
         
         7.EvaluateStatement:
-        LOAD VARIABLE $customer
+        LOAD REGISTER $customer
         PUSH LITERAL `$order`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `$item`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
         CALL $subcomponent WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         8.EvaluateStatement:
-        LOAD VARIABLE $list
+        LOAD REGISTER $list
         ---- Place a list of the message arguments on the stack.
         CALL $list
-        LOAD VARIABLE $item
+        LOAD REGISTER $item
         CALL $addItem WITH 2 ARGUMENTS
         ---- Send the message with its arguments to the recipient.
         SEND $addItem TO COMPONENT WITH ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         9.EvaluateStatement:
         PUSH LITERAL `23`
         CALL $factorial WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         10.EvaluateStatement:
         PUSH LITERAL `2`
         PUSH LITERAL `8`
         CALL $exponential WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         11.EvaluateStatement:
         PUSH LITERAL `π`
         CALL $inverse WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         12.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         CALL $conjugate WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         13.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
+        LOAD REGISTER $x
+        LOAD REGISTER $y
         CALL $product WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         14.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
+        LOAD REGISTER $a
+        LOAD REGISTER $b
         CALL $quotient WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         15.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
+        LOAD REGISTER $c
+        LOAD REGISTER $d
         CALL $remainder WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         16.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
+        LOAD REGISTER $x
+        LOAD REGISTER $y
         CALL $sum WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         17.EvaluateStatement:
-        LOAD VARIABLE $w
-        LOAD VARIABLE $z
+        LOAD REGISTER $w
+        LOAD REGISTER $z
         CALL $difference WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         18.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
         CALL $magnitude WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         19.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
+        LOAD REGISTER $a
+        LOAD REGISTER $b
         CALL $isLess WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         20.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
+        LOAD REGISTER $c
+        LOAD REGISTER $d
         CALL $areEqual WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         21.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
+        LOAD REGISTER $f
+        LOAD REGISTER $g
         CALL $isMore WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         22.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
+        LOAD REGISTER $h
+        LOAD REGISTER $j
         CALL $areSame WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         23.EvaluateStatement:
-        LOAD VARIABLE $k
-        LOAD VARIABLE $m
+        LOAD REGISTER $k
+        LOAD REGISTER $m
         CALL $doesMatch WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         24.EvaluateStatement:
-        LOAD VARIABLE $p
+        LOAD REGISTER $p
         CALL $not WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         25.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
+        LOAD REGISTER $a
+        LOAD REGISTER $b
         CALL $and WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         26.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
+        LOAD REGISTER $c
+        LOAD REGISTER $d
         CALL $sans WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         27.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
+        LOAD REGISTER $f
+        LOAD REGISTER $g
         CALL $xor WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         28.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
+        LOAD REGISTER $h
+        LOAD REGISTER $j
         CALL $or WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
+        SAVE REGISTER $result-1
         
         29.EvaluateStatement:
-        LOAD VARIABLE $foo
+        LOAD REGISTER $foo
         PUSH LITERAL `5`
         CALL $default WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        LOAD VARIABLE $result-1
+        SAVE REGISTER $result-1
+        LOAD REGISTER $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

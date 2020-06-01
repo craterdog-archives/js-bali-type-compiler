@@ -65,9 +65,9 @@ pullInstruction:
 // the top of the component stack.
 loadInstruction:
     'LOAD' (
-        'VARIABLE' |
-        'DRAFT' |
+        'REGISTER' |
         'DOCUMENT' |
+        'CONTRACT' |
         'MESSAGE'
     ) SYMBOL
 ;
@@ -76,9 +76,9 @@ loadInstruction:
 // local variable, message bag, draft or document.
 saveInstruction:
     'SAVE' (
-        'VARIABLE' |
-        'DRAFT' |
+        'REGISTER' |
         'DOCUMENT' |
+        'CONTRACT' |
         'MESSAGE'
     ) SYMBOL
 ;
@@ -87,9 +87,9 @@ saveInstruction:
 // message bag, draft or document.
 dropInstruction:
     'DROP' (
-        'VARIABLE' |
-        'DRAFT' |
+        'REGISTER' |
         'DOCUMENT' |
+        'CONTRACT' |
         'MESSAGE'
     ) SYMBOL
 ;
@@ -120,6 +120,6 @@ callInstruction:
 sendInstruction:
     'SEND' SYMBOL 'TO' (
         'COMPONENT' ('WITH' 'ARGUMENTS')? |
-        'DOCUMENT' ('WITH' 'ARGUMENTS')?
+        'CONTRACT' ('WITH' 'ARGUMENTS')?
     )
 ;

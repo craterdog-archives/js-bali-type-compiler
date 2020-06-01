@@ -10,7 +10,7 @@
         1.PostStatement:
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/messages/v1.2.3`
-        SAVE VARIABLE $bag-2
+        SAVE REGISTER $bag-2
         ---- Post a message to the named message bag.
         PUSH LITERAL `$message`
         SAVE MESSAGE $bag-2
@@ -18,42 +18,42 @@
         2.RetrieveStatement:
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/messages/v1.2.3`
-        SAVE VARIABLE $bag-3
+        SAVE REGISTER $bag-3
         ---- Place a message from the message bag on the stack.
         ---- NOTE: this call blocks until a message is available from the bag.
         LOAD MESSAGE $bag-3
-        SAVE VARIABLE $message
+        SAVE REGISTER $message
         
         3.RejectStatement:
         ---- Save the message to be rejected.
-        LOAD VARIABLE $message
-        SAVE VARIABLE $message-4
+        LOAD REGISTER $message
+        SAVE REGISTER $message-4
         ---- Extract and save the name of the message bag.
-        LOAD VARIABLE $message-4
+        LOAD REGISTER $message-4
         PUSH LITERAL `$bag`
         CALL $keyValue WITH 2 ARGUMENTS
-        SAVE VARIABLE $bag-5
+        SAVE REGISTER $bag-5
         ---- Extract and save the version string for the message.
-        LOAD VARIABLE $message-4
+        LOAD REGISTER $message-4
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         CALL $nextVersion WITH 1 ARGUMENT
-        SAVE VARIABLE $version-6
+        SAVE REGISTER $version-6
         ---- Set the new version string parameter for the message.
-        LOAD VARIABLE $message-4
+        LOAD REGISTER $message-4
         PUSH LITERAL `$version`
-        LOAD VARIABLE $version-6
+        LOAD REGISTER $version-6
         CALL $setParameter WITH 3 ARGUMENTS
         ---- Post the new version of the message to the named message bag.
-        LOAD VARIABLE $message-4
+        LOAD REGISTER $message-4
         SAVE MESSAGE $bag-5
         
         4.RetrieveStatement:
         ---- Save the name of the message bag.
         PUSH LITERAL `/acme/messages/v1.2.3`
-        SAVE VARIABLE $bag-7
+        SAVE REGISTER $bag-7
         ---- Place the recipient and the index of its subcomponent on the stack.
-        LOAD VARIABLE $messages
+        LOAD REGISTER $messages
         PUSH LITERAL `$foo`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `5`
@@ -66,17 +66,17 @@
         
         5.AcceptStatement:
         ---- Save the message to be accepted.
-        LOAD VARIABLE $message
-        SAVE VARIABLE $message-8
+        LOAD REGISTER $message
+        SAVE REGISTER $message-8
         ---- Extract and save the name of the message bag.
-        LOAD VARIABLE $message-8
+        LOAD REGISTER $message-8
         PUSH LITERAL `$bag`
         CALL $keyValue WITH 2 ARGUMENTS
-        SAVE VARIABLE $bag-9
+        SAVE REGISTER $bag-9
         ---- Drop the message from the named message bag.
-        LOAD VARIABLE $message-8
+        LOAD REGISTER $message-8
         DROP MESSAGE $bag-9
-        LOAD VARIABLE $result-1
+        LOAD REGISTER $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

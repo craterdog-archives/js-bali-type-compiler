@@ -211,9 +211,9 @@ ParsingVisitor.prototype.visitPullInstruction = function(ctx) {
 
 
 // loadInstruction:
-//     'LOAD' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'LOAD' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
     const instruction = bali.catalog();
@@ -226,9 +226,9 @@ ParsingVisitor.prototype.visitLoadInstruction = function(ctx) {
 
 
 // saveInstruction:
-//     'SAVE' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'SAVE' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitSaveInstruction = function(ctx) {
     const instruction = bali.catalog();
@@ -241,9 +241,9 @@ ParsingVisitor.prototype.visitSaveInstruction = function(ctx) {
 
 
 // dropInstruction:
-//     'DROP' 'VARIABLE' SYMBOL |
-//     'LOAD' 'DRAFT' SYMBOL |
+//     'DROP' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
+//     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 ParsingVisitor.prototype.visitDropInstruction = function(ctx) {
     const instruction = bali.catalog();
@@ -273,8 +273,8 @@ ParsingVisitor.prototype.visitCallInstruction = function(ctx) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
-//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'CONTRACT' |
+//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
 ParsingVisitor.prototype.visitSendInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.SEND);
