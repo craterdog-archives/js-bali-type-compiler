@@ -859,7 +859,7 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
 // messageExpression: expression ('.' | '<-') message '(' arguments ')'
 CompilingVisitor.prototype.visitMessageExpression = function(tree) {
     const target = tree.getItem(1);
-    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO CONTRACT';
+    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO DOCUMENT';
     const message = tree.getItem(2);
     const argumentz = tree.getItem(3);
     const numberOfArguments = argumentz.getSize();

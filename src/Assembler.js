@@ -280,8 +280,8 @@ AssemblingVisitor.prototype.visitCallInstruction = function(instruction) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 AssemblingVisitor.prototype.visitSendInstruction = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');

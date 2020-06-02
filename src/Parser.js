@@ -273,8 +273,8 @@ ParsingVisitor.prototype.visitCallInstruction = function(ctx) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 ParsingVisitor.prototype.visitSendInstruction = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.SEND);

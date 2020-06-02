@@ -117,6 +117,6 @@ callInstruction:
 sendInstruction:
     'SEND' SYMBOL 'TO' (
         'COMPONENT' ('WITH' 'ARGUMENTS')? |
-        'CONTRACT' ('WITH' 'ARGUMENTS')?
+        'DOCUMENT' ('WITH' 'ARGUMENTS')?
     )
 ;

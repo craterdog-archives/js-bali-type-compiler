@@ -292,8 +292,8 @@ FormattingVisitor.prototype.visitCallInstruction = function(instruction) {
 // sendInstruction:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' |
-//     'SEND' SYMBOL 'TO' 'CONTRACT' 'WITH' 'ARGUMENTS'
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' |
+//     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 FormattingVisitor.prototype.visitSendInstruction = function(instruction) {
     this.source += 'SEND ';
     this.source += instruction.getValue('$operand');
