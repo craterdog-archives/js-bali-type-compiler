@@ -46,7 +46,7 @@ SAVE MESSAGE $bag
 DROP REGISTER $variable
 DROP DOCUMENT $citation
 DROP CONTRACT $name
-DROP MESSAGE $citation
+DROP MESSAGE $message
 
 7.call:
 ---- Calls an intrinsic function with 0 to 3 arguments.

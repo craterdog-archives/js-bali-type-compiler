@@ -61,7 +61,7 @@ pullInstruction:
     )
 ;
 
-// Load onto the component stack a register value, message bag, document or contract
+// Load onto the component stack a register value, document, contract or random message from a bag
 loadInstruction:
     'LOAD' (
         'REGISTER' |
@@ -71,7 +71,7 @@ loadInstruction:
     ) SYMBOL
 ;
 
-// Save the top of the component stack to a register, message bag, document or contract
+// Save the top of the component stack to a register value, document, contract or message bag
 saveInstruction:
     'SAVE' (
         'REGISTER' |
@@ -81,7 +81,7 @@ saveInstruction:
     ) SYMBOL
 ;
 
-// Drop a register value, message bag, document or contract
+// Drop a register value, document, contract or message
 dropInstruction:
     'DROP' (
         'REGISTER' |
