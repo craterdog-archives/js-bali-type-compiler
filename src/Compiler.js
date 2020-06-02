@@ -313,7 +313,9 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
     this.builder.insertComment('Load a copy of the named contract from the repository.');
     this.builder.insertLoadInstruction('CONTRACT', name);
-    this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(contract)
+    this.builder.insertPushInstruction('LITERAL', '$document');
+    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(contract, key)
+    this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
     const document = this.createTemporaryVariable('document');
     this.builder.insertSaveInstruction('REGISTER', document);
 
@@ -502,6 +504,8 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('REGISTER', name);
     this.builder.insertLoadInstruction('CONTRACT', name);
+    this.builder.insertPushInstruction('LITERAL', '$document');
+    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(contract, key)
 };
 
 

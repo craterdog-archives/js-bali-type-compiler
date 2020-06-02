@@ -93,6 +93,8 @@
         LOAD REGISTER $reference
         SAVE REGISTER $name-2
         LOAD CONTRACT $name-2
+        PUSH LITERAL `$document`
+        CALL $keyValue WITH 2 ARGUMENTS
         SAVE REGISTER $result-1
         
         7.EvaluateStatement:
@@ -245,40 +247,40 @@
         "4.EvaluateStatement": 26
         "5.EvaluateStatement": 29
         "6.EvaluateStatement": 35
-        "7.EvaluateStatement": 39
-        "8.EvaluateStatement": 47
-        "9.EvaluateStatement": 53
-        "10.EvaluateStatement": 56
-        "11.EvaluateStatement": 60
-        "12.EvaluateStatement": 63
-        "13.EvaluateStatement": 66
-        "14.EvaluateStatement": 70
-        "15.EvaluateStatement": 74
-        "16.EvaluateStatement": 78
-        "17.EvaluateStatement": 82
-        "18.EvaluateStatement": 86
-        "19.EvaluateStatement": 89
-        "20.EvaluateStatement": 93
-        "21.EvaluateStatement": 97
-        "22.EvaluateStatement": 101
-        "23.EvaluateStatement": 105
-        "24.EvaluateStatement": 109
-        "25.EvaluateStatement": 112
-        "26.EvaluateStatement": 116
-        "27.EvaluateStatement": 120
-        "28.EvaluateStatement": 124
-        "29.EvaluateStatement": 128
+        "7.EvaluateStatement": 41
+        "8.EvaluateStatement": 49
+        "9.EvaluateStatement": 55
+        "10.EvaluateStatement": 58
+        "11.EvaluateStatement": 62
+        "12.EvaluateStatement": 65
+        "13.EvaluateStatement": 68
+        "14.EvaluateStatement": 72
+        "15.EvaluateStatement": 76
+        "16.EvaluateStatement": 80
+        "17.EvaluateStatement": 84
+        "18.EvaluateStatement": 88
+        "19.EvaluateStatement": 91
+        "20.EvaluateStatement": 95
+        "21.EvaluateStatement": 99
+        "22.EvaluateStatement": 103
+        "23.EvaluateStatement": 107
+        "24.EvaluateStatement": 111
+        "25.EvaluateStatement": 114
+        "26.EvaluateStatement": 118
+        "27.EvaluateStatement": 122
+        "28.EvaluateStatement": 126
+        "29.EvaluateStatement": 130
     ]
     $bytecode: '
         C01428012802D00BD00128032804D00BD00180122805C01428062807D884
         D0802808D0012809D001280AD001801260138012280BC847801260016002
-        D08C6003D06880126011800F700F80126004280CD08B280DD08B2804D08B
-        8012600DC051600AD001E8018012280FC82E801228102811D02C80122812
-        C83F80122813C81D801260156016D068801260016002D06B801260036005
-        D070801260156016D08C801260146017D02680122813C853801260016002
-        D042801260036005D008801260066008D04380126009600BD0098012600C
-        600ED02880126010C85C801260016002D004801260036005D07B80126006
-        6008D09A80126009600BD05F801260072804D024801260125000
+        D08C6003D06880126011800F700F280CD04D80126004280DD08B280ED08B
+        2804D08B8012600DC051600AD001E80180122810C82E801228112812D02C
+        80122813C83F80122814C81D801260156016D068801260016002D06B8012
+        60036005D070801260156016D08C801260146017D02680122814C8538012
+        60016002D042801260036005D008801260066008D04380126009600BD009
+        8012600C600ED02880126010C85C801260016002D004801260036005D07B
+        801260066008D09A80126009600BD05F801260072804D024801260125000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

@@ -57,7 +57,7 @@ CALL $range WITH 3 ARGUMENTS
 
 8.send:
 ---- Sends a message to a target component with optional arguments.
-SEND $getKeys TO CONTRACT
-SEND $setValue TO CONTRACT WITH ARGUMENTS
 SEND $getAncestry TO COMPONENT
 SEND $setParameter TO COMPONENT WITH ARGUMENTS
+SEND $getKeys TO CONTRACT
+SEND $setValue TO CONTRACT WITH ARGUMENTS
