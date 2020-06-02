@@ -501,11 +501,9 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
 CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
-    const name = this.createTemporaryVariable('name');
-    this.builder.insertSaveInstruction('REGISTER', name);
-    this.builder.insertLoadInstruction('CONTRACT', name);
-    this.builder.insertPushInstruction('LITERAL', '$document');
-    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(contract, key)
+    const nameOrCitation = this.createTemporaryVariable('nameOrCitation');
+    this.builder.insertSaveInstruction('REGISTER', nameOrCitation);
+    this.builder.insertLoadInstruction('DOCUMENT', nameOrCitation);
 };
 
 
