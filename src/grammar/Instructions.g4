@@ -95,13 +95,7 @@ dropInstruction:
 // are on the component stack. The resulting value of the invocation
 // replaces the arguments that were on the top of the component stack.
 callInstruction:
-    'CALL' SYMBOL (
-        'WITH' (
-            '1' 'ARGUMENT' |
-            NUMBER 'ARGUMENTS'
-        )
-    )?
-;
+    'CALL' SYMBOL ( 'WITH' ( '1' 'ARGUMENT' | NUMBER 'ARGUMENTS'))?;
 
 // Send a message with an optional list of arguments to the local component or
 // committed contract whose name is on top of the component stack. If the
@@ -115,8 +109,4 @@ callInstruction:
 // the component and array of arguments that were on the top of the component
 // stack.
 sendInstruction:
-    'SEND' SYMBOL 'TO' (
-        'COMPONENT' ('WITH' 'ARGUMENTS')? |
-        'DOCUMENT' ('WITH' 'ARGUMENTS')?
-    )
-;
+    'SEND' SYMBOL 'TO' ('COMPONENT' | 'DOCUMENT') ('WITH' 'ARGUMENTS')?;
