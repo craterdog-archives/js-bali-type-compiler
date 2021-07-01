@@ -1,10 +1,11 @@
-// Generated from src/grammar/Document.g4 by ANTLR 4.7.1
+// Generated from src/grammar/Document.g4 by ANTLR 4.8
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 var DocumentListener = require('./DocumentListener').DocumentListener;
 var DocumentVisitor = require('./DocumentVisitor').DocumentVisitor;
 
 var grammarFileName = "Document.g4";
+
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003\'\u0087\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
@@ -183,6 +184,7 @@ DocumentParser.RULE_dropInstruction = 12;
 DocumentParser.RULE_callInstruction = 13;
 DocumentParser.RULE_sendInstruction = 14;
 
+
 function DocumentContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -292,6 +294,7 @@ DocumentParser.prototype.document = function() {
     return localctx;
 };
 
+
 function InstructionsContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -391,6 +394,7 @@ DocumentParser.prototype.instructions = function() {
     return localctx;
 };
 
+
 function StepContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -470,6 +474,7 @@ DocumentParser.prototype.step = function() {
     }
     return localctx;
 };
+
 
 function LabelContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -555,6 +560,7 @@ DocumentParser.prototype.label = function() {
     }
     return localctx;
 };
+
 
 function InstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -712,6 +718,7 @@ DocumentParser.prototype.instruction = function() {
     return localctx;
 };
 
+
 function CommentContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -779,6 +786,7 @@ DocumentParser.prototype.comment = function() {
     return localctx;
 };
 
+
 function SkipInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -844,6 +852,7 @@ DocumentParser.prototype.skipInstruction = function() {
     }
     return localctx;
 };
+
 
 function JumpInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -933,6 +942,7 @@ DocumentParser.prototype.jumpInstruction = function() {
     }
     return localctx;
 };
+
 
 function PushInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1039,6 +1049,7 @@ DocumentParser.prototype.pushInstruction = function() {
     return localctx;
 };
 
+
 function PullInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1112,6 +1123,7 @@ DocumentParser.prototype.pullInstruction = function() {
     }
     return localctx;
 };
+
 
 function LoadInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1192,6 +1204,7 @@ DocumentParser.prototype.loadInstruction = function() {
     return localctx;
 };
 
+
 function SaveInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1271,6 +1284,7 @@ DocumentParser.prototype.saveInstruction = function() {
     return localctx;
 };
 
+
 function DropInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1349,6 +1363,7 @@ DocumentParser.prototype.dropInstruction = function() {
     }
     return localctx;
 };
+
 
 function CallInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1449,6 +1464,7 @@ DocumentParser.prototype.callInstruction = function() {
     }
     return localctx;
 };
+
 
 function SendInstructionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
