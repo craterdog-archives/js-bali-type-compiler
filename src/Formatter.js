@@ -94,54 +94,54 @@ FormattingVisitor.prototype.visitCollection = function(collection) {
 
 
 // document: EOL* instructions EOL* EOF
-// instructions: (step EOL)*
+// instructions: (instruction EOL)*
 FormattingVisitor.prototype.visitList = function(procedure) {
     const iterator = procedure.getIterator();
     while (iterator.hasNext()) {
-        const step = iterator.getNext();
-        step.acceptVisitor(this);
+        const instruction = iterator.getNext();
+        instruction.acceptVisitor(this);
         this.appendNewline();
     }
 };
 
 
-// step: label? instruction
+// instruction: label? action
 // label: EOL LABEL ':' EOL
-FormattingVisitor.prototype.visitCatalog = function(step) {
-    const label = step.getValue('$label');
+FormattingVisitor.prototype.visitCatalog = function(instruction) {
+    const label = instruction.getValue('$label');
     if (label) {
         this.appendNewline();
         this.source += label.getValue() + ':';
         this.appendNewline();
     }
-    const operation = step.getValue('$operation').toNumber();
+    const operation = instruction.getValue('$operation').toNumber();
     switch (operation) {
         case types.NOTE:
-            this.visitComment(step);
+            this.visitNote(instruction);
             break;
         case types.JUMP:
-            this.visitJumpInstruction(step);
+            this.visitJump(instruction);
             break;
         case types.PUSH:
-            this.visitPushInstruction(step);
+            this.visitPush(instruction);
             break;
         case types.PULL:
-            this.visitPullInstruction(step);
+            this.visitPull(instruction);
             break;
         case types.LOAD:
-            this.visitLoadInstruction(step);
+            this.visitLoad(instruction);
             break;
         case types.SAVE:
-            this.visitSaveInstruction(step);
+            this.visitSave(instruction);
             break;
         case types.DROP:
-            this.visitDropInstruction(step);
+            this.visitDrop(instruction);
             break;
         case types.CALL:
-            this.visitCallInstruction(step);
+            this.visitCall(instruction);
             break;
         case types.SEND:
-            this.visitSendInstruction(step);
+            this.visitSend(instruction);
             break;
         default:
             const exception = bali.exception({
@@ -150,8 +150,8 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
                 $exception: '$invalidOperation',
                 $expected: bali.range(0, 7),
                 $actual: operation,
-                $step: step,
-                $message: 'An invalid operation was found in a procedure step.'
+                $instruction: instruction,
+                $message: 'An invalid operation was found in a procedure instruction.'
             });
             if (debug) console.error(exception.toString());
             throw exception;
@@ -159,19 +159,19 @@ FormattingVisitor.prototype.visitCatalog = function(step) {
 };
 
 
-// comment: COMMENT
-FormattingVisitor.prototype.visitComment = function(instruction) {
-    const comment = instruction.getValue('$comment');
-    this.source += comment.getValue();
+// note: COMMENT
+FormattingVisitor.prototype.visitNote = function(instruction) {
+    const note = instruction.getValue('$note');
+    this.source += 'NOTE ' + note.getValue();
 };
 
 
-// jumpInstruction:
+// jump:
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'NONE' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
 //     'JUMP' 'TO' LABEL 'ON' 'FALSE'
-FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
+FormattingVisitor.prototype.visitJump = function(instruction) {
     var modifier = instruction.getValue('$modifier');
     if (!modifier) {
         this.source += 'SKIP INSTRUCTION';
@@ -188,12 +188,12 @@ FormattingVisitor.prototype.visitJumpInstruction = function(instruction) {
 };
 
 
-// pushInstruction:
+// push:
 //     'PUSH' 'HANDLER' LABEL |
 //     'PUSH' 'LITERAL' LITERAL |
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'ARGUMENT' SYMBOL |
-FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
+FormattingVisitor.prototype.visitPush = function(instruction) {
     this.source += 'PUSH ';
     const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.pushModifierString(modifier);
@@ -215,24 +215,24 @@ FormattingVisitor.prototype.visitPushInstruction = function(instruction) {
 };
 
 
-// pullInstruction:
+// pull:
 //     'PULL' 'HANDLER' |
 //     'PULL' 'COMPONENT' |
 //     'PULL' 'RESULT' |
 //     'PULL' 'EXCEPTION'
-FormattingVisitor.prototype.visitPullInstruction = function(instruction) {
+FormattingVisitor.prototype.visitPull = function(instruction) {
     this.source += 'PULL ';
     const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.pullModifierString(modifier);
 };
 
 
-// loadInstruction:
+// load:
 //     'LOAD' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
+FormattingVisitor.prototype.visitLoad = function(instruction) {
     this.source += 'LOAD ';
     const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.loadModifierString(modifier);
@@ -242,12 +242,12 @@ FormattingVisitor.prototype.visitLoadInstruction = function(instruction) {
 };
 
 
-// saveInstruction:
+// save:
 //     'SAVE' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
+FormattingVisitor.prototype.visitSave = function(instruction) {
     this.source += 'SAVE ';
     const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.saveModifierString(modifier);
@@ -257,12 +257,12 @@ FormattingVisitor.prototype.visitSaveInstruction = function(instruction) {
 };
 
 
-// dropInstruction:
+// drop:
 //     'DROP' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-FormattingVisitor.prototype.visitDropInstruction = function(instruction) {
+FormattingVisitor.prototype.visitDrop = function(instruction) {
     this.source += 'DROP ';
     const modifier = instruction.getValue('$modifier').toNumber();
     this.source += types.dropModifierString(modifier);
@@ -272,11 +272,11 @@ FormattingVisitor.prototype.visitDropInstruction = function(instruction) {
 };
 
 
-// callInstruction:
+// call:
 //     'CALL' SYMBOL |
 //     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
-FormattingVisitor.prototype.visitCallInstruction = function(instruction) {
+FormattingVisitor.prototype.visitCall = function(instruction) {
     this.source += 'CALL ';
     this.source += instruction.getValue('$operand');
     const modifier = instruction.getValue('$modifier').toNumber();
@@ -289,12 +289,12 @@ FormattingVisitor.prototype.visitCallInstruction = function(instruction) {
 };
 
 
-// sendInstruction:
+// send:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
-FormattingVisitor.prototype.visitSendInstruction = function(instruction) {
+FormattingVisitor.prototype.visitSend = function(instruction) {
     this.source += 'SEND ';
     this.source += instruction.getValue('$operand');
     const modifier = instruction.getValue('$modifier').toNumber();

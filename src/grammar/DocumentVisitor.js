@@ -24,8 +24,8 @@ DocumentVisitor.prototype.visitInstructions = function(ctx) {
 };
 
 
-// Visit a parse tree produced by DocumentParser#step.
-DocumentVisitor.prototype.visitStep = function(ctx) {
+// Visit a parse tree produced by DocumentParser#instruction.
+DocumentVisitor.prototype.visitInstruction = function(ctx) {
   return this.visitChildren(ctx);
 };
 
@@ -36,68 +36,68 @@ DocumentVisitor.prototype.visitLabel = function(ctx) {
 };
 
 
-// Visit a parse tree produced by DocumentParser#instruction.
-DocumentVisitor.prototype.visitInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#action.
+DocumentVisitor.prototype.visitAction = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#comment.
-DocumentVisitor.prototype.visitComment = function(ctx) {
+// Visit a parse tree produced by DocumentParser#note.
+DocumentVisitor.prototype.visitNote = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#skipInstruction.
-DocumentVisitor.prototype.visitSkipInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#skip.
+DocumentVisitor.prototype.visitSkip = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#jumpInstruction.
-DocumentVisitor.prototype.visitJumpInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#jump.
+DocumentVisitor.prototype.visitJump = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#pushInstruction.
-DocumentVisitor.prototype.visitPushInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#push.
+DocumentVisitor.prototype.visitPush = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#pullInstruction.
-DocumentVisitor.prototype.visitPullInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#pull.
+DocumentVisitor.prototype.visitPull = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#loadInstruction.
-DocumentVisitor.prototype.visitLoadInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#load.
+DocumentVisitor.prototype.visitLoad = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#saveInstruction.
-DocumentVisitor.prototype.visitSaveInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#save.
+DocumentVisitor.prototype.visitSave = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#dropInstruction.
-DocumentVisitor.prototype.visitDropInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#drop.
+DocumentVisitor.prototype.visitDrop = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#callInstruction.
-DocumentVisitor.prototype.visitCallInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#call.
+DocumentVisitor.prototype.visitCall = function(ctx) {
   return this.visitChildren(ctx);
 };
 
 
-// Visit a parse tree produced by DocumentParser#sendInstruction.
-DocumentVisitor.prototype.visitSendInstruction = function(ctx) {
+// Visit a parse tree produced by DocumentParser#send.
+DocumentVisitor.prototype.visitSend = function(ctx) {
   return this.visitChildren(ctx);
 };
 

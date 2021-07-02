@@ -104,11 +104,11 @@
         
         1.3.1.EvaluateStatement:
         LOAD REGISTER $b
-        ---- Place a list of the message arguments on the stack.
+        NOTE --Place a list of the message arguments on the stack.
         CALL $list
         LOAD REGISTER $tag
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Send the message with its arguments to the recipient.
+        NOTE --Send the message with its arguments to the recipient.
         SEND $find TO COMPONENT WITH ARGUMENTS
         SAVE REGISTER $d
         
@@ -133,7 +133,7 @@
         1.4.HandleBlock:
         LOAD REGISTER $exception
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$warning`
         CALL $association WITH 2 ARGUMENTS
@@ -149,12 +149,12 @@
         
         1.4.2.EvaluateStatement:
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something not too serious happened."`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the catalog.
+        NOTE --Add another item to the catalog.
         PUSH LITERAL `$exception`
         PUSH LITERAL `$oops`
         CALL $association WITH 2 ARGUMENTS
@@ -167,7 +167,7 @@
         1.5.HandleBlock:
         LOAD REGISTER $exception
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$moderate`
         CALL $association WITH 2 ARGUMENTS
@@ -177,12 +177,12 @@
         
         1.5.1.EvaluateStatement:
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$message`
         PUSH LITERAL `"Something serious happened."`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the catalog.
+        NOTE --Add another item to the catalog.
         PUSH LITERAL `$exception`
         PUSH LITERAL `$bigOops`
         CALL $association WITH 2 ARGUMENTS

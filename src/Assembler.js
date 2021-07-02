@@ -98,48 +98,48 @@ AssemblingVisitor.prototype.visitCollection = function(collection) {
 
 
 // document: EOL* instructions EOL* EOF
-// instructions: step (EOL step)*
+// instructions: (instruction EOL)*
 AssemblingVisitor.prototype.visitList = function(instructions) {
     const iterator = instructions.getIterator();
     while (iterator.hasNext()) {
-        var step = iterator.getNext();
-        step.acceptVisitor(this);
+        var instruction = iterator.getNext();
+        instruction.acceptVisitor(this);
     }
 };
 
 
-// step: label? instruction
-// label: EOL? LABEL ':' EOL
-AssemblingVisitor.prototype.visitCatalog = function(step) {
+// instruction: label? action
+// label: EOL LABEL ':' EOL
+AssemblingVisitor.prototype.visitCatalog = function(instruction) {
     // can ignore the label at this stage since they don't show up in the bytecode
-    const operation = step.getValue('$operation').toNumber();
+    const operation = instruction.getValue('$operation').toNumber();
     switch (operation) {
         case types.NOTE:
-            this.visitComment(step);
+            this.visitNote(instruction);
             break;
         case types.JUMP:
-            this.visitJumpInstruction(step);
+            this.visitJump(instruction);
             break;
         case types.PUSH:
-            this.visitPushInstruction(step);
+            this.visitPush(instruction);
             break;
         case types.PULL:
-            this.visitPullInstruction(step);
+            this.visitPull(instruction);
             break;
         case types.LOAD:
-            this.visitLoadInstruction(step);
+            this.visitLoad(instruction);
             break;
         case types.SAVE:
-            this.visitSaveInstruction(step);
+            this.visitSave(instruction);
             break;
         case types.DROP:
-            this.visitDropInstruction(step);
+            this.visitDrop(instruction);
             break;
         case types.CALL:
-            this.visitCallInstruction(step);
+            this.visitCall(instruction);
             break;
         case types.SEND:
-            this.visitSendInstruction(step);
+            this.visitSend(instruction);
             break;
         default:
             const exception = this.bali.exception({
@@ -148,8 +148,8 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
                 $exception: '$invalidOperation',
                 $expected: this.bali.range(0, 7),
                 $actual: operation,
-                $step: step,
-                $message: 'An invalid operation was found in a procedure step.'
+                $instruction: instruction,
+                $message: 'An invalid operation was found in a procedure instruction.'
             });
             if (this.debug) console.error(exception.toString());
             throw exception;
@@ -157,18 +157,18 @@ AssemblingVisitor.prototype.visitCatalog = function(step) {
 };
 
 
-// comment: COMMENT
-AssemblingVisitor.prototype.visitComment = function(instruction) {
-    // ignore comments
+// note: COMMENT
+AssemblingVisitor.prototype.visitNote = function(instruction) {
+    // ignore notes
 };
 
 
-// jumpInstruction:
+// jump:
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'NONE' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
 //     'JUMP' 'TO' LABEL 'ON' 'FALSE'
-AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitJump = function(instruction) {
     var word;
     var modifier = instruction.getValue('$modifier');
     if (!modifier) {
@@ -183,12 +183,12 @@ AssemblingVisitor.prototype.visitJumpInstruction = function(instruction) {
 };
 
 
-// pushInstruction:
+// push:
 //     'PUSH' 'HANDLER' LABEL |
 //     'PUSH' 'LITERAL' LITERAL |
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'ARGUMENT' SYMBOL
-AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitPush = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     var value = instruction.getValue('$operand');
     switch(modifier) {
@@ -210,24 +210,24 @@ AssemblingVisitor.prototype.visitPushInstruction = function(instruction) {
 };
 
 
-// pullInstruction:
+// pull:
 //     'PULL' 'HANDLER' |
 //     'PULL' 'COMPONENT' |
 //     'PULL' 'RESULT' |
 //     'PULL' 'EXCEPTION'
-AssemblingVisitor.prototype.visitPullInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitPull = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const word = this.decoder.encodeInstruction(types.PULL, modifier);
     this.bytecode.push(word);
 };
 
 
-// loadInstruction:
+// load:
 //     'LOAD' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitLoad = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
@@ -236,12 +236,12 @@ AssemblingVisitor.prototype.visitLoadInstruction = function(instruction) {
 };
 
 
-// saveInstruction:
+// save:
 //     'SAVE' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitSave = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
@@ -250,12 +250,12 @@ AssemblingVisitor.prototype.visitSaveInstruction = function(instruction) {
 };
 
 
-// dropInstruction:
+// drop:
 //     'DROP' 'REGISTER' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
-AssemblingVisitor.prototype.visitDropInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitDrop = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.variables.getIndex(symbol);
@@ -264,11 +264,11 @@ AssemblingVisitor.prototype.visitDropInstruction = function(instruction) {
 };
 
 
-// callInstruction:
+// call:
 //     'CALL' SYMBOL |
 //     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
-AssemblingVisitor.prototype.visitCallInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitCall = function(instruction) {
     const count = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.intrinsics.index(symbol.toString());
@@ -277,12 +277,12 @@ AssemblingVisitor.prototype.visitCallInstruction = function(instruction) {
 };
 
 
-// sendInstruction:
+// send:
 //     'SEND' SYMBOL 'TO' 'COMPONENT' |
 //     'SEND' SYMBOL 'TO' 'COMPONENT' 'WITH' 'ARGUMENTS' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
-AssemblingVisitor.prototype.visitSendInstruction = function(instruction) {
+AssemblingVisitor.prototype.visitSend = function(instruction) {
     const modifier = instruction.getValue('$modifier').toNumber();
     const symbol = instruction.getValue('$operand');
     const index = this.messages.getIndex(symbol);

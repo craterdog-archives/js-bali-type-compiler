@@ -174,19 +174,19 @@ CompilingVisitor.prototype.getInstructions = function() {
 CompilingVisitor.prototype.visitAcceptClause = function(tree) {
     const expression = tree.getItem(1);
 
-    this.builder.insertComment('Save the message to be accepted.');
+    this.builder.insertNoteInstruction('Save the message to be accepted.');
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
     this.builder.insertSaveInstruction('REGISTER', message);
 
-    this.builder.insertComment('Extract and save the name of the message bag.');
+    this.builder.insertNoteInstruction('Extract and save the name of the message bag.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
     this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('REGISTER', bag);
 
-    this.builder.insertComment('Drop the message from the named message bag.');
+    this.builder.insertNoteInstruction('Drop the message from the named message bag.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertDropInstruction('MESSAGE', bag);
 };
@@ -306,12 +306,12 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const recipient = tree.getItem(index++);
     const expression = tree.getItem(index);
 
-    this.builder.insertComment('Save the name of the contract.');
+    this.builder.insertNoteInstruction('Save the name of the contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('REGISTER', name);
 
-    this.builder.insertComment('Load a copy of the named contract from the repository.');
+    this.builder.insertNoteInstruction('Load a copy of the named contract from the repository.');
     this.builder.insertLoadInstruction('CONTRACT', name);
     this.builder.insertPushInstruction('LITERAL', '$document');
     this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(contract, key)
@@ -319,7 +319,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const document = this.createTemporaryVariable('document');
     this.builder.insertSaveInstruction('REGISTER', document);
 
-    this.builder.insertComment('Calculate the new version string for the new document and save it.');
+    this.builder.insertNoteInstruction('Calculate the new version string for the new document and save it.');
     this.builder.insertLoadInstruction('REGISTER', document);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertCallInstruction('$parameter', 2);  // parameter(document, key)
@@ -328,14 +328,14 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     const version = this.createTemporaryVariable('version');
     this.builder.insertSaveInstruction('REGISTER', version);
 
-    this.builder.insertComment('Set the new version string parameter for the new document.');
+    this.builder.insertNoteInstruction('Set the new version string parameter for the new document.');
     this.builder.insertLoadInstruction('REGISTER', document);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertLoadInstruction('REGISTER', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(document, key, value)
     this.builder.insertPullInstruction('COMPONENT');  // remove the document from the stack
 
-    this.builder.insertComment('Set the new document as the value of the recipient.');
+    this.builder.insertNoteInstruction('Set the new document as the value of the recipient.');
     this.visitRecipient(recipient);
     this.builder.insertLoadInstruction('REGISTER', document);
     this.setRecipient(recipient);
@@ -353,7 +353,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     const parameters = collection.getParameters();
     const numberOfArguments = parameters ? 2 : 0;
     if (numberOfArguments) {
-        this.builder.insertComment('Place an empty parameterized ' + type.slice(1) + ' on the stack.');
+        this.builder.insertNoteInstruction('Place an empty parameterized ' + type.slice(1) + ' on the stack.');
         this.builder.insertPushInstruction('LITERAL', 'none');  // no items to add yet
         this.visitParameters(parameters);
     }
@@ -361,7 +361,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
     var count = 0;
     const iterator = collection.getIterator();
     while (iterator.hasNext()) {
-        this.builder.insertComment('Add an' + (count++ ? 'other' : '') + ' item to the ' + type.slice(1) + '.');
+        this.builder.insertNoteInstruction('Add an' + (count++ ? 'other' : '') + ' item to the ' + type.slice(1) + '.');
         var item = iterator.getNext();
         item.acceptVisitor(this);
         this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
@@ -377,11 +377,11 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
 CompilingVisitor.prototype.visitCommitClause = function(tree) {
     const contract = tree.getItem(1);
     const expression = tree.getItem(2);
-    this.builder.insertComment('Save the name of the new contract.');
+    this.builder.insertNoteInstruction('Save the name of the new contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('REGISTER', name);
-    this.builder.insertComment('Commit the named contract to the repository.');
+    this.builder.insertNoteInstruction('Commit the named contract to the repository.');
     contract.acceptVisitor(this);
     this.builder.insertSaveInstruction('CONTRACT', name);
 };
@@ -513,12 +513,12 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  */
 // discardClause: 'discard' expression
 CompilingVisitor.prototype.visitDiscardClause = function(tree) {
-    this.builder.insertComment('Save the citation to the document.');
+    this.builder.insertNoteInstruction('Save the citation to the document.');
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('REGISTER', citation);
-    this.builder.insertComment('Drop the cited document from the repository.');
+    this.builder.insertNoteInstruction('Drop the cited document from the repository.');
     this.builder.insertDropInstruction('DOCUMENT', citation);
 };
 
@@ -870,7 +870,7 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
 
     // if there are arguments then compile accordingly
     if (numberOfArguments > 0) {
-        this.builder.insertComment('Place a list of the message arguments on the stack.');
+        this.builder.insertNoteInstruction('Place a list of the message arguments on the stack.');
         this.builder.insertCallInstruction('$list', 0);  // list()
         const iterator = argumentz.getIterator();
         while (iterator.hasNext()) {
@@ -878,7 +878,7 @@ CompilingVisitor.prototype.visitMessageExpression = function(tree) {
             argument.acceptVisitor(this);
             this.builder.insertCallInstruction('$addItem', 2);  // addItem(list, argument)
         }
-        this.builder.insertComment('Send the message with its arguments to the recipient.');
+        this.builder.insertNoteInstruction('Send the message with its arguments to the recipient.');
         this.builder.insertSendInstruction(messageName, recipient + ' WITH ARGUMENTS');
     } else {
         this.builder.insertSendInstruction(messageName, recipient);
@@ -914,7 +914,7 @@ CompilingVisitor.prototype.visitNumber = function(number) {
 // parameters: '(' catalog ')'
 CompilingVisitor.prototype.visitParameters = function(parameters) {
     if (parameters) {
-        this.builder.insertComment('Place a catalog of the parameters on the stack.');
+        this.builder.insertNoteInstruction('Place a catalog of the parameters on the stack.');
         this.builder.insertCallInstruction('$catalog', 0);  // catalog()
         const keys = parameters.getKeys();
         const iterator = keys.getIterator();
@@ -951,11 +951,11 @@ CompilingVisitor.prototype.visitPercent = function(percent) {
 CompilingVisitor.prototype.visitPostClause = function(tree) {
     const message = tree.getItem(1);
     const name = tree.getItem(2);
-    this.builder.insertComment('Save the name of the message bag.');
+    this.builder.insertNoteInstruction('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('REGISTER', bag);
-    this.builder.insertComment('Post a message to the named message bag.');
+    this.builder.insertNoteInstruction('Post a message to the named message bag.');
     message.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
@@ -989,11 +989,11 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 // publishClause: 'publish' expression
 CompilingVisitor.prototype.visitPublishClause = function(tree) {
     const event = tree.getItem(1);
-    this.builder.insertComment('Save the name of the global event bag.');
+    this.builder.insertNoteInstruction('Save the name of the global event bag.');
     this.builder.insertPushInstruction('LITERAL', '/bali/vm/events/v1');
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('REGISTER', bag);
-    this.builder.insertComment('Publish an event to the global event bag.');
+    this.builder.insertNoteInstruction('Publish an event to the global event bag.');
     event.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
@@ -1015,13 +1015,13 @@ CompilingVisitor.prototype.visitRange = function(range) {
 CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
     const recipient = tree.getItem(1);
     const name = tree.getItem(2);
-    this.builder.insertComment('Save the name of the message bag.');
+    this.builder.insertNoteInstruction('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('REGISTER', bag);
     this.visitRecipient(recipient);
-    this.builder.insertComment('Place a message from the message bag on the stack.');
-    this.builder.insertComment('NOTE: this call blocks until a message is available from the bag.');
+    this.builder.insertNoteInstruction('Place a message from the message bag on the stack.');
+    this.builder.insertNoteInstruction('Note: this call blocks until a message is available from the bag.');
     this.builder.insertLoadInstruction('MESSAGE', bag);
     this.setRecipient(recipient);
 };
@@ -1030,7 +1030,7 @@ CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
 // recipient: symbol | subcomponent
 CompilingVisitor.prototype.visitRecipient = function(recipient) {
     if (recipient.isType('/bali/structures/Subcomponent')) {
-        this.builder.insertComment('Place the recipient and the index of its subcomponent on the stack.');
+        this.builder.insertNoteInstruction('Place the recipient and the index of its subcomponent on the stack.');
         recipient.acceptVisitor(this);
     }
 };
@@ -1049,20 +1049,20 @@ CompilingVisitor.prototype.visitReference = function(reference) {
  */
 // rejectClause: 'reject' expression
 CompilingVisitor.prototype.visitRejectClause = function(tree) {
-    this.builder.insertComment('Save the message to be rejected.');
+    this.builder.insertNoteInstruction('Save the message to be rejected.');
     const expression = tree.getItem(1);
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
     this.builder.insertSaveInstruction('REGISTER', message);
 
-    this.builder.insertComment('Extract and save the name of the message bag.');
+    this.builder.insertNoteInstruction('Extract and save the name of the message bag.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
     this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('REGISTER', bag);
 
-    this.builder.insertComment('Extract and save the version string for the message.');
+    this.builder.insertNoteInstruction('Extract and save the version string for the message.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertCallInstruction('$parameter', 2);  // parameter(message, key)
@@ -1070,13 +1070,13 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
     const version = this.createTemporaryVariable('version');
     this.builder.insertSaveInstruction('REGISTER', version);
 
-    this.builder.insertComment('Set the new version string parameter for the message.');
+    this.builder.insertNoteInstruction('Set the new version string parameter for the message.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertPushInstruction('LITERAL', '$version');
     this.builder.insertLoadInstruction('REGISTER', version);
     this.builder.insertCallInstruction('$setParameter', 3);  // setParameter(message, key, value)
 
-    this.builder.insertComment('Post the new version of the message to the named message bag.');
+    this.builder.insertNoteInstruction('Post the new version of the message to the named message bag.');
     this.builder.insertLoadInstruction('REGISTER', message);
     this.builder.insertSaveInstruction('MESSAGE', bag);
 };
@@ -1110,10 +1110,10 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
 CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const expression = tree.getItem(1);
 
-    this.builder.insertComment('Place the document on the stack.');
+    this.builder.insertNoteInstruction('Place the document on the stack.');
     expression.acceptVisitor(this);
 
-    this.builder.insertComment('Save the document to the repository and a citation to it.');
+    this.builder.insertNoteInstruction('Save the document to the repository and a citation to it.');
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('DOCUMENT', citation);
 
@@ -1480,7 +1480,7 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         const symbol = recipient.toString();
         this.builder.insertSaveInstruction('REGISTER', symbol);
     } else {
-        this.builder.insertComment('Assign the result as the value of the subcomponent.');
+        this.builder.insertNoteInstruction('Assign the result as the value of the subcomponent.');
         this.builder.insertCallInstruction('$setSubcomponent', 3);
         this.builder.insertPullInstruction('COMPONENT');
     }
@@ -1770,14 +1770,17 @@ InstructionBuilder.prototype.insertInstruction = function(instruction) {
 };
 
 
-InstructionBuilder.prototype.insertComment = function(comment) {
+/*
+ * This method inserts a 'note' instruction into the assembly code.
+ */
+InstructionBuilder.prototype.insertNoteInstruction = function(comment) {
     if (this.nextLabel) {
         this.addresses.setValue(this.nextLabel, this.address);
         this.instructions += EOL;
         this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
     }
-    this.instructions += '---- ' + comment + EOL;
+    this.instructions += 'NOTE --' + comment + EOL;
 };
 
 

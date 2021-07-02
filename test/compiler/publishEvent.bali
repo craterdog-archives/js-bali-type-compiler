@@ -8,22 +8,22 @@
     }
     $instructions: "
         1.PublishStatement:
-        ---- Save the name of the global event bag.
+        NOTE --Save the name of the global event bag.
         PUSH LITERAL `/bali/vm/events/v1`
         SAVE REGISTER $bag-2
-        ---- Publish an event to the global event bag.
+        NOTE --Publish an event to the global event bag.
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `$changeEvent`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the catalog.
+        NOTE --Add another item to the catalog.
         PUSH LITERAL `$key`
         PUSH LITERAL `$foo`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the catalog.
+        NOTE --Add another item to the catalog.
         PUSH LITERAL `$value`
         PUSH LITERAL `5`
         CALL $association WITH 2 ARGUMENTS

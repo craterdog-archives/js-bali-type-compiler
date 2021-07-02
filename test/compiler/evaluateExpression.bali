@@ -40,12 +40,12 @@
     $instructions: "
         1.EvaluateStatement:
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$foo`
         PUSH LITERAL `$bar`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the catalog.
+        NOTE --Add another item to the catalog.
         PUSH LITERAL `$baz`
         PUSH LITERAL `5`
         CALL $association WITH 2 ARGUMENTS
@@ -53,21 +53,21 @@
         SAVE REGISTER $result-1
         
         2.EvaluateStatement:
-        ---- Place an empty parameterized set on the stack.
+        NOTE --Place an empty parameterized set on the stack.
         PUSH LITERAL `none`
-        ---- Place a catalog of the parameters on the stack.
+        NOTE --Place a catalog of the parameters on the stack.
         CALL $catalog
         PUSH LITERAL `$type`
         PUSH LITERAL `/bali/collections/Set/v1`
         CALL $setValue WITH 3 ARGUMENTS
         CALL $set WITH 2 ARGUMENTS
-        ---- Add an item to the set.
+        NOTE --Add an item to the set.
         PUSH LITERAL `"alpha"`
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the set.
+        NOTE --Add another item to the set.
         PUSH LITERAL `"beta"`
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Add another item to the set.
+        NOTE --Add another item to the set.
         PUSH LITERAL `"gamma"`
         CALL $addItem WITH 2 ARGUMENTS
         SAVE REGISTER $result-1
@@ -107,11 +107,11 @@
         
         8.EvaluateStatement:
         LOAD REGISTER $list
-        ---- Place a list of the message arguments on the stack.
+        NOTE --Place a list of the message arguments on the stack.
         CALL $list
         LOAD REGISTER $item
         CALL $addItem WITH 2 ARGUMENTS
-        ---- Send the message with its arguments to the recipient.
+        NOTE --Send the message with its arguments to the recipient.
         SEND $addItem TO COMPONENT WITH ARGUMENTS
         SAVE REGISTER $result-1
         

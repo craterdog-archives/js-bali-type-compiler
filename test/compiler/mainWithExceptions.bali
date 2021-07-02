@@ -13,10 +13,10 @@
     $instructions: "
         1.PostStatement:
         PUSH HANDLER 1.PostStatementHandler
-        ---- Save the name of the message bag.
+        NOTE --Save the name of the message bag.
         PUSH LITERAL `/acme/blog/v1.3`
         SAVE REGISTER $bag-2
-        ---- Post a message to the named message bag.
+        NOTE --Post a message to the named message bag.
         LOAD REGISTER $message
         SAVE MESSAGE $bag-2
         
@@ -30,7 +30,7 @@
         1.1.HandleBlock:
         LOAD REGISTER $error
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `"bad"`
         CALL $association WITH 2 ARGUMENTS
@@ -48,7 +48,7 @@
         1.2.HandleBlock:
         LOAD REGISTER $error
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
         PUSH LITERAL `"horrid"`
         CALL $association WITH 2 ARGUMENTS

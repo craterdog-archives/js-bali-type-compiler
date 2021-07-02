@@ -1,34 +1,35 @@
 grammar Instructions;
 import Tokens;
 
-instructions: (step EOL)*;
+instructions: (instruction EOL)*;
 
-step: label? instruction;
+instruction: label? action;
 
 label: EOL LABEL ':' EOL;
 
-instruction:
-    comment |
-    skipInstruction |
-    jumpInstruction |
-    pushInstruction |
-    pullInstruction |
-    loadInstruction |
-    saveInstruction |
-    dropInstruction |
-    callInstruction |
-    sendInstruction
+action:
+    note |
+    skip |
+    jump |
+    push |
+    pull |
+    load |
+    save |
+    drop |
+    call |
+    send
 ;
 
-comment: COMMENT;
+// Information only, no action occurs
+note: 'NOTE' COMMENT;
 
 // Skip this instruction and continue with the next instruction.
-skipInstruction: 'SKIP' 'INSTRUCTION';
+skip: 'SKIP' 'INSTRUCTION';
 
 // Jump to the address at the label if the value on the component stack
 // matches the condition. Otherwise, continue execution at the next
 // instruction. If there is no condition then jump unconditionally.
-jumpInstruction:
+jump:
     'JUMP' 'TO' LABEL (
         'ON' (
             'NONE' |
@@ -41,7 +42,7 @@ jumpInstruction:
 // Push a literal component, constant or parameter onto the component stack,
 // or push the handler address for the current exception handlers onto the
 // handler stack.
-pushInstruction:
+push:
     'PUSH' (
         'HANDLER' LABEL |
         'LITERAL' LITERAL |
@@ -52,7 +53,7 @@ pushInstruction:
 
 // Pull whatever is currently on top of the handler or component stack off
 // and either discard it or use it accordingly.
-pullInstruction:
+pull:
     'PULL' (
         'HANDLER' |
         'COMPONENT' |
@@ -62,7 +63,7 @@ pullInstruction:
 ;
 
 // Load onto the component stack a register value, document, contract or random message from a bag
-loadInstruction:
+load:
     'LOAD' (
         'REGISTER' |
         'DOCUMENT' |
@@ -72,7 +73,7 @@ loadInstruction:
 ;
 
 // Save the top of the component stack to a register value, document, contract or message bag
-saveInstruction:
+save:
     'SAVE' (
         'REGISTER' |
         'DOCUMENT' |
@@ -82,7 +83,7 @@ saveInstruction:
 ;
 
 // Drop a register value, document, contract or message
-dropInstruction:
+drop:
     'DROP' (
         'REGISTER' |
         'DOCUMENT' |
@@ -94,7 +95,7 @@ dropInstruction:
 // Call the specified intrinsic function using the [0..3] arguments that
 // are on the component stack. The resulting value of the invocation
 // replaces the arguments that were on the top of the component stack.
-callInstruction:
+call:
     'CALL' SYMBOL ( 'WITH' ( '1' 'ARGUMENT' | NUMBER 'ARGUMENTS'))?;
 
 // Send a message with an optional list of arguments to the local component or
@@ -108,5 +109,5 @@ callInstruction:
 // new procedure context completes its execution, the resulting value replaces
 // the component and array of arguments that were on the top of the component
 // stack.
-sendInstruction:
+send:
     'SEND' SYMBOL 'TO' ('COMPONENT' | 'DOCUMENT') ('WITH' 'ARGUMENTS')?;

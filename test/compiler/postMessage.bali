@@ -6,12 +6,12 @@
     }
     $instructions: "
         1.PostStatement:
-        ---- Save the name of the message bag.
+        NOTE --Save the name of the message bag.
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
         SAVE REGISTER $bag-2
-        ---- Post a message to the named message bag.
+        NOTE --Post a message to the named message bag.
         CALL $catalog
-        ---- Add an item to the catalog.
+        NOTE --Add an item to the catalog.
         PUSH LITERAL `$foo`
         PUSH LITERAL `"bar"`
         CALL $association WITH 2 ARGUMENTS

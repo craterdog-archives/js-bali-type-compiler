@@ -10,110 +10,110 @@
     }
     $instructions: "
         1.CheckoutStatement:
-        ---- Save the name of the contract.
+        NOTE --Save the name of the contract.
         PUSH LITERAL `/acme/documents/example/v1.2`
         SAVE REGISTER $name-2
-        ---- Load a copy of the named contract from the repository.
+        NOTE --Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-2
         PUSH LITERAL `$document`
         CALL $keyValue WITH 2 ARGUMENTS
         CALL $duplicate WITH 1 ARGUMENT
         SAVE REGISTER $document-3
-        ---- Calculate the new version string for the new document and save it.
+        NOTE --Calculate the new version string for the new document and save it.
         LOAD REGISTER $document-3
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `0`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE REGISTER $version-4
-        ---- Set the new version string parameter for the new document.
+        NOTE --Set the new version string parameter for the new document.
         LOAD REGISTER $document-3
         PUSH LITERAL `$version`
         LOAD REGISTER $version-4
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
-        ---- Set the new document as the value of the recipient.
+        NOTE --Set the new document as the value of the recipient.
         LOAD REGISTER $document-3
         SAVE REGISTER $document
         
         2.SaveStatement:
-        ---- Place the document on the stack.
+        NOTE --Place the document on the stack.
         LOAD REGISTER $document
-        ---- Save the document to the repository and a citation to it.
+        NOTE --Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-5
         
         3.CommitStatement:
-        ---- Save the name of the new contract.
+        NOTE --Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE REGISTER $name-6
-        ---- Commit the named contract to the repository.
+        NOTE --Commit the named contract to the repository.
         LOAD REGISTER $document
         SAVE CONTRACT $name-6
         
         4.CheckoutStatement:
-        ---- Save the name of the contract.
+        NOTE --Save the name of the contract.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE REGISTER $name-7
-        ---- Load a copy of the named contract from the repository.
+        NOTE --Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-7
         PUSH LITERAL `$document`
         CALL $keyValue WITH 2 ARGUMENTS
         CALL $duplicate WITH 1 ARGUMENT
         SAVE REGISTER $document-8
-        ---- Calculate the new version string for the new document and save it.
+        NOTE --Calculate the new version string for the new document and save it.
         LOAD REGISTER $document-8
         PUSH LITERAL `$version`
         CALL $parameter WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE REGISTER $version-9
-        ---- Set the new version string parameter for the new document.
+        NOTE --Set the new version string parameter for the new document.
         LOAD REGISTER $document-8
         PUSH LITERAL `$version`
         LOAD REGISTER $version-9
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
-        ---- Set the new document as the value of the recipient.
-        ---- Place the recipient and the index of its subcomponent on the stack.
+        NOTE --Set the new document as the value of the recipient.
+        NOTE --Place the recipient and the index of its subcomponent on the stack.
         LOAD REGISTER $documents
         LOAD REGISTER $index
         LOAD REGISTER $document-8
-        ---- Assign the result as the value of the subcomponent.
+        NOTE --Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
         
         5.SaveStatement:
-        ---- Place the document on the stack.
+        NOTE --Place the document on the stack.
         LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
-        ---- Save the document to the repository and a citation to it.
+        NOTE --Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-10
-        ---- Place the recipient and the index of its subcomponent on the stack.
+        NOTE --Place the recipient and the index of its subcomponent on the stack.
         LOAD REGISTER $citations
         LOAD REGISTER $index
         LOAD REGISTER $citation-10
-        ---- Assign the result as the value of the subcomponent.
+        NOTE --Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
         
         6.CommitStatement:
-        ---- Save the name of the new contract.
+        NOTE --Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
         SAVE REGISTER $name-11
-        ---- Commit the named contract to the repository.
+        NOTE --Commit the named contract to the repository.
         LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE CONTRACT $name-11
         
         7.DiscardStatement:
-        ---- Save the citation to the document.
+        NOTE --Save the citation to the document.
         LOAD REGISTER $documents
         LOAD REGISTER $index
         CALL $subcomponent WITH 2 ARGUMENTS
         SAVE REGISTER $citation-12
-        ---- Drop the cited document from the repository.
+        NOTE --Drop the cited document from the repository.
         DROP DOCUMENT $citation-12
         LOAD REGISTER $result-1
         PULL RESULT
