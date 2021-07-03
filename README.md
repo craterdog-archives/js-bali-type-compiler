@@ -19,7 +19,7 @@ npm install bali-type-compiler
 Then add the following line to your NodeJS modules:
 ```
 const debug = 1;  // debugging level: [0..3]
-const compiler = require('bali-type-compiler').api(notary, repository, debug);
+const compiler = require('bali-type-compiler').api(debug);
 ```
 
 ### Contributing
