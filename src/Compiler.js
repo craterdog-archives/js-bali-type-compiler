@@ -1284,16 +1284,6 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
 };
 
 
-// TODO: added this from FormattingVisitor do we need it?
-// subcomponent: variable '[' indices ']'
-CompilingVisitor.prototype.visitSubcomponent = function(tree) {
-    const variable = tree.getItem(1);
-    variable.acceptVisitor(this);
-    const indices = tree.getItem(2);
-    indices.acceptVisitor(this);
-};
-
-
 /*
  * This method inserts the instructions that cause the VM to replace
  * the value of an expression that is on top of the component stack
