@@ -167,6 +167,7 @@ FormattingVisitor.prototype.visitNote = function(instruction) {
 
 
 // jump:
+//     'JUMP' 'TO' 'NEXT' 'INSTRUCTION' |
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'NONE' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
@@ -174,7 +175,7 @@ FormattingVisitor.prototype.visitNote = function(instruction) {
 FormattingVisitor.prototype.visitJump = function(instruction) {
     var modifier = instruction.getValue('$modifier');
     if (!modifier) {
-        this.source += 'SKIP INSTRUCTION';
+        this.source += 'JUMP TO NEXT INSTRUCTION';
     } else {
         this.source += 'JUMP TO ';
         const operand = instruction.getValue('$operand').getValue();

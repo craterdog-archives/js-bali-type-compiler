@@ -65,15 +65,6 @@ DocumentListener.prototype.exitNote = function(ctx) {
 };
 
 
-// Enter a parse tree produced by DocumentParser#skip.
-DocumentListener.prototype.enterSkip = function(ctx) {
-};
-
-// Exit a parse tree produced by DocumentParser#skip.
-DocumentListener.prototype.exitSkip = function(ctx) {
-};
-
-
 // Enter a parse tree produced by DocumentParser#jump.
 DocumentListener.prototype.enterJump = function(ctx) {
 };

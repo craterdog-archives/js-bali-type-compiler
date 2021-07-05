@@ -48,12 +48,6 @@ DocumentVisitor.prototype.visitNote = function(ctx) {
 };
 
 
-// Visit a parse tree produced by DocumentParser#skip.
-DocumentVisitor.prototype.visitSkip = function(ctx) {
-  return this.visitChildren(ctx);
-};
-
-
 // Visit a parse tree produced by DocumentParser#jump.
 DocumentVisitor.prototype.visitJump = function(ctx) {
   return this.visitChildren(ctx);

@@ -55,7 +55,7 @@
         JUMP TO 1.SelectStatementDone
         
         1.4.ElseClause:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.4.1.EvaluateStatement:
         PUSH LITERAL `none`

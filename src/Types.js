@@ -17,8 +17,6 @@
 
 // PUBLIC CONSTANTS
 
-exports.SKIP = 0;
-
 exports.NOTE = -1;
 exports.JUMP = 0;
 exports.PUSH = 1;

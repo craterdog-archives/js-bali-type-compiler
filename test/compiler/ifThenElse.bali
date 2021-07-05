@@ -8,7 +8,7 @@
     }
     $instructions: "
         1.IfStatement:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.1.ConditionClause:
         PUSH LITERAL `true`
@@ -22,14 +22,14 @@
         JUMP TO 1.IfStatementDone
         
         1.2.ElseClause:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.2.1.EvaluateStatement:
         LOAD REGISTER $no
         SAVE REGISTER $result-1
         
         1.2.ElseClauseDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.IfStatementDone:
         LOAD REGISTER $result-1

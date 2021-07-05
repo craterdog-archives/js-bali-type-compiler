@@ -1736,7 +1736,7 @@ InstructionBuilder.prototype.getNextBlockPrefix = function() {
 InstructionBuilder.prototype.insertLabel = function(label) {
     // check for existing label
     if (this.nextLabel) {
-        this.insertSkipInstruction();
+        this.insertJumpInstruction();  // JUMP TO NEXT INSTRUCTION
     }
 
     // set the new label
@@ -1775,19 +1775,10 @@ InstructionBuilder.prototype.insertNoteInstruction = function(comment) {
 
 
 /*
- * This method inserts a 'skip' instruction into the assembly code.
- */
-InstructionBuilder.prototype.insertSkipInstruction = function() {
-    const instruction = 'SKIP INSTRUCTION';
-    this.insertInstruction(instruction);
-};
-
-
-/*
  * This method inserts a 'jump' instruction into the assembly code.
  */
 InstructionBuilder.prototype.insertJumpInstruction = function(label, context) {
-    var instruction = 'JUMP TO ' + label;
+    var instruction = 'JUMP TO ' + (label? label : 'NEXT INSTRUCTION');
     if (context) instruction += ' ' + context;
     this.insertInstruction(instruction);
 };

@@ -142,15 +142,8 @@ ParsingVisitor.prototype.visitNote = function(ctx) {
 };
 
 
-// skip: 'SKIP INSTRUCTION'
-ParsingVisitor.prototype.visitSkip = function(ctx) {
-    const instruction = bali.catalog();
-    instruction.setValue('$operation', types.SKIP);
-    this.result = instruction;
-};
-
-
 // jump:
+//     'JUMP' 'TO' 'NEXT' 'INSTRUCTION' |
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'NONE' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
@@ -158,12 +151,17 @@ ParsingVisitor.prototype.visitSkip = function(ctx) {
 ParsingVisitor.prototype.visitJump = function(ctx) {
     const instruction = bali.catalog();
     instruction.setValue('$operation', types.JUMP);
-    var modifier = types.ON_ANY;
-    if (ctx.children.length > 3) {
-        modifier = types.jumpModifierValue(ctx.children[3].getText() + ' ' + ctx.children[4].getText());
+    switch (ctx.children.length) {
+        case 3:
+            instruction.setValue('$modifier', types.ON_ANY);
+            instruction.setValue('$operand', bali.text(ctx.LABEL().getText()));
+            break;
+        case 5:
+            const modifier = types.jumpModifierValue(ctx.children[3].getText() + ' ' + ctx.children[4].getText());
+            instruction.setValue('$modifier', modifier);
+            instruction.setValue('$operand', bali.text(ctx.LABEL().getText()));
+            break;
     }
-    instruction.setValue('$modifier', modifier);
-    instruction.setValue('$operand', bali.text(ctx.LABEL().getText()));
     this.result = instruction;
 };
 

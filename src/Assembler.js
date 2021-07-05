@@ -164,6 +164,7 @@ AssemblingVisitor.prototype.visitNote = function(instruction) {
 
 
 // jump:
+//     'JUMP' 'TO' 'NEXT' 'INSTRUCTION' |
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'NONE' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
@@ -172,7 +173,7 @@ AssemblingVisitor.prototype.visitJump = function(instruction) {
     var word;
     var modifier = instruction.getValue('$modifier');
     if (!modifier) {
-        word = this.decoder.encodeInstruction(types.SKIP, 0, 0);
+        word = this.decoder.encodeInstruction(types.JUMP, 0, 0);  // JUMP TO NEXT INSTRUCTION
     } else {
         modifier = modifier.toNumber();
         const label = instruction.getValue('$operand');

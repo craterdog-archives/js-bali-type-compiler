@@ -100,7 +100,7 @@
         JUMP TO 1.IfStatementDone
         
         1.3.ElseClause:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.3.1.EvaluateStatement:
         LOAD REGISTER $b
@@ -121,7 +121,7 @@
         PULL RESULT
         
         1.3.ElseClauseDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         1.IfStatementDone:
         PULL HANDLER
@@ -201,10 +201,10 @@
         PULL EXCEPTION
         
         1.IfStatementSucceeded:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.WhileStatement:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.ConditionClause:
         PUSH LITERAL `true`
@@ -215,7 +215,7 @@
         SAVE REGISTER $foo
         
         2.1.2.IfStatement:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.1.ConditionClause:
         LOAD REGISTER $foo
@@ -228,7 +228,7 @@
         JUMP TO 2.1.2.IfStatementDone
         
         2.1.2.2.ElseClause:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.2.1.WithStatement:
         LOAD REGISTER $sequence
@@ -274,7 +274,7 @@
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
         
         2.1.2.2.1.1.1.3.ElseClause:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.2.1.1.1.3.1.ContinueStatement:
         JUMP TO 2.1.2.2.1.1.ConditionClause
@@ -283,19 +283,19 @@
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
         
         2.1.2.2.1.1.1.SelectStatementDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.2.1.ConditionRepeat:
         JUMP TO 2.1.2.2.1.1.ConditionClause
         
         2.1.2.2.1.WithStatementDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.2.ElseClauseDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.1.2.IfStatementDone:
-        SKIP INSTRUCTION
+        JUMP TO NEXT INSTRUCTION
         
         2.ConditionRepeat:
         JUMP TO 2.1.ConditionClause

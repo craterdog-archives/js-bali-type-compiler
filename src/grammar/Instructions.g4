@@ -1,15 +1,14 @@
 grammar Instructions;
 import Tokens;
 
-instructions: (instruction EOL)*;
+instructions: (instruction EOL+)*;
 
 instruction: label? action;
 
-label: EOL LABEL ':' EOL;
+label: LABEL ':' EOL;
 
 action:
     note |
-    skip |
     jump |
     push |
     pull |
@@ -23,20 +22,20 @@ action:
 // Information only, no action occurs
 note: 'NOTE' COMMENT;
 
-// Skip this instruction and continue with the next instruction.
-skip: 'SKIP' 'INSTRUCTION';
-
 // Jump to the address at the label if the value on the component stack
 // matches the condition. Otherwise, continue execution at the next
 // instruction. If there is no condition then jump unconditionally.
 jump:
-    'JUMP' 'TO' LABEL (
-        'ON' (
-            'NONE' |
-            'TRUE' |
-            'FALSE'
-        )
-    )?
+    'JUMP' 'TO' (
+        'NEXT' 'INSTRUCTION' |
+        LABEL (
+            'ON' (
+                'NONE' |
+                'TRUE' |
+                'FALSE'
+            )
+        )?
+    )
 ;
 
 // Push a literal component, constant or parameter onto the component stack,

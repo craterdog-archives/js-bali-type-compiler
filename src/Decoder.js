@@ -50,7 +50,7 @@ const Decoder = function(debug) {
     const operandIsAddress = function(operation, modifier, operand) {
         switch (operation) {
             case types.JUMP:
-                return operand > 0;
+                return true;
             case types.PUSH:
                 return modifier === types.HANDLER;
             default:
@@ -87,7 +87,7 @@ const Decoder = function(debug) {
         const operation = this.decodeOperation(instruction);
         const modifier = this.decodeModifier(instruction);
         const operand = this.decodeOperand(instruction);
-        if (!operation && !modifier && !operand) return 'SKIP INSTRUCTION';
+        if (!operation && !modifier && !operand) return 'JUMP TO NEXT INSTRUCTION';
         const operandString = operandToString(operation, modifier, operand);
         var string = types.operationString(operation) + ' ';
         switch (operation) {
@@ -185,7 +185,7 @@ const Decoder = function(debug) {
         const operand = this.decodeOperand(instruction);
         switch (operation) {
             case types.JUMP:
-                // the SKIP INSTRUCTION is the only one allowed to have a zero operand
+                // the JUMP TO NEXT INSTRUCTION is the only one allowed to have a zero operand
                 // and only if the modifier is also zero
                 return operand > 0 || modifier === 0;
             case types.PULL:
