@@ -224,7 +224,7 @@ AssemblingVisitor.prototype.visitPull = function(instruction) {
 
 
 // load:
-//     'LOAD' 'REGISTER' SYMBOL |
+//     'LOAD' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -238,7 +238,7 @@ AssemblingVisitor.prototype.visitLoad = function(instruction) {
 
 
 // save:
-//     'SAVE' 'REGISTER' SYMBOL |
+//     'SAVE' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -252,7 +252,7 @@ AssemblingVisitor.prototype.visitSave = function(instruction) {
 
 
 // drop:
-//     'DROP' 'REGISTER' SYMBOL |
+//     'DROP' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL

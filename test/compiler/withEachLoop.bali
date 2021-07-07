@@ -11,32 +11,32 @@
     }
     $instructions: "
         1.WithStatement:
-        LOAD REGISTER $sequence
+        LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        SAVE REGISTER $iterator-2
+        SAVE VARIABLE $iterator-2
         
         1.1.ConditionClause:
-        LOAD REGISTER $iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $hasNext TO COMPONENT
         JUMP TO 1.WithStatementDone ON FALSE
-        LOAD REGISTER $iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
-        SAVE REGISTER $symbol
+        SAVE VARIABLE $symbol
         
         1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
-        SAVE REGISTER $x
+        SAVE VARIABLE $x
         
         1.1.2.IfStatement:
         JUMP TO NEXT INSTRUCTION
         
         1.1.2.1.ConditionClause:
-        LOAD REGISTER $x
+        LOAD VARIABLE $x
         JUMP TO 1.1.2.IfStatementDone ON FALSE
         
         1.1.2.1.1.EvaluateStatement:
         PUSH LITERAL `none`
-        SAVE REGISTER $y
+        SAVE VARIABLE $y
         
         1.1.2.1.2.ContinueStatement:
         JUMP TO 1.1.ConditionClause
@@ -46,13 +46,13 @@
         
         1.1.3.EvaluateStatement:
         PUSH LITERAL `any`
-        SAVE REGISTER $z
+        SAVE VARIABLE $z
         
         1.ConditionRepeat:
         JUMP TO 1.1.ConditionClause
         
         1.WithStatementDone:
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

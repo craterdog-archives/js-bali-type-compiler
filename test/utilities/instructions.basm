@@ -28,21 +28,21 @@ PULL EXCEPTION
 
 4.load:
 NOTE --Loads an item from the environment onto a stack.
-LOAD REGISTER $variable
+LOAD VARIABLE $variable
 LOAD DOCUMENT $citation
 LOAD CONTRACT $name
 LOAD MESSAGE $bag
 
 5.save:
 NOTE --Saves the top item from a stack into the environment.
-SAVE REGISTER $variable
+SAVE VARIABLE $variable
 SAVE DOCUMENT $citation
 SAVE CONTRACT $name
 SAVE MESSAGE $bag
 
 6.drop:
 NOTE --Drops an item from the environment.
-DROP REGISTER $variable
+DROP VARIABLE $variable
 DROP DOCUMENT $citation
 DROP CONTRACT $name
 DROP MESSAGE $message

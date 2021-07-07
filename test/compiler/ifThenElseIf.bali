@@ -15,8 +15,8 @@
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
-        LOAD REGISTER $yes
-        SAVE REGISTER $result-1
+        LOAD VARIABLE $yes
+        SAVE VARIABLE $result-1
         
         1.1.ConditionClauseDone:
         JUMP TO 1.IfStatementDone
@@ -26,11 +26,11 @@
         JUMP TO 1.IfStatementDone ON FALSE
         
         1.2.1.EvaluateStatement:
-        LOAD REGISTER $no
-        SAVE REGISTER $result-1
+        LOAD VARIABLE $no
+        SAVE VARIABLE $result-1
         
         1.IfStatementDone:
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

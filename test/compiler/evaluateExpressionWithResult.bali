@@ -5,12 +5,12 @@
     }
     $instructions: "
         1.EvaluateStatement:
-        LOAD REGISTER $bar
-        SAVE REGISTER $foo
+        LOAD VARIABLE $bar
+        SAVE VARIABLE $foo
         
         2.EvaluateStatement:
         NOTE --Place the recipient and the index of its subcomponent on the stack.
-        LOAD REGISTER $document
+        LOAD VARIABLE $document
         PUSH LITERAL `$customer`
         CALL $subcomponent WITH 2 ARGUMENTS
         PUSH LITERAL `$order`
@@ -20,7 +20,7 @@
         NOTE --Assign the result as the value of the subcomponent.
         CALL $setSubcomponent WITH 3 ARGUMENTS
         PULL COMPONENT
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

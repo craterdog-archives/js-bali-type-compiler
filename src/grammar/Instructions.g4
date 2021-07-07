@@ -61,30 +61,30 @@ pull:
     )
 ;
 
-// Load onto the component stack a register value, document, contract or random message from a bag
+// Load onto the component stack a variable value, document, contract or random message from a bag
 load:
     'LOAD' (
-        'REGISTER' |
+        'VARIABLE' |
         'DOCUMENT' |
         'CONTRACT' |
         'MESSAGE'
     ) SYMBOL
 ;
 
-// Save the top of the component stack to a register value, document, contract or message bag
+// Save the top of the component stack to a variable value, document, contract or message bag
 save:
     'SAVE' (
-        'REGISTER' |
+        'VARIABLE' |
         'DOCUMENT' |
         'CONTRACT' |
         'MESSAGE'
     ) SYMBOL
 ;
 
-// Drop a register value, document, contract or message
+// Drop a variable value, document, contract or message
 drop:
     'DROP' (
-        'REGISTER' |
+        'VARIABLE' |
         'DOCUMENT' |
         'CONTRACT' |
         'MESSAGE'

@@ -54,46 +54,46 @@
         PUSH HANDLER 1.IfStatementHandler
         
         1.1.ConditionClause:
-        LOAD REGISTER $a
-        LOAD REGISTER $b
+        LOAD VARIABLE $a
+        LOAD VARIABLE $b
         CALL $isLess WITH 2 ARGUMENTS
         JUMP TO 1.2.ConditionClause ON FALSE
         
         1.1.1.EvaluateStatement:
-        LOAD REGISTER $b
-        SAVE REGISTER $a
+        LOAD VARIABLE $b
+        SAVE VARIABLE $a
         
         1.1.2.EvaluateStatement:
         PUSH LITERAL `{
             $foo := bar
             $bar := baz
         }`
-        SAVE REGISTER $b
+        SAVE VARIABLE $b
         
         1.1.3.ThrowStatement:
-        LOAD REGISTER $exception
+        LOAD VARIABLE $exception
         PULL EXCEPTION
         
         1.1.ConditionClauseDone:
         JUMP TO 1.IfStatementDone
         
         1.2.ConditionClause:
-        LOAD REGISTER $a
+        LOAD VARIABLE $a
         PUSH LITERAL `0`
         CALL $isMore WITH 2 ARGUMENTS
         JUMP TO 1.3.ElseClause ON FALSE
         
         1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        SAVE REGISTER $result-1
+        SAVE VARIABLE $result-1
         
         1.2.2.EvaluateStatement:
-        LOAD REGISTER $b
+        LOAD VARIABLE $b
         CALL $factorial WITH 1 ARGUMENT
-        SAVE REGISTER $c
+        SAVE VARIABLE $c
         
         1.2.3.ReturnStatement:
-        LOAD REGISTER $c
+        LOAD VARIABLE $c
         PULL RESULT
         
         1.2.ConditionClauseDone:
@@ -103,18 +103,18 @@
         JUMP TO NEXT INSTRUCTION
         
         1.3.1.EvaluateStatement:
-        LOAD REGISTER $b
+        LOAD VARIABLE $b
         NOTE --Place a list of the message arguments on the stack.
         CALL $list
-        LOAD REGISTER $tag
+        LOAD VARIABLE $tag
         CALL $addItem WITH 2 ARGUMENTS
         NOTE --Send the message with its arguments to the recipient.
         SEND $find TO COMPONENT WITH ARGUMENTS
-        SAVE REGISTER $d
+        SAVE VARIABLE $d
         
         1.3.2.EvaluateStatement:
         PUSH LITERAL `(3, 4i)`
-        SAVE REGISTER $result-1
+        SAVE VARIABLE $result-1
         
         1.3.3.ReturnStatement:
         PUSH LITERAL `none`
@@ -128,10 +128,10 @@
         JUMP TO 1.IfStatementSucceeded
         
         1.IfStatementHandler:
-        SAVE REGISTER $exception
+        SAVE VARIABLE $exception
         
         1.4.HandleBlock:
-        LOAD REGISTER $exception
+        LOAD VARIABLE $exception
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -142,10 +142,10 @@
         JUMP TO 1.5.HandleBlock ON FALSE
         
         1.4.1.EvaluateStatement:
-        LOAD REGISTER $count
+        LOAD VARIABLE $count
         PUSH LITERAL `1`
         CALL $sum WITH 2 ARGUMENTS
-        SAVE REGISTER $count
+        SAVE VARIABLE $count
         
         1.4.2.EvaluateStatement:
         CALL $catalog
@@ -159,13 +159,13 @@
         PUSH LITERAL `$oops`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        SAVE REGISTER $result-1
+        SAVE VARIABLE $result-1
         
         1.4.HandleBlockDone:
         JUMP TO 1.IfStatementSucceeded
         
         1.5.HandleBlock:
-        LOAD REGISTER $exception
+        LOAD VARIABLE $exception
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -187,17 +187,17 @@
         PUSH LITERAL `$bigOops`
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
-        SAVE REGISTER $exception
+        SAVE VARIABLE $exception
         
         1.5.2.ThrowStatement:
-        LOAD REGISTER $exception
+        LOAD VARIABLE $exception
         PULL EXCEPTION
         
         1.5.HandleBlockDone:
         JUMP TO 1.IfStatementSucceeded
         
         1.IfStatementFailed:
-        LOAD REGISTER $exception
+        LOAD VARIABLE $exception
         PULL EXCEPTION
         
         1.IfStatementSucceeded:
@@ -211,14 +211,14 @@
         JUMP TO 2.WhileStatementDone ON FALSE
         
         2.1.1.EvaluateStatement:
-        LOAD REGISTER $bar
-        SAVE REGISTER $foo
+        LOAD VARIABLE $bar
+        SAVE VARIABLE $foo
         
         2.1.2.IfStatement:
         JUMP TO NEXT INSTRUCTION
         
         2.1.2.1.ConditionClause:
-        LOAD REGISTER $foo
+        LOAD VARIABLE $foo
         JUMP TO 2.1.2.2.ElseClause ON FALSE
         
         2.1.2.1.1.BreakStatement:
@@ -231,44 +231,44 @@
         JUMP TO NEXT INSTRUCTION
         
         2.1.2.2.1.WithStatement:
-        LOAD REGISTER $sequence
+        LOAD VARIABLE $sequence
         SEND $iterator TO COMPONENT
-        SAVE REGISTER $iterator-2
+        SAVE VARIABLE $iterator-2
         
         2.1.2.2.1.1.ConditionClause:
-        LOAD REGISTER $iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $hasNext TO COMPONENT
         JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
-        LOAD REGISTER $iterator-2
+        LOAD VARIABLE $iterator-2
         SEND $next TO COMPONENT
-        SAVE REGISTER $item
+        SAVE VARIABLE $item
         
         2.1.2.2.1.1.1.SelectStatement:
-        LOAD REGISTER $selection
-        SAVE REGISTER $selector-3
+        LOAD VARIABLE $selection
+        SAVE VARIABLE $selector-3
         
         2.1.2.2.1.1.1.1.OptionClause:
-        LOAD REGISTER $selector-3
+        LOAD VARIABLE $selector-3
         PUSH LITERAL `$first`
         CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
         
         2.1.2.2.1.1.1.1.1.EvaluateStatement:
         PUSH LITERAL `true`
-        SAVE REGISTER $result-1
+        SAVE VARIABLE $result-1
         
         2.1.2.2.1.1.1.1.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
         
         2.1.2.2.1.1.1.2.OptionClause:
-        LOAD REGISTER $selector-3
+        LOAD VARIABLE $selector-3
         PUSH LITERAL `$second`
         CALL $doesMatch WITH 2 ARGUMENTS
         JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
         
         2.1.2.2.1.1.1.2.1.EvaluateStatement:
         PUSH LITERAL `false`
-        SAVE REGISTER $result-1
+        SAVE VARIABLE $result-1
         
         2.1.2.2.1.1.1.2.OptionClauseDone:
         JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
@@ -301,7 +301,7 @@
         JUMP TO 2.1.ConditionClause
         
         2.WhileStatementDone:
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

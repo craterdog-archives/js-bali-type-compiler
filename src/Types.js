@@ -41,7 +41,7 @@ exports.COMPONENT = 1;
 exports.RESULT = 2;
 exports.EXCEPTION = 3;
 
-exports.REGISTER = 0;
+exports.VARIABLE = 0;
 exports.DOCUMENT = 1;
 exports.CONTRACT = 2;
 exports.MESSAGE = 3;
@@ -161,21 +161,21 @@ const PULL_MODIFIERS = [
 ];
 
 const LOAD_MODIFIERS = [
-    'REGISTER',
+    'VARIABLE',
     'DOCUMENT',
     'CONTRACT',
     'MESSAGE'
 ];
 
 const SAVE_MODIFIERS = [
-    'REGISTER',
+    'VARIABLE',
     'DOCUMENT',
     'CONTRACT',
     'MESSAGE'
 ];
 
 const DROP_MODIFIERS = [
-    'REGISTER',
+    'VARIABLE',
     'DOCUMENT',
     'CONTRACT',
     'MESSAGE'

@@ -13,18 +13,18 @@
         JUMP TO NEXT INSTRUCTION
         
         1.1.ConditionClause:
-        LOAD REGISTER $condition
+        LOAD VARIABLE $condition
         JUMP TO 1.WhileStatementDone ON FALSE
         
         1.1.1.EvaluateStatement:
-        LOAD REGISTER $b
-        SAVE REGISTER $a
+        LOAD VARIABLE $b
+        SAVE VARIABLE $a
         
         1.1.2.IfStatement:
         JUMP TO NEXT INSTRUCTION
         
         1.1.2.1.ConditionClause:
-        LOAD REGISTER $a
+        LOAD VARIABLE $a
         JUMP TO 1.1.2.IfStatementDone ON FALSE
         
         1.1.2.1.1.BreakStatement:
@@ -34,14 +34,14 @@
         JUMP TO NEXT INSTRUCTION
         
         1.1.3.EvaluateStatement:
-        LOAD REGISTER $c
-        SAVE REGISTER $a
+        LOAD VARIABLE $c
+        SAVE VARIABLE $a
         
         1.ConditionRepeat:
         JUMP TO 1.1.ConditionClause
         
         1.WhileStatementDone:
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

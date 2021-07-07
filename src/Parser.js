@@ -209,7 +209,7 @@ ParsingVisitor.prototype.visitPull = function(ctx) {
 
 
 // load:
-//     'LOAD' 'REGISTER' SYMBOL |
+//     'LOAD' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -224,7 +224,7 @@ ParsingVisitor.prototype.visitLoad = function(ctx) {
 
 
 // save:
-//     'SAVE' 'REGISTER' SYMBOL |
+//     'SAVE' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -239,7 +239,7 @@ ParsingVisitor.prototype.visitSave = function(ctx) {
 
 
 // drop:
-//     'DROP' 'REGISTER' SYMBOL |
+//     'DROP' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL

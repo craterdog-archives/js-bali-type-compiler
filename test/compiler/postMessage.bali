@@ -8,7 +8,7 @@
         1.PostStatement:
         NOTE --Save the name of the message bag.
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
-        SAVE REGISTER $bag-2
+        SAVE VARIABLE $bag-2
         NOTE --Post a message to the named message bag.
         CALL $catalog
         NOTE --Add an item to the catalog.
@@ -17,7 +17,7 @@
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
         SAVE MESSAGE $bag-2
-        LOAD REGISTER $result-1
+        LOAD VARIABLE $result-1
         PULL RESULT
     "($mediaType: "application/basm")
     $addresses: [

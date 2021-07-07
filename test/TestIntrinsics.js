@@ -63,8 +63,8 @@ const dirtyType = bali.catalog({
             $instructions: bali.component('"\n' +
                 '    1.EvaluateStatement:\n' +
                 '    PUSH LITERAL `none`\n' +
-                '    SAVE REGISTER $result-1\n' +
-                '    LOAD REGISTER $result-1\n' +
+                '    SAVE VARIABLE $result-1\n' +
+                '    LOAD VARIABLE $result-1\n' +
                 '    PULL RESULT\n' +
                 '"($mediaType: "application/basm")'
             ),

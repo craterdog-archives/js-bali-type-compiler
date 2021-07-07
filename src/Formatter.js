@@ -229,7 +229,7 @@ FormattingVisitor.prototype.visitPull = function(instruction) {
 
 
 // load:
-//     'LOAD' 'REGISTER' SYMBOL |
+//     'LOAD' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -244,7 +244,7 @@ FormattingVisitor.prototype.visitLoad = function(instruction) {
 
 
 // save:
-//     'SAVE' 'REGISTER' SYMBOL |
+//     'SAVE' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
@@ -259,7 +259,7 @@ FormattingVisitor.prototype.visitSave = function(instruction) {
 
 
 // drop:
-//     'DROP' 'REGISTER' SYMBOL |
+//     'DROP' 'VARIABLE' SYMBOL |
 //     'LOAD' 'DOCUMENT' SYMBOL |
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
