@@ -1730,8 +1730,8 @@ InstructionBuilder.prototype.getNextBlockPrefix = function() {
 
 /*
  * This method sets the label to be used for the next instruction. If a label has
- * already been set, then the existing label is used to label a new 'skip'
- * instruction that is inserted.
+ * already been set, then the existing label is used to label a new
+ * 'JUMP TO NEXT INSTRUCTION' that is inserted.
  */
 InstructionBuilder.prototype.insertLabel = function(label) {
     // check for existing label
