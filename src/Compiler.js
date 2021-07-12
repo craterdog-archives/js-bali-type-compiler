@@ -47,10 +47,10 @@ exports.Compiler = Compiler;
  * @param {Catalog} type The type definition to be cleaned.
  */
 Compiler.prototype.cleanType = function(type) {
-    type.removeValue('$literals');
+    type.removeAttribute('$literals');
 
     // create the methods catalog if necessary
-    var methods = type.getValue('$methods');
+    var methods = type.getAttribute('$methods');
     if (methods && !methods.isEqualTo(bali.pattern.NONE)) {
 
         // clean each method
@@ -75,12 +75,12 @@ Compiler.prototype.cleanType = function(type) {
  * @param {Catalog} method The method definition to be cleaned.
  */
 Compiler.prototype.cleanMethod = function(method) {
-    method.removeValue('$instructions');
-    method.removeValue('$addresses');
-    method.removeValue('$bytecode');
-    method.removeValue('$arguments');
-    method.removeValue('$variables');
-    method.removeValue('$messages');
+    method.removeAttribute('$instructions');
+    method.removeAttribute('$addresses');
+    method.removeAttribute('$bytecode');
+    method.removeAttribute('$arguments');
+    method.removeAttribute('$variables');
+    method.removeAttribute('$messages');
 };
 
 
@@ -91,7 +91,7 @@ Compiler.prototype.cleanMethod = function(method) {
  * @param {Catalog} type The type definition to be compiled.
  */
 Compiler.prototype.compileType = function(type) {
-    var methods = type.getValue('$methods');
+    var methods = type.getAttribute('$methods');
     if (methods) {
         // compile each method
         const iterator = methods.getIterator();
@@ -123,7 +123,7 @@ Compiler.prototype.compileType = function(type) {
 Compiler.prototype.compileMethod = function(type, method) {
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, this.debug);
-    const procedure = method.getValue('$procedure');
+    const procedure = method.getAttribute('$procedure');
     procedure.getStatements().acceptVisitor(visitor);
 
     // format the instructions and add to the compiled method
@@ -132,7 +132,7 @@ Compiler.prototype.compileMethod = function(type, method) {
     instructions = parser.parseInstructions(instructions);
     const formatter = new Formatter(0, this.debug);
     instructions = bali.text(formatter.formatInstructions(instructions), {$mediaType: 'application/basm'});
-    method.setValue('$instructions', instructions);
+    method.setAttribute('$instructions', instructions);
 };
 
 
@@ -182,7 +182,7 @@ CompilingVisitor.prototype.visitAcceptClause = function(tree) {
     this.builder.insertNoteInstruction('Extract and save the name of the message bag.');
     this.builder.insertLoadInstruction('VARIABLE', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
-    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(message, key)
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
 
@@ -314,7 +314,7 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
     this.builder.insertNoteInstruction('Load a copy of the named contract from the repository.');
     this.builder.insertLoadInstruction('CONTRACT', name);
     this.builder.insertPushInstruction('LITERAL', '$document');
-    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(contract, key)
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(contract, key)
     this.builder.insertCallInstruction('$duplicate', 1);  // duplicate(document)
     const document = this.createTemporaryVariable('document');
     this.builder.insertSaveInstruction('VARIABLE', document);
@@ -754,13 +754,12 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
 
 
 /*
- * This method inserts instructions that cause the VM to traverse all but the
- * last index in a list of indices associated with a component. For each index
- * the VM replaces the component that is on top of the component stack with its
- * subcomponent at that index. It leaves the parent component and the index of
- * the final subcomponent on the component stack so that the outer rule can
- * either use them to get the final subcomponent value or set it depending on
- * the context.
+ * This method inserts instructions that cause the VM to traverse all but the last
+ * index in a list of indices associated with a composite component. For each index
+ * the VM replaces the component that is on top of the component stack with the
+ * attribute at that index. It leaves the parent component and the index of the
+ * final attribute on the component stack so that the outer rule can either use
+ * them to get the final attribute value or set it depending on the context.
  */
 // indices: expression (',' expression)*
 CompilingVisitor.prototype.visitIndices = function(tree) {
@@ -769,13 +768,13 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
     while (count--) {
         // the VM places the value of the next index onto the top of the component stack
         iterator.getNext().acceptVisitor(this);
-        // the VM retrieves the value of the subcomponent at the given index of the parent component
-        this.builder.insertCallInstruction('$subcomponent', 2);  // subcomponent(composite, index)
-        // the parent and index have been replaced by the value of the subcomponent
+        // the VM retrieves the value of the attribute at the given index of the parent component
+        this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
+        // the parent and index have been replaced by the value of the attribute
     }
     // the VM places the value of the last index onto the top of the component stack
     iterator.getNext().acceptVisitor(this);
-    // the parent component and index of the last subcomponent are on top of the component stack
+    // the parent component and index of the last attribute are on top of the component stack
 };
 
 
@@ -921,9 +920,9 @@ CompilingVisitor.prototype.visitParameters = function(parameters) {
         while (iterator.hasNext()) {
             const key = iterator.getNext();
             this.builder.insertPushInstruction('LITERAL', key.toLiteral());
-            const value = parameters.getValue(key);
+            const value = parameters.getAttribute(key);
             value.acceptVisitor(this);
-            this.builder.insertCallInstruction('$setValue', 3);  // setValue(catalog, key, value)
+            this.builder.insertCallInstruction('$setAttribute', 3);  // setAttribute(catalog, key, value)
         }
     }
 };
@@ -1027,10 +1026,10 @@ CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
 };
 
 
-// recipient: symbol | subcomponent
+// recipient: symbol | attribute
 CompilingVisitor.prototype.visitRecipient = function(recipient) {
-    if (recipient.isType('/bali/structures/Subcomponent')) {
-        this.builder.insertNoteInstruction('Place the recipient and the index of its subcomponent on the stack.');
+    if (recipient.isType('/bali/structures/Attribute')) {
+        this.builder.insertNoteInstruction('Place the recipient and the index of its attribute on the stack.');
         recipient.acceptVisitor(this);
     }
 };
@@ -1058,7 +1057,7 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
     this.builder.insertNoteInstruction('Extract and save the name of the message bag.');
     this.builder.insertLoadInstruction('VARIABLE', message);
     this.builder.insertPushInstruction('LITERAL', '$bag');
-    this.builder.insertCallInstruction('$keyValue', 2);  // keyValue(message, key)
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(message, key)
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
 
@@ -1287,19 +1286,19 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
 /*
  * This method inserts the instructions that cause the VM to replace
  * the value of an expression that is on top of the component stack
- * with its subcomponent referred to by the indices.
+ * with its attribute referred to by the indices.
  */
-// subcomponentExpression: expression '[' indices ']'
-CompilingVisitor.prototype.visitSubcomponentExpression = function(tree) {
+// attributeExpression: expression '[' indices ']'
+CompilingVisitor.prototype.visitAttributeExpression = function(tree) {
     const component = tree.getItem(1);
     const indices = tree.getItem(2);
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
-    // the VM replaces the value on the component stack with the parent and index of the subcomponent
+    // the VM replaces the value on the component stack with the parent and index of the attribute
     indices.acceptVisitor(this);
-    // the VM retrieves the value of the subcomponent at the given index of the parent component
-    this.builder.insertCallInstruction('$subcomponent', 2);  // subcomponent(composite, index)
-    // the parent and index have been replaced by the value of the subcomponent
+    // the VM retrieves the value of the attribute at the given index of the parent component
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
+    // the parent and index have been replaced by the value of the attribute
 };
 
 
@@ -1349,7 +1348,7 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
     if (this.builder.argumentz.containsItem(variable)) {
         // arguments take precedence over local variables and global constants
         this.builder.insertPushInstruction('ARGUMENT', variable);
-    } else if (this.builder.constants.getValue(variable)) {
+    } else if (this.builder.constants.getAttribute(variable)) {
         // global constants take precedence over local variables
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
@@ -1462,7 +1461,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 
 /*
  * This method inserts instructions that cause the VM to either set
- * the value of a variable or a subcomponent to the value on the top of the
+ * the value of a variable or an attribute to the value on the top of the
  * component stack.
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
@@ -1470,8 +1469,8 @@ CompilingVisitor.prototype.setRecipient = function(recipient) {
         const symbol = recipient.toString();
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
-        this.builder.insertNoteInstruction('Assign the result as the value of the subcomponent.');
-        this.builder.insertCallInstruction('$setSubcomponent', 3);
+        this.builder.insertNoteInstruction('Assign the result as the value of the attribute.');
+        this.builder.insertCallInstruction('$setAttribute', 3);
         this.builder.insertPullInstruction('COMPONENT');
     }
 };
@@ -1523,10 +1522,10 @@ function InstructionBuilder(type, method, debug) {
     this.debug = debug || false;
 
     // setup the compilation context
-    this.literals = type.getValue('$literals') || bali.set();
-    this.constants = type.getValue('$constants') || bali.catalog();
+    this.literals = type.getAttribute('$literals') || bali.set();
+    this.constants = type.getAttribute('$constants') || bali.catalog();
     this.argumentz = bali.list(['$target']);
-    const parameters = method.getValue('$parameters');
+    const parameters = method.getAttribute('$parameters');
     if (parameters) this.argumentz.addItems(parameters.getKeys());
     this.variables = bali.set();
     this.messages = bali.set();
@@ -1536,13 +1535,13 @@ function InstructionBuilder(type, method, debug) {
     this.stack = [];  // stack of procedure contexts
 
     // add the compilation context to the type and method
-    type.setValue('$literals', this.literals);
-    method.setValue('$instructions', bali.pattern.NONE);
-    method.setValue('$addresses', this.addresses);
-    method.setValue('$bytecode', bali.pattern.NONE);
-    method.setValue('$arguments', this.argumentz);
-    method.setValue('$variables', this.variables);
-    method.setValue('$messages', this.messages);
+    type.setAttribute('$literals', this.literals);
+    method.setAttribute('$instructions', bali.pattern.NONE);
+    method.setAttribute('$addresses', this.addresses);
+    method.setAttribute('$bytecode', bali.pattern.NONE);
+    method.setAttribute('$arguments', this.argumentz);
+    method.setAttribute('$variables', this.variables);
+    method.setAttribute('$messages', this.messages);
 
     return this;
 }
@@ -1750,7 +1749,7 @@ InstructionBuilder.prototype.insertLabel = function(label) {
  */
 InstructionBuilder.prototype.insertInstruction = function(instruction) {
     if (this.nextLabel) {
-        this.addresses.setValue(this.nextLabel, this.address);
+        this.addresses.setAttribute(this.nextLabel, this.address);
         this.instructions += EOL;
         this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;
@@ -1765,7 +1764,7 @@ InstructionBuilder.prototype.insertInstruction = function(instruction) {
  */
 InstructionBuilder.prototype.insertNoteInstruction = function(comment) {
     if (this.nextLabel) {
-        this.addresses.setValue(this.nextLabel, this.address);
+        this.addresses.setAttribute(this.nextLabel, this.address);
         this.instructions += EOL;
         this.instructions += this.nextLabel + ':' + EOL;
         this.nextLabel = undefined;

@@ -562,7 +562,7 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $citation intrinsic function', function() {
             const index = intrinsics.index('$citation');
             const citation = intrinsics.invoke(index, document);
-            expect(digest.isEqualTo(citation.getValue('$digest'))).to.equal(true);
+            expect(digest.isEqualTo(citation.getAttribute('$digest'))).to.equal(true);
         });
 
         it('should invoke $cleanType intrinsic function', function() {
@@ -1716,8 +1716,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $keyValue intrinsic function', function() {
-            const index = intrinsics.index('$keyValue');
+        it('should invoke $attribute intrinsic function', function() {
+            const index = intrinsics.index('$attribute');
             intrinsics.invoke(index, catalog, symbol);
             expect(
                 function() {
@@ -2381,8 +2381,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $removeValue intrinsic function', function() {
-            const index = intrinsics.index('$removeValue');
+        it('should invoke $removeAttribute intrinsic function', function() {
+            const index = intrinsics.index('$removeAttribute');
             intrinsics.invoke(index, catalog, symbol);
             expect(
                 function() {
@@ -2401,8 +2401,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $removeValues intrinsic function', function() {
-            const index = intrinsics.index('$removeValues');
+        it('should invoke $removeAttributes intrinsic function', function() {
+            const index = intrinsics.index('$removeAttributes');
             intrinsics.invoke(index, catalog, list);
             expect(
                 function() {
@@ -2563,8 +2563,8 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, document, key, value);
         });
 
-        it('should invoke $setSubcomponent intrinsic function', function() {
-            const index = intrinsics.index('$setSubcomponent');
+        it('should invoke $setAttribute intrinsic function', function() {
+            const index = intrinsics.index('$setAttribute');
             intrinsics.invoke(index, bali.list([0, 1, 2]), two, angle);
             intrinsics.invoke(index, bali.catalog({$foo: "bar", $type: "baz"}), symbol, type);
             expect(
@@ -2599,8 +2599,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $setValue intrinsic function', function() {
-            const index = intrinsics.index('$setValue');
+        it('should invoke $setAttribute intrinsic function', function() {
+            const index = intrinsics.index('$setAttribute');
             intrinsics.invoke(index, catalog, symbol, text);
             expect(
                 function() {
@@ -2733,8 +2733,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $subcomponent intrinsic function', function() {
-            const index = intrinsics.index('$subcomponent');
+        it('should invoke $attribute intrinsic function', function() {
+            const index = intrinsics.index('$attribute');
             const list = bali.list([1, 2, 3]);
             intrinsics.invoke(index, list, two);
             intrinsics.invoke(index, catalog, symbol);
@@ -2959,8 +2959,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $values intrinsic function', function() {
-            const index = intrinsics.index('$values');
+        it('should invoke $attributes intrinsic function', function() {
+            const index = intrinsics.index('$attributes');
             intrinsics.invoke(index, catalog, list);
             expect(
                 function() {

@@ -59,4 +59,4 @@ NOTE --Sends a message to a target component with optional arguments.
 SEND $getAncestry TO COMPONENT
 SEND $setParameter TO COMPONENT WITH ARGUMENTS
 SEND $getKeys TO DOCUMENT
-SEND $setValue TO DOCUMENT WITH ARGUMENTS
+SEND $setAttribute TO DOCUMENT WITH ARGUMENTS

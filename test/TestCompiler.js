@@ -42,8 +42,8 @@ describe('Bali Nebula™ Type Compiler', function() {
                 var literals = bali.list();
                 var constants = bali.catalog();
                 var type = bali.catalog();
-                type.setValue('$literals', literals);
-                type.setValue('$constants', constants);
+                type.setAttribute('$literals', literals);
+                type.setAttribute('$constants', constants);
 
                 // clean the method
                 compiler.cleanMethod(method);

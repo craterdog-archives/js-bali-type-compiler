@@ -51,7 +51,7 @@ exports.assembler = new Assembler();
 Assembler.prototype.assembleMethod = function(type, method) {
 
     // assemble the instructions into bytecode
-    var instructions = method.getValue('$instructions');
+    var instructions = method.getAttribute('$instructions');
     const parser = new Parser(this.debug);
     instructions = parser.parseInstructions(instructions.getValue());
     const visitor = new AssemblingVisitor(type, method, this.debug);
@@ -61,7 +61,7 @@ Assembler.prototype.assembleMethod = function(type, method) {
     var bytecode = visitor.getBytecode();
     const base16 = this.bali.decoder(2).base16Encode(this.decoder.bytecodeToBytes(bytecode));
     bytecode = this.bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
-    method.setValue('$bytecode', bytecode);
+    method.setAttribute('$bytecode', bytecode);
 };
 
 
@@ -71,12 +71,12 @@ function AssemblingVisitor(type, method, debug) {
     this.debug = debug || 0;
     this.decoder = new Decoder(this.debug);
     this.intrinsics = require('./Intrinsics').api(this.debug);
-    this.literals = type.getValue('$literals');
-    this.constants = type.getValue('$constants');
-    this.argumentz = method.getValue('$arguments');
-    this.variables = method.getValue('$variables');
-    this.messages = method.getValue('$messages');
-    this.addresses = method.getValue('$addresses');
+    this.literals = type.getAttribute('$literals');
+    this.constants = type.getAttribute('$constants');
+    this.argumentz = method.getAttribute('$arguments');
+    this.variables = method.getAttribute('$variables');
+    this.messages = method.getAttribute('$messages');
+    this.addresses = method.getAttribute('$addresses');
     this.bytecode = [];
     return this;
 }
@@ -112,7 +112,7 @@ AssemblingVisitor.prototype.visitList = function(instructions) {
 // label: EOL LABEL ':' EOL
 AssemblingVisitor.prototype.visitCatalog = function(instruction) {
     // can ignore the label at this stage since they don't show up in the bytecode
-    const operation = instruction.getValue('$operation').toNumber();
+    const operation = instruction.getAttribute('$operation').toNumber();
     switch (operation) {
         case types.NOTE:
             this.visitNote(instruction);
@@ -171,13 +171,13 @@ AssemblingVisitor.prototype.visitNote = function(instruction) {
 //     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 AssemblingVisitor.prototype.visitJump = function(instruction) {
     var word;
-    var modifier = instruction.getValue('$modifier');
+    var modifier = instruction.getAttribute('$modifier');
     if (!modifier) {
         word = this.decoder.encodeInstruction(types.JUMP, 0, 0);  // JUMP TO NEXT INSTRUCTION
     } else {
         modifier = modifier.toNumber();
-        const label = instruction.getValue('$operand');
-        const address = this.addresses.getValue(label);
+        const label = instruction.getAttribute('$operand');
+        const address = this.addresses.getAttribute(label);
         word = this.decoder.encodeInstruction(types.JUMP, modifier, address);
     }
     this.bytecode.push(word);
@@ -190,11 +190,11 @@ AssemblingVisitor.prototype.visitJump = function(instruction) {
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'ARGUMENT' SYMBOL
 AssemblingVisitor.prototype.visitPush = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    var value = instruction.getValue('$operand');
+    const modifier = instruction.getAttribute('$modifier').toNumber();
+    var value = instruction.getAttribute('$operand');
     switch(modifier) {
         case types.HANDLER:
-            value = this.addresses.getValue(value);
+            value = this.addresses.getAttribute(value);
             break;
         case types.LITERAL:
             value = this.literals.getIndex(value);
@@ -217,7 +217,7 @@ AssemblingVisitor.prototype.visitPush = function(instruction) {
 //     'PULL' 'RESULT' |
 //     'PULL' 'EXCEPTION'
 AssemblingVisitor.prototype.visitPull = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toNumber();
     const word = this.decoder.encodeInstruction(types.PULL, modifier);
     this.bytecode.push(word);
 };
@@ -229,8 +229,8 @@ AssemblingVisitor.prototype.visitPull = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitLoad = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    const symbol = instruction.getValue('$operand');
+    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.LOAD, modifier, index);
     this.bytecode.push(word);
@@ -243,8 +243,8 @@ AssemblingVisitor.prototype.visitLoad = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitSave = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    const symbol = instruction.getValue('$operand');
+    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.SAVE, modifier, index);
     this.bytecode.push(word);
@@ -257,8 +257,8 @@ AssemblingVisitor.prototype.visitSave = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitDrop = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    const symbol = instruction.getValue('$operand');
+    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.DROP, modifier, index);
     this.bytecode.push(word);
@@ -270,8 +270,8 @@ AssemblingVisitor.prototype.visitDrop = function(instruction) {
 //     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 AssemblingVisitor.prototype.visitCall = function(instruction) {
-    const count = instruction.getValue('$modifier').toNumber();
-    const symbol = instruction.getValue('$operand');
+    const count = instruction.getAttribute('$modifier').toNumber();
+    const symbol = instruction.getAttribute('$operand');
     const index = this.intrinsics.index(symbol.toString());
     const word = this.decoder.encodeInstruction(types.CALL, count, index);
     this.bytecode.push(word);
@@ -284,8 +284,8 @@ AssemblingVisitor.prototype.visitCall = function(instruction) {
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 AssemblingVisitor.prototype.visitSend = function(instruction) {
-    const modifier = instruction.getValue('$modifier').toNumber();
-    const symbol = instruction.getValue('$operand');
+    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const symbol = instruction.getAttribute('$operand');
     const index = this.messages.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.SEND, modifier, index);
     this.bytecode.push(word);

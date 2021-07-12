@@ -16,7 +16,7 @@
         NOTE --Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-2
         PUSH LITERAL `$document`
-        CALL $keyValue WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         CALL $duplicate WITH 1 ARGUMENT
         SAVE VARIABLE $document-3
         NOTE --Calculate the new version string for the new document and save it.
@@ -57,7 +57,7 @@
         NOTE --Load a copy of the named contract from the repository.
         LOAD CONTRACT $name-7
         PUSH LITERAL `$document`
-        CALL $keyValue WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         CALL $duplicate WITH 1 ARGUMENT
         SAVE VARIABLE $document-8
         NOTE --Calculate the new version string for the new document and save it.
@@ -74,27 +74,27 @@
         CALL $setParameter WITH 3 ARGUMENTS
         PULL COMPONENT
         NOTE --Set the new document as the value of the recipient.
-        NOTE --Place the recipient and the index of its subcomponent on the stack.
+        NOTE --Place the recipient and the index of its attribute on the stack.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         LOAD VARIABLE $document-8
-        NOTE --Assign the result as the value of the subcomponent.
-        CALL $setSubcomponent WITH 3 ARGUMENTS
+        NOTE --Assign the result as the value of the attribute.
+        CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         
         5.SaveStatement:
         NOTE --Place the document on the stack.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
-        CALL $subcomponent WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         NOTE --Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-10
-        NOTE --Place the recipient and the index of its subcomponent on the stack.
+        NOTE --Place the recipient and the index of its attribute on the stack.
         LOAD VARIABLE $citations
         LOAD VARIABLE $index
         LOAD VARIABLE $citation-10
-        NOTE --Assign the result as the value of the subcomponent.
-        CALL $setSubcomponent WITH 3 ARGUMENTS
+        NOTE --Assign the result as the value of the attribute.
+        CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         
         6.CommitStatement:
@@ -104,14 +104,14 @@
         NOTE --Commit the named contract to the repository.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
-        CALL $subcomponent WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         SAVE CONTRACT $name-11
         
         7.DiscardStatement:
         NOTE --Save the citation to the document.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
-        CALL $subcomponent WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         SAVE VARIABLE $citation-12
         NOTE --Drop the cited document from the repository.
         DROP DOCUMENT $citation-12
@@ -128,11 +128,11 @@
         "7.DiscardStatement": 65
     ]
     $bytecode: '
-        2801800B700B2802D04DC829800660062803D0602804D05B800F60062803
-        600FD882480060068005600588032806800C6005900C2806800D700D2802
-        D04DC829800760072803D060280AD05B8010600728036010D88248006008
-        60096007D883480060086009D08B8801600460096001D8834800280C800A
-        60086009D08B900A60086009D08B8002A802600E5000
+        2801800B700B2802D00CC82B800660062803D0612804D05C800F60062803
+        600FD884480060068005600588032806800C6005900C2806800D700D2802
+        D00CC82B800760072803D061280AD05C8010600728036010D88448006008
+        60096007D882480060086009D00C8801600460096001D8824800280C800A
+        60086009D00C900A60086009D00C8002A802600E5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

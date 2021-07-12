@@ -9,16 +9,16 @@
         SAVE VARIABLE $foo
         
         2.EvaluateStatement:
-        NOTE --Place the recipient and the index of its subcomponent on the stack.
+        NOTE --Place the recipient and the index of its attribute on the stack.
         LOAD VARIABLE $document
         PUSH LITERAL `$customer`
-        CALL $subcomponent WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         PUSH LITERAL `$order`
-        CALL $subcomponent WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         PUSH LITERAL `5`
-        NOTE --Assign the result as the value of the subcomponent.
-        CALL $setSubcomponent WITH 3 ARGUMENTS
+        NOTE --Assign the result as the value of the attribute.
+        CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         LOAD VARIABLE $result-1
         PULL RESULT
@@ -27,7 +27,7 @@
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
     ]
-    $bytecode: '6001800360022801D08B2802D08B28032804D883480060045000'(
+    $bytecode: '6001800360022801D00C2802D00C28032804D882480060045000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )

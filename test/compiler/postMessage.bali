@@ -23,7 +23,7 @@
     $addresses: [
         "1.PostStatement": 1
     ]
-    $bytecode: '28018001C01428022803D00BD001980160025000'(
+    $bytecode: '28018001C01628022803D00BD001980160025000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )
