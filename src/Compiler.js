@@ -16,7 +16,7 @@
  * Bali Virtual Machine™.
  */
 const bali = require('bali-component-framework').api();
-const Visitor = require('bali-component-framework/src/types/Visitor').Visitor;
+const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
 const Assembler = require('./Assembler').Assembler;
 const Parser = require('./Parser').Parser;
 const Formatter = require('./Formatter').Formatter;
