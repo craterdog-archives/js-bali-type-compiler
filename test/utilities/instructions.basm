@@ -3,7 +3,7 @@
 NOTE --Jumps to a new address (conditionally or unconditionally).
 JUMP TO NEXT INSTRUCTION
 JUMP TO 2.push
-JUMP TO 3.pull ON NONE
+JUMP TO 3.pull ON EMPTY
 JUMP TO 4.load ON TRUE
 JUMP TO 5.save ON FALSE
 

@@ -94,7 +94,7 @@ var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new a
 var sharedContextCache = new antlr4.PredictionContextCache();
 
 var literalNames = [ null, "':'", "'NOTE'", "'JUMP'", "'TO'", "'NEXT'", 
-                     "'INSTRUCTION'", "'ON'", "'NONE'", "'TRUE'", "'FALSE'", 
+                     "'INSTRUCTION'", "'ON'", "'EMPTY'", "'TRUE'", "'FALSE'", 
                      "'PUSH'", "'HANDLER'", "'LITERAL'", "'CONSTANT'", "'ARGUMENT'", 
                      "'PULL'", "'COMPONENT'", "'RESULT'", "'EXCEPTION'", 
                      "'LOAD'", "'VARIABLE'", "'DOCUMENT'", "'CONTRACT'", 

@@ -30,7 +30,7 @@ jump:
         'NEXT' 'INSTRUCTION' |
         LABEL (
             'ON' (
-                'NONE' |
+                'EMPTY' |
                 'TRUE' |
                 'FALSE'
             )

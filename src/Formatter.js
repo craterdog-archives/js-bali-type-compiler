@@ -169,7 +169,7 @@ FormattingVisitor.prototype.visitNote = function(instruction) {
 // jump:
 //     'JUMP' 'TO' 'NEXT' 'INSTRUCTION' |
 //     'JUMP' 'TO' LABEL |
-//     'JUMP' 'TO' LABEL 'ON' 'NONE' |
+//     'JUMP' 'TO' LABEL 'ON' 'EMPTY' |
 //     'JUMP' 'TO' LABEL 'ON' 'TRUE' |
 //     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 FormattingVisitor.prototype.visitJump = function(instruction) {
