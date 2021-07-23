@@ -56,7 +56,7 @@
         "1.ConditionRepeat": 13
         "1.WhileStatementDone": 14
     ]
-    $bytecode: '00006004180E6002800100006001180A000E000060038001000260055000'(
+    $bytecode: '00006004100E6002800100006001100A000E000060038001000260055000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )

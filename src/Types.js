@@ -29,8 +29,8 @@ exports.SEND = 7;
 
 exports.ON_ANY = 0;
 exports.ON_EMPTY = 1;
-exports.ON_TRUE = 2;
-exports.ON_FALSE = 3;
+exports.ON_FALSE = 2;
+exports.ON_TRUE = 3;
 
 exports.HANDLER = 0;
 exports.LITERAL = 1;
@@ -142,8 +142,8 @@ const OPERATIONS = [
 const JUMP_MODIFIERS = [
     'ON ANY',
     'ON EMPTY',
-    'ON TRUE',
-    'ON FALSE'
+    'ON FALSE',
+    'ON TRUE'
 ];
 
 const PUSH_MODIFIERS = [

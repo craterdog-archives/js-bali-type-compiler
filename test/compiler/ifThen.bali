@@ -26,7 +26,7 @@
         "1.1.1.EvaluateStatement": 4
         "1.IfStatementDone": 6
     ]
-    $bytecode: '0000280118066002800160015000'(
+    $bytecode: '0000280110066002800160015000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )
