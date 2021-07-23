@@ -167,8 +167,8 @@ AssemblingVisitor.prototype.visitNote = function(instruction) {
 //     'JUMP' 'TO' 'NEXT' 'INSTRUCTION' |
 //     'JUMP' 'TO' LABEL |
 //     'JUMP' 'TO' LABEL 'ON' 'EMPTY' |
-//     'JUMP' 'TO' LABEL 'ON' 'FALSE' |
-//     'JUMP' 'TO' LABEL 'ON' 'TRUE'
+//     'JUMP' 'TO' LABEL 'ON' 'NONE' |
+//     'JUMP' 'TO' LABEL 'ON' 'FALSE'
 AssemblingVisitor.prototype.visitJump = function(instruction) {
     var word;
     var modifier = instruction.getAttribute('$modifier');

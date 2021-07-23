@@ -31,8 +31,8 @@ jump:
         LABEL (
             'ON' (
                 'EMPTY' |
-                'FALSE' |
-                'TRUE'
+                'NONE' |
+                'FALSE'
             )
         )?
     )
