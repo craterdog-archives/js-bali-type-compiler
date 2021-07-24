@@ -49,7 +49,9 @@
         $encoding: $base16
         $mediaType: "application/bcod"
     )
-    $arguments: [ ]
+    $arguments: [
+        $target
+    ]
     $variables: [
         $no
         $result-1

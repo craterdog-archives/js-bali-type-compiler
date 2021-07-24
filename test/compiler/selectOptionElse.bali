@@ -91,7 +91,9 @@
         $encoding: $base16
         $mediaType: "application/bcod"
     )
-    $arguments: [ ]
+    $arguments: [
+        $target
+    ]
     $variables: [
         $result-1
         $selector-2

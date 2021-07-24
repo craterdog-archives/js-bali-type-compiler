@@ -1346,13 +1346,13 @@ CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     const variable = '$' + identifier.toString();
     if (this.builder.argumentz.containsItem(variable)) {
-        // arguments take precedence over local variables and global constants
+        // the $target and arguments take precedence over global constants and local variables
         this.builder.insertPushInstruction('ARGUMENT', variable);
     } else if (this.builder.constants.getAttribute(variable)) {
         // global constants take precedence over local variables
         this.builder.insertPushInstruction('CONSTANT', variable);
     } else {
-        // it is a local variable
+        // it must be a local variable
         this.builder.insertLoadInstruction('VARIABLE', variable);
     }
 };
@@ -1467,17 +1467,6 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.isType('/bali/elements/Symbol')) {
         const symbol = recipient.toString();
-        if (symbol === '$target') {
-            const exception = bali.exception({
-                $module: '/bali/compiler/Compiler',
-                $procedure: '$setRecipient',
-                $exception: '$immutable',
-                $recipient: recipient,
-                $message: 'The $target variable is immutable.'
-            });
-            if (this.debug) console.error(exception.toString());
-            throw exception;
-        }
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
         this.builder.insertNoteInstruction('Assign the result as the value of the attribute.');
@@ -1535,8 +1524,8 @@ function InstructionBuilder(type, method, debug) {
     // setup the compilation context
     this.literals = type.getAttribute('$literals') || bali.set();
     this.constants = type.getAttribute('$constants') || bali.catalog();
-    this.argumentz = bali.list();
-    const parameters = method.getAttribute('$parameters');
+    this.argumentz = bali.list(['$target']);  // $target is immutable and is the first argument (not a variable)
+    const parameters = method.getAttribute('$parameters');  // method parameters are the rest of the arguments
     if (parameters) this.argumentz.addItems(parameters.getKeys());
     this.variables = bali.set();
     this.messages = bali.set();

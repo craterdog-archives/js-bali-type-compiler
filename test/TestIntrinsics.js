@@ -75,7 +75,7 @@ const dirtyType = bali.catalog({
                 '    $encoding: $base16\n' +
                 '    $mediaType: "application/bcod"\n' +
                 ')'),
-            $arguments: bali.list(),
+            $arguments: bali.list(['$target']),
             $variables: bali.set(['$result-1']),
             $messages: bali.set()
         })

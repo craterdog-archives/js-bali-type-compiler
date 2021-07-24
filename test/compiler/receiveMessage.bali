@@ -94,7 +94,9 @@
         $encoding: $base16
         $mediaType: "application/bcod"
     )
-    $arguments: [ ]
+    $arguments: [
+        $target
+    ]
     $variables: [
         $bag-2
         $bag-3
