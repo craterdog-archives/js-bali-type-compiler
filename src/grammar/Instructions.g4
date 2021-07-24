@@ -98,12 +98,12 @@ call:
     'CALL' SYMBOL ( 'WITH' ( '1' 'ARGUMENT' | NUMBER 'ARGUMENTS'))?;
 
 // Send a message with an optional list of arguments to the local component or
-// committed contract whose name is on top of the component stack. If the
-// recipient is a named contract, a new procedure context containing the
+// document referenced by the name or citation that is on top of the component
+// stack. If the recipient is a document, a new procedure context containing the
 // message, arguments, and contract name is placed in a bag to be executed
 // by the next available processor. Otherwise, the current processor loads the
 // bytecode for the procedure associated with the message defined in the
-// component's type definition into a new procedure context and begins
+// local component's type definition into a new procedure context and begins
 // executing it using the target component and array of arguments.  When the
 // new procedure context completes its execution, the resulting value replaces
 // the component and array of arguments that were on the top of the component

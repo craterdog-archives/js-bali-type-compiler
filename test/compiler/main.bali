@@ -16,9 +16,7 @@
         $encoding: $base16
         $mediaType: "application/bcod"
     )
-    $arguments: [
-        $target
-    ]
+    $arguments: [ ]
     $variables: [
         $result-1
     ]($type: /bali/collections/Set/v1)

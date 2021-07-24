@@ -1467,6 +1467,17 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
 CompilingVisitor.prototype.setRecipient = function(recipient) {
     if (recipient.isType('/bali/elements/Symbol')) {
         const symbol = recipient.toString();
+        if (symbol === '$target') {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Compiler',
+                $procedure: '$setRecipient',
+                $exception: '$immutable',
+                $recipient: recipient,
+                $message: 'The $target variable is immutable.'
+            });
+            if (this.debug) console.error(exception.toString());
+            throw exception;
+        }
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {
         this.builder.insertNoteInstruction('Assign the result as the value of the attribute.');
@@ -1524,7 +1535,7 @@ function InstructionBuilder(type, method, debug) {
     // setup the compilation context
     this.literals = type.getAttribute('$literals') || bali.set();
     this.constants = type.getAttribute('$constants') || bali.catalog();
-    this.argumentz = bali.list(['$target']);
+    this.argumentz = bali.list();
     const parameters = method.getAttribute('$parameters');
     if (parameters) this.argumentz.addItems(parameters.getKeys());
     this.variables = bali.set();
