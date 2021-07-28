@@ -30,7 +30,7 @@ const EOL = '\n';
 /**
  * This function returns the public interace for the virtual machine intrinsic functions.
  *
- * @param {Boolean|Number} debug An optional number in the range [0..3] that controls
+ * @param {Boolean|Number} debug An optional number in the range 0..3 that controls
  * the level of debugging that occurs:
  * <pre>
  *   0 (or false): debugging turned off
@@ -563,7 +563,7 @@ exports.api = function(debug) {
         },
 
         $first: function(range) {
-            validateTypeArgument('$first', '/bali/elements/Range', range);
+            validateTypeArgument('$first', '/bali/structures/Range', range);
             const first = range.getFirst();
             return (first === undefined) ? bali.pattern.NONE : bali.number(first);
         },
@@ -719,7 +719,7 @@ exports.api = function(debug) {
 
         $items: function(sequential, range) {
             validateInterfaceArgument('$items', '/bali/interfaces/Sequential', sequential);
-            validateTypeArgument('$items', '/bali/elements/Range', range);
+            validateTypeArgument('$items', '/bali/structures/Range', range);
             return sequential.getItems(range);
         },
 
@@ -739,7 +739,7 @@ exports.api = function(debug) {
         },
 
         $last: function(range) {
-            validateTypeArgument('$last', '/bali/elements/Range', range);
+            validateTypeArgument('$last', '/bali/structures/Range', range);
             const last = range.getLast();
             return (last === undefined) ? bali.pattern.NONE : bali.number(last);
         },
@@ -977,7 +977,7 @@ exports.api = function(debug) {
 
         $removeRange: function(list, range) {
             validateTypeArgument('$removeRange', '/bali/collections/List', list);
-            validateTypeArgument('$removeRange', '/bali/elements/Range', range);
+            validateTypeArgument('$removeRange', '/bali/structures/Range', range);
             list.removeItems(range);
             return list;
         },

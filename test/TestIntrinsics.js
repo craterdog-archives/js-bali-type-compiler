@@ -1287,7 +1287,6 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$index');
             intrinsics.invoke(index, binary, two);
             intrinsics.invoke(index, name, two);
-            intrinsics.invoke(index, range, two);
             intrinsics.invoke(index, symbol, two);
             intrinsics.invoke(index, text, two);
             intrinsics.invoke(index, version, two);
@@ -1469,7 +1468,6 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$isEmpty');
             intrinsics.invoke(index, binary);
             intrinsics.invoke(index, name);
-            intrinsics.invoke(index, range);
             intrinsics.invoke(index, symbol);
             intrinsics.invoke(index, text);
             intrinsics.invoke(index, version);
@@ -1621,7 +1619,6 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$item');
             intrinsics.invoke(index, binary, two);
             intrinsics.invoke(index, name, two);
-            intrinsics.invoke(index, range, two);
             intrinsics.invoke(index, symbol, two);
             intrinsics.invoke(index, text, two);
             intrinsics.invoke(index, version, two);
@@ -1651,7 +1648,6 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$items');
             intrinsics.invoke(index, binary, range);
             intrinsics.invoke(index, name, range);
-            intrinsics.invoke(index, range, range);
             intrinsics.invoke(index, symbol, range);
             intrinsics.invoke(index, text, range);
             intrinsics.invoke(index, version, range);
@@ -2692,7 +2688,6 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$size');
             intrinsics.invoke(index, binary);
             intrinsics.invoke(index, name);
-            intrinsics.invoke(index, range);
             intrinsics.invoke(index, symbol);
             intrinsics.invoke(index, text);
             intrinsics.invoke(index, version);
