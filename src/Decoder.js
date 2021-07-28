@@ -31,7 +31,7 @@ const EOL = '\n';  // POSIX end of line character
 /**
  * This function returns a decoder object that can perform bytecode encoding and decoding.
  *
- * @param {Number} debug A number in the range [0..3].
+ * @param {Number} debug A number in the range 0..3.
  * @returns {Decoder} The new decoder.
  */
 const Decoder = function(debug) {
