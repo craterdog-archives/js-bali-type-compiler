@@ -124,7 +124,7 @@ Compiler.prototype.compileMethod = function(type, method) {
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, this.debug);
     const procedure = method.getAttribute('$procedure');
-    procedure.getStatements().acceptVisitor(visitor);
+    procedure.getAction().acceptVisitor(visitor);
 
     // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
@@ -192,6 +192,32 @@ CompilingVisitor.prototype.visitAcceptClause = function(tree) {
 };
 
 
+/*
+ * This method compiles a sequence of statements by inserting instructions for
+ * the VM to follow for each statement.
+ */
+// action:
+//     statement (';' statement)*   |
+//     EOL (statement EOL)* |
+//     /*no statements*/
+CompilingVisitor.prototype.visitAction = function(action) {
+    // create a new compiler procedure context in the instruction builder
+    this.builder.pushProcedureContext(action);
+
+    // the VM executes each statement
+    const iterator = action.getIterator();
+    while (iterator.hasNext()) {
+        this.builder.requiresFinalization = true;
+        var statement = iterator.getNext();
+        statement.acceptVisitor(this);
+        this.builder.incrementStatementCount();
+    }
+
+    // throw away the current compiler procedure context in the instruction builder
+    this.builder.popProcedureContext();
+};
+
+
 // angle: ANGLE
 CompilingVisitor.prototype.visitAngle = function(angle) {
     this.visitElement(angle);
@@ -204,7 +230,7 @@ CompilingVisitor.prototype.visitAngle = function(angle) {
  */
 // arguments:
 //     expression (',' expression)* |
-//     /* no arguments */
+//     /* no expressions */
 CompilingVisitor.prototype.visitArguments = function(tree) {
     if (!tree.isEmpty()) {
         const iterator = tree.getIterator();
@@ -253,6 +279,25 @@ CompilingVisitor.prototype.visitAssociation = function(association) {
     association.getKey().acceptVisitor(this);
     association.getValue().acceptVisitor(this);
     this.builder.insertCallInstruction('$association', 2);  // association(key, value)
+};
+
+
+/*
+ * This method inserts the instructions that cause the VM to replace
+ * the value of an expression that is on top of the component stack
+ * with its attribute referred to by the indices.
+ */
+// attributeExpression: expression '[' indices ']'
+CompilingVisitor.prototype.visitAttributeExpression = function(tree) {
+    const component = tree.getItem(1);
+    const indices = tree.getItem(2);
+    // the VM places the value of the expression on top of the component stack
+    component.acceptVisitor(this);
+    // the VM replaces the value on the component stack with the parent and index of the attribute
+    indices.acceptVisitor(this);
+    // the VM retrieves the value of the attribute at the given index of the parent component
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
+    // the parent and index have been replaced by the value of the attribute
 };
 
 
@@ -972,7 +1017,7 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
  * A code block gets compiled into the corresponding assembly instructions, but a
  * procedure gets treated as a component on the component stack.
  */
-// procedure: '{' statements '}'
+// procedure: '{' action '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     this.builder.insertPushInstruction('LITERAL', procedure.toLiteral());
     const parameters = procedure.getParameters();
@@ -1001,28 +1046,6 @@ CompilingVisitor.prototype.visitPublishClause = function(tree) {
 // range: ('0' | REAL)? '..' ('0' | REAL)?
 CompilingVisitor.prototype.visitRange = function(range) {
     this.visitElement(range);
-};
-
-
-/*
- * This method compiles the instructions needed to retrieve a message from a
- * bag in the Bali Document Repository™. The resulting message is assigned
- * to a recipient. The recipient may be either a variable or an indexed child
- * of a composite component.
- */
-// retrieveClause: 'retrieve' recipient 'from' expression
-CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
-    const recipient = tree.getItem(1);
-    const name = tree.getItem(2);
-    this.builder.insertNoteInstruction('Save the name of the message bag.');
-    name.acceptVisitor(this);
-    const bag = this.createTemporaryVariable('bag');
-    this.builder.insertSaveInstruction('VARIABLE', bag);
-    this.visitRecipient(recipient);
-    this.builder.insertNoteInstruction('Place a message from the message bag on the stack.');
-    this.builder.insertNoteInstruction('Note: this call blocks until a message is available from the bag.');
-    this.builder.insertLoadInstruction('MESSAGE', bag);
-    this.setRecipient(recipient);
 };
 
 
@@ -1078,6 +1101,28 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
     this.builder.insertNoteInstruction('Post the new version of the message to the named message bag.');
     this.builder.insertLoadInstruction('VARIABLE', message);
     this.builder.insertSaveInstruction('MESSAGE', bag);
+};
+
+
+/*
+ * This method compiles the instructions needed to retrieve a message from a
+ * bag in the Bali Document Repository™. The resulting message is assigned
+ * to a recipient. The recipient may be either a variable or an indexed child
+ * of a composite component.
+ */
+// retrieveClause: 'retrieve' recipient 'from' expression
+CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
+    const recipient = tree.getItem(1);
+    const name = tree.getItem(2);
+    this.builder.insertNoteInstruction('Save the name of the message bag.');
+    name.acceptVisitor(this);
+    const bag = this.createTemporaryVariable('bag');
+    this.builder.insertSaveInstruction('VARIABLE', bag);
+    this.visitRecipient(recipient);
+    this.builder.insertNoteInstruction('Place a message from the message bag on the stack.');
+    this.builder.insertNoteInstruction('Note: this call blocks until a message is available from the bag.');
+    this.builder.insertLoadInstruction('MESSAGE', bag);
+    this.setRecipient(recipient);
 };
 
 
@@ -1208,37 +1253,6 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
 
 
 /*
- * This method compiles a sequence of statements by inserting instructions for
- * the VM to follow for each statement. Since procedure blocks can be nested
- * within statement clauses each procedure needs its own compilation context. When
- * entering a procedure a new context is pushed onto the compilation stack and when
- * the procedure is done being compiled, that context is popped back off the stack.
- * NOTE: This stack is different than the runtime component stack that is
- * maintained by the Nebula Virtual Processor.
- */
-// statements:
-//     statement (';' statement)*   |
-//     EOL (statement EOL)* |
-//     /*empty statements*/
-CompilingVisitor.prototype.visitStatements = function(statements) {
-    // create a new compiler procedure context in the instruction builder
-    this.builder.pushProcedureContext(statements);
-
-    // the VM executes each statement
-    const iterator = statements.getIterator();
-    while (iterator.hasNext()) {
-        this.builder.requiresFinalization = true;
-        var statement = iterator.getNext();
-        statement.acceptVisitor(this);
-        this.builder.incrementStatementCount();
-    }
-
-    // throw away the current compiler procedure context in the instruction builder
-    this.builder.popProcedureContext();
-};
-
-
-/*
  * This method inserts instructions that cause the VM to attempt to execute
  * a main clause and then if any exceptions are thrown attempts to handle
  * them using a sequence of handle clauses.
@@ -1280,25 +1294,6 @@ CompilingVisitor.prototype.visitStatement = function(tree) {
 
     // the VM moves on to the next statement
     this.builder.popStatementContext();
-};
-
-
-/*
- * This method inserts the instructions that cause the VM to replace
- * the value of an expression that is on top of the component stack
- * with its attribute referred to by the indices.
- */
-// attributeExpression: expression '[' indices ']'
-CompilingVisitor.prototype.visitAttributeExpression = function(tree) {
-    const component = tree.getItem(1);
-    const indices = tree.getItem(2);
-    // the VM places the value of the expression on top of the component stack
-    component.acceptVisitor(this);
-    // the VM replaces the value on the component stack with the parent and index of the attribute
-    indices.acceptVisitor(this);
-    // the VM retrieves the value of the attribute at the given index of the parent component
-    this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
-    // the parent and index have been replaced by the value of the attribute
 };
 
 
