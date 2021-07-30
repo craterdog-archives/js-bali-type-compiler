@@ -124,7 +124,7 @@ Compiler.prototype.compileMethod = function(type, method) {
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, this.debug);
     const procedure = method.getAttribute('$procedure');
-    procedure.getAction().acceptVisitor(visitor);
+    procedure.getActivity().acceptVisitor(visitor);
 
     // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
@@ -196,16 +196,16 @@ CompilingVisitor.prototype.visitAcceptClause = function(tree) {
  * This method compiles a sequence of statements by inserting instructions for
  * the VM to follow for each statement.
  */
-// action:
+// activity:
 //     statement (';' statement)*   |
 //     EOL (statement EOL)* |
 //     /*no statements*/
-CompilingVisitor.prototype.visitAction = function(action) {
+CompilingVisitor.prototype.visitActivity = function(activity) {
     // create a new compiler procedure context in the instruction builder
-    this.builder.pushProcedureContext(action);
+    this.builder.pushProcedureContext(activity);
 
     // the VM executes each statement
-    const iterator = action.getIterator();
+    const iterator = activity.getIterator();
     while (iterator.hasNext()) {
         this.builder.requiresFinalization = true;
         var statement = iterator.getNext();
@@ -1017,7 +1017,7 @@ CompilingVisitor.prototype.visitProbability = function(probability) {
  * A code block gets compiled into the corresponding assembly instructions, but a
  * procedure gets treated as a component on the component stack.
  */
-// procedure: '{' action '}'
+// procedure: '{' activity '}'
 CompilingVisitor.prototype.visitProcedure = function(procedure) {
     this.builder.insertPushInstruction('LITERAL', procedure.toLiteral());
     const parameters = procedure.getParameters();

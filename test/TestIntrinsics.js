@@ -14,7 +14,7 @@ const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(debug);
 const intrinsics = require('../src/Intrinsics').api(debug);
 const generator = bali.generator();
-const action = bali.tree('/bali/structures/Action');
+const activity = bali.tree('/bali/structures/Activity');
 const angle = bali.angle.PI;
 const binary = bali.binary(generator.generateBytes(10));
 const complex = bali.component('(3, 4i)');
@@ -43,7 +43,7 @@ const tree = bali.tree('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3, 4]);
 const iterator = list.getIterator();
-const procedure = bali.procedure(action, {$foo: 'bar'});
+const procedure = bali.procedure(activity, {$foo: 'bar'});
 const array = [];
 const object = {};
 const document = bali.catalog({
@@ -109,8 +109,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $action intrinsic function', function() {
-            const index = intrinsics.index('$action');
+        it('should invoke $activity intrinsic function', function() {
+            const index = intrinsics.index('$activity');
             intrinsics.invoke(index, procedure);
             intrinsics.invoke(index, procedure, bali.catalog({$foo: 'bar'}));
             expect(
@@ -2126,8 +2126,8 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $procedure intrinsic function', function() {
             const index = intrinsics.index('$procedure');
-            intrinsics.invoke(index, action);
-            intrinsics.invoke(index, action, catalog);
+            intrinsics.invoke(index, activity);
+            intrinsics.invoke(index, activity, catalog);
             expect(
                 function() {
                     intrinsics.invoke(index);

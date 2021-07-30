@@ -9,7 +9,7 @@
  ************************************************************************/
 
 const debug = 1;
-const fs = require('fs');
+const pfs = require('fs').promises;
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const Parser = require('../src/Parser').Parser;
@@ -20,9 +20,9 @@ describe('Bali Method Compiler', function() {
     describe('Test Parser and Formatter', function() {
         const parser = new Parser(debug);
 
-        it('should parse and format the same instructions', function() {
+        it('should parse and format the same instructions', async function() {
             const file = 'test/utilities/instructions.basm';
-            const source = fs.readFileSync(file, 'utf8');
+            const source = await pfs.readFile(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line
@@ -31,9 +31,9 @@ describe('Bali Method Compiler', function() {
             expect(formatted).to.equal(source);  // add POSIX compliant <EOL>
         });
 
-        it('should parse and format the same instructions with indentation', function() {
+        it('should parse and format the same instructions with indentation', async function() {
             const file = 'test/utilities/instructions.basm';
-            const source = fs.readFileSync(file, 'utf8');
+            const source = await pfs.readFile(file, 'utf8');
             expect(source).to.exist;  // jshint ignore:line
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;  // jshint ignore:line

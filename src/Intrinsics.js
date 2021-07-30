@@ -255,9 +255,9 @@ exports.api = function(debug) {
             throw new Error('PROCESSOR: No intrinsic function should have an index of zero.');
         },
 
-        $action: function(procedure) {
-            validateTypeArgument('$action', '/bali/structures/Procedure', procedure);
-            return procedure.getAction();
+        $activity: function(procedure) {
+            validateTypeArgument('$activity', '/bali/structures/Procedure', procedure);
+            return procedure.getActivity();
         },
 
         $addItem: function(collection, item) {
@@ -873,10 +873,10 @@ exports.api = function(debug) {
             return bali.probability.random();
         },
 
-        $procedure: function(action, parameters) {
-            validateTypeArgument('$procedure', '/bali/structures/Action', action);
+        $procedure: function(activity, parameters) {
+            validateTypeArgument('$procedure', '/bali/structures/Activity', activity);
             parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
-            return bali.procedure(action, parameters);
+            return bali.procedure(activity, parameters);
         },
 
         $product: function(first, second) {

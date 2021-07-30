@@ -9,7 +9,7 @@
  ************************************************************************/
 
 const debug = 1;
-const fs = require('fs');
+const pfs = require('fs').promises;
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(debug);
@@ -20,7 +20,7 @@ describe('Bali Method Compiler', function() {
 
     describe('Test bytecode utilities on bytecodes', function() {
 
-        it('should perform round trip conversions from bytes to bytecodes', function() {
+        it('should perform round trip conversions from bytes to bytecodes', async function() {
             const generator = bali.generator();
             const bytes = generator.generateBytes(16);
             const bytecode = decoder.bytesToBytecode(bytes);
@@ -30,7 +30,7 @@ describe('Bali Method Compiler', function() {
             expect(JSON.stringify(bytecode2, null, 2)).to.equal(JSON.stringify(bytecode, null, 2));
         });
 
-        it('should round trip conversions from bytecodes to bytes', function() {
+        it('should round trip conversions from bytecodes to bytes', async function() {
             const bytecode = [0, 10241, 6164];
             const bytes = decoder.bytecodeToBytes(bytecode);
             expect(bytes.toString('hex')).to.equal('000028011814');
@@ -40,7 +40,7 @@ describe('Bali Method Compiler', function() {
 
     describe('Test bytecode utilities on instructions', function() {
 
-        it('should construct and compare instructions', function() {
+        it('should construct and compare instructions', async function() {
             const bytecode = [];
             var operand;
             var operation;
@@ -70,8 +70,8 @@ describe('Bali Method Compiler', function() {
             }
 
             const formattedInstructions = decoder.bytecodeToString(bytecode);
-            //fs.writeFileSync('test/utilities/formatted.code', formattedInstructions, 'utf8');
-            const expected = fs.readFileSync('test/utilities/formatted.code', 'utf8');
+            //await pfs.writeFile('test/utilities/formatted.code', formattedInstructions, 'utf8');
+            const expected = await pfs.readFile('test/utilities/formatted.code', 'utf8');
             expect(formattedInstructions).to.equal(expected);
         });
 
