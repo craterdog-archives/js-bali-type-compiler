@@ -1,5 +1,6 @@
 [
     $procedure: {
+        -- Note
         if a < b then {
             $a := b
             $b := {
@@ -29,9 +30,12 @@
             $exception := [
                 $message: "Something serious happened."
                 $exception: $bigOops
-            ]
+            ]  -- note
             throw exception
         }
+        /*
+        Comment
+        */
         while true do {
             $foo := bar
             if foo then {

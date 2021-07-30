@@ -1257,8 +1257,14 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
  * a main clause and then if any exceptions are thrown attempts to handle
  * them using a sequence of handle clauses.
  */
-// statement: mainClause handleClause?
+// statement: comment | mainClause handleClause?
 CompilingVisitor.prototype.visitStatement = function(tree) {
+    // ignore comments
+    if (tree.getItem(1).isType('/bali/structures/Comment')) {
+        this.builder.decrementStatementCount();
+        return;
+    }
+
     // initialize the context for this statement
     const statement = this.builder.pushStatementContext(tree);
     this.builder.insertLabel(statement.startLabel);
@@ -1667,6 +1673,15 @@ InstructionBuilder.prototype.getStatementNumber = function() {
 InstructionBuilder.prototype.incrementStatementCount = function() {
     const procedure = this.stack.peek();
     procedure.statementNumber++;
+};
+
+
+/*
+ * This method decrements by one the statement counter within the current procedure context.
+ */
+InstructionBuilder.prototype.decrementStatementCount = function() {
+    const procedure = this.stack.peek();
+    procedure.statementNumber--;
 };
 
 
