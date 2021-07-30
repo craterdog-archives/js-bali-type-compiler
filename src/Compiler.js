@@ -18,8 +18,6 @@
 const bali = require('bali-component-framework').api();
 const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
 const Assembler = require('./Assembler').Assembler;
-const Parser = require('./Parser').Parser;
-const Formatter = require('./Formatter').Formatter;
 const EOL = '\n';  // POSIX end of line character
 
 
@@ -128,10 +126,7 @@ Compiler.prototype.compileMethod = function(type, method) {
 
     // format the instructions and add to the compiled method
     var instructions = visitor.getInstructions();
-    const parser = new Parser(this.debug);
-    instructions = parser.parseInstructions(instructions);
-    const formatter = new Formatter(0, this.debug);
-    instructions = bali.text(formatter.formatInstructions(instructions), {$mediaType: 'application/basm'});
+    instructions = bali.text(instructions, {$mediaType: 'application/basm'});
     method.setAttribute('$instructions', instructions);
 };
 
