@@ -109,22 +109,6 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $code intrinsic function', function() {
-            const index = intrinsics.index('$code');
-            intrinsics.invoke(index, procedure);
-            intrinsics.invoke(index, procedure, bali.catalog({$foo: 'bar'}));
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, probability);
-                }
-            ).to.throw();
-        });
-
         it('should invoke $addItem intrinsic function', function() {
             const index = intrinsics.index('$addItem');
             intrinsics.invoke(index, catalog, association);
@@ -632,6 +616,22 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$cleanType');
             const clean = intrinsics.invoke(index, dirtyType.duplicate());
             expect(clean.isEqualTo(cleanType)).to.equal(true);
+        });
+
+        it('should invoke $code intrinsic function', function() {
+            const index = intrinsics.index('$code');
+            intrinsics.invoke(index, procedure);
+            intrinsics.invoke(index, procedure, bali.catalog({$foo: 'bar'}));
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
         });
 
         it('should invoke $coinToss intrinsic function', function() {

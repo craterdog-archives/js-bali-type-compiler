@@ -255,11 +255,6 @@ exports.api = function(debug) {
             throw new Error('PROCESSOR: No intrinsic function should have an index of zero.');
         },
 
-        $code: function(procedure) {
-            validateTypeArgument('$code', '/bali/structures/Procedure', procedure);
-            return procedure.getCode();
-        },
-
         $addItem: function(collection, item) {
             validateTypeArgument('$addItem', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$addItem', '/bali/abstractions/Component', item);
@@ -425,6 +420,11 @@ exports.api = function(debug) {
             validateTypeArgument('$cleanType', '/bali/collections/Catalog', type);
             compiler.cleanType(type);
             return type;
+        },
+
+        $code: function(procedure) {
+            validateTypeArgument('$code', '/bali/structures/Procedure', procedure);
+            return procedure.getCode();
         },
 
         $coinToss: function(weight) {
