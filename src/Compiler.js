@@ -187,32 +187,6 @@ CompilingVisitor.prototype.visitAcceptClause = function(tree) {
 };
 
 
-/*
- * This method compiles a sequence of statements by inserting instructions for
- * the VM to follow for each statement.
- */
-// code:
-//     statement (';' statement)*   |
-//     EOL (statement EOL)* |
-//     /*no statements*/
-CompilingVisitor.prototype.visitCode = function(code) {
-    // create a new compiler procedure context in the instruction builder
-    this.builder.pushProcedureContext(code);
-
-    // the VM executes each statement
-    const iterator = code.getIterator();
-    while (iterator.hasNext()) {
-        this.builder.requiresFinalization = true;
-        var statement = iterator.getNext();
-        statement.acceptVisitor(this);
-        this.builder.incrementStatementCount();
-    }
-
-    // throw away the current compiler procedure context in the instruction builder
-    this.builder.popProcedureContext();
-};
-
-
 // angle: ANGLE
 CompilingVisitor.prototype.visitAngle = function(angle) {
     this.visitElement(angle);
@@ -227,12 +201,10 @@ CompilingVisitor.prototype.visitAngle = function(angle) {
 //     expression (',' expression)* |
 //     /* no expressions */
 CompilingVisitor.prototype.visitArguments = function(tree) {
-    if (!tree.isEmpty()) {
-        const iterator = tree.getIterator();
-        while (iterator.hasNext()) {
-            const argument = iterator.getNext();
-            argument.acceptVisitor(this);
-        }
+    const iterator = tree.getIterator();
+    while (iterator.hasNext()) {
+        const argument = iterator.getNext();
+        argument.acceptVisitor(this);
     }
 };
 
@@ -288,11 +260,11 @@ CompilingVisitor.prototype.visitAttributeExpression = function(tree) {
     const indices = tree.getItem(2);
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
-    // the VM replaces the value on the component stack with the parent and index of the attribute
+    // the VM replaces the value on the component stack with the parent and index of the desired attribute
     indices.acceptVisitor(this);
-    // the VM retrieves the value of the attribute at the given index of the parent component
+    // the VM retrieves the value of the desired attribute at the given index of the parent component
     this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
-    // the parent and index have been replaced by the value of the attribute
+    // only the value of the desired attribute remains on the stack
 };
 
 
@@ -336,7 +308,7 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
 
 /*
  * This method compiles the instructions needed to checkout from the Bali Document Repository™
- * a committed document and assign it to a recipient. The recipient may be either
+ * a new version of a signed contract and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a composite component.
  */
 // checkoutClause: 'checkout' ('level' expression 'of')? recipient 'from' expression
@@ -383,6 +355,32 @@ CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
 
 
 /*
+ * This method compiles a sequence of statements by inserting instructions for
+ * the VM to follow for each statement.
+ */
+// code:
+//     statement (';' statement)*   |
+//     EOL (statement EOL)* |
+//     /*no statements*/
+CompilingVisitor.prototype.visitCode = function(code) {
+    // create a new compiler procedure context in the instruction builder
+    this.builder.pushProcedureContext(code);
+
+    // the VM executes each statement
+    const iterator = code.getIterator();
+    while (iterator.hasNext()) {
+        this.builder.requiresFinalization = true;
+        var statement = iterator.getNext();
+        statement.acceptVisitor(this);
+        this.builder.incrementStatementCount();
+    }
+
+    // throw away the current compiler procedure context in the instruction builder
+    this.builder.popProcedureContext();
+};
+
+
+/*
  * This method inserts the instructions that cause the VM to place the collection
  * on top of the component stack.
  */
@@ -406,24 +404,6 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
         item.acceptVisitor(this);
         this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
     }
-};
-
-
-/*
- * This method inserts the instructions needed to commit to the Bali Document Repository™
- * a named contract that is on top of the component stack.
- */
-// commitClause: 'commit' expression 'to' expression
-CompilingVisitor.prototype.visitCommitClause = function(tree) {
-    const contract = tree.getItem(1);
-    const expression = tree.getItem(2);
-    this.builder.insertNoteInstruction('Save the name of the new contract.');
-    expression.acceptVisitor(this);
-    const name = this.createTemporaryVariable('name');
-    this.builder.insertSaveInstruction('VARIABLE', name);
-    this.builder.insertNoteInstruction('Commit the named contract to the repository.');
-    contract.acceptVisitor(this);
-    this.builder.insertSaveInstruction('CONTRACT', name);
 };
 
 
@@ -1244,6 +1224,24 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
         this.builder.insertLabel(clausePrefix + 'ElseClauseDone');
         this.builder.insertJumpInstruction(doneLabel);
     }
+};
+
+
+/*
+ * This method inserts the instructions needed to digitally sign the named contract
+ * that is on top of the component stack and save it in the repository.
+ */
+// signClause: 'sign' expression 'as' expression
+CompilingVisitor.prototype.visitSignClause = function(tree) {
+    const contract = tree.getItem(1);
+    const expression = tree.getItem(2);
+    this.builder.insertNoteInstruction('Save the name of the new contract.');
+    expression.acceptVisitor(this);
+    const name = this.createTemporaryVariable('name');
+    this.builder.insertSaveInstruction('VARIABLE', name);
+    this.builder.insertNoteInstruction('Sign the named contract and save to the repository.');
+    contract.acceptVisitor(this);
+    this.builder.insertSaveInstruction('CONTRACT', name);
 };
 
 

@@ -2,10 +2,10 @@
     $procedure: {
         checkout $document from /acme/documents/example/v1.2
         save document
-        commit document to /acme/documents/example/v1.3
+        sign document as /acme/documents/example/v1.3
         checkout level 3 of documents[index] from /acme/documents/example/v1.3
         save documents[index] as citations[index]
-        commit documents[index] to /acme/documents/example/v1.3.1
+        sign documents[index] as /acme/documents/example/v1.3.1
         discard documents[index]
     }
     $instructions: "
@@ -42,11 +42,11 @@
         NOTE --Save the document to the repository and a citation to it.
         SAVE DOCUMENT $citation-5
         
-        3.CommitStatement:
+        3.SignStatement:
         NOTE --Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3`
         SAVE VARIABLE $name-6
-        NOTE --Commit the named contract to the repository.
+        NOTE --Sign the named contract and save to the repository.
         LOAD VARIABLE $document
         SAVE CONTRACT $name-6
         
@@ -97,11 +97,11 @@
         CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         
-        6.CommitStatement:
+        6.SignStatement:
         NOTE --Save the name of the new contract.
         PUSH LITERAL `/acme/documents/example/v1.3.1`
         SAVE VARIABLE $name-11
-        NOTE --Commit the named contract to the repository.
+        NOTE --Sign the named contract and save to the repository.
         LOAD VARIABLE $documents
         LOAD VARIABLE $index
         CALL $attribute WITH 2 ARGUMENTS
@@ -121,10 +121,10 @@
     $addresses: [
         "1.CheckoutStatement": 1
         "2.SaveStatement": 21
-        "3.CommitStatement": 23
+        "3.SignStatement": 23
         "4.CheckoutStatement": 27
         "5.SaveStatement": 50
-        "6.CommitStatement": 59
+        "6.SignStatement": 59
         "7.DiscardStatement": 65
     ]
     $bytecode: '
