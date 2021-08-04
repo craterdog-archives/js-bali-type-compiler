@@ -724,7 +724,11 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $concatenation intrinsic function', function() {
             const index = intrinsics.index('$concatenation');
+            intrinsics.invoke(index, binary, binary);
+            intrinsics.invoke(index, text, text);
+            intrinsics.invoke(index, name, name);
             intrinsics.invoke(index, list, list);
+            intrinsics.invoke(index, catalog, catalog);
             expect(
                 function() {
                     intrinsics.invoke(index);
