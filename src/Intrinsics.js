@@ -282,30 +282,30 @@ exports.api = function(debug) {
         },
 
         $arccosine: function(ratio) {
-            validateInterfaceArgument('$arccosine', '/bali/interfaces/Numerical', ratio);
-            return bali.angle.arccosine(ratio.toNumber());
+            validateInterfaceArgument('$arccosine', '/bali/interfaces/Continuous', ratio);
+            return bali.angle.arccosine(ratio.toReal());
         },
 
         $arcsine: function(ratio) {
-            validateInterfaceArgument('$arcsine', '/bali/interfaces/Numerical', ratio);
-            return bali.angle.arcsine(ratio.toNumber());
+            validateInterfaceArgument('$arcsine', '/bali/interfaces/Continuous', ratio);
+            return bali.angle.arcsine(ratio.toReal());
         },
 
         $arctangent: function(opposite, adjacent) {
-            validateInterfaceArgument('$arctangent', '/bali/interfaces/Numerical', opposite);
-            validateInterfaceArgument('$arctangent', '/bali/interfaces/Numerical', adjacent);
-            return bali.angle.arctangent(opposite.toNumber(), adjacent.toNumber());
+            validateInterfaceArgument('$arctangent', '/bali/interfaces/Continuous', opposite);
+            validateInterfaceArgument('$arctangent', '/bali/interfaces/Continuous', adjacent);
+            return bali.angle.arctangent(opposite.toReal(), adjacent.toReal());
         },
 
         $areEqual: function(first, second) {
-            validateTypeArgument('$areEqual', '/bali/abstractions/Component', first);
-            validateTypeArgument('$areEqual', '/bali/abstractions/Component', second);
+            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', second);
             return bali.probability(first.isEqualTo(second));
         },
 
         $areSame: function(first, second) {
-            validateTypeArgument('$areSame', '/bali/abstractions/Component', first);
-            validateTypeArgument('$areSame', '/bali/abstractions/Component', second);
+            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', second);
             return bali.probability(first === second);
         },
 
@@ -429,7 +429,7 @@ exports.api = function(debug) {
 
         $coinToss: function(weight) {
             validateTypeArgument('$coinToss', '/bali/elements/Probability', weight);
-            return bali.probability(generator.flipCoin(weight.toNumber()));
+            return bali.probability(generator.flipCoin(weight.toReal()));
         },
 
         $comparison: function(first, second) {
@@ -527,10 +527,10 @@ exports.api = function(debug) {
             return bali.text(EOL + component.toBDN(indentation) + EOL);
         },
 
-        $doesMatch: function(component, pattern) {
-            validateTypeArgument('$doesMatch', '/bali/abstractions/Component', component);
+        $doesMatch: function(comparable, pattern) {
+            validateTypeArgument('$doesMatch', '/bali/interfaces/Comparable', comparable);
             validateTypeArgument('$doesMatch', '/bali/abstractions/Component', pattern);
-            return bali.probability(component.isMatchedBy(pattern));
+            return bali.probability(comparable.isMatchedBy(pattern));
         },
 
         $duplicate: function(component) {
@@ -682,14 +682,14 @@ exports.api = function(debug) {
         },
 
         $isLess: function(first, second) {
-            validateTypeArgument('$isLess', '/bali/abstractions/Component', first);
-            validateTypeArgument('$isLess', '/bali/abstractions/Component', second);
+            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', second);
             return bali.probability(first.comparedTo(second) < 0);
         },
 
         $isMore: function(first, second) {
-            validateTypeArgument('$isMore', '/bali/abstractions/Component', first);
-            validateTypeArgument('$isMore', '/bali/abstractions/Component', second);
+            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', second);
             return bali.probability(first.comparedTo(second) > 0);
         },
 
@@ -916,9 +916,9 @@ exports.api = function(debug) {
             return bali.range(first, last, parameters);
         },
 
-        $real: function(numerical) {
-            validateInterfaceArgument('$real', '/bali/interfaces/Numerical', numerical);
-            return bali.number(numerical.toNumber());
+        $real: function(continuous) {
+            validateInterfaceArgument('$real', '/bali/interfaces/Continuous', continuous);
+            return bali.number(continuous.toReal());
         },
 
         $reciprocal: function(number) {
