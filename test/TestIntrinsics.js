@@ -33,7 +33,7 @@ const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
 const catalog = bali.catalog({$a: 'a', $b: 'b', $c: 'c', $d: 'd', $e: 'e'});
 const list = bali.list([1, 2, 3]);
-const percent = bali.percent(25);
+const percentage = bali.percentage(25);
 const queue = bali.queue([2,4,6,8,10,12]);
 const range = bali.range(1, 4);
 const set = bali.set([2,4,6,8,10,12]);
@@ -935,7 +935,7 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, angle, angle);
             intrinsics.invoke(index, duration, duration);
             intrinsics.invoke(index, number, number);
-            intrinsics.invoke(index, percent, percent);
+            intrinsics.invoke(index, percentage, percentage);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1434,7 +1434,7 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, percent);
+                    intrinsics.invoke(index, percentage);
                 }
             ).to.throw();
             expect(
@@ -2266,7 +2266,7 @@ describe('Bali Intrinsic Functions', function() {
             const index = intrinsics.index('$real');
             intrinsics.invoke(index, number);
             intrinsics.invoke(index, angle);
-            intrinsics.invoke(index, percent);
+            intrinsics.invoke(index, percentage);
             intrinsics.invoke(index, probability);
             expect(
                 function() {
@@ -2761,7 +2761,7 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, duration, duration);
             intrinsics.invoke(index, number, number);
             intrinsics.invoke(index, angle, angle);
-            intrinsics.invoke(index, percent, percent);
+            intrinsics.invoke(index, percentage, percentage);
             expect(
                 function() {
                     intrinsics.invoke(index);

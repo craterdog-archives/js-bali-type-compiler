@@ -559,7 +559,7 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 //     duration |
 //     moment |
 //     number |
-//     percent |
+//     percentage |
 //     probability |
 //     range |
 //     reference |
@@ -954,9 +954,9 @@ CompilingVisitor.prototype.visitPattern = function(pattern) {
 };
 
 
-// percent: PERCENT
-CompilingVisitor.prototype.visitPercent = function(percent) {
-    this.visitElement(percent);
+// percentage: PERCENTAGE
+CompilingVisitor.prototype.visitPercentage = function(percentage) {
+    this.visitElement(percentage);
 };
 
 
