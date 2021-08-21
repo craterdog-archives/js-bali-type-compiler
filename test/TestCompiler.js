@@ -8,7 +8,7 @@
  * Source Initiative. (See http://opensource.org/licenses/MIT)          *
  ************************************************************************/
 
-const debug = 1;
+const debug = 0;
 const directory = 'test/config/';
 const pfs = require('fs').promises;
 const crypto = require('crypto');

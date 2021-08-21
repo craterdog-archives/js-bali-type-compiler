@@ -112,7 +112,7 @@ AssemblingVisitor.prototype.visitList = function(instructions) {
 // label: EOL LABEL ':' EOL
 AssemblingVisitor.prototype.visitCatalog = function(instruction) {
     // can ignore the label at this stage since they don't show up in the bytecode
-    const operation = instruction.getAttribute('$operation').toNumber();
+    const operation = instruction.getAttribute('$operation').toInteger();
     switch (operation) {
         case types.NOTE:
             this.visitNote(instruction);
@@ -175,7 +175,7 @@ AssemblingVisitor.prototype.visitJump = function(instruction) {
     if (!modifier) {
         word = this.decoder.encodeInstruction(types.JUMP, 0, 0);  // JUMP TO NEXT INSTRUCTION
     } else {
-        modifier = modifier.toNumber();
+        modifier = modifier.toInteger();
         const label = instruction.getAttribute('$operand');
         const address = this.addresses.getAttribute(label);
         word = this.decoder.encodeInstruction(types.JUMP, modifier, address);
@@ -190,7 +190,7 @@ AssemblingVisitor.prototype.visitJump = function(instruction) {
 //     'PUSH' 'CONSTANT' SYMBOL |
 //     'PUSH' 'ARGUMENT' SYMBOL
 AssemblingVisitor.prototype.visitPush = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     var value = instruction.getAttribute('$operand');
     switch(modifier) {
         case types.HANDLER:
@@ -217,7 +217,7 @@ AssemblingVisitor.prototype.visitPush = function(instruction) {
 //     'PULL' 'RESULT' |
 //     'PULL' 'EXCEPTION'
 AssemblingVisitor.prototype.visitPull = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     const word = this.decoder.encodeInstruction(types.PULL, modifier);
     this.bytecode.push(word);
 };
@@ -229,7 +229,7 @@ AssemblingVisitor.prototype.visitPull = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitLoad = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.LOAD, modifier, index);
@@ -243,7 +243,7 @@ AssemblingVisitor.prototype.visitLoad = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitSave = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.SAVE, modifier, index);
@@ -257,7 +257,7 @@ AssemblingVisitor.prototype.visitSave = function(instruction) {
 //     'LOAD' 'CONTRACT' SYMBOL |
 //     'LOAD' 'MESSAGE' SYMBOL
 AssemblingVisitor.prototype.visitDrop = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     const symbol = instruction.getAttribute('$operand');
     const index = this.variables.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.DROP, modifier, index);
@@ -270,7 +270,7 @@ AssemblingVisitor.prototype.visitDrop = function(instruction) {
 //     'CALL' SYMBOL 'WITH' '1' 'ARGUMENT' |
 //     'CALL' SYMBOL 'WITH' NUMBER 'ARGUMENTS'
 AssemblingVisitor.prototype.visitCall = function(instruction) {
-    const count = instruction.getAttribute('$modifier').toNumber();
+    const count = instruction.getAttribute('$modifier').toInteger();
     const symbol = instruction.getAttribute('$operand');
     const index = this.intrinsics.index(symbol.toString());
     const word = this.decoder.encodeInstruction(types.CALL, count, index);
@@ -284,7 +284,7 @@ AssemblingVisitor.prototype.visitCall = function(instruction) {
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' |
 //     'SEND' SYMBOL 'TO' 'DOCUMENT' 'WITH' 'ARGUMENTS'
 AssemblingVisitor.prototype.visitSend = function(instruction) {
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     const symbol = instruction.getAttribute('$operand');
     const index = this.messages.getIndex(symbol);
     const word = this.decoder.encodeInstruction(types.SEND, modifier, index);

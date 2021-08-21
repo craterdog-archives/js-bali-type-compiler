@@ -14,7 +14,7 @@ const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(debug);
 const intrinsics = require('../src/Intrinsics').api(debug);
 const generator = bali.generator();
-const code = bali.tree('/bali/structures/Code');
+const code = bali.node('/bali/structures/Code');
 const angle = bali.angle.PI;
 const binary = bali.binary(generator.generateBytes(10));
 const complex = bali.component('(3, 4i)');
@@ -27,7 +27,7 @@ const tag = bali.tag();
 const zero = bali.number(0);
 const two = bali.number(2);
 const probability = bali.probability(0.5);
-const reference = bali.reference('https://google.com/advertizing?foo=bar#home');
+const resource = bali.resource('https://google.com/advertizing?foo=bar#home');
 const text = bali.text('This is text...');
 const source = bali.text('/bali/collections/List');
 const association = bali.association('$key', '"value"');
@@ -39,7 +39,7 @@ const range = bali.range(1, 4);
 const set = bali.set([2,4,6,8,10,12]);
 const stack = bali.stack([2,4,6,8,10,12]);
 const symbol = bali.component('$type');
-const tree = bali.tree('/bali/collections/Tree');
+const tree = bali.node('/bali/collections/Tree');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3, 4]);
 const iterator = list.getIterator();
@@ -432,7 +432,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $authority intrinsic function', function() {
             const index = intrinsics.index('$authority');
-            intrinsics.invoke(index, reference);
+            intrinsics.invoke(index, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1179,7 +1179,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $fragment intrinsic function', function() {
             const index = intrinsics.index('$fragment');
-            intrinsics.invoke(index, reference);
+            intrinsics.invoke(index, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1265,7 +1265,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $HTML intrinsic function', function() {
             const index = intrinsics.index('$HTML');
-            intrinsics.invoke(index, catalog, reference);
+            intrinsics.invoke(index, catalog, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1417,6 +1417,7 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $integer intrinsic function', function() {
             const index = intrinsics.index('$integer');
             intrinsics.invoke(index, number);
+            intrinsics.invoke(index, probability);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1425,11 +1426,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, angle);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, probability);
                 }
             ).to.throw();
             expect(
@@ -2063,24 +2059,9 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $parent intrinsic function', function() {
-            const index = intrinsics.index('$parent');
-            intrinsics.invoke(index, tree);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
         it('should invoke $path intrinsic function', function() {
             const index = intrinsics.index('$path');
-            intrinsics.invoke(index, reference);
+            intrinsics.invoke(index, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2171,7 +2152,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $query intrinsic function', function() {
             const index = intrinsics.index('$query');
-            intrinsics.invoke(index, reference);
+            intrinsics.invoke(index, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2556,7 +2537,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $scheme intrinsic function', function() {
             const index = intrinsics.index('$scheme');
-            intrinsics.invoke(index, reference);
+            intrinsics.invoke(index, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);

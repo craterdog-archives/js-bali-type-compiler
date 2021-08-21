@@ -114,7 +114,7 @@ FormattingVisitor.prototype.visitCatalog = function(instruction) {
         this.source += label.getValue() + ':';
         this.appendNewline();
     }
-    const operation = instruction.getAttribute('$operation').toNumber();
+    const operation = instruction.getAttribute('$operation').toInteger();
     switch (operation) {
         case types.NOTE:
             this.visitNote(instruction);
@@ -180,7 +180,7 @@ FormattingVisitor.prototype.visitJump = function(instruction) {
         this.source += 'JUMP TO ';
         const operand = instruction.getAttribute('$operand').getValue();
         this.source += operand;
-        modifier = modifier.toNumber();
+        modifier = modifier.toInteger();
         if (modifier !== types.ON_ANY) {
             this.source += ' ';
             this.source += types.jumpModifierString(modifier);
@@ -196,7 +196,7 @@ FormattingVisitor.prototype.visitJump = function(instruction) {
 //     'PUSH' 'ARGUMENT' SYMBOL |
 FormattingVisitor.prototype.visitPush = function(instruction) {
     this.source += 'PUSH ';
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += types.pushModifierString(modifier);
     this.source += ' ';
     var operand = instruction.getAttribute('$operand');
@@ -223,7 +223,7 @@ FormattingVisitor.prototype.visitPush = function(instruction) {
 //     'PULL' 'EXCEPTION'
 FormattingVisitor.prototype.visitPull = function(instruction) {
     this.source += 'PULL ';
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += types.pullModifierString(modifier);
 };
 
@@ -235,7 +235,7 @@ FormattingVisitor.prototype.visitPull = function(instruction) {
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitLoad = function(instruction) {
     this.source += 'LOAD ';
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += types.loadModifierString(modifier);
     this.source += ' ';
     const operand = instruction.getAttribute('$operand').toString();
@@ -250,7 +250,7 @@ FormattingVisitor.prototype.visitLoad = function(instruction) {
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitSave = function(instruction) {
     this.source += 'SAVE ';
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += types.saveModifierString(modifier);
     this.source += ' ';
     const operand = instruction.getAttribute('$operand').toString();
@@ -265,7 +265,7 @@ FormattingVisitor.prototype.visitSave = function(instruction) {
 //     'LOAD' 'MESSAGE' SYMBOL
 FormattingVisitor.prototype.visitDrop = function(instruction) {
     this.source += 'DROP ';
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += types.dropModifierString(modifier);
     this.source += ' ';
     const operand = instruction.getAttribute('$operand').toString();
@@ -280,7 +280,7 @@ FormattingVisitor.prototype.visitDrop = function(instruction) {
 FormattingVisitor.prototype.visitCall = function(instruction) {
     this.source += 'CALL ';
     this.source += instruction.getAttribute('$operand');
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     if (modifier > 0) {
         this.source += ' WITH ';
         this.source += modifier;
@@ -298,7 +298,7 @@ FormattingVisitor.prototype.visitCall = function(instruction) {
 FormattingVisitor.prototype.visitSend = function(instruction) {
     this.source += 'SEND ';
     this.source += instruction.getAttribute('$operand');
-    const modifier = instruction.getAttribute('$modifier').toNumber();
+    const modifier = instruction.getAttribute('$modifier').toInteger();
     this.source += ' ';
     this.source += types.sendModifierString(modifier);
 };

@@ -274,6 +274,12 @@ CompilingVisitor.prototype.visitBinary = function(binary) {
 };
 
 
+// boolean: 'false' | 'true'
+CompilingVisitor.prototype.visitBoolean = function(boolean) {
+    this.visitElement(boolean);
+};
+
+
 /*
  *  This method is causes the VM to jump out of the enclosing loop procedure block.
  */
@@ -298,7 +304,6 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
         $module: '/bali/compiler/Compiler',
         $procedure: '$visitBreakClause',
         $exception: '$noEnclosingLoop',
-        $parent: tree.getParent(),
         $message: 'A break statement was found with no enclosing loop.'
     });
     if (this.debug) console.error(exception.toString());
@@ -490,7 +495,6 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
         $module: '/bali/compiler/Compiler',
         $procedure: '$visitContinueClause',
         $exception: '$noEnclosingLoop',
-        $parent: tree.getParent(),
         $message: 'A continue statement was found with no enclosing loop.'
     });
     if (this.debug) console.error(exception.toString());
@@ -556,13 +560,14 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 // element:
 //     angle |
 //     binary |
+//     boolean |
 //     duration |
 //     moment |
 //     number |
 //     percentage |
 //     probability |
 //     range |
-//     reference |
+//     resource |
 //     symbol |
 //     tag |
 //     template |
@@ -980,7 +985,7 @@ CompilingVisitor.prototype.visitPostClause = function(tree) {
 };
 
 
-// probability: 'false' | FRACTION | 'true'
+// probability: FRACTION | '1.'
 CompilingVisitor.prototype.visitProbability = function(probability) {
     this.visitElement(probability);
 };
@@ -1033,9 +1038,9 @@ CompilingVisitor.prototype.visitRecipient = function(recipient) {
 };
 
 
-// reference: RESOURCE
-CompilingVisitor.prototype.visitReference = function(reference) {
-    this.visitElement(reference);
+// resource: RESOURCE
+CompilingVisitor.prototype.visitResource = function(resource) {
+    this.visitElement(resource);
 };
 
 
