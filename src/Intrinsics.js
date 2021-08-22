@@ -122,26 +122,22 @@ exports.api = function(debug) {
     // PRIVATE FUNCTIONS
 
     const validateTypeArgument = function(procedure, type, argument) {
-        if (argument === undefined || argument === null || !argument.isComponent || !argument.isType(type)) {
-            const exception = bali.exception({
-                $module: '/bali/compiler/Intrinsics',
-                $procedure: procedure,
-                $exception: '$argumentType',
-                $expected: type,
-                $actual: bali.type(argument),
-                $text: 'An argument passed into an intrinsic function does not have the required type.'
-            });
-            if (debug > 0) console.error(exception.toString());
-            throw exception;
-        }
+        if (argument && argument.isComponent && (argument.isType(type) || argument.supportsInterface(type))) return;
+        const exception = bali.exception({
+            $module: '/bali/compiler/Intrinsics',
+            $procedure: procedure,
+            $exception: '$argumentType',
+            $expected: type,
+            $actual: bali.type(argument),
+            $text: 'An argument passed into an intrinsic function does not have the required type.'
+        });
+        if (debug > 0) console.error(exception.toString());
+        throw exception;
     };
 
     const validateOptionalTypeArgument = function(procedure, type, argument) {
-        if (bali.pattern.NONE.isEqualTo(argument)) return undefined;
-        if (argument !== undefined) {
-            validateTypeArgument(procedure, type, argument);
-        }
-        return argument;
+        if (argument === null || argument === undefined || bali.pattern.NONE.isEqualTo(argument)) return;
+        validateTypeArgument(procedure, type, argument);
     };
 
     const validateSameType = function(procedure, first, second) {
@@ -159,29 +155,6 @@ exports.api = function(debug) {
             if (debug > 0) console.error(exception.toString());
             throw exception;
         }
-    };
-
-    const validateInterfaceArgument = function(procedure, iface, argument) {
-        if (argument === undefined || argument === null || !argument.isComponent || !argument.supportsInterface(iface)) {
-            const exception = bali.exception({
-                $module: '/bali/compiler/Intrinsics',
-                $procedure: procedure,
-                $exception: '$argumentType',
-                $expected: iface,
-                $actual: (argument && argument.isComponent) ? argument.getInterfaces() : bali.type(argument),
-                $text: 'An argument passed into an intrinsic function does not support a required interface.'
-            });
-            if (debug > 0) console.error(exception.toString());
-            throw exception;
-        }
-    };
-
-    const validateOptionalInterfaceArgument = function(procedure, iface, argument) {
-        if (bali.pattern.NONE.isEqualTo(argument)) return undefined;
-        if (argument !== undefined) {
-            validateInterfaceArgument(procedure, iface, argument);
-        }
-        return argument;
     };
 
     const validateIndex = function(procedure, size, index) {
@@ -270,42 +243,42 @@ exports.api = function(debug) {
         },
 
         $ancestry: function(component) {
-            validateInterfaceArgument('$ancestry', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$ancestry', '/bali/interfaces/Reflective', component);
             return bali.list(component.getAncestry());
         },
 
         $and: function(first, second) {
-            validateInterfaceArgument('$and', '/bali/interfaces/Logical', first);
-            validateInterfaceArgument('$and', '/bali/interfaces/Logical', second);
+            validateTypeArgument('$and', '/bali/libraries/Logical', first);
+            validateTypeArgument('$and', '/bali/libraries/Logical', second);
             validateSameType('$and', first, second);
             return first.constructor.and(first, second);
         },
 
         $arccosine: function(ratio) {
-            validateInterfaceArgument('$arccosine', '/bali/interfaces/Continuous', ratio);
+            validateTypeArgument('$arccosine', '/bali/interfaces/Continuous', ratio);
             return bali.angle.arccosine(ratio.toReal());
         },
 
         $arcsine: function(ratio) {
-            validateInterfaceArgument('$arcsine', '/bali/interfaces/Continuous', ratio);
+            validateTypeArgument('$arcsine', '/bali/interfaces/Continuous', ratio);
             return bali.angle.arcsine(ratio.toReal());
         },
 
         $arctangent: function(opposite, adjacent) {
-            validateInterfaceArgument('$arctangent', '/bali/interfaces/Continuous', opposite);
-            validateInterfaceArgument('$arctangent', '/bali/interfaces/Continuous', adjacent);
+            validateTypeArgument('$arctangent', '/bali/interfaces/Continuous', opposite);
+            validateTypeArgument('$arctangent', '/bali/interfaces/Continuous', adjacent);
             return bali.angle.arctangent(opposite.toReal(), adjacent.toReal());
         },
 
         $areEqual: function(first, second) {
-            validateInterfaceArgument('$areEqual', '/bali/interfaces/Comparable', first);
-            validateInterfaceArgument('$areEqual', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', second);
             return bali.probability(first.isEqualTo(second));
         },
 
         $areSame: function(first, second) {
-            validateInterfaceArgument('$areSame', '/bali/interfaces/Comparable', first);
-            validateInterfaceArgument('$areSame', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', second);
             return bali.probability(first === second);
         },
 
@@ -322,7 +295,7 @@ exports.api = function(debug) {
         },
 
         $attribute: function(composite, key) {
-            validateInterfaceArgument('$attribute', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$attribute', '/bali/interfaces/Composite', composite);
             validateTypeArgument('$attribute', '/bali/abstractions/Element', key);
             return composite.getAttribute(key) || bali.pattern.NONE;
         },
@@ -387,7 +360,7 @@ exports.api = function(debug) {
         },
 
         $binary: function(size, parameters) {
-            validateInterfaceArgument('$binary', '/bali/interfaces/Discrete', size);
+            validateTypeArgument('$binary', '/bali/interfaces/Discrete', size);
             parameters = validateOptionalTypeArgument('$binary', '/bali/collections/Catalog', parameters);
             size = size.toInteger();
             validateIndex('$binary', 1024, size);
@@ -433,8 +406,8 @@ exports.api = function(debug) {
         },
 
         $comparison: function(first, second) {
-            validateInterfaceArgument('$comparison', '/bali/interfaces/Comparable', first);
-            validateInterfaceArgument('$comparison', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$comparison', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$comparison', '/bali/interfaces/Comparable', second);
             return bali.number(first.comparedTo(second));
         },
 
@@ -445,7 +418,7 @@ exports.api = function(debug) {
         },
 
         $complement: function(angle) {
-            validateTypeArgument('$complement', '/bali/elements/Angle', angle);
+            validateTypeArgument('$complement', '/bali/libraries/Radial', angle);
             return bali.angle.complement(angle);
         },
 
@@ -455,14 +428,14 @@ exports.api = function(debug) {
         },
 
         $concatenation: function(first, second) {
-            validateInterfaceArgument('$concatenation', '/bali/interfaces/Chainable', first);
-            validateInterfaceArgument('$concatenation', '/bali/interfaces/Chainable', second);
+            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', first);
+            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', second);
             validateSameType('$concatenation', first, second);
             return first.constructor.concatenation(first, second);
         },
 
         $conjugate: function(number) {
-            validateTypeArgument('$conjugate', '/bali/elements/Number', number);
+            validateTypeArgument('$conjugate', '/bali/libraries/Numerical', number);
             return bali.number.conjugate(number);
         },
 
@@ -485,7 +458,7 @@ exports.api = function(debug) {
         },
 
         $cosine: function(angle) {
-            validateTypeArgument('$cosine', '/bali/elements/Angle', angle);
+            validateTypeArgument('$cosine', '/bali/libraries/Radial', angle);
             return bali.number(bali.angle.cosine(angle));
         },
 
@@ -511,8 +484,8 @@ exports.api = function(debug) {
         },
 
         $difference: function(first, second) {
-            validateInterfaceArgument('$difference', '/bali/interfaces/Scalable', first);
-            validateInterfaceArgument('$difference', '/bali/interfaces/Scalable', second);
+            validateTypeArgument('$difference', '/bali/libraries/Scalable', first);
+            validateTypeArgument('$difference', '/bali/libraries/Scalable', second);
             validateSameType('$difference', first, second);
             return first.constructor.difference(first, second);
         },
@@ -528,7 +501,7 @@ exports.api = function(debug) {
         },
 
         $doesMatch: function(comparable, pattern) {
-            validateInterfaceArgument('$doesMatch', '/bali/interfaces/Comparable', comparable);
+            validateTypeArgument('$doesMatch', '/bali/interfaces/Comparable', comparable);
             validateTypeArgument('$doesMatch', '/bali/abstractions/Component', pattern);
             return bali.probability(comparable.isMatchedBy(pattern));
         },
@@ -551,8 +524,8 @@ exports.api = function(debug) {
         },
 
         $exponential: function(base, exponent) {
-            validateTypeArgument('$exponential', '/bali/elements/Number', base);
-            validateTypeArgument('$exponential', '/bali/elements/Number', exponent);
+            validateTypeArgument('$exponential', '/bali/libraries/Numerical', base);
+            validateTypeArgument('$exponential', '/bali/libraries/Numerical', exponent);
             return bali.number.exponential(base, exponent);
         },
 
@@ -563,7 +536,7 @@ exports.api = function(debug) {
         },
 
         $factorial: function(number) {
-            validateTypeArgument('$factorial', '/bali/elements/Number', number);
+            validateTypeArgument('$factorial', '/bali/libraries/Numerical', number);
             return bali.number.factorial(number);
         },
 
@@ -614,7 +587,7 @@ exports.api = function(debug) {
         },
 
         $HTML: function(component, style) {
-            validateInterfaceArgument('$HTML', '/bali/interfaces/Exportable', component);
+            validateTypeArgument('$HTML', '/bali/interfaces/Exportable', component);
             validateTypeArgument('$HTML', '/bali/elements/Resource', style);
             return bali.text(EOL + component.toHTML(style.getValue().toString()) + EOL);
         },
@@ -625,14 +598,14 @@ exports.api = function(debug) {
         },
 
         $index: function(sequential, item) {
-            validateInterfaceArgument('$index', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$index', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$index', '/bali/abstractions/Component', item);
             return bali.number(sequential.getIndex(item));
         },
 
         $insertItem: function(list, index, item) {
             validateTypeArgument('$insertItem', '/bali/collections/List', list);
-            validateInterfaceArgument('$insertItem', '/bali/interfaces/Discrete', index);
+            validateTypeArgument('$insertItem', '/bali/interfaces/Discrete', index);
             validateTypeArgument('$insertItem', '/bali/abstractions/Component', item);
             index = index.toInteger();
             validateIndex('$insertItem', list.getSize(), index);
@@ -642,7 +615,7 @@ exports.api = function(debug) {
 
         $insertItems: function(list, index, items) {
             validateTypeArgument('$insertItems', '/bali/collections/List', list);
-            validateInterfaceArgument('$insertItems', '/bali/interfaces/Discrete', index);
+            validateTypeArgument('$insertItems', '/bali/interfaces/Discrete', index);
             validateTypeArgument('$insertItems', '/bali/abstractions/Collection', items);
             index = index.toInteger();
             validateIndex('$insertItems', list.getSize(), index);
@@ -657,22 +630,22 @@ exports.api = function(debug) {
         },
 
         $integer: function(discrete) {
-            validateInterfaceArgument('$integer', '/bali/interfaces/Discrete', discrete);
+            validateTypeArgument('$integer', '/bali/interfaces/Discrete', discrete);
             return bali.number(discrete.toInteger());
         },
 
         $interfaces: function(component) {
-            validateInterfaceArgument('$interfaces', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$interfaces', '/bali/interfaces/Reflective', component);
             return bali.list(component.getInterfaces());
         },
 
         $inverse: function(scalable) {
-            validateInterfaceArgument('$inverse', '/bali/interfaces/Scalable', scalable);
+            validateTypeArgument('$inverse', '/bali/libraries/Scalable', scalable);
             return scalable.constructor.inverse(scalable);
         },
 
         $isEmpty: function(sequential) {
-            validateInterfaceArgument('$isEmpty', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$isEmpty', '/bali/interfaces/Sequential', sequential);
             return bali.probability(sequential.isEmpty());
         },
 
@@ -682,24 +655,24 @@ exports.api = function(debug) {
         },
 
         $isLess: function(first, second) {
-            validateInterfaceArgument('$isLess', '/bali/interfaces/Comparable', first);
-            validateInterfaceArgument('$isLess', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', second);
             return bali.probability(first.comparedTo(second) < 0);
         },
 
         $isMore: function(first, second) {
-            validateInterfaceArgument('$isMore', '/bali/interfaces/Comparable', first);
-            validateInterfaceArgument('$isMore', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', first);
+            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', second);
             return bali.probability(first.comparedTo(second) > 0);
         },
 
         $isParameterized: function(component) {
-            validateInterfaceArgument('$isParameterized', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$isParameterized', '/bali/interfaces/Reflective', component);
             return bali.probability(component.isParameterized());
         },
 
         $isType: function(component, type) {
-            validateInterfaceArgument('$isType', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$isType', '/bali/interfaces/Reflective', component);
             validateTypeArgument('$isType', '/bali/elements/Name', type);
             return bali.probability(component.isType(type.toString()));
         },
@@ -715,21 +688,21 @@ exports.api = function(debug) {
         },
 
         $item: function(sequential, index) {
-            validateInterfaceArgument('$item', '/bali/interfaces/Sequential', sequential);
-            validateInterfaceArgument('$item', '/bali/interfaces/Discrete', index);
+            validateTypeArgument('$item', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$item', '/bali/interfaces/Discrete', index);
             index = index.toInteger();
             validateIndex('$item', sequential.getSize(), index);
             return sequential.componentize(sequential.getItem(index));
         },
 
         $items: function(sequential, range) {
-            validateInterfaceArgument('$items', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$items', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$items', '/bali/structures/Range', range);
             return sequential.getItems(range);
         },
 
         $iterator: function(sequential) {
-            validateInterfaceArgument('$iterator', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$iterator', '/bali/interfaces/Sequential', sequential);
             return sequential.getIterator();
         },
 
@@ -767,8 +740,8 @@ exports.api = function(debug) {
         },
 
         $logarithm: function(base, value) {
-            validateTypeArgument('$logarithm', '/bali/elements/Number', base);
-            validateTypeArgument('$logarithm', '/bali/elements/Number', value);
+            validateTypeArgument('$logarithm', '/bali/libraries/Numerical', base);
+            validateTypeArgument('$logarithm', '/bali/libraries/Numerical', value);
             return bali.number.logarithm(base, value);
         },
 
@@ -823,7 +796,7 @@ exports.api = function(debug) {
         },
 
         $not: function(logical) {
-            validateInterfaceArgument('$not', '/bali/interfaces/Logical', logical);
+            validateTypeArgument('$not', '/bali/libraries/Logical', logical);
             return logical.constructor.not(logical);
         },
 
@@ -832,20 +805,20 @@ exports.api = function(debug) {
         },
 
         $or: function(first, second) {
-            validateInterfaceArgument('$or', '/bali/interfaces/Logical', first);
-            validateInterfaceArgument('$or', '/bali/interfaces/Logical', second);
+            validateTypeArgument('$or', '/bali/libraries/Logical', first);
+            validateTypeArgument('$or', '/bali/libraries/Logical', second);
             validateSameType('$or', first, second);
             return first.constructor.or(first, second);
         },
 
         $parameter: function(component, key) {
-            validateInterfaceArgument('$parameter', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$parameter', '/bali/interfaces/Reflective', component);
             validateTypeArgument('$parameter', '/bali/abstractions/Element', key);
             return component.getParameter(key);
         },
 
         $parameters: function(component) {
-            validateInterfaceArgument('$parameters', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$parameters', '/bali/interfaces/Reflective', component);
             return component.getParameters();
         },
 
@@ -875,8 +848,8 @@ exports.api = function(debug) {
         },
 
         $product: function(first, second) {
-            validateTypeArgument('$product', '/bali/elements/Number', first);
-            validateTypeArgument('$product', '/bali/elements/Number', second);
+            validateTypeArgument('$product', '/bali/libraries/Numerical', first);
+            validateTypeArgument('$product', '/bali/libraries/Numerical', second);
             return bali.number.product(first, second);
         },
 
@@ -892,8 +865,8 @@ exports.api = function(debug) {
         },
 
         $quotient: function(first, second) {
-            validateTypeArgument('$quotient', '/bali/elements/Number', first);
-            validateTypeArgument('$quotient', '/bali/elements/Number', second);
+            validateTypeArgument('$quotient', '/bali/libraries/Numerical', first);
+            validateTypeArgument('$quotient', '/bali/libraries/Numerical', second);
             return bali.number.quotient(first, second);
         },
 
@@ -912,18 +885,18 @@ exports.api = function(debug) {
         },
 
         $real: function(continuous) {
-            validateInterfaceArgument('$real', '/bali/interfaces/Continuous', continuous);
+            validateTypeArgument('$real', '/bali/interfaces/Continuous', continuous);
             return bali.number(continuous.toReal());
         },
 
         $reciprocal: function(number) {
-            validateTypeArgument('$reciprocal', '/bali/elements/Number', number);
+            validateTypeArgument('$reciprocal', '/bali/libraries/Numerical', number);
             return bali.number.reciprocal(number);
         },
 
         $remainder: function(first, second) {
-            validateTypeArgument('$remainder', '/bali/elements/Number', first);
-            validateTypeArgument('$remainder', '/bali/elements/Number', second);
+            validateTypeArgument('$remainder', '/bali/libraries/Numerical', first);
+            validateTypeArgument('$remainder', '/bali/libraries/Numerical', second);
             return bali.number.remainder(first, second);
         },
 
@@ -954,7 +927,7 @@ exports.api = function(debug) {
 
         $removeIndex: function(list, index) {
             validateTypeArgument('$removeIndex', '/bali/collections/List', list);
-            validateInterfaceArgument('$removeIndex', '/bali/interfaces/Discrete', index);
+            validateTypeArgument('$removeIndex', '/bali/interfaces/Discrete', index);
             index = index.toInteger();
             validateIndex('$removeIndex', list.getSize(), index);
             list.removeItem(index);
@@ -988,20 +961,20 @@ exports.api = function(debug) {
         },
 
         $reverseItems: function(sortable) {
-            validateInterfaceArgument('$reverseItems', '/bali/interfaces/Sortable', sortable);
+            validateTypeArgument('$reverseItems', '/bali/interfaces/Sortable', sortable);
             sortable.reverseItems();
             return sortable;
         },
 
         $sans: function(first, second) {
-            validateInterfaceArgument('$sans', '/bali/interfaces/Logical', first);
-            validateInterfaceArgument('$sans', '/bali/interfaces/Logical', second);
+            validateTypeArgument('$sans', '/bali/libraries/Logical', first);
+            validateTypeArgument('$sans', '/bali/libraries/Logical', second);
             validateSameType('$sans', first, second);
             return first.constructor.sans(first, second);
         },
 
         $scaled: function(scalable, factor) {
-            validateInterfaceArgument('$scaled', '/bali/interfaces/Scalable', scalable);
+            validateTypeArgument('$scaled', '/bali/libraries/Scalable', scalable);
             validateTypeArgument('$scaled', '/bali/elements/Number', factor);
             return scalable.constructor.scaled(scalable, factor);
         },
@@ -1028,7 +1001,7 @@ exports.api = function(debug) {
         },
 
         $setAttribute: function(composite, key, value) {
-            validateInterfaceArgument('$setAttribute', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$setAttribute', '/bali/interfaces/Composite', composite);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Element', key);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Component', value);
             composite.setAttribute(key, value);
@@ -1037,7 +1010,7 @@ exports.api = function(debug) {
 
         $setItem: function(list, index, item) {
             validateTypeArgument('$setItem', '/bali/collections/List', list);
-            validateInterfaceArgument('$setItem', '/bali/interfaces/Discrete', index);
+            validateTypeArgument('$setItem', '/bali/interfaces/Discrete', index);
             validateTypeArgument('$setItem', '/bali/abstractions/Component', item);
             index = index.toInteger();
             validateIndex('$setItem', list.getSize(), index);
@@ -1046,7 +1019,7 @@ exports.api = function(debug) {
         },
 
         $setParameter: function(component, key, value) {
-            validateInterfaceArgument('$setParameter', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$setParameter', '/bali/interfaces/Reflective', component);
             validateTypeArgument('$setParameter', '/bali/abstractions/Element', key);
             validateTypeArgument('$setParameter', '/bali/abstractions/Component', value);
             component.setParameter(key, value);
@@ -1060,17 +1033,17 @@ exports.api = function(debug) {
         },
 
         $sine: function(angle) {
-            validateTypeArgument('$sine', '/bali/elements/Angle', angle);
+            validateTypeArgument('$sine', '/bali/libraries/Radial', angle);
             return bali.number(bali.angle.sine(angle));
         },
 
         $size: function(sequential) {
-            validateInterfaceArgument('$size', '/bali/interfaces/Sequential', sequential);
+            validateTypeArgument('$size', '/bali/interfaces/Sequential', sequential);
             return bali.number(sequential.getSize());
         },
 
         $sortItems: function(sortable) {
-            validateInterfaceArgument('$sortItems', '/bali/interfaces/Sortable', sortable);
+            validateTypeArgument('$sortItems', '/bali/interfaces/Sortable', sortable);
             sortable.sortItems();
             return sortable;
         },
@@ -1082,19 +1055,19 @@ exports.api = function(debug) {
         },
 
         $sum: function(first, second) {
-            validateInterfaceArgument('$sum', '/bali/interfaces/Scalable', first);
-            validateInterfaceArgument('$sum', '/bali/interfaces/Scalable', second);
+            validateTypeArgument('$sum', '/bali/libraries/Scalable', first);
+            validateTypeArgument('$sum', '/bali/libraries/Scalable', second);
             validateSameType('$sum', first, second);
             return first.constructor.sum(first, second);
         },
 
         $supplement: function(angle) {
-            validateTypeArgument('$supplement', '/bali/elements/Angle', angle);
+            validateTypeArgument('$supplement', '/bali/libraries/Radial', angle);
             return bali.angle.supplement(angle);
         },
 
         $supportsInterface: function(component, iface) {
-            validateInterfaceArgument('$supportsInterface', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$supportsInterface', '/bali/interfaces/Reflective', component);
             validateTypeArgument('$supportsInterface', '/bali/elements/Name', iface);
             return component.supportsInterface(iface);
         },
@@ -1107,7 +1080,7 @@ exports.api = function(debug) {
         },
 
         $tangent: function(angle) {
-            validateTypeArgument('$tangent', '/bali/elements/Angle', angle);
+            validateTypeArgument('$tangent', '/bali/libraries/Radial', angle);
             return bali.number(bali.angle.tangent(angle));
         },
 
@@ -1124,7 +1097,7 @@ exports.api = function(debug) {
 
         $toSlot: function(iterator, slot) {
             validateTypeArgument('$toSlot', '/bali/abstractions/Iterator', iterator);
-            validateInterfaceArgument('$toSlot', '/bali/interfaces/Discrete', slot);
+            validateTypeArgument('$toSlot', '/bali/interfaces/Discrete', slot);
             iterator.toSlot(slot);
             return iterator;
         },
@@ -1142,7 +1115,7 @@ exports.api = function(debug) {
         },
 
         $type: function(component) {
-            validateInterfaceArgument('$type', '/bali/interfaces/Reflective', component);
+            validateTypeArgument('$type', '/bali/interfaces/Reflective', component);
             return bali.component(component.getType());
         },
 
@@ -1157,8 +1130,8 @@ exports.api = function(debug) {
         },
 
         $xor: function(first, second) {
-            validateInterfaceArgument('$xor', '/bali/interfaces/Logical', first);
-            validateInterfaceArgument('$xor', '/bali/interfaces/Logical', second);
+            validateTypeArgument('$xor', '/bali/libraries/Logical', first);
+            validateTypeArgument('$xor', '/bali/libraries/Logical', second);
             validateSameType('$xor', first, second);
             return first.constructor.xor(first, second);
         },
