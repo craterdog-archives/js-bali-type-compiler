@@ -136,8 +136,9 @@ exports.api = function(debug) {
     };
 
     const validateOptionalTypeArgument = function(procedure, type, argument) {
-        if (argument === null || argument === undefined || bali.pattern.NONE.isEqualTo(argument)) return;
+        if (argument === null || argument === undefined || bali.pattern.NONE.isEqualTo(argument)) return undefined;
         validateTypeArgument(procedure, type, argument);
+        return argument;
     };
 
     const validateSameType = function(procedure, first, second) {
@@ -313,7 +314,7 @@ exports.api = function(debug) {
 
         $base2: function(binary, indentation) {
             validateTypeArgument('$base2', '/bali/elements/Binary', binary);
-            indentation = validateOptionalInterfaceArgument('$base2', '/bali/interfaces/Discrete', indentation);
+            indentation = validateOptionalTypeArgument('$base2', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toInteger();
@@ -325,7 +326,7 @@ exports.api = function(debug) {
 
         $base16: function(binary, indentation) {
             validateTypeArgument('$base16', '/bali/elements/Binary', binary);
-            indentation = validateOptionalInterfaceArgument('$base16', '/bali/interfaces/Discrete', indentation);
+            indentation = validateOptionalTypeArgument('$base16', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toInteger();
@@ -337,7 +338,7 @@ exports.api = function(debug) {
 
         $base32: function(binary, indentation) {
             validateTypeArgument('$base32', '/bali/elements/Binary', binary);
-            indentation = validateOptionalInterfaceArgument('$base32', '/bali/interfaces/Discrete', indentation);
+            indentation = validateOptionalTypeArgument('$base32', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toInteger();
@@ -349,7 +350,7 @@ exports.api = function(debug) {
 
         $base64: function(binary, indentation) {
             validateTypeArgument('$base64', '/bali/elements/Binary', binary);
-            indentation = validateOptionalInterfaceArgument('$base64', '/bali/interfaces/Discrete', indentation);
+            indentation = validateOptionalTypeArgument('$base64', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toInteger();
@@ -492,7 +493,7 @@ exports.api = function(debug) {
 
         $document: function(component, indentation) {
             validateTypeArgument('$document', '/bali/abstractions/Component', component);
-            indentation = validateOptionalInterfaceArgument('$document', '/bali/interfaces/Discrete', indentation);
+            indentation = validateOptionalTypeArgument('$document', '/bali/interfaces/Discrete', indentation);
             if (indentation) {
                 indentation = indentation.toInteger();
                 validateIndex('$document', 10, indentation);
@@ -787,7 +788,7 @@ exports.api = function(debug) {
 
         $nextVersion: function(version, level) {
             validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
-            validateOptionalInterfaceArgument('$nextVersion', '/bali/interfaces/Discrete', level);
+            validateOptionalTypeArgument('$nextVersion', '/bali/interfaces/Discrete', level);
             if (level) {
                 level = level.toInteger();
                 if (level) validateIndex('$nextVersion', version.getSize() + 1, level);  // allow for the next subversion
@@ -876,8 +877,8 @@ exports.api = function(debug) {
         },
 
         $range: function(first, last, parameters) {
-            first = validateOptionalInterfaceArgument('$range', '/bali/interfaces/Discrete', first);
-            last = validateOptionalInterfaceArgument('$range', '/bali/interfaces/Discrete', last);
+            first = validateOptionalTypeArgument('$range', '/bali/interfaces/Discrete', first);
+            last = validateOptionalTypeArgument('$range', '/bali/interfaces/Discrete', last);
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             if (first) first = first.toInteger();
             if (last) last = last.toInteger();
@@ -1073,7 +1074,7 @@ exports.api = function(debug) {
         },
 
         $tag: function(size) {
-            size = validateOptionalInterfaceArgument('$tag', '/bali/interfaces/Discrete', size);
+            size = validateOptionalTypeArgument('$tag', '/bali/interfaces/Discrete', size);
             size = size.toInteger();
             validateIndex('$tag', 64, size);
             return bali.tag(size);
