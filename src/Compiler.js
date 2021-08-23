@@ -134,10 +134,10 @@ Compiler.prototype.compileMethod = function(type, method) {
 // PRIVATE CLASSES
 
 /*
- * This private class uses the Visitor Pattern to traverse the syntax tree generated
+ * This private class uses the Visitor Pattern to traverse the syntax node generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
  * to construct the corresponding Bali Virtual Machine™ instructions for the
- * syntax tree is it traversing.
+ * syntax node is it traversing.
  */
 function CompilingVisitor(type, method, debug) {
     Visitor.call(this);
@@ -166,8 +166,8 @@ CompilingVisitor.prototype.getInstructions = function() {
  * was retrieved from a message bag.
  */
 // acceptClause: 'accept' expression
-CompilingVisitor.prototype.visitAcceptClause = function(tree) {
-    const expression = tree.getItem(1);
+CompilingVisitor.prototype.visitAcceptClause = function(node) {
+    const expression = node.getItem(1);
 
     this.builder.insertNoteInstruction('Save the message to be accepted.');
     expression.acceptVisitor(this);
@@ -200,8 +200,8 @@ CompilingVisitor.prototype.visitAngle = function(angle) {
 // arguments:
 //     expression (',' expression)* |
 //     /* no expressions */
-CompilingVisitor.prototype.visitArguments = function(tree) {
-    const iterator = tree.getIterator();
+CompilingVisitor.prototype.visitArguments = function(node) {
+    const iterator = node.getIterator();
     while (iterator.hasNext()) {
         const argument = iterator.getNext();
         argument.acceptVisitor(this);
@@ -215,12 +215,12 @@ CompilingVisitor.prototype.visitArguments = function(tree) {
  * value of an arithmetic operation on them.
  */
 // arithmeticExpression: expression ('*' | '/' | '//' | '+' | '-') expression
-CompilingVisitor.prototype.visitArithmeticExpression = function(tree) {
-    const firstOperand = tree.getItem(1);
-    const secondOperand = tree.getItem(2);
+CompilingVisitor.prototype.visitArithmeticExpression = function(node) {
+    const firstOperand = node.getItem(1);
+    const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
-    const operator = tree.operator;
+    const operator = node.operator;
     switch (operator) {
         case '*':
             this.builder.insertCallInstruction('$product', 2);  // product(x, y)
@@ -255,9 +255,9 @@ CompilingVisitor.prototype.visitAssociation = function(association) {
  * with its attribute referred to by the indices.
  */
 // attributeExpression: expression '[' indices ']'
-CompilingVisitor.prototype.visitAttributeExpression = function(tree) {
-    const component = tree.getItem(1);
-    const indices = tree.getItem(2);
+CompilingVisitor.prototype.visitAttributeExpression = function(node) {
+    const component = node.getItem(1);
+    const indices = node.getItem(2);
     // the VM places the value of the expression on top of the component stack
     component.acceptVisitor(this);
     // the VM replaces the value on the component stack with the parent and index of the desired attribute
@@ -284,7 +284,7 @@ CompilingVisitor.prototype.visitBoolean = function(boolean) {
  *  This method is causes the VM to jump out of the enclosing loop procedure block.
  */
 // breakClause: 'break' 'loop'
-CompilingVisitor.prototype.visitBreakClause = function(tree) {
+CompilingVisitor.prototype.visitBreakClause = function(node) {
     // retrieve the loop label from the parent context
     const procedures = this.builder.stack;
     var procedure;
@@ -317,11 +317,11 @@ CompilingVisitor.prototype.visitBreakClause = function(tree) {
  * a variable or an indexed child of a composite component.
  */
 // checkoutClause: 'checkout' ('level' expression 'of')? recipient 'from' expression
-CompilingVisitor.prototype.visitCheckoutClause = function(tree) {
+CompilingVisitor.prototype.visitCheckoutClause = function(node) {
     var index = 1;
-    const level = (tree.getSize() === 3) ? tree.getItem(index++) : bali.number();
-    const recipient = tree.getItem(index++);
-    const expression = tree.getItem(index);
+    const level = (node.getSize() === 3) ? node.getItem(index++) : bali.number();
+    const recipient = node.getItem(index++);
+    const expression = node.getItem(index);
 
     this.builder.insertNoteInstruction('Save the name of the contract.');
     expression.acceptVisitor(this);
@@ -418,12 +418,12 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
  * value of a comparison operation on them.
  */
 // comparisonExpression: expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression
-CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
-    const firstOperand = tree.getItem(1);
-    const secondOperand = tree.getItem(2);
+CompilingVisitor.prototype.visitComparisonExpression = function(node) {
+    const firstOperand = node.getItem(1);
+    const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
-    const operator = tree.operator;
+    const operator = node.operator;
     switch (operator) {
         case '<':
             this.builder.insertCallInstruction('$isLess', 2);  // less(x, y)
@@ -450,8 +450,8 @@ CompilingVisitor.prototype.visitComparisonExpression = function(tree) {
  * complement of the value.
  */
 // complementExpression: 'NOT' expression
-CompilingVisitor.prototype.visitComplementExpression = function(tree) {
-    const operand = tree.getItem(1);
+CompilingVisitor.prototype.visitComplementExpression = function(node) {
+    const operand = node.getItem(1);
     operand.acceptVisitor(this);
     this.builder.insertCallInstruction('$not', 1);  // not(p)
 };
@@ -463,9 +463,9 @@ CompilingVisitor.prototype.visitComplementExpression = function(tree) {
  * value of a concatenation operation on them.
  */
 // concatenationExpression: expression '&' expression
-CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
-    const firstOperand = tree.getItem(1);
-    const secondOperand = tree.getItem(2);
+CompilingVisitor.prototype.visitConcatenationExpression = function(node) {
+    const firstOperand = node.getItem(1);
+    const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
     this.builder.insertCallInstruction('$concatenation', 2);  // concatenation(a, b)
@@ -476,7 +476,7 @@ CompilingVisitor.prototype.visitConcatenationExpression = function(tree) {
 /*
  *  This method is causes the VM to jump to the beginning of the enclosing loop procedure block.
  */
-CompilingVisitor.prototype.visitContinueClause = function(tree) {
+CompilingVisitor.prototype.visitContinueClause = function(node) {
     // retrieve the loop label from the parent context
     const procedures = this.builder.stack;
     var procedure;
@@ -508,9 +508,9 @@ CompilingVisitor.prototype.visitContinueClause = function(tree) {
  * second expression.
  */
 // defaultExpression: expression '?' expression
-CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
-    const proposedValue = tree.getItem(1);
-    const defaultValue = tree.getItem(2);
+CompilingVisitor.prototype.visitDefaultExpression = function(node) {
+    const proposedValue = node.getItem(1);
+    const defaultValue = node.getItem(2);
     proposedValue.acceptVisitor(this);
     defaultValue.acceptVisitor(this);
     this.builder.insertCallInstruction('$default', 2);  // default(value, defaultValue)
@@ -522,8 +522,8 @@ CompilingVisitor.prototype.visitDefaultExpression = function(tree) {
  * document that is on top of the component stack with the named document.
  */
 // dereferenceExpression: '@' expression
-CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
-    const expression = tree.getItem(1);
+CompilingVisitor.prototype.visitDereferenceExpression = function(node) {
+    const expression = node.getItem(1);
     expression.acceptVisitor(this);
     const nameOrCitation = this.createTemporaryVariable('nameOrCitation');
     this.builder.insertSaveInstruction('VARIABLE', nameOrCitation);
@@ -536,9 +536,9 @@ CompilingVisitor.prototype.visitDereferenceExpression = function(tree) {
  * the cited document.
  */
 // discardClause: 'discard' expression
-CompilingVisitor.prototype.visitDiscardClause = function(tree) {
+CompilingVisitor.prototype.visitDiscardClause = function(node) {
     this.builder.insertNoteInstruction('Save the citation to the document.');
-    const expression = tree.getItem(1);
+    const expression = node.getItem(1);
     expression.acceptVisitor(this);
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('VARIABLE', citation);
@@ -585,13 +585,36 @@ CompilingVisitor.prototype.visitElement = function(element) {
  * optionally assign the resulting value to a recipient. The recipient may be
  * either a variable or an indexed child of a collection component.
  */
-// evaluateClause: (recipient ':=')? expression
-CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
-    const expression = tree.getItem(-1);
-    if (tree.getSize() > 1) {
-        const recipient = tree.getItem(1);
+// evaluateClause: (recipient op=(':=' | '+=' | '-=' | '*='))? expression
+CompilingVisitor.prototype.visitEvaluateClause = function(node) {
+    const expression = node.getItem(-1);
+    if (node.getSize() > 1) {
+        const recipient = node.getItem(1);
         this.visitRecipient(recipient);
-        expression.acceptVisitor(this);
+        const operator = node.operator;
+        if (operator !== ':=') {
+            if (recipient.isType('/bali/composites/Attribute')) {
+                this.builder.insertNoteInstruction('Place the current value of the attribute on the stack.');
+                recipient.acceptVisitor(this);
+                this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
+            } else {
+                this.builder.insertLoadInstruction('VARIABLE', recipient.toString());
+            }
+            expression.acceptVisitor(this);
+            switch (operator) {
+                case '+=':
+                    this.builder.insertCallInstruction('$sum', 2);  // x <- sum(x, y)
+                    break;
+                case '-=':
+                    this.builder.insertCallInstruction('$difference', 2);  // x <- difference(x,y)
+                    break;
+                case '*=':
+                    this.builder.insertCallInstruction('$scaled', 2);  // x <- scaled(x, factor)
+                    break;
+            }
+        } else {
+            expression.acceptVisitor(this);
+        }
         this.setRecipient(recipient);
     } else {
         expression.acceptVisitor(this);
@@ -606,9 +629,9 @@ CompilingVisitor.prototype.visitEvaluateClause = function(tree) {
  * value of an exponential operation on them.
  */
 // exponentialExpression: <assoc=right> expression '^' expression
-CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
-    const firstOperand = tree.getItem(1);
-    const secondOperand = tree.getItem(2);
+CompilingVisitor.prototype.visitExponentialExpression = function(node) {
+    const firstOperand = node.getItem(1);
+    const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
     this.builder.insertCallInstruction('$exponential', 2);  // exponential(x, power)
@@ -621,8 +644,8 @@ CompilingVisitor.prototype.visitExponentialExpression = function(tree) {
  * factorial of the value.
  */
 // factorialExpression: expression '!'
-CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
-    const operand = tree.getItem(1);
+CompilingVisitor.prototype.visitFactorialExpression = function(node) {
+    const operand = node.getItem(1);
     operand.acceptVisitor(this);
     this.builder.insertCallInstruction('$factorial', 1);  // factorial(x)
 };
@@ -635,16 +658,16 @@ CompilingVisitor.prototype.visitFactorialExpression = function(tree) {
  * the component stack.
  */
 // functionExpression: function '(' arguments ')'
-CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
-    const functionName = '$' + tree.getItem(1).toString();
-    const argumentz = tree.getItem(2);
+CompilingVisitor.prototype.visitFunctionExpression = function(node) {
+    const functionName = '$' + node.getItem(1).toString();
+    const argumentz = node.getItem(2);
     const numberOfArguments = argumentz.getSize();
     if (numberOfArguments > 3) {
         const exception = bali.exception({
             $module: '/bali/compiler/Compiler',
             $procedure: '$visitFunctionExpression',
             $exception: '$argumentCount',
-            $function: tree,
+            $function: node,
             $message: 'The number of arguments to a function must be three or less.'
         });
         if (this.debug) console.error(exception.toString());
@@ -662,9 +685,9 @@ CompilingVisitor.prototype.visitFunctionExpression = function(tree) {
  * handler or the end of the exception clauses if there isn't another one.
  */
 // handleClause: 'handle' symbol ('matching' expression 'with' block)+
-CompilingVisitor.prototype.visitHandleClause = function(tree) {
+CompilingVisitor.prototype.visitHandleClause = function(node) {
     // the VM saves the exception that is on top of the component stack in the variable
-    const iterator = tree.getIterator();
+    const iterator = node.getIterator();
     const symbol = iterator.getNext();
     const exception = symbol.toString();
     this.builder.insertSaveInstruction('VARIABLE', exception);
@@ -716,13 +739,13 @@ CompilingVisitor.prototype.visitHandleClause = function(tree) {
  * procedure block may be executed by the VM.
  */
 // ifClause: 'if' expression 'then' block ('else' 'if' expression 'then' block)* ('else' block)?
-CompilingVisitor.prototype.visitIfClause = function(tree) {
+CompilingVisitor.prototype.visitIfClause = function(node) {
     var elseBlock;
     var clausePrefix;
     const doneLabel = this.builder.getStatementContext().doneLabel;
 
     // separate out the parts of the statement
-    const array = tree.toArray();
+    const array = node.toArray();
     if (array.length % 2 === 1) {
         elseBlock = array.pop();  // remove the else block
     }
@@ -787,9 +810,9 @@ CompilingVisitor.prototype.visitIfClause = function(tree) {
  * them to get the final attribute value or set it depending on the context.
  */
 // indices: expression (',' expression)*
-CompilingVisitor.prototype.visitIndices = function(tree) {
-    const iterator = tree.getIterator();
-    var count = tree.getSize() - 1;  // skip the last index
+CompilingVisitor.prototype.visitIndices = function(node) {
+    const iterator = node.getIterator();
+    var count = node.getSize() - 1;  // skip the last index
     while (count--) {
         // the VM places the value of the next index onto the top of the component stack
         iterator.getNext().acceptVisitor(this);
@@ -809,10 +832,10 @@ CompilingVisitor.prototype.visitIndices = function(tree) {
  * geometric, or complex inverse of the value.
  */
 // inversionExpression: ('-' | '/' | '*') expression
-CompilingVisitor.prototype.visitInversionExpression = function(tree) {
-    const operand = tree.getItem(1);
+CompilingVisitor.prototype.visitInversionExpression = function(node) {
+    const operand = node.getItem(1);
     operand.acceptVisitor(this);
-    const operator = tree.operator;
+    const operator = node.operator;
     switch (operator) {
         case '-':
             this.builder.insertCallInstruction('$inverse', 1);  // inverse(x)
@@ -833,12 +856,12 @@ CompilingVisitor.prototype.visitInversionExpression = function(tree) {
  * value of a logical operation on them.
  */
 // logicalExpression: expression ('AND' | 'SANS' | 'XOR' | 'OR') expression
-CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
-    const firstOperand = tree.getItem(1);
-    const secondOperand = tree.getItem(2);
+CompilingVisitor.prototype.visitLogicalExpression = function(node) {
+    const firstOperand = node.getItem(1);
+    const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
-    const operator = tree.operator;
+    const operator = node.operator;
     switch (operator) {
         case 'AND':
             this.builder.insertCallInstruction('$and', 2);  // and(p, q)
@@ -862,8 +885,8 @@ CompilingVisitor.prototype.visitLogicalExpression = function(tree) {
  * magnitude of the value.
  */
 // magnitudeExpression: '|' expression '|'
-CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
-    const operand = tree.getItem(1);
+CompilingVisitor.prototype.visitMagnitudeExpression = function(node) {
+    const operand = node.getItem(1);
     operand.acceptVisitor(this);
     this.builder.insertCallInstruction('$magnitude', 1);  // magnitude(x)
 };
@@ -879,11 +902,11 @@ CompilingVisitor.prototype.visitMagnitudeExpression = function(tree) {
  * is placed on the stack.
  */
 // messageExpression: expression ('.' | '<-') message '(' arguments ')'
-CompilingVisitor.prototype.visitMessageExpression = function(tree) {
-    const target = tree.getItem(1);
-    const recipient = (tree.operator === '.') ? 'TO COMPONENT' : 'TO DOCUMENT';
-    const message = tree.getItem(2);
-    const argumentz = tree.getItem(3);
+CompilingVisitor.prototype.visitMessageExpression = function(node) {
+    const target = node.getItem(1);
+    const recipient = (node.operator === '.') ? 'TO COMPONENT' : 'TO DOCUMENT';
+    const message = node.getItem(2);
+    const argumentz = node.getItem(3);
     const numberOfArguments = argumentz.getSize();
 
     // the VM places the value of the target expression onto the top of the component stack
@@ -972,9 +995,9 @@ CompilingVisitor.prototype.visitPercentage = function(percentage) {
  * is another expression that the VM evaluates as well.
  */
 // postClause: 'post' expression 'to' expression
-CompilingVisitor.prototype.visitPostClause = function(tree) {
-    const message = tree.getItem(1);
-    const name = tree.getItem(2);
+CompilingVisitor.prototype.visitPostClause = function(node) {
+    const message = node.getItem(1);
+    const name = node.getItem(2);
     this.builder.insertNoteInstruction('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
@@ -1011,8 +1034,8 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
  * component stack to the global event bag in the Bali Document Repository™.
  */
 // publishClause: 'publish' expression
-CompilingVisitor.prototype.visitPublishClause = function(tree) {
-    const event = tree.getItem(1);
+CompilingVisitor.prototype.visitPublishClause = function(node) {
+    const event = node.getItem(1);
     this.builder.insertNoteInstruction('Save the name of the global event bag.');
     this.builder.insertPushInstruction('LITERAL', '/bali/vm/events/v1');
     const bag = this.createTemporaryVariable('bag');
@@ -1050,9 +1073,9 @@ CompilingVisitor.prototype.visitResource = function(resource) {
  * the message bag.
  */
 // rejectClause: 'reject' expression
-CompilingVisitor.prototype.visitRejectClause = function(tree) {
+CompilingVisitor.prototype.visitRejectClause = function(node) {
     this.builder.insertNoteInstruction('Save the message to be rejected.');
-    const expression = tree.getItem(1);
+    const expression = node.getItem(1);
     expression.acceptVisitor(this);
     const message = this.createTemporaryVariable('message');
     this.builder.insertSaveInstruction('VARIABLE', message);
@@ -1091,9 +1114,9 @@ CompilingVisitor.prototype.visitRejectClause = function(tree) {
  * of a composite component.
  */
 // retrieveClause: 'retrieve' recipient 'from' expression
-CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
-    const recipient = tree.getItem(1);
-    const name = tree.getItem(2);
+CompilingVisitor.prototype.visitRetrieveClause = function(node) {
+    const recipient = node.getItem(1);
+    const name = node.getItem(2);
     this.builder.insertNoteInstruction('Save the name of the message bag.');
     name.acceptVisitor(this);
     const bag = this.createTemporaryVariable('bag');
@@ -1113,9 +1136,9 @@ CompilingVisitor.prototype.visitRetrieveClause = function(tree) {
  * then returns the result to the calling procedure.
  */
 // returnClause: 'return' expression?
-CompilingVisitor.prototype.visitReturnClause = function(tree) {
-    if (tree.getSize() > 0) {
-        const result = tree.getItem(1);
+CompilingVisitor.prototype.visitReturnClause = function(node) {
+    if (node.getSize() > 0) {
+        const result = node.getItem(1);
         result.acceptVisitor(this);
     } else {
         this.builder.insertPushInstruction('LITERAL', 'none');
@@ -1131,8 +1154,8 @@ CompilingVisitor.prototype.visitReturnClause = function(tree) {
  * the Bali Document Repository™.
  */
 // saveClause: 'save' expression ('as' recipient)?
-CompilingVisitor.prototype.visitSaveClause = function(tree) {
-    const expression = tree.getItem(1);
+CompilingVisitor.prototype.visitSaveClause = function(node) {
+    const expression = node.getItem(1);
 
     this.builder.insertNoteInstruction('Place the document on the stack.');
     expression.acceptVisitor(this);
@@ -1141,8 +1164,8 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
     const citation = this.createTemporaryVariable('citation');
     this.builder.insertSaveInstruction('DOCUMENT', citation);
 
-    if (tree.getSize() > 1) {
-        const recipient = tree.getItem(2);
+    if (node.getSize() > 1) {
+        const recipient = node.getItem(2);
         this.visitRecipient(recipient);
         this.builder.insertLoadInstruction('VARIABLE', citation);
         this.setRecipient(recipient);
@@ -1157,13 +1180,13 @@ CompilingVisitor.prototype.visitSaveClause = function(tree) {
  * conditions are true an optional procedure block may be executed by the VM.
  */
 // selectClause: 'select' expression 'from' (expression 'do' block)+ ('else' block)?
-CompilingVisitor.prototype.visitSelectClause = function(tree) {
+CompilingVisitor.prototype.visitSelectClause = function(node) {
     const doneLabel = this.builder.getStatementContext().doneLabel;
     var elseBlock;
     var clausePrefix;
 
     // separate out the parts of the statement
-    const array = tree.toArray();
+    const array = node.toArray();
     const selector = array.splice(0, 1)[0];  // remove the selector
     if (array.length % 2 === 1) {
         elseBlock = array.pop();  // remove the else block
@@ -1237,9 +1260,9 @@ CompilingVisitor.prototype.visitSelectClause = function(tree) {
  * that is on top of the component stack and save it in the repository.
  */
 // signClause: 'sign' expression 'as' expression
-CompilingVisitor.prototype.visitSignClause = function(tree) {
-    const contract = tree.getItem(1);
-    const expression = tree.getItem(2);
+CompilingVisitor.prototype.visitSignClause = function(node) {
+    const contract = node.getItem(1);
+    const expression = node.getItem(2);
     this.builder.insertNoteInstruction('Save the name of the new contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
@@ -1256,15 +1279,15 @@ CompilingVisitor.prototype.visitSignClause = function(tree) {
  * them using a sequence of handle clauses.
  */
 // statement: comment | mainClause handleClause?
-CompilingVisitor.prototype.visitStatement = function(tree) {
+CompilingVisitor.prototype.visitStatement = function(node) {
     // ignore comments
-    if (tree.getItem(1).isType('/bali/composites/Comment')) {
+    if (node.getItem(1).isType('/bali/composites/Comment')) {
         this.builder.decrementStatementCount();
         return;
     }
 
     // initialize the context for this statement
-    const statement = this.builder.pushStatementContext(tree);
+    const statement = this.builder.pushStatementContext(node);
     this.builder.insertLabel(statement.startLabel);
 
     // the VM pushes any exception handlers onto the exception handler stack
@@ -1326,8 +1349,8 @@ CompilingVisitor.prototype.visitText = function(text) {
  * current handler context.
  */
 // throwClause: 'throw' expression
-CompilingVisitor.prototype.visitThrowClause = function(tree) {
-    const exception = tree.getItem(1);
+CompilingVisitor.prototype.visitThrowClause = function(node) {
+    const exception = node.getItem(1);
     // the VM places the value of the exception expression on top of the component stack
     exception.acceptVisitor(this);
     // the VM jumps to the handler clauses for the current context
@@ -1368,9 +1391,9 @@ CompilingVisitor.prototype.visitVersion = function(version) {
  * block while a condition expression is true.
  */
 // whileClause: 'while' expression 'do' block
-CompilingVisitor.prototype.visitWhileClause = function(tree) {
-    const condition = tree.getItem(1);
-    const block = tree.getItem(2);
+CompilingVisitor.prototype.visitWhileClause = function(node) {
+    const condition = node.getItem(1);
+    const block = node.getItem(2);
     const clausePrefix = this.builder.getBlockPrefix();
 
     // construct the loop and done labels
@@ -1400,10 +1423,10 @@ CompilingVisitor.prototype.visitWhileClause = function(tree) {
  * each item in a collection expression.
  */
 // withClause: 'with' ('each' symbol 'in')? expression 'do' block
-CompilingVisitor.prototype.visitWithClause = function(tree) {
-    const variable = tree.getSize() > 2 ? tree.getItem(1).toString() : this.createTemporaryVariable('item');
-    const sequence = tree.getItem(-2);
-    const block = tree.getItem(-1);
+CompilingVisitor.prototype.visitWithClause = function(node) {
+    const variable = node.getSize() > 2 ? node.getItem(1).toString() : this.createTemporaryVariable('item');
+    const sequence = node.getItem(-2);
+    const block = node.getItem(-1);
     const clausePrefix = this.builder.getBlockPrefix();
 
     // construct the loop and done labels
@@ -1584,9 +1607,9 @@ InstructionBuilder.prototype.popProcedureContext = function() {
  * This method pushes a new statement context onto the procedure stack and initializes
  * it.
  */
-InstructionBuilder.prototype.pushStatementContext = function(tree) {
-    const mainClause = tree.getItem(1);
-    const handleClause = tree.getSize() > 1 ? tree.getItem(2) : undefined;
+InstructionBuilder.prototype.pushStatementContext = function(node) {
+    const mainClause = node.getItem(1);
+    const handleClause = node.getSize() > 1 ? node.getItem(2) : undefined;
     const blockCount = countBlocks(mainClause) + countBlocks(handleClause);
     const statement = {
         mainClause: mainClause,
