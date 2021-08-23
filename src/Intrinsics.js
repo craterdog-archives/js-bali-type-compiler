@@ -296,7 +296,7 @@ exports.api = function(debug) {
         },
 
         $attribute: function(composite, key) {
-            validateTypeArgument('$attribute', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$attribute', '/bali/interfaces/Structural', composite);
             validateTypeArgument('$attribute', '/bali/abstractions/Element', key);
             return composite.getAttribute(key) || bali.pattern.NONE;
         },
@@ -1002,7 +1002,7 @@ exports.api = function(debug) {
         },
 
         $setAttribute: function(composite, key, value) {
-            validateTypeArgument('$setAttribute', '/bali/interfaces/Composite', composite);
+            validateTypeArgument('$setAttribute', '/bali/interfaces/Structural', composite);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Element', key);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Component', value);
             composite.setAttribute(key, value);
