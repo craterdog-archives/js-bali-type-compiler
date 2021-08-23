@@ -296,11 +296,11 @@ grammar.DocumentLexer.prototype.recover = function(e) {
 };
 
 
-function CustomErrorStrategy(debug) {
-    this.debug = debug || false;
+const CustomErrorStrategy = function(debug) {
     ErrorStrategy.DefaultErrorStrategy.call(this);
+    this.debug = debug || 0;
     return this;
-}
+};
 CustomErrorStrategy.prototype = Object.create(ErrorStrategy.DefaultErrorStrategy.prototype);
 CustomErrorStrategy.prototype.constructor = CustomErrorStrategy;
 
@@ -310,19 +310,19 @@ CustomErrorStrategy.prototype.reportError = function(recognizer, e) {
 };
 
 
-CustomErrorStrategy.prototype.recover = function(recognizer, e) {
+CustomErrorStrategy.prototype.recover = function(recognizer, cause) {
     var context = recognizer._ctx;
     while (context !== null) {
-        context.exception = e;
+        context.exception = cause;
         context = context.parentCtx;
     }
     const exception = bali.exception({
-        $module: '/bali/compiler/Parser',
-        $procedure: '$parseAssembly',
+        $module: '/bali/assembler/Parser',
+        $procedure: '$parseInstructions',
         $exception: '$syntaxError',
-        $message: '"' + e.message + '"'
-    });
-    if (this.debug) console.error(exception.toString());
+        $text: cause.toString()
+    }, cause);
+    if (this.debug > 0) console.error(exception.toString());
     throw exception;
 };
 
@@ -339,12 +339,12 @@ CustomErrorStrategy.prototype.sync = function(recognizer) {
 };
 
 
-function CustomErrorListener(debug) {
+const CustomErrorListener = function(debug) {
     antlr.error.ErrorListener.call(this);
-    this.debug = debug || false;
+    this.debug = debug || 0;
     this.exactOnly = false;  // 'true' results in uninteresting ambiguities so leave 'false'
     return this;
-}
+};
 CustomErrorListener.prototype = Object.create(antlr.error.ErrorListener.prototype);
 CustomErrorListener.prototype.constructor = CustomErrorListener;
 
@@ -362,27 +362,27 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
     }
     message = addContext(recognizer, message);
 
-    // stop the processing
+    // capture the exception
     const exception = bali.exception({
-        $module: '/bali/compiler/Parser',
-        $procedure: '$parseAssembly',
+        $module: '/bali/assembler/Parser',
+        $procedure: '$parseInstructions',
         $exception: '$syntaxError',
-        $message: message
+        $text: message
     });
 
-    // log the error message if in debug mode
-    if (this.debug) console.error(exception.toString());
+    // stop the processing
+    if (this.debug > 0) console.error(exception.toString());
     throw exception;
 };
 
 
 CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startIndex, stopIndex, exact, alternatives, configs) {
-    if (this.debug) {
+    if (this.debug > 0) {
         const rule = getRule(recognizer, dfa);
         alternatives = [];
         configs.items.forEach(function(item) {
             alternatives.push(item.alt);
-        });
+        }, this);
         alternatives = "{" + alternatives.join(", ") + "}";
         var message = 'The parser encountered ambiguous input for rule: ' + rule + ', alternatives: ' + alternatives;
         message = addContext(recognizer, message);
@@ -392,7 +392,7 @@ CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startI
 
 
 CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, dfa, startIndex, stopIndex, prediction, configs) {
-    if (this.debug) {
+    if (this.debug > 0) {
         const rule = getRule(recognizer, dfa);
         var message = 'The parser encountered a context sensitive rule: ' + rule;
         message = addContext(recognizer, message);
@@ -403,7 +403,7 @@ CustomErrorListener.prototype.reportContextSensitivity = function(recognizer, df
 
 // PRIVATE FUNCTIONS
 
-function getRule(recognizer, dfa) {
+const getRule = function(recognizer, dfa) {
     const description = dfa.decision.toString();
     const ruleIndex = dfa.atnStartState.ruleIndex;
 
@@ -413,10 +413,10 @@ function getRule(recognizer, dfa) {
     }
     const ruleName = ruleNames[ruleIndex] || '<unknown>';
     return description + " (" + ruleName + ")";
-}
+};
 
 
-function addContext(recognizer, message) {
+const addContext = function(recognizer, message) {
     // truncate the main message as needed
     message = EOL + '    ' + message.slice(0, 160) + EOL;
 
@@ -425,18 +425,18 @@ function addContext(recognizer, message) {
     const token = offendingToken ? recognizer.getTokenErrorDisplay(offendingToken) : '';
     const input = token ? offendingToken.getInputStream() : recognizer._input;
     const lines = input.toString().split(EOL);
-    const lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;
-    const columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;
+    const lineNumber = token ? offendingToken.line : recognizer._tokenStartLine;  // unit based
+    const columnNumber = token ? offendingToken.column : recognizer._tokenStartColumn;  // zero based
     if (lineNumber > 1) {
         message += '    [' + (lineNumber - 1) + ']: ' + lines[lineNumber - 2] + EOL;
     }
     message += '    [' + lineNumber + ']: ' + lines[lineNumber - 1] + EOL;
-    var line = '    [' + lineNumber + ']: ';
-    for (var i = 0; i < columnNumber; i++) {
+    var line = '         ';  // indent 4 spaces plus "[", "]: " for total of nine spaces
+    for (var i = 0; i < lineNumber.toString().length + columnNumber - 1; i++) {
         line += ' ';
     }
-    var start = token ? offendingToken.start : columnNumber;
-    const stop = token ? offendingToken.stop : columnNumber;
+    var start = token ? offendingToken.start : 0;
+    const stop = token ? offendingToken.stop : 0;
     while (start++ <= stop) {
         line += '^';
     }
@@ -445,4 +445,4 @@ function addContext(recognizer, message) {
         message += '    [' + (lineNumber + 1) + ']: ' + lines[lineNumber] + EOL;
     }
     return message;
-}
+};

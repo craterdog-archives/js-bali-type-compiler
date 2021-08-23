@@ -397,7 +397,7 @@ exports.api = function(debug) {
         },
 
         $code: function(procedure) {
-            validateTypeArgument('$code', '/bali/structures/Procedure', procedure);
+            validateTypeArgument('$code', '/bali/composites/Procedure', procedure);
             return procedure.getCode();
         },
 
@@ -542,7 +542,7 @@ exports.api = function(debug) {
         },
 
         $first: function(range) {
-            validateTypeArgument('$first', '/bali/structures/Range', range);
+            validateTypeArgument('$first', '/bali/composites/Range', range);
             const first = range.getFirst();
             return (first === undefined) ? bali.pattern.NONE : bali.number(first);
         },
@@ -698,7 +698,7 @@ exports.api = function(debug) {
 
         $items: function(sequential, range) {
             validateTypeArgument('$items', '/bali/interfaces/Sequential', sequential);
-            validateTypeArgument('$items', '/bali/structures/Range', range);
+            validateTypeArgument('$items', '/bali/composites/Range', range);
             return sequential.getItems(range);
         },
 
@@ -708,7 +708,7 @@ exports.api = function(debug) {
         },
 
         $key: function(association) {
-            validateTypeArgument('$key', '/bali/structures/Association', association);
+            validateTypeArgument('$key', '/bali/composites/Association', association);
             return association.getKey();
         },
 
@@ -718,7 +718,7 @@ exports.api = function(debug) {
         },
 
         $last: function(range) {
-            validateTypeArgument('$last', '/bali/structures/Range', range);
+            validateTypeArgument('$last', '/bali/composites/Range', range);
             const last = range.getLast();
             return (last === undefined) ? bali.pattern.NONE : bali.number(last);
         },
@@ -843,7 +843,7 @@ exports.api = function(debug) {
         },
 
         $procedure: function(code, parameters) {
-            validateTypeArgument('$procedure', '/bali/structures/Code', code);
+            validateTypeArgument('$procedure', '/bali/composites/Code', code);
             parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(code, parameters);
         },
@@ -951,7 +951,7 @@ exports.api = function(debug) {
 
         $removeRange: function(list, range) {
             validateTypeArgument('$removeRange', '/bali/collections/List', list);
-            validateTypeArgument('$removeRange', '/bali/structures/Range', range);
+            validateTypeArgument('$removeRange', '/bali/composites/Range', range);
             list.removeItems(range);
             return list;
         },
@@ -1121,7 +1121,7 @@ exports.api = function(debug) {
         },
 
         $value: function(association) {
-            validateTypeArgument('$value', '/bali/structures/Association', association);
+            validateTypeArgument('$value', '/bali/composites/Association', association);
             return association.getValue();
         },
 
