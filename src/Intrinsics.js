@@ -412,9 +412,9 @@ exports.api = function(debug) {
             return type;
         },
 
-        $complement: function(angle) {
-            validateTypeArgument('$complement', '/bali/libraries/Radial', angle);
-            return bali.angle.complement(angle);
+        $complement: function(radial) {
+            validateTypeArgument('$complement', '/bali/libraries/Radial', radial);
+            return radial.constructor.complement(radial);
         },
 
         $component: function(source) {
@@ -429,9 +429,9 @@ exports.api = function(debug) {
             return first.constructor.concatenation(first, second);
         },
 
-        $conjugate: function(number) {
-            validateTypeArgument('$conjugate', '/bali/libraries/Numerical', number);
-            return bali.number.conjugate(number);
+        $conjugate: function(numerical) {
+            validateTypeArgument('$conjugate', '/bali/libraries/Numerical', numerical);
+            return numerical.constructor.conjugate(numerical);
         },
 
         $containsAll: function(collection, items) {
@@ -452,9 +452,9 @@ exports.api = function(debug) {
             return bali.boolean(collection.containsItem(item));
         },
 
-        $cosine: function(angle) {
-            validateTypeArgument('$cosine', '/bali/libraries/Radial', angle);
-            return bali.number(bali.angle.cosine(angle));
+        $cosine: function(radial) {
+            validateTypeArgument('$cosine', '/bali/libraries/Radial', radial);
+            return bali.number(radial.constructor.cosine(radial));
         },
 
         $day: function(moment) {
@@ -521,7 +521,8 @@ exports.api = function(debug) {
         $exponential: function(base, exponent) {
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', base);
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', exponent);
-            return bali.number.exponential(base, exponent);
+            validateSameType('$exponential', base, exponent);
+            return base.constructor.exponential(base, exponent);
         },
 
         $extraction: function(catalog, keys) {
@@ -530,9 +531,9 @@ exports.api = function(debug) {
             return bali.catalog.extraction(catalog, keys);
         },
 
-        $factorial: function(number) {
-            validateTypeArgument('$factorial', '/bali/libraries/Numerical', number);
-            return bali.number.factorial(number);
+        $factorial: function(numerical) {
+            validateTypeArgument('$factorial', '/bali/libraries/Numerical', numerical);
+            return numerical.constructor.factorial(numerical);
         },
 
         $first: function(range) {
@@ -743,7 +744,8 @@ exports.api = function(debug) {
         $logarithm: function(base, value) {
             validateTypeArgument('$logarithm', '/bali/libraries/Numerical', base);
             validateTypeArgument('$logarithm', '/bali/libraries/Numerical', value);
-            return bali.number.logarithm(base, value);
+            validateSameType('$logarithm', base, value);
+            return base.constructor.logarithm(base, value);
         },
 
         $magnitude: function(number) {
@@ -857,7 +859,8 @@ exports.api = function(debug) {
         $product: function(first, second) {
             validateTypeArgument('$product', '/bali/libraries/Numerical', first);
             validateTypeArgument('$product', '/bali/libraries/Numerical', second);
-            return bali.number.product(first, second);
+            validateSameType('$product', first, second);
+            return first.constructor.product(first, second);
         },
 
         $query: function(resource) {
@@ -874,7 +877,8 @@ exports.api = function(debug) {
         $quotient: function(first, second) {
             validateTypeArgument('$quotient', '/bali/libraries/Numerical', first);
             validateTypeArgument('$quotient', '/bali/libraries/Numerical', second);
-            return bali.number.quotient(first, second);
+            validateSameType('$quotient', first, second);
+            return first.constructor.quotient(first, second);
         },
 
         $radians: function(angle) {
@@ -883,11 +887,12 @@ exports.api = function(debug) {
         },
 
         $range: function(first, last, parameters) {
-            first = validateOptionalTypeArgument('$range', '/bali/interfaces/Discrete', first);
-            last = validateOptionalTypeArgument('$range', '/bali/interfaces/Discrete', last);
+            first = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', first);
+            last = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', last);
+            if (first && last) {
+                validateSameType('$range', first, last);
+            }
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
-            if (first) first = first.toInteger();
-            if (last) last = last.toInteger();
             return bali.range(first, last, parameters);
         },
 
@@ -896,15 +901,16 @@ exports.api = function(debug) {
             return bali.number(continuous.toReal());
         },
 
-        $reciprocal: function(number) {
-            validateTypeArgument('$reciprocal', '/bali/libraries/Numerical', number);
-            return bali.number.reciprocal(number);
+        $reciprocal: function(numerical) {
+            validateTypeArgument('$reciprocal', '/bali/libraries/Numerical', numerical);
+            return numerical.constructor.reciprocal(numerical);
         },
 
         $remainder: function(first, second) {
             validateTypeArgument('$remainder', '/bali/libraries/Numerical', first);
             validateTypeArgument('$remainder', '/bali/libraries/Numerical', second);
-            return bali.number.remainder(first, second);
+            validateSameType('$remainder', first, second);
+            return first.constructor.remainder(first, second);
         },
 
         $removeAll: function(collection) {
@@ -1039,9 +1045,9 @@ exports.api = function(debug) {
             return list;
         },
 
-        $sine: function(angle) {
-            validateTypeArgument('$sine', '/bali/libraries/Radial', angle);
-            return bali.number(bali.angle.sine(angle));
+        $sine: function(radial) {
+            validateTypeArgument('$sine', '/bali/libraries/Radial', radial);
+            return bali.number(radial.constructor.sine(radial));
         },
 
         $size: function(sequential) {
@@ -1068,9 +1074,9 @@ exports.api = function(debug) {
             return first.constructor.sum(first, second);
         },
 
-        $supplement: function(angle) {
-            validateTypeArgument('$supplement', '/bali/libraries/Radial', angle);
-            return bali.angle.supplement(angle);
+        $supplement: function(radial) {
+            validateTypeArgument('$supplement', '/bali/libraries/Radial', radial);
+            return radial.constructor.supplement(radial);
         },
 
         $supportsInterface: function(component, iface) {
@@ -1086,9 +1092,9 @@ exports.api = function(debug) {
             return bali.tag(size);
         },
 
-        $tangent: function(angle) {
-            validateTypeArgument('$tangent', '/bali/libraries/Radial', angle);
-            return bali.number(bali.angle.tangent(angle));
+        $tangent: function(radial) {
+            validateTypeArgument('$tangent', '/bali/libraries/Radial', radial);
+            return bali.number(radial.constructor.tangent(radial));
         },
 
         $toEnd: function(iterator) {
