@@ -274,19 +274,19 @@ exports.api = function(debug) {
         $areEqual: function(first, second) {
             validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', second);
-            return bali.probability(first.isEqualTo(second));
+            return bali.boolean(first.isEqualTo(second));
         },
 
         $areSame: function(first, second) {
             validateTypeArgument('$areSame', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$areSame', '/bali/interfaces/Comparable', second);
-            return bali.probability(first === second);
+            return bali.boolean(first === second);
         },
 
         $areValid: function(current, next) {
             validateTypeArgument('$areValid', '/bali/elements/Version', current);
             validateTypeArgument('$areValid', '/bali/elements/Version', next);
-            return bali.probability(bali.version.validNextVersion(current, next));
+            return bali.boolean(bali.version.validNextVersion(current, next));
         },
 
         $association: function(key, value) {
@@ -371,7 +371,7 @@ exports.api = function(debug) {
 
         $boolean: function(component) {
             validateTypeArgument('$boolean', '/bali/abstractions/Component', component);
-            return bali.probability(component.toBoolean());
+            return bali.boolean(component.toBoolean());
         },
 
         $bytes: function(tag) {
@@ -403,7 +403,7 @@ exports.api = function(debug) {
 
         $coinToss: function(weight) {
             validateTypeArgument('$coinToss', '/bali/elements/Probability', weight);
-            return bali.probability(generator.flipCoin(weight.toReal()));
+            return bali.boolean(generator.flipCoin(weight.toReal()));
         },
 
         $comparison: function(first, second) {
@@ -443,19 +443,19 @@ exports.api = function(debug) {
         $containsAll: function(collection, items) {
             validateTypeArgument('$containsAll', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$containsAll', '/bali/abstractions/Collection', items);
-            return bali.probability(collection.containsAll(items));
+            return bali.boolean(collection.containsAll(items));
         },
 
         $containsAny: function(collection, items) {
             validateTypeArgument('$containsAny', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$containsAny', '/bali/abstractions/Collection', items);
-            return bali.probability(collection.containsAny(items));
+            return bali.boolean(collection.containsAny(items));
         },
 
         $containsItem: function(collection, item) {
             validateTypeArgument('$containsItem', '/bali/abstractions/Collection', collection);
             validateTypeArgument('$containsItem', '/bali/abstractions/Component', item);
-            return bali.probability(collection.containsItem(item));
+            return bali.boolean(collection.containsItem(item));
         },
 
         $cosine: function(angle) {
@@ -504,7 +504,7 @@ exports.api = function(debug) {
         $doesMatch: function(comparable, pattern) {
             validateTypeArgument('$doesMatch', '/bali/interfaces/Comparable', comparable);
             validateTypeArgument('$doesMatch', '/bali/abstractions/Component', pattern);
-            return bali.probability(comparable.isMatchedBy(pattern));
+            return bali.boolean(comparable.isMatchedBy(pattern));
         },
 
         $duplicate: function(component) {
@@ -647,45 +647,45 @@ exports.api = function(debug) {
 
         $isEmpty: function(sequential) {
             validateTypeArgument('$isEmpty', '/bali/interfaces/Sequential', sequential);
-            return bali.probability(sequential.isEmpty());
+            return bali.boolean(sequential.isEmpty());
         },
 
         $isInfinite: function(number) {
             validateTypeArgument('$isInfinite', '/bali/elements/Number', number);
-            return bali.probability(number.isInfinite());
+            return bali.boolean(number.isInfinite());
         },
 
         $isLess: function(first, second) {
             validateTypeArgument('$isLess', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$isLess', '/bali/interfaces/Comparable', second);
-            return bali.probability(first.comparedTo(second) < 0);
+            return bali.boolean(first.comparedTo(second) < 0);
         },
 
         $isMore: function(first, second) {
             validateTypeArgument('$isMore', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$isMore', '/bali/interfaces/Comparable', second);
-            return bali.probability(first.comparedTo(second) > 0);
+            return bali.boolean(first.comparedTo(second) > 0);
         },
 
         $isParameterized: function(component) {
             validateTypeArgument('$isParameterized', '/bali/interfaces/Reflective', component);
-            return bali.probability(component.isParameterized());
+            return bali.boolean(component.isParameterized());
         },
 
         $isType: function(component, type) {
             validateTypeArgument('$isType', '/bali/interfaces/Reflective', component);
             validateTypeArgument('$isType', '/bali/elements/Name', type);
-            return bali.probability(component.isType(type.toString()));
+            return bali.boolean(component.isType(type.toString()));
         },
 
         $isUndefined: function(number) {
             validateTypeArgument('$isUndefined', '/bali/elements/Number', number);
-            return bali.probability(number.isUndefined());
+            return bali.boolean(number.isUndefined());
         },
 
         $isZero: function(number) {
             validateTypeArgument('$isZero', '/bali/elements/Number', number);
-            return bali.probability(number.isZero());
+            return bali.boolean(number.isZero());
         },
 
         $item: function(sequential, index) {
