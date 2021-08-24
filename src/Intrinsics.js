@@ -412,9 +412,9 @@ exports.api = function(debug) {
             return type;
         },
 
-        $complement: function(radial) {
-            validateTypeArgument('$complement', '/bali/libraries/Radial', radial);
-            return radial.constructor.complement(radial);
+        $complement: function(angle) {
+            validateTypeArgument('$complement', '/bali/elements/Angle', angle);
+            return bali.angle.complement(angle);
         },
 
         $component: function(source) {
@@ -452,9 +452,9 @@ exports.api = function(debug) {
             return bali.boolean(collection.containsItem(item));
         },
 
-        $cosine: function(radial) {
-            validateTypeArgument('$cosine', '/bali/libraries/Radial', radial);
-            return bali.number(radial.constructor.cosine(radial));
+        $cosine: function(angle) {
+            validateTypeArgument('$cosine', '/bali/elements/Angle', angle);
+            return bali.number(bali.angle.cosine(angle));
         },
 
         $day: function(moment) {
@@ -1045,9 +1045,9 @@ exports.api = function(debug) {
             return list;
         },
 
-        $sine: function(radial) {
-            validateTypeArgument('$sine', '/bali/libraries/Radial', radial);
-            return bali.number(radial.constructor.sine(radial));
+        $sine: function(angle) {
+            validateTypeArgument('$sine', '/bali/elements/Angle', angle);
+            return bali.number(bali.angle.sine(angle));
         },
 
         $size: function(sequential) {
@@ -1074,9 +1074,9 @@ exports.api = function(debug) {
             return first.constructor.sum(first, second);
         },
 
-        $supplement: function(radial) {
-            validateTypeArgument('$supplement', '/bali/libraries/Radial', radial);
-            return radial.constructor.supplement(radial);
+        $supplement: function(angle) {
+            validateTypeArgument('$supplement', '/bali/elements/Angle', angle);
+            return bali.angle.supplement(angle);
         },
 
         $supportsInterface: function(component, iface) {
@@ -1092,9 +1092,9 @@ exports.api = function(debug) {
             return bali.tag(size);
         },
 
-        $tangent: function(radial) {
-            validateTypeArgument('$tangent', '/bali/libraries/Radial', radial);
-            return bali.number(radial.constructor.tangent(radial));
+        $tangent: function(angle) {
+            validateTypeArgument('$tangent', '/bali/elements/Angle', angle);
+            return bali.number(bali.angle.tangent(angle));
         },
 
         $toEnd: function(iterator) {
