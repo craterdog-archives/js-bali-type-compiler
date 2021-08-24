@@ -325,33 +325,6 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $areValid intrinsic function', function() {
-            const index = intrinsics.index('$areValid');
-            intrinsics.invoke(index, version, bali.version([1, 3]));
-            intrinsics.invoke(index, version, bali.version([1, 2, 4]));
-            intrinsics.invoke(index, version, bali.version([1, 2, 3, 1]));
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, version);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, version, 'v1.2.3.1');
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, 'v1.2.3', version);
-                }
-            ).to.throw();
-        });
-
         it('should invoke $association intrinsic function', function() {
             const index = intrinsics.index('$association');
             intrinsics.invoke(index, number, list);
@@ -1562,6 +1535,33 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, duration, 0);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $isNext intrinsic function', function() {
+            const index = intrinsics.index('$isNext');
+            intrinsics.invoke(index, version, bali.version([1, 3]));
+            intrinsics.invoke(index, version, bali.version([1, 2, 4]));
+            intrinsics.invoke(index, version, bali.version([1, 2, 3, 1]));
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, version);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, version, 'v1.2.3.1');
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'v1.2.3', version);
                 }
             ).to.throw();
         });

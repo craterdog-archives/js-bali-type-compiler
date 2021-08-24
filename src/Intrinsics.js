@@ -283,12 +283,6 @@ exports.api = function(debug) {
             return bali.boolean(first === second);
         },
 
-        $areValid: function(current, next) {
-            validateTypeArgument('$areValid', '/bali/elements/Version', current);
-            validateTypeArgument('$areValid', '/bali/elements/Version', next);
-            return bali.boolean(bali.version.validNextVersion(current, next));
-        },
-
         $association: function(key, value) {
             validateTypeArgument('$association', '/bali/abstractions/Element', key);
             validateTypeArgument('$association', '/bali/abstractions/Component', value);
@@ -665,6 +659,12 @@ exports.api = function(debug) {
             validateTypeArgument('$isMore', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$isMore', '/bali/interfaces/Comparable', second);
             return bali.boolean(first.comparedTo(second) > 0);
+        },
+
+        $isNext: function(current, next) {
+            validateTypeArgument('$isNext', '/bali/elements/Version', current);
+            validateTypeArgument('$isNext', '/bali/elements/Version', next);
+            return bali.boolean(bali.version.validNextVersion(current, next));
         },
 
         $isParameterized: function(component) {

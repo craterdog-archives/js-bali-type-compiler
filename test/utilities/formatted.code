@@ -25,10 +25,10 @@
 [017]:    A816    51   22     DROP DOCUMENT 22
 [018]:    B017    52   23     DROP CONTRACT 23
 [019]:    B818    53   24     DROP MESSAGE 24
-[01A]:    C019    60   25     CALL $code
-[01B]:    C81A    61   26     CALL $coinToss WITH 1 ARGUMENT
-[01C]:    D01B    62   27     CALL $comparison WITH 2 ARGUMENTS
-[01D]:    D81C    63   28     CALL $compileType WITH 3 ARGUMENTS
+[01A]:    C019    60   25     CALL $coinToss
+[01B]:    C81A    61   26     CALL $comparison WITH 1 ARGUMENT
+[01C]:    D01B    62   27     CALL $compileType WITH 2 ARGUMENTS
+[01D]:    D81C    63   28     CALL $complement WITH 3 ARGUMENTS
 [01E]:    E01D    70   29     SEND 29 TO COMPONENT
 [01F]:    E81E    71   30     SEND 30 TO COMPONENT WITH ARGUMENTS
 [020]:    F01F    72   31     SEND 31 TO DOCUMENT
