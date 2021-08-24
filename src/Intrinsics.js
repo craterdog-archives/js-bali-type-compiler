@@ -796,6 +796,12 @@ exports.api = function(debug) {
             return bali.version.nextVersion(version, level);
         },
 
+        $node: function(type, children) {
+            validateTypeArgument('$node', '/bali/elements/Name', type);
+            children = validateOptionalTypeArgument('$node', '/bali/abstractions/Collection', children);
+            return bali.node(type.toString(), children);
+        },
+
         $not: function(logical) {
             validateTypeArgument('$not', '/bali/libraries/Logical', logical);
             return logical.constructor.not(logical);
@@ -1107,12 +1113,6 @@ exports.api = function(debug) {
             validateTypeArgument('$toStart', '/bali/abstractions/Iterator', iterator);
             iterator.toStart();
             return iterator;
-        },
-
-        $tree: function(type, children) {
-            validateTypeArgument('$tree', '/bali/elements/Name', type);
-            children = validateOptionalTypeArgument('$tree', '/bali/abstractions/Collection', children);
-            return bali.node(type.toString(), children);
         },
 
         $type: function(component) {

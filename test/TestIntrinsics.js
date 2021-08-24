@@ -39,7 +39,7 @@ const range = bali.range(1, 4);
 const set = bali.set([2,4,6,8,10,12]);
 const stack = bali.stack([2,4,6,8,10,12]);
 const symbol = bali.component('$type');
-const tree = bali.node('/bali/collections/Tree');
+const node = bali.node('/bali/composites/Node');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3, 4]);
 const iterator = list.getIterator();
@@ -1983,6 +1983,27 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $node intrinsic function', function() {
+            const index = intrinsics.index('$node');
+            intrinsics.invoke(index, type);
+            intrinsics.invoke(index, type, list);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, type, text);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $not intrinsic function', function() {
             const index = intrinsics.index('$not');
             intrinsics.invoke(index, probability);
@@ -2120,7 +2141,7 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, tree);
+                    intrinsics.invoke(index, node);
                 }
             ).to.throw();
         });
@@ -2886,27 +2907,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-        });
-
-        it('should invoke $tree intrinsic function', function() {
-            const index = intrinsics.index('$tree');
-            intrinsics.invoke(index, type);
-            intrinsics.invoke(index, type, list);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, type, text);
                 }
             ).to.throw();
         });
