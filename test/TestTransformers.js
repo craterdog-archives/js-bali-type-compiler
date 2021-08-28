@@ -23,9 +23,9 @@ describe('Bali Method Compiler', function() {
         it('should parse and format the same instructions', async function() {
             const file = 'test/utilities/instructions.basm';
             const source = await pfs.readFile(file, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
+            expect(source).to.exist;
             const procedure = parser.parseInstructions(source);
-            expect(procedure).to.exist;  // jshint ignore:line
+            expect(procedure).to.exist;
             const formatter = new Formatter(0, debug);
             const formatted = formatter.formatInstructions(procedure);
             expect(formatted).to.equal(source);  // add POSIX compliant <EOL>
@@ -34,9 +34,9 @@ describe('Bali Method Compiler', function() {
         it('should parse and format the same instructions with indentation', async function() {
             const file = 'test/utilities/instructions.basm';
             const source = await pfs.readFile(file, 'utf8');
-            expect(source).to.exist;  // jshint ignore:line
+            expect(source).to.exist;
             const procedure = parser.parseInstructions(source);
-            expect(procedure).to.exist;  // jshint ignore:line
+            expect(procedure).to.exist;
             const formatter = new Formatter(1, debug);
             const formatted = formatter.formatInstructions(procedure);
             const expected = source.replace(/^/gm, '    ').replace(/^    $/g, '');

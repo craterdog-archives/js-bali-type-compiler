@@ -127,8 +127,7 @@
         SAVE VARIABLE $result-1
         
         11.EvaluateStatement:
-        PUSH LITERAL `π`
-        CALL $inverse WITH 1 ARGUMENT
+        PUSH LITERAL `-π`
         SAVE VARIABLE $result-1
         
         12.EvaluateStatement:
@@ -250,35 +249,35 @@
         "9.EvaluateStatement": 53
         "10.EvaluateStatement": 56
         "11.EvaluateStatement": 60
-        "12.EvaluateStatement": 63
-        "13.EvaluateStatement": 66
-        "14.EvaluateStatement": 70
-        "15.EvaluateStatement": 74
-        "16.EvaluateStatement": 78
-        "17.EvaluateStatement": 82
-        "18.EvaluateStatement": 86
-        "19.EvaluateStatement": 89
-        "20.EvaluateStatement": 93
-        "21.EvaluateStatement": 97
-        "22.EvaluateStatement": 101
-        "23.EvaluateStatement": 105
-        "24.EvaluateStatement": 109
-        "25.EvaluateStatement": 112
-        "26.EvaluateStatement": 116
-        "27.EvaluateStatement": 120
-        "28.EvaluateStatement": 124
-        "29.EvaluateStatement": 128
+        "12.EvaluateStatement": 62
+        "13.EvaluateStatement": 65
+        "14.EvaluateStatement": 69
+        "15.EvaluateStatement": 73
+        "16.EvaluateStatement": 77
+        "17.EvaluateStatement": 81
+        "18.EvaluateStatement": 85
+        "19.EvaluateStatement": 88
+        "20.EvaluateStatement": 92
+        "21.EvaluateStatement": 96
+        "22.EvaluateStatement": 100
+        "23.EvaluateStatement": 104
+        "24.EvaluateStatement": 108
+        "25.EvaluateStatement": 111
+        "26.EvaluateStatement": 115
+        "27.EvaluateStatement": 119
+        "28.EvaluateStatement": 123
+        "29.EvaluateStatement": 127
     ]
     $bytecode: '
         C01528012802D00AD00128032804D00AD00180122805C01528062807D883
         D0822808D0012809D001280AD001801260138012280BC84B801260016002
         D08B6003D06A80126011800F680F80126004280CD00B280DD00B2804D00B
         8012600DC054600AD001E8018012280FC830801228102811D02E80122812
-        C84280122813C81F801260156016D06A801260016002D06D801260036005
-        D072801260156016D08B801260146017D02880122813C856801260016002
-        D045801260036005D008801260066008D04680126009600BD0098012600C
-        600ED02A80126010C860801260016002D004801260036005D07D80126006
-        6008D09780126009600BD062801260072804D026801260125000
+        80122813C81F801260156016D06A801260016002D06D801260036005D072
+        801260156016D08B801260146017D02880122813C856801260016002D045
+        801260036005D008801260066008D04680126009600BD0098012600C600E
+        D02A80126010C860801260016002D004801260036005D07D801260066008
+        D09780126009600BD062801260072804D026801260125000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

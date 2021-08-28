@@ -886,14 +886,16 @@ exports.api = function(debug) {
             return bali.number(angle.getRadians());
         },
 
-        $range: function(first, last, parameters) {
-            first = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', first);
-            last = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', last);
+        $range: function(endpoints, connector, parameters) {
+            endpoints = validateOptionalTypeArgument('$range', '/bali/collections/List', endpoints);
+            const first = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', endpoints.getItem(1));
+            const last = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', endpoints.getItem(2));
+            connector = validateOptionalTypeArgument('$range', '/bali/elements/Text', connector);
             if (first && last) {
                 validateSameType('$range', first, last);
             }
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
-            return bali.range(first, last, parameters);
+            return bali.range(first, last, connector, parameters);
         },
 
         $real: function(continuous) {

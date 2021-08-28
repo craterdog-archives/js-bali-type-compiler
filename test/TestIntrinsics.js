@@ -35,7 +35,7 @@ const catalog = bali.catalog({$a: 'a', $b: 'b', $c: 'c', $d: 'd', $e: 'e'});
 const list = bali.list([1, 2, 3]);
 const percentage = bali.percentage(25);
 const queue = bali.queue([2,4,6,8,10,12]);
-const range = bali.range(1, 4);
+const range = bali.range(1, 4, '..<');
 const set = bali.set([2,4,6,8,10,12]);
 const stack = bali.stack([2,4,6,8,10,12]);
 const symbol = bali.component('$type');
@@ -2245,21 +2245,16 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $range intrinsic function', function() {
             const index = intrinsics.index('$range');
-            intrinsics.invoke(index, zero, two);
-            intrinsics.invoke(index, zero, two, bali.catalog({$collection: [0, 1, 2]}));
+            intrinsics.invoke(index, bali.list([zero, two]), bali.text('..<'));
+            intrinsics.invoke(index, bali.list([zero, two]), bali.NONE, bali.catalog({$collection: [0, 1, 2]}));
             expect(
                 function() {
-                    intrinsics.invoke(index, zero, 2);
+                    intrinsics.invoke(index, [zero, 2]);
                 }
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, 0, two);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, zero, two, text);
+                    intrinsics.invoke(index, bali.list([zero, two]), '..');
                 }
             ).to.throw();
         });

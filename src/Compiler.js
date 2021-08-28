@@ -563,10 +563,10 @@ CompilingVisitor.prototype.visitDuration = function(duration) {
 //     boolean |
 //     duration |
 //     moment |
+//     name |
 //     number |
 //     percentage |
 //     probability |
-//     range |
 //     resource |
 //     symbol |
 //     tag |
@@ -1046,9 +1046,11 @@ CompilingVisitor.prototype.visitPublishClause = function(node) {
 };
 
 
-// range: ('0' | REAL)? '..' ('0' | REAL)?
+// range: element? ('<..<' | '<..' | '..<' | '..') element?
 CompilingVisitor.prototype.visitRange = function(range) {
-    this.visitElement(range);
+    this.builder.insertPushInstruction('LITERAL', range.toLiteral());
+    const parameters = range.getParameters();
+    this.visitParameters(parameters);
 };
 
 
