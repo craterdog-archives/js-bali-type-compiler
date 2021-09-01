@@ -1041,6 +1041,13 @@ exports.api = function(debug) {
             return component;
         },
 
+        $setValue: function(association, value) {
+            validateTypeArgument('$setValue', '/bali/composites/Association', association);
+            validateTypeArgument('$setValue', '/bali/abstractions/Component', value);
+            association.setValue(value);
+            return association;
+        },
+
         $shuffleItems: function(list) {
             validateTypeArgument('$shuffleItems', '/bali/collections/List', list);
             list.shuffleItems();

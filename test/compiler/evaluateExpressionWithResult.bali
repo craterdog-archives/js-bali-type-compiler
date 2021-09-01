@@ -1,6 +1,11 @@
 [
     $procedure: {
         $foo := bar
+        $bar := [
+            1
+            2
+            four - 1
+        ]
         document[$customer, $order, 3] := 5
         foo[$bar] += 1
         $counter -= delta
@@ -12,6 +17,21 @@
         SAVE VARIABLE $foo
         
         2.EvaluateStatement:
+        CALL $list
+        NOTE --Add an item to the list.
+        PUSH LITERAL `1`
+        CALL $addItem WITH 2 ARGUMENTS
+        NOTE --Add another item to the list.
+        PUSH LITERAL `2`
+        CALL $addItem WITH 2 ARGUMENTS
+        NOTE --Add another item to the list.
+        LOAD VARIABLE $four
+        PUSH LITERAL `1`
+        CALL $difference WITH 2 ARGUMENTS
+        CALL $addItem WITH 2 ARGUMENTS
+        SAVE VARIABLE $bar
+        
+        3.EvaluateStatement:
         NOTE --Place the recipient and the index of its attribute on the stack.
         LOAD VARIABLE $document
         PUSH LITERAL `$customer`
@@ -24,7 +44,7 @@
         CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         
-        3.EvaluateStatement:
+        4.EvaluateStatement:
         NOTE --Place the recipient and the index of its attribute on the stack.
         LOAD VARIABLE $foo
         PUSH LITERAL `$bar`
@@ -38,13 +58,13 @@
         CALL $setAttribute WITH 3 ARGUMENTS
         PULL COMPONENT
         
-        4.EvaluateStatement:
+        5.EvaluateStatement:
         LOAD VARIABLE $counter
         LOAD VARIABLE $delta
         CALL $difference WITH 2 ARGUMENTS
         SAVE VARIABLE $counter
         
-        5.EvaluateStatement:
+        6.EvaluateStatement:
         LOAD VARIABLE $angle
         PUSH LITERAL `3`
         CALL $scaled WITH 2 ARGUMENTS
@@ -55,13 +75,15 @@
     $addresses: [
         "1.EvaluateStatement": 1
         "2.EvaluateStatement": 3
-        "3.EvaluateStatement": 12
-        "4.EvaluateStatement": 21
-        "5.EvaluateStatement": 25
+        "3.EvaluateStatement": 13
+        "4.EvaluateStatement": 22
+        "5.EvaluateStatement": 31
+        "6.EvaluateStatement": 35
     ]
     $bytecode: '
-        6002800660052801D00B2802D00B28032804D88348006006280560062805
-        D00B2807D08BD883480060036004D028800360012803D07E800160075000
+        60028006C0542801D0012802D00160072801D028D001800260052804D00B
+        2805D00B28062807D88348006006280860062808D00B2801D08CD8834800
+        60036004D028800360012806D07E800160085000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -76,6 +98,7 @@
         $delta
         $document
         $foo
+        $four
         $result-1
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)

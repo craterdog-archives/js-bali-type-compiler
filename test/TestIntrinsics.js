@@ -2671,6 +2671,12 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, document, key, value);
         });
 
+        it('should invoke $setValue intrinsic function', function() {
+            const index = intrinsics.index('$setValue');
+            const value = bali.component('v2');
+            intrinsics.invoke(index, association, value);
+        });
+
         it('should invoke $shuffleItems intrinsic function', function() {
             const index = intrinsics.index('$shuffleItems');
             intrinsics.invoke(index, list);

@@ -3,7 +3,7 @@
         publish [
             $type: $changeEvent
             $key: $foo
-            $value: 5
+            $value: size + 1
         ]
     }
     $instructions: "
@@ -25,7 +25,9 @@
         CALL $addItem WITH 2 ARGUMENTS
         NOTE --Add another item to the catalog.
         PUSH LITERAL `$value`
-        PUSH LITERAL `5`
+        LOAD VARIABLE $size
+        PUSH LITERAL `1`
+        CALL $sum WITH 2 ARGUMENTS
         CALL $association WITH 2 ARGUMENTS
         CALL $addItem WITH 2 ARGUMENTS
         SAVE MESSAGE $bag-2
@@ -36,8 +38,8 @@
         "1.PublishStatement": 1
     ]
     $bytecode: '
-        28018001C01528022803D00AD00128042805D00AD00128062807D00AD001
-        980160025000
+        28018001C01528022803D00AD00128042805D00AD001280660032807D08C
+        D00AD001980160025000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"
@@ -48,6 +50,7 @@
     $variables: [
         $bag-2
         $result-1
+        $size
     ]($type: /bali/collections/Set/v1)
     $messages: [ ]($type: /bali/collections/Set/v1)
 ]
