@@ -241,7 +241,7 @@ CompilingVisitor.prototype.visitArithmeticExpression = function(node) {
 };
 
 
-// association: component ':' expression
+// association: element ':' expression
 CompilingVisitor.prototype.visitAssociation = function(association) {
     association.getKey().acceptVisitor(this);
     association.getValue().acceptVisitor(this);
