@@ -446,10 +446,10 @@ exports.api = function(debug) {
             return bali.boolean(collection.containsAny(items));
         },
 
-        $containsItem: function(collection, item) {
-            validateTypeArgument('$containsItem', '/bali/abstractions/Collection', collection);
+        $containsItem: function(sequential, item) {
+            validateTypeArgument('$containsItem', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$containsItem', '/bali/abstractions/Component', item);
-            return bali.boolean(collection.containsItem(item));
+            return bali.boolean(sequential.containsItem(item));
         },
 
         $cosine: function(angle) {
@@ -895,6 +895,7 @@ exports.api = function(debug) {
                 validateSameType('$range', first, last);
             }
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
+            connector = connector ? connector.getValue() : undefined;
             return bali.range(first, last, connector, parameters);
         },
 
