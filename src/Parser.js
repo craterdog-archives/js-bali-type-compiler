@@ -379,12 +379,7 @@ CustomErrorListener.prototype.syntaxError = function(recognizer, offendingToken,
 CustomErrorListener.prototype.reportAmbiguity = function(recognizer, dfa, startIndex, stopIndex, exact, alternatives, configs) {
     if (this.debug > 0) {
         const rule = getRule(recognizer, dfa);
-        alternatives = [];
-        configs.items.forEach(function(item) {
-            alternatives.push(item.alt);
-        }, this);
-        alternatives = "{" + alternatives.join(", ") + "}";
-        var message = 'The parser encountered ambiguous input for rule: ' + rule + ', alternatives: ' + alternatives;
+        var message = 'The parser encountered ambiguous input for rule: ' + rule;
         message = addContext(recognizer, message);
         console.error(message);
     }
