@@ -29,6 +29,7 @@
         
         1.1.HandleBlock:
         LOAD VARIABLE $error
+        NOTE --Place an empty catalog on the stack.
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -47,6 +48,7 @@
         
         1.2.HandleBlock:
         LOAD VARIABLE $error
+        NOTE --Place an empty catalog on the stack.
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -85,8 +87,8 @@
         "1.PostStatementSucceeded": 33
     ]
     $bytecode: '
-        200828018001600398014000002180026002C01528022803D00AD001D02A
-        18142804800400216002C01528022806D00AD001D02A181F280780040021
+        200828018001600398014000002180026002C01328022803D009D001D024
+        18142804800400216002C01328022806D009D001D024181F280780040021
         6002580060045000
     '(
         $encoding: $base16

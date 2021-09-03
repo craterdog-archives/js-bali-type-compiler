@@ -12,6 +12,7 @@
         PUSH LITERAL `/bali/vm/events/v1`
         SAVE VARIABLE $bag-2
         NOTE --Publish an event to the global event bag.
+        NOTE --Place an empty catalog on the stack.
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$type`
@@ -38,8 +39,8 @@
         "1.PublishStatement": 1
     ]
     $bytecode: '
-        28018001C01528022803D00AD00128042805D00AD001280660032807D08C
-        D00AD001980160025000
+        28018001C01328022803D009D00128042805D009D001280660032807D076
+        D009D001980160025000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

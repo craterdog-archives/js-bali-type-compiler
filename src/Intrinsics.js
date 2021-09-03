@@ -236,13 +236,6 @@ exports.api = function(debug) {
             return collection;
         },
 
-        $addItems: function(collection, items) {
-            validateTypeArgument('$addItems', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$addItems', '/bali/abstractions/Collection', items);
-            collection.addItems(items);
-            return collection;
-        },
-
         $ancestry: function(component) {
             validateTypeArgument('$ancestry', '/bali/interfaces/Reflective', component);
             return bali.list(component.getAncestry());
@@ -293,12 +286,6 @@ exports.api = function(debug) {
             validateTypeArgument('$attribute', '/bali/interfaces/Structural', composite);
             validateTypeArgument('$attribute', '/bali/abstractions/Element', key);
             return composite.getAttribute(key) || bali.pattern.NONE;
-        },
-
-        $attributes: function(catalog, keys) {
-            validateTypeArgument('$attributes', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$attributes', '/bali/collections/List', keys);
-            return catalog.getAttributes(keys);
         },
 
         $authority: function(resource) {
@@ -373,10 +360,9 @@ exports.api = function(debug) {
             return bali.binary(tag.getBytes());
         },
 
-        $catalog: function(items, parameters) {
-            items = validateOptionalTypeArgument('$catalog', '/bali/abstractions/Collection', items);
+        $catalog: function(parameters) {
             parameters = validateOptionalTypeArgument('$catalog', '/bali/collections/Catalog', parameters);
-            return bali.catalog(items, parameters);
+            return bali.catalog(undefined, parameters);
         },
 
         $citation: function(document) {
@@ -384,15 +370,16 @@ exports.api = function(debug) {
             return citeDocument(document);
         },
 
-        $cleanType: function(type) {
-            validateTypeArgument('$cleanType', '/bali/collections/Catalog', type);
-            compiler.cleanType(type);
-            return type;
-        },
-
         $code: function(procedure) {
             validateTypeArgument('$code', '/bali/composites/Procedure', procedure);
             return procedure.getCode();
+        },
+
+        $concatenation: function(first, second) {
+            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', first);
+            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', second);
+            validateSameType('$concatenation', first, second);
+            return first.constructor.concatenation(first, second);
         },
 
         $coinToss: function(weight) {
@@ -422,34 +409,9 @@ exports.api = function(debug) {
             return bali.component(source.getValue());
         },
 
-        $concatenation: function(first, second) {
-            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', first);
-            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', second);
-            validateSameType('$concatenation', first, second);
-            return first.constructor.concatenation(first, second);
-        },
-
         $conjugate: function(numerical) {
             validateTypeArgument('$conjugate', '/bali/libraries/Numerical', numerical);
             return numerical.constructor.conjugate(numerical);
-        },
-
-        $containsAll: function(collection, items) {
-            validateTypeArgument('$containsAll', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$containsAll', '/bali/abstractions/Collection', items);
-            return bali.boolean(collection.containsAll(items));
-        },
-
-        $containsAny: function(collection, items) {
-            validateTypeArgument('$containsAny', '/bali/abstractions/Collection', collection);
-            validateTypeArgument('$containsAny', '/bali/abstractions/Collection', items);
-            return bali.boolean(collection.containsAny(items));
-        },
-
-        $containsItem: function(sequential, item) {
-            validateTypeArgument('$containsItem', '/bali/interfaces/Sequential', sequential);
-            validateTypeArgument('$containsItem', '/bali/abstractions/Component', item);
-            return bali.boolean(sequential.containsItem(item));
         },
 
         $cosine: function(angle) {
@@ -525,19 +487,13 @@ exports.api = function(debug) {
             return base.constructor.exponential(base, exponent);
         },
 
-        $extraction: function(catalog, keys) {
-            validateTypeArgument('$extraction', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$extraction', '/bali/collections/List', keys);
-            return bali.catalog.extraction(catalog, keys);
-        },
-
         $factorial: function(numerical) {
             validateTypeArgument('$factorial', '/bali/libraries/Numerical', numerical);
             return numerical.constructor.factorial(numerical);
         },
 
         $first: function(range) {
-            validateTypeArgument('$first', '/bali/composites/Range', range);
+            validateTypeArgument('$first', '/bali/collections/Range', range);
             const first = range.getFirst();
             return (first === undefined) ? bali.pattern.NONE : bali.number(first);
         },
@@ -593,12 +549,6 @@ exports.api = function(debug) {
             return bali.number(number.getImaginary());
         },
 
-        $index: function(sequential, item) {
-            validateTypeArgument('$index', '/bali/interfaces/Sequential', sequential);
-            validateTypeArgument('$index', '/bali/abstractions/Component', item);
-            return bali.number(sequential.getIndex(item));
-        },
-
         $insertItem: function(list, index, item) {
             validateTypeArgument('$insertItem', '/bali/collections/List', list);
             validateTypeArgument('$insertItem', '/bali/interfaces/Discrete', index);
@@ -607,22 +557,6 @@ exports.api = function(debug) {
             validateIndex('$insertItem', list.getSize(), index);
             list.insertItem(index, item);
             return list;
-        },
-
-        $insertItems: function(list, index, items) {
-            validateTypeArgument('$insertItems', '/bali/collections/List', list);
-            validateTypeArgument('$insertItems', '/bali/interfaces/Discrete', index);
-            validateTypeArgument('$insertItems', '/bali/abstractions/Collection', items);
-            index = index.toInteger();
-            validateIndex('$insertItems', list.getSize(), index);
-            list.insertItems(index, items);
-            return list;
-        },
-
-        $instance: function(type, attributes) {
-            validateTypeArgument('$instance', '/bali/collections/Catalog', type);
-            validateTypeArgument('$instance', '/bali/collections/Catalog', attributes);
-            return bali.instance(type, attributes);
         },
 
         $integer: function(discrete) {
@@ -640,16 +574,6 @@ exports.api = function(debug) {
             return scalable.constructor.inverse(scalable);
         },
 
-        $isEmpty: function(sequential) {
-            validateTypeArgument('$isEmpty', '/bali/interfaces/Sequential', sequential);
-            return bali.boolean(sequential.isEmpty());
-        },
-
-        $isInfinite: function(number) {
-            validateTypeArgument('$isInfinite', '/bali/elements/Number', number);
-            return bali.boolean(number.isInfinite());
-        },
-
         $isLess: function(first, second) {
             validateTypeArgument('$isLess', '/bali/interfaces/Comparable', first);
             validateTypeArgument('$isLess', '/bali/interfaces/Comparable', second);
@@ -662,45 +586,12 @@ exports.api = function(debug) {
             return bali.boolean(first.comparedTo(second) > 0);
         },
 
-        $isNext: function(current, next) {
-            validateTypeArgument('$isNext', '/bali/elements/Version', current);
-            validateTypeArgument('$isNext', '/bali/elements/Version', next);
-            return bali.boolean(bali.version.validNextVersion(current, next));
-        },
-
-        $isParameterized: function(component) {
-            validateTypeArgument('$isParameterized', '/bali/interfaces/Reflective', component);
-            return bali.boolean(component.isParameterized());
-        },
-
-        $isType: function(component, type) {
-            validateTypeArgument('$isType', '/bali/interfaces/Reflective', component);
-            validateTypeArgument('$isType', '/bali/elements/Name', type);
-            return bali.boolean(component.isType(type.toString()));
-        },
-
-        $isUndefined: function(number) {
-            validateTypeArgument('$isUndefined', '/bali/elements/Number', number);
-            return bali.boolean(number.isUndefined());
-        },
-
-        $isZero: function(number) {
-            validateTypeArgument('$isZero', '/bali/elements/Number', number);
-            return bali.boolean(number.isZero());
-        },
-
         $item: function(sequential, index) {
             validateTypeArgument('$item', '/bali/interfaces/Sequential', sequential);
             validateTypeArgument('$item', '/bali/interfaces/Discrete', index);
             index = index.toInteger();
             validateIndex('$item', sequential.getSize(), index);
             return sequential.componentize(sequential.getItem(index));
-        },
-
-        $items: function(sequential, range) {
-            validateTypeArgument('$items', '/bali/interfaces/Sequential', sequential);
-            validateTypeArgument('$items', '/bali/composites/Range', range);
-            return sequential.getItems(range);
         },
 
         $iterator: function(sequential) {
@@ -713,13 +604,8 @@ exports.api = function(debug) {
             return association.getKey();
         },
 
-        $keys: function(catalog) {
-            validateTypeArgument('$keys', '/bali/collections/Catalog', catalog);
-            return catalog.getKeys();
-        },
-
         $last: function(range) {
-            validateTypeArgument('$last', '/bali/composites/Range', range);
+            validateTypeArgument('$last', '/bali/collections/Range', range);
             const last = range.getLast();
             return (last === undefined) ? bali.pattern.NONE : bali.number(last);
         },
@@ -730,15 +616,9 @@ exports.api = function(debug) {
             return bali.moment.later(moment, duration);
         },
 
-        $levels: function(version) {
-            validateTypeArgument('$levels', '/bali/elements/Version' , version);
-            return bali.list(version.getValue());
-        },
-
-        $list: function(items, parameters) {
-            items = validateOptionalTypeArgument('$list', '/bali/abstractions/Collection', items);
+        $list: function(parameters) {
             parameters = validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
-            return bali.list(items, parameters);
+            return bali.list(undefined, parameters);
         },
 
         $logarithm: function(base, value) {
@@ -826,11 +706,6 @@ exports.api = function(debug) {
             return component.getParameter(key);
         },
 
-        $parameters: function(component) {
-            validateTypeArgument('$parameters', '/bali/interfaces/Reflective', component);
-            return component.getParameters();
-        },
-
         $path: function(resource) {
             validateTypeArgument('$path', '/bali/elements/Resource', resource);
             return bali.text(resource.getPath());
@@ -844,10 +719,6 @@ exports.api = function(debug) {
         $previous: function(iterator) {
             validateTypeArgument('$previous', '/bali/abstractions/Iterator', iterator);
             return iterator.componentize(iterator.getPrevious());
-        },
-
-        $probability: function() {
-            return bali.probability.random();
         },
 
         $procedure: function(code, parameters) {
@@ -868,10 +739,9 @@ exports.api = function(debug) {
             return bali.text(resource.getQuery());
         },
 
-        $queue: function(items, parameters) {
-            items = validateOptionalTypeArgument('$queue', '/bali/abstractions/Collection', items);
+        $queue: function(parameters) {
             parameters = validateOptionalTypeArgument('$queue', '/bali/collections/Catalog', parameters);
-            return bali.queue(items, parameters);
+            return bali.queue(undefined, parameters);
         },
 
         $quotient: function(first, second) {
@@ -886,17 +756,15 @@ exports.api = function(debug) {
             return bali.number(angle.getRadians());
         },
 
-        $range: function(endpoints, connector, parameters) {
-            endpoints = validateOptionalTypeArgument('$range', '/bali/collections/List', endpoints);
-            const first = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', endpoints.getItem(1));
-            const last = validateOptionalTypeArgument('$range', '/bali/abstractions/Element', endpoints.getItem(2));
+        $random: function() {
+            return bali.probability.random();
+        },
+
+        $range: function(connector, parameters) {
             connector = validateOptionalTypeArgument('$range', '/bali/elements/Text', connector);
-            if (first && last) {
-                validateSameType('$range', first, last);
-            }
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             connector = connector ? connector.getValue() : undefined;
-            return bali.range(first, last, connector, parameters);
+            return bali.range(undefined, connector, undefined, parameters);
         },
 
         $real: function(continuous) {
@@ -929,13 +797,6 @@ exports.api = function(debug) {
             return catalog;
         },
 
-        $removeAttributes: function(catalog, keys) {
-            validateTypeArgument('$removeAttributes', '/bali/collections/Catalog', catalog);
-            validateTypeArgument('$removeAttributes', '/bali/collections/List', keys);
-            catalog.removeAttributes(keys);
-            return catalog;
-        },
-
         $removeHead: function(queue) {
             validateTypeArgument('$removeHead', '/bali/collections/Queue', queue);
             return queue.removeItem();
@@ -955,20 +816,6 @@ exports.api = function(debug) {
             validateTypeArgument('$removeItem', '/bali/abstractions/Component', item);
             set.removeItem(item);
             return set;
-        },
-
-        $removeItems: function(set, items) {
-            validateTypeArgument('$removeItems', '/bali/collections/Set', set);
-            validateTypeArgument('$removeItems', '/bali/abstractions/Collection', items);
-            set.removeItems(items);
-            return set;
-        },
-
-        $removeRange: function(list, range) {
-            validateTypeArgument('$removeRange', '/bali/collections/List', list);
-            validateTypeArgument('$removeRange', '/bali/composites/Range', range);
-            list.removeItems(range);
-            return list;
         },
 
         $removeTop: function(stack) {
@@ -1010,10 +857,9 @@ exports.api = function(debug) {
             return bali.number(duration.getSeconds(duration));
         },
 
-        $set: function(items, parameters) {
-            items = validateOptionalTypeArgument('$set', '/bali/abstractions/Collection', items);
+        $set: function(parameters) {
             parameters = validateOptionalTypeArgument('$set', '/bali/collections/Catalog', parameters);
-            return bali.set(items, parameters);
+            return bali.set(undefined, parameters);
         },
 
         $setAttribute: function(composite, key, value) {
@@ -1024,6 +870,13 @@ exports.api = function(debug) {
             return composite;
         },
 
+        $setFirst: function(range, value) {
+            validateTypeArgument('$setFirst', '/bali/collections/Range', range);
+            validateTypeArgument('$setFirst', '/bali/abstractions/Component', value);
+            range.setFirst(value);
+            return range;
+        },
+
         $setItem: function(list, index, item) {
             validateTypeArgument('$setItem', '/bali/collections/List', list);
             validateTypeArgument('$setItem', '/bali/interfaces/Discrete', index);
@@ -1032,6 +885,13 @@ exports.api = function(debug) {
             validateIndex('$setItem', list.getSize(), index);
             list.setItem(index, item);
             return list;
+        },
+
+        $setLast: function(range, value) {
+            validateTypeArgument('$setLast', '/bali/collections/Range', range);
+            validateTypeArgument('$setLast', '/bali/abstractions/Component', value);
+            range.setLast(value);
+            return range;
         },
 
         $setParameter: function(component, key, value) {
@@ -1071,10 +931,9 @@ exports.api = function(debug) {
             return sortable;
         },
 
-        $stack: function(items, parameters) {
-            items = validateOptionalTypeArgument('$stack', '/bali/abstractions/Collection', items);
+        $stack: function(parameters) {
             parameters = validateOptionalTypeArgument('$stack', '/bali/collections/Catalog', parameters);
-            return bali.stack(items, parameters);
+            return bali.stack(undefined, parameters);
         },
 
         $sum: function(first, second) {
@@ -1087,12 +946,6 @@ exports.api = function(debug) {
         $supplement: function(angle) {
             validateTypeArgument('$supplement', '/bali/elements/Angle', angle);
             return bali.angle.supplement(angle);
-        },
-
-        $supportsInterface: function(component, iface) {
-            validateTypeArgument('$supportsInterface', '/bali/interfaces/Reflective', component);
-            validateTypeArgument('$supportsInterface', '/bali/elements/Name', iface);
-            return component.supportsInterface(iface);
         },
 
         $tag: function(size) {
@@ -1129,11 +982,6 @@ exports.api = function(debug) {
             validateTypeArgument('$toStart', '/bali/abstractions/Iterator', iterator);
             iterator.toStart();
             return iterator;
-        },
-
-        $type: function(component) {
-            validateTypeArgument('$type', '/bali/interfaces/Reflective', component);
-            return bali.component(component.getType());
         },
 
         $value: function(association) {

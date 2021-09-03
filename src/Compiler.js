@@ -389,25 +389,45 @@ CompilingVisitor.prototype.visitCode = function(code) {
  * This method inserts the instructions that cause the VM to place the collection
  * on top of the component stack.
  */
-// collection: list | catalog
+// collection: range | list | catalog
 CompilingVisitor.prototype.visitCollection = function(collection) {
+    const parameters = collection.getParameters();
     var type = collection.constructor.name;
     type = '$' + type.charAt(0).toLowerCase() + type.slice(1);
-    const parameters = collection.getParameters();
-    const numberOfArguments = parameters ? 2 : 0;
-    if (numberOfArguments) {
-        this.builder.insertNoteInstruction('Place an empty parameterized ' + type.slice(1) + ' on the stack.');
-        this.builder.insertPushInstruction('LITERAL', 'none');  // no items to add yet
-        this.visitParameters(parameters);
-    }
-    this.builder.insertCallInstruction(type, numberOfArguments);  // <type>(items, parameters)
-    var count = 0;
-    const iterator = collection.getIterator();
-    while (iterator.hasNext()) {
-        this.builder.insertNoteInstruction('Add an' + (count++ ? 'other' : '') + ' item to the ' + type.slice(1) + '.');
-        var item = iterator.getNext();
-        item.acceptVisitor(this);
-        this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
+    if (type === '$range') {
+        this.builder.insertNoteInstruction('Place a range on the stack.');
+        const connector = bali.text(collection.getConnector());
+        connector.acceptVisitor(this);
+        if (parameters) this.visitParameters(parameters);
+        const numberOfArguments = parameters ? 2 : 1;
+        this.builder.insertCallInstruction('$range', numberOfArguments);  // $range(connector, parameters)
+        const first = collection.getFirst();
+        if (first) {
+            this.builder.insertNoteInstruction('Set the first item in the range.');
+            first.acceptVisitor(this);
+            this.builder.insertCallInstruction('$setFirst', 2);  // setFirst(range, first)
+        }
+        const last = collection.getLast();
+        if (last) {
+            this.builder.insertNoteInstruction('Set the last item in the range.');
+            last.acceptVisitor(this);
+            this.builder.insertCallInstruction('$setLast', 2);  // setLast(range, last)
+        }
+    } else {
+        this.builder.insertNoteInstruction('Place an empty ' + type.slice(1) + ' on the stack.');
+        const numberOfArguments = parameters ? 1 : 0;
+        if (numberOfArguments) {
+            this.visitParameters(parameters);
+        }
+        this.builder.insertCallInstruction(type, numberOfArguments);  // <type>(parameters)
+        var count = 0;
+        const iterator = collection.getIterator();
+        while (iterator.hasNext()) {
+            this.builder.insertNoteInstruction('Add an' + (count++ ? 'other' : '') + ' item to the ' + type.slice(1) + '.');
+            var item = iterator.getNext();
+            item.acceptVisitor(this);
+            this.builder.insertCallInstruction('$addItem', 2);  // addItem(collection, item)
+        }
     }
 };
 
@@ -1043,14 +1063,6 @@ CompilingVisitor.prototype.visitPublishClause = function(node) {
     this.builder.insertNoteInstruction('Publish an event to the global event bag.');
     event.acceptVisitor(this);
     this.builder.insertSaveInstruction('MESSAGE', bag);
-};
-
-
-// range: element? ('<..<' | '<..' | '..<' | '..') element?
-CompilingVisitor.prototype.visitRange = function(range) {
-    this.builder.insertPushInstruction('LITERAL', range.toLiteral());
-    const parameters = range.getParameters();
-    this.visitParameters(parameters);
 };
 
 

@@ -10,6 +10,7 @@
         PUSH LITERAL `/acme/messages/inbound/v1.2.3`
         SAVE VARIABLE $bag-2
         NOTE --Post a message to the named message bag.
+        NOTE --Place an empty catalog on the stack.
         CALL $catalog
         NOTE --Add an item to the catalog.
         PUSH LITERAL `$foo`
@@ -23,7 +24,7 @@
     $addresses: [
         "1.PostStatement": 1
     ]
-    $bytecode: '28018001C01528022803D00AD001980160025000'(
+    $bytecode: '28018001C01328022803D009D001980160025000'(
         $encoding: $base16
         $mediaType: "application/bcod"
     )
