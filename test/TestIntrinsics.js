@@ -1350,6 +1350,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $levels intrinsic function', function() {
+            const index = intrinsics.index('$levels');
+            intrinsics.invoke(index, version);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 'v1.2.3');
+                }
+            ).to.throw();
+        });
+
         it('should invoke $list intrinsic function', function() {
             const index = intrinsics.index('$list');
             intrinsics.invoke(index);

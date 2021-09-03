@@ -616,6 +616,11 @@ exports.api = function(debug) {
             return bali.moment.later(moment, duration);
         },
 
+        $levels: function(version) {
+            validateTypeArgument('$levels', '/bali/elements/Version' , version);
+            return bali.list(version.getValue());
+        },
+
         $list: function(parameters) {
             parameters = validateOptionalTypeArgument('$list', '/bali/collections/Catalog', parameters);
             return bali.list(undefined, parameters);
