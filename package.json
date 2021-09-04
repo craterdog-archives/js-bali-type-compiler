@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "antlr4": "4.8.0",
-    "bali-component-framework": "^2.49.0"
+    "bali-component-framework": "^2.50.0"
   }
 }
