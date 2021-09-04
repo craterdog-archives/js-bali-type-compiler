@@ -1528,9 +1528,9 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $parameter intrinsic function', function() {
-            const index = intrinsics.index('$parameter');
-            intrinsics.invoke(index, set, symbol);
+        it('should invoke $parameters intrinsic function', function() {
+            const index = intrinsics.index('$parameters');
+            intrinsics.invoke(index, set);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1538,12 +1538,7 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, set);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, set, '$type');
+                    intrinsics.invoke(index, key);
                 }
             ).to.throw();
         });

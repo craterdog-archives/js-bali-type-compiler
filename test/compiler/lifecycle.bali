@@ -21,8 +21,9 @@
         SAVE VARIABLE $document-3
         NOTE --Calculate the new version string for the new document and save it.
         LOAD VARIABLE $document-3
+        CALL $parameters WITH 1 ARGUMENT
         PUSH LITERAL `$version`
-        CALL $parameter WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         PUSH LITERAL `0`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE VARIABLE $version-4
@@ -62,8 +63,9 @@
         SAVE VARIABLE $document-8
         NOTE --Calculate the new version string for the new document and save it.
         LOAD VARIABLE $document-8
+        CALL $parameters WITH 1 ARGUMENT
         PUSH LITERAL `$version`
-        CALL $parameter WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         PUSH LITERAL `3`
         CALL $nextVersion WITH 2 ARGUMENTS
         SAVE VARIABLE $version-9
@@ -120,19 +122,19 @@
     "($mediaType: "application/basm")
     $addresses: [
         "1.CheckoutStatement": 1
-        "2.SaveStatement": 21
-        "3.SignStatement": 23
-        "4.CheckoutStatement": 27
-        "5.SaveStatement": 50
-        "6.SignStatement": 59
-        "7.DiscardStatement": 65
+        "2.SaveStatement": 22
+        "3.SignStatement": 24
+        "4.CheckoutStatement": 28
+        "5.SaveStatement": 52
+        "6.SignStatement": 61
+        "7.DiscardStatement": 67
     ]
     $bytecode: '
-        2801800B700B2802D00AC825800660062803D0502804D04B800F60062803
-        600FD870480060068005600588032806800C6005900C2806800D700D2802
-        D00AC825800760072803D050280AD04B8010600728036010D87048006008
-        60096007D86C480060086009D00A8801600460096001D86C4800280C800A
-        60086009D00A900A60086009D00A8002A802600E5000
+        2801800B700B2802D00AC82580066006C8502803D00A2804D04B800F6006
+        2803600FD870480060068005600588032806800C6005900C2806800D700D
+        2802D00AC82580076007C8502803D00A280AD04B8010600728036010D870
+        4800600860096007D86C480060086009D00A8801600460096001D86C4800
+        280C800A60086009D00A900A60086009D00A8002A802600E5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

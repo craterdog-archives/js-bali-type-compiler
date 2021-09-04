@@ -35,8 +35,9 @@
         SAVE VARIABLE $bag-5
         NOTE --Extract and save the version string for the message.
         LOAD VARIABLE $message-4
+        CALL $parameters WITH 1 ARGUMENT
         PUSH LITERAL `$version`
-        CALL $parameter WITH 2 ARGUMENTS
+        CALL $attribute WITH 2 ARGUMENTS
         CALL $nextVersion WITH 1 ARGUMENT
         SAVE VARIABLE $version-6
         NOTE --Set the new version string parameter for the message.
@@ -83,13 +84,13 @@
         "1.PostStatement": 1
         "2.RetrieveStatement": 5
         "3.RejectStatement": 9
-        "4.RetrieveStatement": 26
-        "5.AcceptStatement": 35
+        "4.RetrieveStatement": 27
+        "5.AcceptStatement": 36
     ]
     $bytecode: '
         280180012802980128018002780280066006800760072804D00A80036007
-        2805D050C84B800B60072805600BD870600798032801800460092808D00A
-        28097804D86C48006006800860082804D00A80056008B805600A5000
+        C8502805D00AC84B800B60072805600BD870600798032801800460092808
+        D00A28097804D86C48006006800860082804D00A80056008B805600A5000
     '(
         $encoding: $base16
         $mediaType: "application/bcod"

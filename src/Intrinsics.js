@@ -705,10 +705,9 @@ exports.api = function(debug) {
             return first.constructor.or(first, second);
         },
 
-        $parameter: function(component, key) {
-            validateTypeArgument('$parameter', '/bali/interfaces/Reflective', component);
-            validateTypeArgument('$parameter', '/bali/abstractions/Element', key);
-            return component.getParameter(key);
+        $parameters: function(component) {
+            validateTypeArgument('$parameters', '/bali/interfaces/Reflective', component);
+            return component.getParameters();
         },
 
         $path: function(resource) {

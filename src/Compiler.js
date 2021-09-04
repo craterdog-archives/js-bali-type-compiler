@@ -338,8 +338,9 @@ CompilingVisitor.prototype.visitCheckoutClause = function(node) {
 
     this.builder.insertNoteInstruction('Calculate the new version string for the new document and save it.');
     this.builder.insertLoadInstruction('VARIABLE', document);
+    this.builder.insertCallInstruction('$parameters', 1);  // parameters(document)
     this.builder.insertPushInstruction('LITERAL', '$version');
-    this.builder.insertCallInstruction('$parameter', 2);  // parameter(document, key)
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(parameters, key)
     level.acceptVisitor(this);
     this.builder.insertCallInstruction('$nextVersion', 2);  // nextVersion(version, level)
     const version = this.createTemporaryVariable('version');
@@ -1103,8 +1104,9 @@ CompilingVisitor.prototype.visitRejectClause = function(node) {
 
     this.builder.insertNoteInstruction('Extract and save the version string for the message.');
     this.builder.insertLoadInstruction('VARIABLE', message);
+    this.builder.insertCallInstruction('$parameters', 1);  // parameters(message)
     this.builder.insertPushInstruction('LITERAL', '$version');
-    this.builder.insertCallInstruction('$parameter', 2);  // parameter(message, key)
+    this.builder.insertCallInstruction('$attribute', 2);  // attribute(parameters, key)
     this.builder.insertCallInstruction('$nextVersion', 1);  // nextVersion(version)
     const version = this.createTemporaryVariable('version');
     this.builder.insertSaveInstruction('VARIABLE', version);
