@@ -481,15 +481,15 @@ CompilingVisitor.prototype.visitComplementExpression = function(node) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of a concatenation operation on them.
+ * value of a chain operation on them.
  */
-// concatenationExpression: expression '&' expression
-CompilingVisitor.prototype.visitConcatenationExpression = function(node) {
+// chainExpression: expression '&' expression
+CompilingVisitor.prototype.visitChainExpression = function(node) {
     const firstOperand = node.getItem(1);
     const secondOperand = node.getItem(2);
     firstOperand.acceptVisitor(this);
     secondOperand.acceptVisitor(this);
-    this.builder.insertCallInstruction('$concatenation', 2);  // concatenation(a, b)
+    this.builder.insertCallInstruction('$chain', 2);  // chain(a, b)
 };
 
 

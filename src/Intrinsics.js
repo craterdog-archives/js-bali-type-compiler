@@ -365,6 +365,13 @@ exports.api = function(debug) {
             return bali.catalog(undefined, parameters);
         },
 
+        $chain: function(first, second) {
+            validateTypeArgument('$chain', '/bali/libraries/Chainable', first);
+            validateTypeArgument('$chain', '/bali/libraries/Chainable', second);
+            validateSameType('$chain', first, second);
+            return first.constructor.chain(first, second);
+        },
+
         $citation: function(document) {
             validateTypeArgument('$citation', '/bali/collections/Catalog', document);
             return citeDocument(document);
@@ -373,13 +380,6 @@ exports.api = function(debug) {
         $code: function(procedure) {
             validateTypeArgument('$code', '/bali/composites/Procedure', procedure);
             return procedure.getCode();
-        },
-
-        $concatenation: function(first, second) {
-            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', first);
-            validateTypeArgument('$concatenation', '/bali/libraries/Chainable', second);
-            validateSameType('$concatenation', first, second);
-            return first.constructor.concatenation(first, second);
         },
 
         $coinToss: function(weight) {
