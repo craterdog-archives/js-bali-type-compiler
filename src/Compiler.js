@@ -614,7 +614,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(node) {
         this.visitRecipient(recipient);
         const operator = node.operator;
         if (operator !== ':=') {
-            if (recipient.isType('/bali/composites/Attribute')) {
+            if (recipient.isType('/bali/trees/Attribute')) {
                 this.builder.insertNoteInstruction('Place the current value of the attribute on the stack.');
                 recipient.acceptVisitor(this);
                 this.builder.insertCallInstruction('$attribute', 2);  // attribute(composite, index)
@@ -1069,7 +1069,7 @@ CompilingVisitor.prototype.visitPublishClause = function(node) {
 
 // recipient: symbol | attribute
 CompilingVisitor.prototype.visitRecipient = function(recipient) {
-    if (recipient.isType('/bali/composites/Attribute')) {
+    if (recipient.isType('/bali/trees/Attribute')) {
         this.builder.insertNoteInstruction('Place the recipient and the index of its attribute on the stack.');
         recipient.acceptVisitor(this);
     }
@@ -1297,7 +1297,7 @@ CompilingVisitor.prototype.visitSignClause = function(node) {
 // statement: comment | mainClause handleClause?
 CompilingVisitor.prototype.visitStatement = function(node) {
     // ignore comments
-    if (node.getItem(1).isType('/bali/composites/Comment')) {
+    if (node.getItem(1).isType('/bali/trees/Comment')) {
         this.builder.decrementStatementCount();
         return;
     }
@@ -1537,7 +1537,7 @@ function countBlocks(clause) {
         const iterator = clause.getIterator();
         while (iterator.hasNext()) {
             var item = iterator.getNext();
-            if (item.isType('/bali/composites/Block')) {
+            if (item.isType('/bali/trees/Block')) {
                 count++;
             }
         }
@@ -1637,7 +1637,7 @@ InstructionBuilder.prototype.pushStatementContext = function(node) {
     // initialize the procedure configuration for this statement
     const procedure = this.stack.peek();
     procedure.statement = statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/trees/' and 'Clause'
     const prefix = procedure.prefix + procedure.statementNumber + '.';
     statement.startLabel = prefix + type + 'Statement';
     if (statement.blockCount > 0) {
@@ -1738,7 +1738,7 @@ InstructionBuilder.prototype.getStatementPrefix = function() {
  */
 InstructionBuilder.prototype.getStatementType = function() {
     const statement = this.stack.peek().statement;
-    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/composites/' and 'Clause'
+    const type = statement.mainClause.getType().split('/')[3].slice(0, -6);  // remove '/bali/trees/' and 'Clause'
     return type;
 };
 

@@ -283,7 +283,7 @@ exports.api = function(debug) {
         },
 
         $attribute: function(composite, key) {
-            validateTypeArgument('$attribute', '/bali/interfaces/Structural', composite);
+            validateTypeArgument('$attribute', '/bali/interfaces/Composite', composite);
             validateTypeArgument('$attribute', '/bali/abstractions/Element', key);
             return composite.getAttribute(key) || bali.pattern.NONE;
         },
@@ -378,7 +378,7 @@ exports.api = function(debug) {
         },
 
         $code: function(procedure) {
-            validateTypeArgument('$code', '/bali/composites/Procedure', procedure);
+            validateTypeArgument('$code', '/bali/trees/Procedure', procedure);
             return procedure.getCode();
         },
 
@@ -600,7 +600,7 @@ exports.api = function(debug) {
         },
 
         $key: function(association) {
-            validateTypeArgument('$key', '/bali/composites/Association', association);
+            validateTypeArgument('$key', '/bali/collections/Association', association);
             return association.getKey();
         },
 
@@ -726,7 +726,7 @@ exports.api = function(debug) {
         },
 
         $procedure: function(code, parameters) {
-            validateTypeArgument('$procedure', '/bali/composites/Code', code);
+            validateTypeArgument('$procedure', '/bali/trees/Code', code);
             parameters = validateOptionalTypeArgument('$procedure', '/bali/collections/Catalog', parameters);
             return bali.procedure(code, parameters);
         },
@@ -867,7 +867,7 @@ exports.api = function(debug) {
         },
 
         $setAttribute: function(composite, key, value) {
-            validateTypeArgument('$setAttribute', '/bali/interfaces/Structural', composite);
+            validateTypeArgument('$setAttribute', '/bali/interfaces/Composite', composite);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Element', key);
             validateTypeArgument('$setAttribute', '/bali/abstractions/Component', value);
             composite.setAttribute(key, value);
@@ -907,7 +907,7 @@ exports.api = function(debug) {
         },
 
         $setValue: function(association, value) {
-            validateTypeArgument('$setValue', '/bali/composites/Association', association);
+            validateTypeArgument('$setValue', '/bali/collections/Association', association);
             validateTypeArgument('$setValue', '/bali/abstractions/Component', value);
             association.setValue(value);
             return association;
@@ -989,7 +989,7 @@ exports.api = function(debug) {
         },
 
         $value: function(association) {
-            validateTypeArgument('$value', '/bali/composites/Association', association);
+            validateTypeArgument('$value', '/bali/collections/Association', association);
             return association.getValue();
         },
 
