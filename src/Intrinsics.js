@@ -604,6 +604,11 @@ exports.api = function(debug) {
             return association.getKey();
         },
 
+        $keys: function(catalog) {
+            validateTypeArgument('$keys', '/bali/collections/Catalog', catalog);
+            return catalog.getKeys();
+        },
+
         $last: function(range) {
             validateTypeArgument('$last', '/bali/collections/Range', range);
             const last = range.getLast();

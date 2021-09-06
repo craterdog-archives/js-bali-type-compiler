@@ -1315,6 +1315,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $keys intrinsic function', function() {
+            const index = intrinsics.index('$keys');
+            intrinsics.invoke(index, catalog);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $last intrinsic function', function() {
             const index = intrinsics.index('$last');
             intrinsics.invoke(index, range);
