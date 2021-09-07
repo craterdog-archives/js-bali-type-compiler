@@ -414,6 +414,11 @@ exports.api = function(debug) {
             return numerical.constructor.conjugate(numerical);
         },
 
+        $connector: function(range) {
+            validateTypeArgument('$connector', '/bali/collections/Range', range);
+            return bali.text(range.getConnector());
+        },
+
         $cosine: function(angle) {
             validateTypeArgument('$cosine', '/bali/elements/Angle', angle);
             return bali.number(bali.angle.cosine(angle));

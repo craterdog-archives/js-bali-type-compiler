@@ -654,6 +654,21 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $connector intrinsic function', function() {
+            const index = intrinsics.index('$connector');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $cosine intrinsic function', function() {
             const index = intrinsics.index('$cosine');
             intrinsics.invoke(index, angle);
