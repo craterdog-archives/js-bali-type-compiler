@@ -939,9 +939,10 @@ exports.api = function(debug) {
             return bali.number(sequential.getSize());
         },
 
-        $sortItems: function(sortable) {
+        $sortItems: function(sortable, sorter) {
             validateTypeArgument('$sortItems', '/bali/interfaces/Sortable', sortable);
-            sortable.sortItems();
+            sorter = validateOptionalTypeArgument('$sortItems', '/bali/agents/Sorter', sorter);
+            sortable.sortItems(sorter);
             return sortable;
         },
 
