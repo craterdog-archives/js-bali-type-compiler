@@ -93,6 +93,19 @@ FormattingVisitor.prototype.visitCollection = function(collection) {
 };
 
 
+// component: value parameters? note?
+FormattingVisitor.prototype.visitComponent = function(component) {
+    const functionName = 'visit' + component.getType().split('/')[3];
+    if (this[functionName]) {
+        // dispatch to the actual type handler
+        this[functionName](component);
+    } else {
+        // dispatch to typed catalog handler
+        this.visitCatalog(component);
+    }
+};
+
+
 // document: EOL* instructions EOL* EOF
 // instructions: (instruction EOL)*
 FormattingVisitor.prototype.visitList = function(procedure) {
@@ -205,7 +218,7 @@ FormattingVisitor.prototype.visitPush = function(instruction) {
             operand = operand.getValue();
             break;
         case types.LITERAL:
-            operand = '`' + operand.toBDN(this.indentation) + '`';
+            operand = '`' + bali.source(operand, this.indentation) + '`';
             break;
         case types.CONSTANT:
         case types.ARGUMENT:

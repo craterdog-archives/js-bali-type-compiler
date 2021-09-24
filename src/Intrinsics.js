@@ -44,7 +44,6 @@ exports.api = function(debug) {
     if (debug === null || debug === undefined) debug = 0;  // default is off
     const bali = require('bali-component-framework').api(debug);
     const compiler = new Compiler(debug);
-    const validator = bali.validator(debug);
     const generator = bali.generator(debug);
 
     // PUBLIC FUNCTIONS
@@ -128,7 +127,7 @@ exports.api = function(debug) {
             $procedure: procedure,
             $exception: '$argumentType',
             $expected: type,
-            $actual: bali.type(argument),
+            $actual: bali.component.canonicalType(argument),
             $text: 'An argument passed into an intrinsic function does not have the required type.'
         });
         if (debug > 0) console.error(exception.toString());
@@ -136,7 +135,7 @@ exports.api = function(debug) {
     };
 
     const validateOptionalTypeArgument = function(procedure, type, argument) {
-        if (argument === null || argument === undefined || bali.pattern.NONE.isEqualTo(argument)) return undefined;
+        if (argument === null || argument === undefined || bali.areEqual(bali.pattern.NONE, argument)) return undefined;
         validateTypeArgument(procedure, type, argument);
         return argument;
     };
@@ -265,14 +264,14 @@ exports.api = function(debug) {
         },
 
         $areEqual: function(first, second) {
-            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', first);
-            validateTypeArgument('$areEqual', '/bali/interfaces/Comparable', second);
-            return bali.boolean(first.isEqualTo(second));
+            validateTypeArgument('$areEqual', '/bali/abstractions/Component', first);
+            validateTypeArgument('$areEqual', '/bali/abstractions/Component', second);
+            return bali.boolean(bali.areEqual(first, second));
         },
 
         $areSame: function(first, second) {
-            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', first);
-            validateTypeArgument('$areSame', '/bali/interfaces/Comparable', second);
+            validateTypeArgument('$areSame', '/bali/abstractions/Component', first);
+            validateTypeArgument('$areSame', '/bali/abstractions/Component', second);
             return bali.boolean(first === second);
         },
 
@@ -387,10 +386,8 @@ exports.api = function(debug) {
             return bali.boolean(generator.flipCoin(weight.toReal()));
         },
 
-        $comparison: function(first, second) {
-            validateTypeArgument('$comparison', '/bali/interfaces/Comparable', first);
-            validateTypeArgument('$comparison', '/bali/interfaces/Comparable', second);
-            return bali.number(first.comparedTo(second));
+        $comparator: function() {
+            return bali.comparator();
         },
 
         $compileType: function(type) {
@@ -437,7 +434,7 @@ exports.api = function(debug) {
         $default: function(component, value) {
             validateTypeArgument('$default', '/bali/abstractions/Component', component);
             validateTypeArgument('$default', '/bali/abstractions/Component', value);
-            return !component.isEqualTo(bali.pattern.NONE) ? component : value;
+            return !bali.areEqual(component, bali.pattern.NONE) ? component : value;
         },
 
         $degrees: function(angle) {
@@ -452,25 +449,20 @@ exports.api = function(debug) {
             return first.constructor.difference(first, second);
         },
 
-        $document: function(component, indentation) {
+        $document: function(component) {
             validateTypeArgument('$document', '/bali/abstractions/Component', component);
-            indentation = validateOptionalTypeArgument('$document', '/bali/interfaces/Discrete', indentation);
-            if (indentation) {
-                indentation = indentation.toInteger();
-                validateIndex('$document', 10, indentation);
-            }
-            return bali.text(EOL + component.toBDN(indentation) + EOL);
+            return bali.text(EOL + bali.document(component) + EOL);
         },
 
-        $doesMatch: function(comparable, pattern) {
-            validateTypeArgument('$doesMatch', '/bali/interfaces/Comparable', comparable);
+        $doesMatch: function(component, pattern) {
+            validateTypeArgument('$doesMatch', '/bali/abstractions/Component', component);
             validateTypeArgument('$doesMatch', '/bali/abstractions/Component', pattern);
-            return bali.boolean(comparable.isMatchedBy(pattern));
+            return bali.boolean(bali.doesMatch(component, pattern));
         },
 
         $duplicate: function(component) {
             validateTypeArgument('$duplicate', '/bali/abstractions/Component', component);
-            return component.duplicate();
+            return bali.duplicate(component);
         },
 
         $duration: function(first, second) {
@@ -544,9 +536,9 @@ exports.api = function(debug) {
         },
 
         $HTML: function(component, style) {
-            validateTypeArgument('$HTML', '/bali/interfaces/Exportable', component);
+            validateTypeArgument('$HTML', '/bali/abstractions/Component', component);
             validateTypeArgument('$HTML', '/bali/elements/Resource', style);
-            return bali.text(EOL + component.toHTML(style.getValue().toString()) + EOL);
+            return bali.text(EOL + bali.html(component, style.getValue().toString()) + EOL);
         },
 
         $imaginary: function(number) {
@@ -580,15 +572,15 @@ exports.api = function(debug) {
         },
 
         $isLess: function(first, second) {
-            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', first);
-            validateTypeArgument('$isLess', '/bali/interfaces/Comparable', second);
-            return bali.boolean(first.comparedTo(second) < 0);
+            validateTypeArgument('$isLess', '/bali/abstractions/Component', first);
+            validateTypeArgument('$isLess', '/bali/abstractions/Component', second);
+            return bali.boolean(bali.ranking(first, second) < 0);
         },
 
         $isMore: function(first, second) {
-            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', first);
-            validateTypeArgument('$isMore', '/bali/interfaces/Comparable', second);
-            return bali.boolean(first.comparedTo(second) > 0);
+            validateTypeArgument('$isMore', '/bali/abstractions/Component', first);
+            validateTypeArgument('$isMore', '/bali/abstractions/Component', second);
+            return bali.boolean(bali.ranking(first, second) > 0);
         },
 
         $item: function(sequential, index) {
@@ -781,6 +773,12 @@ exports.api = function(debug) {
             return bali.range(undefined, connector, undefined, parameters);
         },
 
+        $ranking: function(first, second) {
+            validateTypeArgument('$ranking', '/bali/abstractions/Component', first);
+            validateTypeArgument('$ranking', '/bali/abstractions/Component', second);
+            return bali.number(bali.ranking(first, second));
+        },
+
         $real: function(continuous) {
             validateTypeArgument('$real', '/bali/interfaces/Continuous', continuous);
             return bali.number(continuous.toReal());
@@ -939,11 +937,26 @@ exports.api = function(debug) {
             return bali.number(sequential.getSize());
         },
 
+        $sorter: function(comparator) {
+            comparator = validateOptionalTypeArgument('$sorter', '/bali/agents/CanonicalComparator', comparator);
+            return bali.sorter(comparator);
+        },
+
         $sortItems: function(sortable, sorter) {
             validateTypeArgument('$sortItems', '/bali/interfaces/Sortable', sortable);
-            sorter = validateOptionalTypeArgument('$sortItems', '/bali/agents/Sorter', sorter);
+            sorter = validateOptionalTypeArgument('$sortItems', '/bali/agents/MergeSorter', sorter);
             sortable.sortItems(sorter);
             return sortable;
+        },
+
+        $source: function(component, indentation) {
+            validateTypeArgument('$source', '/bali/abstractions/Component', component);
+            indentation = validateOptionalTypeArgument('$source', '/bali/interfaces/Discrete', indentation);
+            if (indentation) {
+                indentation = indentation.toInteger();
+                validateIndex('$source', 10, indentation);
+            }
+            return bali.text(EOL + bali.source(component, indentation) + EOL);
         },
 
         $stack: function(parameters) {

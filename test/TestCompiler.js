@@ -55,7 +55,7 @@ describe('Bali Nebula™ Type Compiler', function() {
                 compiler.assembleMethod(type, method);
 
                 // check for differences
-                source = method.toDocument();
+                source = bali.document(method);
                 await pfs.writeFile(baliFile, source, 'utf8');
                 var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;

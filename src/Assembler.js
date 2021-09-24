@@ -97,6 +97,19 @@ AssemblingVisitor.prototype.visitCollection = function(collection) {
 };
 
 
+// component: value parameters? note?
+AssemblingVisitor.prototype.visitComponent = function(component) {
+    const functionName = 'visit' + component.getType().split('/')[3];
+    if (this[functionName]) {
+        // dispatch to the actual type handler
+        this[functionName](component);
+    } else {
+        // dispatch to typed catalog handler
+        this.visitCatalog(component);
+    }
+};
+
+
 // document: EOL* instructions EOL* EOF
 // instructions: (instruction EOL)*
 AssemblingVisitor.prototype.visitList = function(instructions) {

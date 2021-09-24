@@ -43,6 +43,8 @@ const node = bali.node('/bali/trees/Node');
 const type = bali.component('/bali/collections/Set');
 const version = bali.version([1, 2, 3, 4]);
 const iterator = list.getIterator();
+const comparator = bali.comparator();
+const sorter = bali.sorter(comparator);
 const procedure = bali.procedure(code, {$foo: 'bar'});
 const array = [];
 const object = {};
@@ -532,7 +534,7 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $citation intrinsic function', function() {
             const index = intrinsics.index('$citation');
             const citation = intrinsics.invoke(index, document);
-            expect(digest.isEqualTo(citation.getAttribute('$digest'))).to.equal(true);
+            expect(bali.areEqual(digest, citation.getAttribute('$digest'))).to.equal(true);
         });
 
         it('should invoke $code intrinsic function', function() {
@@ -571,37 +573,15 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $comparison intrinsic function', function() {
-            const index = intrinsics.index('$comparison');
-            intrinsics.invoke(index, number, number);
-            intrinsics.invoke(index, text, text);
-            intrinsics.invoke(index, list, set);
-            expect(
-                function() {
-                    intrinsics.invoke(index);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, two);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, two, 3);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, 5, 6);
-                }
-            ).to.throw();
+        it('should invoke $comparator intrinsic function', function() {
+            const index = intrinsics.index('$comparator');
+            expect(bali.areEqual(intrinsics.invoke(index), comparator)).to.equal(true);
         });
 
         it('should invoke $compileType intrinsic function', function() {
             const index = intrinsics.index('$compileType');
-            const compiled = intrinsics.invoke(index, cleanType.duplicate());
-            expect(compiled.isEqualTo(dirtyType)).to.equal(true);
+            const compiled = intrinsics.invoke(index, bali.duplicate(cleanType));
+            expect(bali.areEqual(compiled, dirtyType)).to.equal(true);
         });
 
         it('should invoke $complement intrinsic function', function() {
@@ -782,11 +762,8 @@ describe('Bali Intrinsic Functions', function() {
         it('should invoke $document intrinsic function', function() {
             const index = intrinsics.index('$document');
             intrinsics.invoke(index, number);
-            intrinsics.invoke(index, number, indentation);
             intrinsics.invoke(index, text);
-            intrinsics.invoke(index, text, indentation);
             intrinsics.invoke(index, list);
-            intrinsics.invoke(index, list, indentation);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -795,16 +772,6 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, '/bali/collections/List');
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, angle);
-                }
-            ).to.throw();
-            expect(
-                function() {
-                    intrinsics.invoke(index, list, 5);
                 }
             ).to.throw();
         });
@@ -1204,9 +1171,17 @@ describe('Bali Intrinsic Functions', function() {
             intrinsics.invoke(index, version, two);
             intrinsics.invoke(index, catalog, two);
             intrinsics.invoke(index, list, two);
-            intrinsics.invoke(index, queue, two);
             intrinsics.invoke(index, set, two);
-            intrinsics.invoke(index, stack, two);
+            expect(
+                function() {
+                    intrinsics.invoke(index, queue, two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, stack, two);
+                }
+            ).to.throw();
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1751,6 +1726,33 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $ranking intrinsic function', function() {
+            const index = intrinsics.index('$ranking');
+            intrinsics.invoke(index, number, number);
+            intrinsics.invoke(index, text, text);
+            intrinsics.invoke(index, list, set);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, two);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, two, 3);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, 5, 6);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $real intrinsic function', function() {
             const index = intrinsics.index('$real');
             intrinsics.invoke(index, number);
@@ -2168,10 +2170,19 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $sorter intrinsic function', function() {
+            const index = intrinsics.index('$sorter');
+            expect(bali.areEqual(intrinsics.invoke(index, comparator), sorter)).to.equal(true);
+        });
+
         it('should invoke $sortItems intrinsic function', function() {
             const index = intrinsics.index('$sortItems');
             intrinsics.invoke(index, list);
+            intrinsics.invoke(index, list, bali.sorter());
+            intrinsics.invoke(index, list, sorter);
             intrinsics.invoke(index, catalog);
+            intrinsics.invoke(index, catalog, bali.sorter());
+            intrinsics.invoke(index, catalog, sorter);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -2180,6 +2191,36 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, queue);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $source intrinsic function', function() {
+            const index = intrinsics.index('$source');
+            intrinsics.invoke(index, number);
+            intrinsics.invoke(index, number, indentation);
+            intrinsics.invoke(index, text);
+            intrinsics.invoke(index, text, indentation);
+            intrinsics.invoke(index, list);
+            intrinsics.invoke(index, list, indentation);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, '/bali/collections/List');
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, angle);
+                }
+            ).to.throw();
+            expect(
+                function() {
+                    intrinsics.invoke(index, list, 5);
                 }
             ).to.throw();
         });

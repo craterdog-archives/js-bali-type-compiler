@@ -16,7 +16,6 @@
  * Bali Virtual Machine™.
  */
 const bali = require('bali-component-framework').api();
-const Visitor = require('bali-component-framework/src/abstractions/Visitor').Visitor;
 const Assembler = require('./Assembler').Assembler;
 const EOL = '\n';  // POSIX end of line character
 
@@ -49,7 +48,7 @@ Compiler.prototype.cleanType = function(type) {
 
     // create the methods catalog if necessary
     var methods = type.getAttribute('$methods');
-    if (methods && !methods.isEqualTo(bali.pattern.NONE)) {
+    if (methods && !bali.areEqual(methods, bali.pattern.NONE)) {
 
         // clean each method
         const iterator = methods.getIterator();
@@ -140,13 +139,16 @@ Compiler.prototype.compileMethod = function(type, method) {
  * syntax node is it traversing.
  */
 function CompilingVisitor(type, method, debug) {
-    Visitor.call(this);
-    this.debug = debug || 0;
+    bali.Visitor.call(
+        this,
+        ['/bali/compiler/CompilingVisitor'],
+        debug
+    );
     this.builder = new InstructionBuilder(type, method);
     this.temporaryVariableCount = 2;  // skip the $result-1 temporary variable
     return this;
 }
-CompilingVisitor.prototype = Object.create(Visitor.prototype);
+CompilingVisitor.prototype = Object.create(bali.Visitor.prototype);
 CompilingVisitor.prototype.constructor = CompilingVisitor;
 
 
