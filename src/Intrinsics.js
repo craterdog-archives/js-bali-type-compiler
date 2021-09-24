@@ -292,20 +292,20 @@ exports.api = function(debug) {
             return bali.text(resource.getAuthority());
         },
 
-        $base2: function(binary, indentation) {
-            validateTypeArgument('$base2', '/bali/elements/Binary', binary);
-            indentation = validateOptionalTypeArgument('$base2', '/bali/interfaces/Discrete', indentation);
+        $base02: function(binary, indentation) {
+            validateTypeArgument('$base02', '/bali/strings/Binary', binary);
+            indentation = validateOptionalTypeArgument('$base02', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
                 indentation = indentation.toInteger();
-                validateIndex('$base2', 10, indentation);
+                validateIndex('$base02', 10, indentation);
             }
             const decoder = bali.decoder(indentation);
-            return bali.text(decoder.base2Encode(binary.getValue()));
+            return bali.text(decoder.base02Encode(binary.getValue()));
         },
 
         $base16: function(binary, indentation) {
-            validateTypeArgument('$base16', '/bali/elements/Binary', binary);
+            validateTypeArgument('$base16', '/bali/strings/Binary', binary);
             indentation = validateOptionalTypeArgument('$base16', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
@@ -317,7 +317,7 @@ exports.api = function(debug) {
         },
 
         $base32: function(binary, indentation) {
-            validateTypeArgument('$base32', '/bali/elements/Binary', binary);
+            validateTypeArgument('$base32', '/bali/strings/Binary', binary);
             indentation = validateOptionalTypeArgument('$base32', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
@@ -329,7 +329,7 @@ exports.api = function(debug) {
         },
 
         $base64: function(binary, indentation) {
-            validateTypeArgument('$base64', '/bali/elements/Binary', binary);
+            validateTypeArgument('$base64', '/bali/strings/Binary', binary);
             indentation = validateOptionalTypeArgument('$base64', '/bali/interfaces/Discrete', indentation);
             indentation = indentation || 0;
             if (indentation) {
@@ -402,7 +402,7 @@ exports.api = function(debug) {
         },
 
         $component: function(source) {
-            validateTypeArgument('$component', '/bali/elements/Text', source);
+            validateTypeArgument('$component', '/bali/strings/Text', source);
             return bali.component(source.getValue());
         },
 
@@ -535,9 +535,9 @@ exports.api = function(debug) {
             return bali.number(duration.getHours(duration));
         },
 
-        $HTML: function(component, style) {
-            validateTypeArgument('$HTML', '/bali/abstractions/Component', component);
-            validateTypeArgument('$HTML', '/bali/elements/Resource', style);
+        $html: function(component, style) {
+            validateTypeArgument('$html', '/bali/abstractions/Component', component);
+            validateTypeArgument('$html', '/bali/elements/Resource', style);
             return bali.text(EOL + bali.html(component, style.getValue().toString()) + EOL);
         },
 
@@ -619,7 +619,7 @@ exports.api = function(debug) {
         },
 
         $levels: function(version) {
-            validateTypeArgument('$levels', '/bali/elements/Version' , version);
+            validateTypeArgument('$levels', '/bali/strings/Version' , version);
             return bali.list(version.getValue());
         },
 
@@ -676,7 +676,7 @@ exports.api = function(debug) {
         },
 
         $nextVersion: function(version, level) {
-            validateTypeArgument('$nextVersion', '/bali/elements/Version', version);
+            validateTypeArgument('$nextVersion', '/bali/strings/Version', version);
             validateOptionalTypeArgument('$nextVersion', '/bali/interfaces/Discrete', level);
             if (level) {
                 level = level.toInteger();
@@ -685,10 +685,9 @@ exports.api = function(debug) {
             return bali.version.nextVersion(version, level);
         },
 
-        $node: function(type, children) {
-            validateTypeArgument('$node', '/bali/elements/Name', type);
-            children = validateOptionalTypeArgument('$node', '/bali/abstractions/Collection', children);
-            return bali.node(type.toString(), children);
+        $node: function(type) {
+            validateTypeArgument('$node', '/bali/strings/Name', type);
+            return bali.node(type.toString());
         },
 
         $not: function(logical) {
@@ -767,7 +766,7 @@ exports.api = function(debug) {
         },
 
         $range: function(connector, parameters) {
-            connector = validateOptionalTypeArgument('$range', '/bali/elements/Text', connector);
+            connector = validateOptionalTypeArgument('$range', '/bali/strings/Text', connector);
             parameters = validateOptionalTypeArgument('$range', '/bali/collections/Catalog', parameters);
             connector = connector ? connector.getValue() : undefined;
             return bali.range(undefined, connector, undefined, parameters);
@@ -1010,6 +1009,12 @@ exports.api = function(debug) {
             validateTypeArgument('$toStart', '/bali/abstractions/Iterator', iterator);
             iterator.toStart();
             return iterator;
+        },
+
+        $validVersion: function(current, next) {
+            validateTypeArgument('$validVersion', '/bali/strings/Version', current);
+            validateTypeArgument('$validVersion', '/bali/strings/Version', next);
+            return bali.version.validNextVersion(current, next);
         },
 
         $value: function(association) {

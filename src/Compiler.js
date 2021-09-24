@@ -1505,7 +1505,7 @@ CompilingVisitor.prototype.createTemporaryVariable = function(name) {
  * component stack.
  */
 CompilingVisitor.prototype.setRecipient = function(recipient) {
-    if (recipient.isType('/bali/elements/Symbol')) {
+    if (recipient.isType('/bali/strings/Symbol')) {
         const symbol = recipient.toString();
         this.builder.insertSaveInstruction('VARIABLE', symbol);
     } else {

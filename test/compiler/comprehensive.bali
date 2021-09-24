@@ -53,7 +53,7 @@
                 }
             }
         }
-    }($string: /bali/elements/Text/v1)
+    }($string: /bali/strings/Text/v1)
     $instructions: "
         1.IfStatement:
         PUSH HANDLER 1.IfStatementHandler
