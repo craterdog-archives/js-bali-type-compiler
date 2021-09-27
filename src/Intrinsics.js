@@ -1001,7 +1001,7 @@ exports.api = function(debug) {
         $toSlot: function(iterator, slot) {
             validateTypeArgument('$toSlot', '/bali/abstractions/Iterator', iterator);
             validateTypeArgument('$toSlot', '/bali/interfaces/Discrete', slot);
-            iterator.toSlot(slot);
+            iterator.toSlot(slot.toInteger());
             return iterator;
         },
 
