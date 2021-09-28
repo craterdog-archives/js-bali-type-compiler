@@ -477,6 +477,11 @@ exports.api = function(debug) {
             return bali.moment.earlier(moment, duration);
         },
 
+        $effective: function(range) {
+            validateTypeArgument('$effective', '/bali/collections/Range', range);
+            return bali.range.effective(range);
+        },
+
         $exponential: function(base, exponent) {
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', base);
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', exponent);
@@ -569,6 +574,11 @@ exports.api = function(debug) {
         $inverse: function(scalable) {
             validateTypeArgument('$inverse', '/bali/libraries/Scalable', scalable);
             return scalable.constructor.inverse(scalable);
+        },
+
+        $isEnumerable: function(range) {
+            validateTypeArgument('$isEnumerable', '/bali/collections/Range', range);
+            return range.isEnumerable();
         },
 
         $isLess: function(first, second) {

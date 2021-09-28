@@ -885,6 +885,16 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
+        it('should invoke $effective intrinsic function', function() {
+            const index = intrinsics.index('$effective');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index);
+                }
+            ).to.throw();
+        });
+
         it('should invoke $exponential intrinsic function', function() {
             const index = intrinsics.index('$exponential');
             intrinsics.invoke(index, number, number);
@@ -1184,6 +1194,16 @@ describe('Bali Intrinsic Functions', function() {
             expect(
                 function() {
                     intrinsics.invoke(index, probability);
+                }
+            ).to.throw();
+        });
+
+        it('should invoke $isEnumerable intrinsic function', function() {
+            const index = intrinsics.index('$isEnumerable');
+            intrinsics.invoke(index, range);
+            expect(
+                function() {
+                    intrinsics.invoke(index, list);
                 }
             ).to.throw();
         });
