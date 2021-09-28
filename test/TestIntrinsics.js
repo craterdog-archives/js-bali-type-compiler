@@ -60,6 +60,11 @@ const document = bali.catalog({
 });
 const digest = bali.component("'FBA3LC32TXJ3X32CFA4159YV4LV1S1M03XQWNBBTPZ30Q5FLNKSLYDBM1S5WH97FTLJGWDXVW69A7294RBFGPRYG6DXM8A5FZ2HYPK0'");
 const dirtyType = bali.catalog({
+    $messages: bali.catalog({
+        $dummy: bali.catalog({
+            $type: '/bali/examples/Dummy'
+        })
+    }),
     $methods: bali.catalog({
         $dummy: bali.catalog({
             $procedure: bali.component('{\n    none\n}'),
@@ -86,6 +91,11 @@ const dirtyType = bali.catalog({
     $literals: bali.set(['none'])
 });
 const cleanType = bali.catalog({
+    $messages: bali.catalog({
+        $dummy: bali.catalog({
+            $type: '/bali/examples/Dummy'
+        })
+    }),
     $methods: bali.catalog({
         $dummy: bali.catalog({
             $procedure: bali.component('{\n    none\n}')

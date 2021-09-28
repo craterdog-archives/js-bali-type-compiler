@@ -88,22 +88,23 @@ Compiler.prototype.cleanMethod = function(method) {
  * @param {Catalog} type The type definition to be compiled.
  */
 Compiler.prototype.compileType = function(type) {
-    var methods = type.getAttribute('$methods');
-    if (methods) {
-        // compile each method
-        const iterator = methods.getIterator();
-        while (iterator.hasNext()) {
-            const association = iterator.getNext();
-            const method = association.getValue();
-            this.compileMethod(type, method);
-        }
+    // retrieve the context
+    var functions = type.getAttribute('$functions') || bali.catalog();
+    var messages = type.getAttribute('$messages') || bali.catalog();
+    var methods = type.getAttribute('$methods') || bali.catalog();
 
-        // assemble each method
-        const assembler = new Assembler(this.debug);
-        iterator.toStart();
-        while (iterator.hasNext()) {
-            const association = iterator.getNext();
-            const method = association.getValue();
+    // compile each method
+    const assembler = new Assembler(this.debug);
+    const iterator = methods.getIterator();
+    while (iterator.hasNext()) {
+        const association = iterator.getNext();
+        const name = association.getKey();
+        const method = association.getValue();
+        var definition = functions.getAttribute(name);
+        if (!definition) definition = messages.getAttribute(name);
+        if (definition) {
+            const parameters = definition.getAttribute('$parameters');
+            this.compileMethod(type, method, parameters);
             assembler.assembleMethod(type, method);
         }
     }
@@ -117,9 +118,9 @@ Compiler.prototype.compileType = function(type) {
  * @param {Catalog} type The type context for the method being compiled.
  * @param {Catalog} method The method to be compiled.
  */
-Compiler.prototype.compileMethod = function(type, method) {
+Compiler.prototype.compileMethod = function(type, method, parameters) {
     // compile the method into assembly instructions
-    const visitor = new CompilingVisitor(type, method, this.debug);
+    const visitor = new CompilingVisitor(type, method, parameters, this.debug);
     const procedure = method.getAttribute('$procedure');
     procedure.getCode().acceptVisitor(visitor);
 
@@ -138,13 +139,13 @@ Compiler.prototype.compileMethod = function(type, method) {
  * to construct the corresponding Bali Virtual Machine™ instructions for the
  * syntax node is it traversing.
  */
-function CompilingVisitor(type, method, debug) {
+function CompilingVisitor(type, method, parameters, debug) {
     bali.Visitor.call(
         this,
         ['/bali/compiler/CompilingVisitor'],
         debug
     );
-    this.builder = new InstructionBuilder(type, method);
+    this.builder = new InstructionBuilder(type, method, parameters, debug);
     this.temporaryVariableCount = 2;  // skip the $result-1 temporary variable
     return this;
 }
@@ -1558,14 +1559,13 @@ function countBlocks(clause) {
  * For example, a prefix of '2.3.4.' would correspond to the fourth statement in the third
  * clause of the second statement in the main procedure.
  */
-function InstructionBuilder(type, method, debug) {
+function InstructionBuilder(type, method, parameters, debug) {
     this.debug = debug || false;
 
     // setup the compilation context
     this.literals = type.getAttribute('$literals') || bali.set();
     this.constants = type.getAttribute('$constants') || bali.catalog();
     this.argumentz = bali.list(['$target']);  // $target is immutable and is the first argument (not a variable)
-    const parameters = method.getAttribute('$parameters');  // method parameters are the rest of the arguments
     if (parameters) this.argumentz.addItems(parameters.getKeys());
     this.variables = bali.set();
     this.messages = bali.set();

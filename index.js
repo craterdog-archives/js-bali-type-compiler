@@ -69,9 +69,9 @@ exports.api = function(debug) {
          * compiled.
          * @param {Catalog} method The method being compiled.
          */
-        compileMethod: function(type, method) {
+        compileMethod: function(type, method, parameters) {
             const compiler = new Compiler(debug);
-            compiler.compileMethod(type, method);
+            compiler.compileMethod(type, method, parameters);
         },
 
         /**
