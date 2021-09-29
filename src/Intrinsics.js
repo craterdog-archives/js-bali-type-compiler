@@ -212,7 +212,7 @@ exports.api = function(debug) {
             $version: version,
             $digest: digest
         }, {
-            $type: '/bali/notary/Citation/v1'
+            $type: '/nebula/notary/Citation/v1'
         });
 
         return citation;

@@ -1069,7 +1069,7 @@ CompilingVisitor.prototype.visitProcedure = function(procedure) {
 CompilingVisitor.prototype.visitPublishClause = function(node) {
     const event = node.getItem(1);
     this.builder.insertNoteInstruction('Save the name of the global event bag.');
-    this.builder.insertPushInstruction('LITERAL', '/bali/vm/events/v1');
+    this.builder.insertPushInstruction('LITERAL', '/nebula/vm/events/v1');
     const bag = this.createTemporaryVariable('bag');
     this.builder.insertSaveInstruction('VARIABLE', bag);
     this.builder.insertNoteInstruction('Publish an event to the global event bag.');

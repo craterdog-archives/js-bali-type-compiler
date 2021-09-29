@@ -8,7 +8,7 @@
             "alpha"
             "beta"
             "gamma"
-        ]($type: /bali/collections/Set/v1)
+        ]($type: /nebula/collections/Set/v1)
         variable
         isLess(13, 5)
         (a + b) * c
@@ -59,7 +59,7 @@
         NOTE --Place a catalog of the parameters on the stack.
         CALL $catalog
         PUSH LITERAL `$type`
-        PUSH LITERAL `/bali/collections/Set/v1`
+        PUSH LITERAL `/nebula/collections/Set/v1`
         CALL $setAttribute WITH 3 ARGUMENTS
         CALL $set WITH 1 ARGUMENT
         NOTE --Add an item to the set.
@@ -320,8 +320,8 @@
         $x
         $y
         $z
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
     $messages: [
         $addItem
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
 ]

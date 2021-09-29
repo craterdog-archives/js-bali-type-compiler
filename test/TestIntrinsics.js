@@ -52,13 +52,13 @@ const object = {};
 const document = bali.catalog({
     $foo: 'bar'
 }, {
-    $type: '/bali/examples/Type/v1',
+    $type: '/nebula/examples/Type/v1',
     $tag: '#8QP2XF6AXHTQJQJWH0BPR79KWM37XD8C',
     $version: 'v1',
-    $permissions: '/bali/permissions/public/v1',
+    $permissions: '/nebula/permissions/public/v1',
     $previous: 'none'
 });
-const digest = bali.component("'FBA3LC32TXJ3X32CFA4159YV4LV1S1M03XQWNBBTPZ30Q5FLNKSLYDBM1S5WH97FTLJGWDXVW69A7294RBFGPRYG6DXM8A5FZ2HYPK0'");
+const digest = bali.component("'SG6HC8SJP4NZQ2WVAQD4BS8D8Z0BWK6Y5KSNQT6TAYJ43Y5ZGTJZPBRKCFTHA0KGLQZ0NFJK1ADTXKKX6QT91DNVKZ7FWG0CHPCCDPR'");
 const dirtyType = bali.catalog({
     $messages: bali.catalog({
         $dummy: bali.catalog({

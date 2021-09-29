@@ -102,6 +102,6 @@
         $error
         $message
         $result-1
-    ]($type: /bali/collections/Set/v1)
-    $messages: [ ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
+    $messages: [ ]($type: /nebula/collections/Set/v1)
 ]

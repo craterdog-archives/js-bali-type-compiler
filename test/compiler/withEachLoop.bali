@@ -86,10 +86,10 @@
         $x
         $y
         $z
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
     $messages: [
         $hasNext
         $iterator
         $next
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
 ]

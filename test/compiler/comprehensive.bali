@@ -53,7 +53,7 @@
                 }
             }
         }
-    }($string: /bali/strings/Text/v1)
+    }($string: /nebula/strings/Text/v1)
     $instructions: "
         1.IfStatement:
         PUSH HANDLER 1.IfStatementHandler
@@ -417,11 +417,11 @@
         $selector-3
         $sequence
         $tag
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
     $messages: [
         $find
         $hasNext
         $iterator
         $next
-    ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
 ]

@@ -9,7 +9,7 @@
     $instructions: "
         1.PublishStatement:
         NOTE --Save the name of the global event bag.
-        PUSH LITERAL `/bali/vm/events/v1`
+        PUSH LITERAL `/nebula/vm/events/v1`
         SAVE VARIABLE $bag-2
         NOTE --Publish an event to the global event bag.
         NOTE --Place an empty catalog on the stack.
@@ -52,6 +52,6 @@
         $bag-2
         $result-1
         $size
-    ]($type: /bali/collections/Set/v1)
-    $messages: [ ]($type: /bali/collections/Set/v1)
+    ]($type: /nebula/collections/Set/v1)
+    $messages: [ ]($type: /nebula/collections/Set/v1)
 ]
