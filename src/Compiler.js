@@ -94,19 +94,27 @@ Compiler.prototype.compileType = function(type) {
     var methods = type.getAttribute('$methods') || bali.catalog();
 
     // compile each method
-    const assembler = new Assembler(this.debug);
     const iterator = methods.getIterator();
     while (iterator.hasNext()) {
         const association = iterator.getNext();
         const name = association.getKey();
         const method = association.getValue();
         var definition = functions.getAttribute(name);
+        var parameters = bali.catalog();
         if (!definition) definition = messages.getAttribute(name);
         if (definition) {
             const parameters = definition.getAttribute('$parameters');
-            this.compileMethod(type, method, parameters);
-            assembler.assembleMethod(type, method);
         }
+        this.compileMethod(type, method, parameters);
+    }
+
+    // assemble each method (must occur after the literals have been added by all compilations)
+    const assembler = new Assembler(this.debug);
+    iterator.toStart();
+    while (iterator.hasNext()) {
+        const association = iterator.getNext();
+        const method = association.getValue();
+        assembler.assembleMethod(type, method);
     }
 };
 
