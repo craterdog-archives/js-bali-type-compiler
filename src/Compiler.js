@@ -88,6 +88,9 @@ Compiler.prototype.cleanMethod = function(method) {
  * @param {Catalog} type The type definition to be compiled.
  */
 Compiler.prototype.compileType = function(type) {
+    // clean the type first
+    this.cleanType(type);
+
     // retrieve the context
     var functions = type.getAttribute('$functions') || bali.catalog();
     var messages = type.getAttribute('$messages') || bali.catalog();
