@@ -103,7 +103,7 @@ Compiler.prototype.compileType = function(type) {
         var parameters = bali.catalog();
         if (!definition) definition = messages.getAttribute(name);
         if (definition) {
-            const parameters = definition.getAttribute('$parameters');
+            parameters = definition.getAttribute('$parameters');
         }
         this.compileMethod(type, method, parameters);
     }
