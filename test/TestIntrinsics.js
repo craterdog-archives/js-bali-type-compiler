@@ -1059,7 +1059,7 @@ describe('Bali Intrinsic Functions', function() {
 
         it('should invoke $html intrinsic function', function() {
             const index = intrinsics.index('$html');
-            intrinsics.invoke(index, catalog, resource);
+            intrinsics.invoke(index, catalog, text, resource);
             expect(
                 function() {
                     intrinsics.invoke(index);
@@ -1067,7 +1067,7 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
             expect(
                 function() {
-                    intrinsics.invoke(index, catalog);
+                    intrinsics.invoke(index, catalog, text);
                 }
             ).to.throw();
             expect(
@@ -1892,8 +1892,8 @@ describe('Bali Intrinsic Functions', function() {
             ).to.throw();
         });
 
-        it('should invoke $removeAll intrinsic function', function() {
-            const index = intrinsics.index('$removeAll');
+        it('should invoke $emptyCollection intrinsic function', function() {
+            const index = intrinsics.index('$emptyCollection');
             intrinsics.invoke(index, list);
             expect(
                 function() {

@@ -482,6 +482,12 @@ exports.api = function(debug) {
             return bali.range.effective(range);
         },
 
+        $emptyCollection: function(collection) {
+            validateTypeArgument('$emptyCollection', '/bali/abstractions/Collection', collection);
+            collection.emptyCollection();
+            return collection;
+        },
+
         $exponential: function(base, exponent) {
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', base);
             validateTypeArgument('$exponential', '/bali/libraries/Numerical', exponent);
@@ -540,10 +546,11 @@ exports.api = function(debug) {
             return bali.number(duration.getHours(duration));
         },
 
-        $html: function(component, style) {
+        $html: function(component, title, style) {
             validateTypeArgument('$html', '/bali/abstractions/Component', component);
+            validateTypeArgument('$html', '/bali/strings/Text', title);
             validateTypeArgument('$html', '/bali/elements/Resource', style);
-            return bali.text(EOL + bali.html(component, style.getValue().toString()) + EOL);
+            return bali.text(EOL + bali.html(component, title.getValue(), style.getValue().toString()) + EOL);
         },
 
         $imaginary: function(number) {
@@ -805,17 +812,10 @@ exports.api = function(debug) {
             return first.constructor.remainder(first, second);
         },
 
-        $removeAll: function(collection) {
-            validateTypeArgument('$removeAll', '/bali/abstractions/Collection', collection);
-            collection.removeAll();
-            return collection;
-        },
-
         $removeAttribute: function(catalog, key) {
             validateTypeArgument('$removeAttribute', '/bali/collections/Catalog', catalog);
             validateTypeArgument('$removeAttribute', '/bali/abstractions/Element', key);
-            catalog.removeAttribute(key);
-            return catalog;
+            return catalog.removeAttribute(key);
         },
 
         $removeHead: function(queue) {
@@ -828,15 +828,13 @@ exports.api = function(debug) {
             validateTypeArgument('$removeIndex', '/bali/interfaces/Discrete', index);
             index = index.toInteger();
             validateIndex('$removeIndex', list.getSize(), index);
-            list.removeItem(index);
-            return list;
+            return list.removeItem(index);
         },
 
         $removeItem: function(set, item) {
             validateTypeArgument('$removeItem', '/bali/collections/Set', set);
             validateTypeArgument('$removeItem', '/bali/abstractions/Component', item);
-            set.removeItem(item);
-            return set;
+            return set.removeItem(item);
         },
 
         $removeTop: function(stack) {
