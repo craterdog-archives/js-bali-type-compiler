@@ -9,14 +9,18 @@
  ************************************************************************/
 
 const debug = 0;
-const directory = 'test/config/';
 const pfs = require('fs').promises;
 const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
 const bali = require('bali-component-framework').api(debug);
 const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
-const compiler = require('../index').api(debug);
+const directory = 'test/config/';
+const notary = require('bali-digital-notary').test(account, directory, debug);
+const local = require('bali-document-repository').local(notary, directory, debug);
+const cached = require('bali-document-repository').cached(local, debug);
+const repository = require('bali-document-repository').repository(notary, cached, debug);
+const compiler = require('../index').api(repository, debug);
 
 
 describe('Bali Nebula™ Type Compiler', function() {

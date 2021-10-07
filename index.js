@@ -19,15 +19,25 @@ const Compiler = require('./src/Compiler').Compiler;
 /**
  * This function returns an object that implements the Bali Nebula™ compiler interface.
  *
- * @param {Boolean} debug An optional flag that determines whether or not exceptions
- * will be logged to the error console.
+ * @param {DocumentRepository} repository The document repository from which to retrieve
+ * type definitions.
+ * @param {Boolean|Number} debug An optional number in the range [0..3] that controls
+ * the level of debugging that occurs:
+ * <pre>
+ *   0 (or false): debugging turned off
+ *   1 (or true): log exceptions to console.error
+ *   2: perform argument validation and log exceptions to console.error
+ *   3: perform argument validation and log exceptions to console.error and debug info to console.log
+ * </pre>
  * @returns {Object} An object that implements the Bali Nebula™ compiler interface.
  */
-exports.api = function(debug) {
+exports.api = function(repository, debug) {
     // validate the parameters
-    debug = debug || false;
-    const intrinsics = require('./src/Intrinsics').api(debug);
+    debug = debug || 0;  // default is off
+    const parser = new Parser(debug);
     const decoder = new Decoder(debug);
+    const compiler = new Compiler(repository, debug);
+    const assembler = new Assembler(debug);
 
     return {
 
@@ -37,7 +47,6 @@ exports.api = function(debug) {
          * @param {Catalog} type The type definition to be cleaned.
          */
         cleanType: function(type) {
-            const compiler = new Compiler(debug);
             compiler.cleanType(type);
         },
 
@@ -47,7 +56,6 @@ exports.api = function(debug) {
          * @param {Catalog} method The method being cleaned.
          */
         cleanMethod: function(method) {
-            const compiler = new Compiler(debug);
             compiler.cleanMethod(method);
         },
 
@@ -57,7 +65,6 @@ exports.api = function(debug) {
          * @param {Catalog} type The type definition to be compiled.
          */
         compileType: function(type) {
-            const compiler = new Compiler(debug);
             compiler.compileType(type);
         },
 
@@ -68,9 +75,9 @@ exports.api = function(debug) {
          * @param {Catalog} type A catalog containing the type context for the method being
          * compiled.
          * @param {Catalog} method The method being compiled.
+         * @param {Catalog} parameters The parameters that the method accepts.
          */
         compileMethod: function(type, method, parameters) {
-            const compiler = new Compiler(debug);
             compiler.compileMethod(type, method, parameters);
         },
 
@@ -84,7 +91,6 @@ exports.api = function(debug) {
          * @param {Catalog} method A catalog containing the compiled method context.
          */
         assembleMethod: function(type, method) {
-            const assembler = new Assembler(debug);
             assembler.assembleMethod(type, method);
         },
 
@@ -112,7 +118,6 @@ exports.api = function(debug) {
          * instructions.
          */
         parseInstructions: function(assembly) {
-            const parser = new Parser(debug);
             return parser.parseInstructions(assembly);
         },
 
@@ -199,32 +204,6 @@ exports.api = function(debug) {
          */
         string: function(instruction) {
             return decoder.instructionToString(instruction);
-        },
-
-        /**
-         * This function retrieves the index for the intrinsic function associated with the
-         * specified name.
-         *
-         * @param {String} name The name of the intrinsic function.
-         * @returns {Object} The index of the corresponding intrinsic function.
-         */
-        index: function(name) {
-            return intrinsics.index(name);
-        },
-
-        /**
-         * This function invokes the intrinsic function associated with the specified index using
-         * the specified arguments.
-         *
-         * @param {Number} index The index of the intrinsic function to invoke.
-         * @param {Component} argument1 The first argument.
-         * @param {Component} argument2 The second argument.
-         * @param {Component} argument3 The second argument.
-         * @returns {Object} The result of the intrinsic function invocation.
-         */
-        invoke: function(index, argument1, argument2, argument3) {
-            return intrinsics.invoke(index, argument1, argument2, argument3);
         }
-
     };
 };

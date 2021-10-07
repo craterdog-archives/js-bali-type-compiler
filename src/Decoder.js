@@ -36,7 +36,6 @@ const EOL = '\n';  // POSIX end of line character
  */
 const Decoder = function(debug) {
     debug = debug || 0;
-    const intrinsics = require('./Intrinsics').api(this.debug);
 
     // PRIVATE CONSTANTS
 
@@ -111,7 +110,7 @@ const Decoder = function(debug) {
                 string += types.dropModifierString(modifier) + ' ' + operandString;
                 break;
             case types.CALL:
-                string += intrinsics.name(operand);
+                string += operandString;
                 if (modifier > 0) string += ' WITH ' + modifier + ' ARGUMENT';
                 if (modifier > 1) string += 'S';
                 break;

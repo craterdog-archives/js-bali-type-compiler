@@ -30,8 +30,14 @@ const EOL = '\n';  // POSIX end of line character
  * will be logged to the error console.
  * @returns {Compiler} The new document compiler.
  */
-function Compiler(debug) {
-    this.debug = debug || 0;
+function Compiler(repository, debug) {
+    this.debug = debug || 0;  // default is off
+    if (this.debug > 1) {
+        bali.component.validateArgument('/bali/compiler/Compiler', '$Compiler', '$repository', repository, [
+            '/javascript/Object'
+        ]);
+    }
+    this.repository = repository;
     return this;
 }
 Compiler.prototype.constructor = Compiler;
@@ -45,20 +51,12 @@ exports.Compiler = Compiler;
  */
 Compiler.prototype.cleanType = function(type) {
     type.removeAttribute('$literals');
-
-    // create the methods catalog if necessary
     var methods = type.getAttribute('$methods');
-    if (methods && !bali.areEqual(methods, bali.pattern.NONE)) {
-
-        // clean each method
+    if (methods) {
         const iterator = methods.getIterator();
         while (iterator.hasNext()) {
-
-            // retrieve the source code for the method
             const association = iterator.getNext();
             const method = association.getValue();
-
-            // compile the source code into assembly instructions
             this.cleanMethod(method);
         }
     }
@@ -92,6 +90,26 @@ Compiler.prototype.compileType = function(type) {
     this.cleanType(type);
 
     // retrieve the context
+    const types = bali.list([type]);
+    var name = type.getAttribute('$parent');
+    while (!bali.areEqual(name, bali.pattern.NONE)) {
+        var parent = this.repository.retrieveContract(name);
+        if (!parent) {
+            const exception = bali.exception({
+                $module: '/bali/compiler/Compiler',
+                $procedure: '$compileType',
+                $exception: '$missingParent',
+                $type: name,
+                $message: '"One of the ancestor types is not in the repository."'
+            });
+            if (this.debug) console.error(exception.toString());
+            throw exception;
+        }
+        types.insertItem(1, parent);
+        name = parent.getAttribute('$parent');
+    }
+    console.error("TYPES: " + types);
+
     var functions = type.getAttribute('$functions') || bali.catalog();
     var messages = type.getAttribute('$messages') || bali.catalog();
     var methods = type.getAttribute('$methods') || bali.catalog();
@@ -156,7 +174,7 @@ function CompilingVisitor(type, method, parameters, debug) {
         ['/bali/compiler/CompilingVisitor'],
         debug
     );
-    this.builder = new InstructionBuilder(type, method, parameters, debug);
+    this.builder = new InstructionBuilder(type, method, parameters, this.debug);
     this.temporaryVariableCount = 2;  // skip the $result-1 temporary variable
     return this;
 }
