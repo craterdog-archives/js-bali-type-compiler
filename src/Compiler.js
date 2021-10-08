@@ -20,32 +20,33 @@ const Assembler = require('./Assembler').Assembler;
 const EOL = '\n';  // POSIX end of line character
 
 
-// PUBLIC FUNCTIONS
-
 /**
- * This class implements a compiler that compiles a type definition document into a
+ * This constructor returns a compiler that compiles a type definition document into a
  * compiled type document containing the bytecode for each of its methods.
  *
- * @param {Boolean} debug An optional flag that determines whether or not exceptions
- * will be logged to the error console.
+ * An optional debug argument may be specified that controls the level of debugging that
+ * should be applied during execution. The allowed levels are as follows:
+ * <pre>
+ *   0: no debugging is applied (this is the default value and has the best performance)
+ *   1: log any exceptions to console.error before throwing them
+ *   2: perform argument validation checks on each call (poor performance)
+ *   3: log interesting arguments, states and results to console.log
+ * </pre>
+ *
  * @returns {Compiler} The new document compiler.
  */
-function Compiler(repository, debug) {
+function Compiler(debug) {
     this.debug = debug || 0;  // default is off
-    if (this.debug > 1) {
-        bali.component.validateArgument('/bali/compiler/Compiler', '$Compiler', '$repository', repository, [
-            '/javascript/Object'
-        ]);
-    }
-    this.repository = repository;
     return this;
 }
 Compiler.prototype.constructor = Compiler;
 exports.Compiler = Compiler;
 
 
+// PUBLIC METHODS
+
 /**
- * This function cleans a type definition so that it does not contain any compilation attributes.
+ * This method cleans a type definition so that it does not contain any compilation attributes.
  *
  * @param {Catalog} type The type definition to be cleaned.
  */
@@ -64,7 +65,7 @@ Compiler.prototype.cleanType = function(type) {
 
 
 /**
- * This function cleans a method definition so that it does not contain any compilation
+ * This method cleans a method definition so that it does not contain any compilation
  * attributes.
  *
  * @param {Catalog} method The method definition to be cleaned.
@@ -80,12 +81,21 @@ Compiler.prototype.cleanMethod = function(method) {
 
 
 /**
- * This function compiles and assembles each method in a type definition so that they may be
+ * This method compiles and assembles each method in a type definition so that they may be
  * run on the Bali Virtual Machine™.
  *
  * @param {Catalog} type The type definition to be compiled.
  */
-Compiler.prototype.compileType = function(type) {
+Compiler.prototype.compileType = function(repository, type) {
+    if (this.debug > 1) {
+        bali.component.validateArgument('/bali/compiler/Compiler', '$compileType', '$repository', repository, [
+            '/javascript/Object'
+        ]);
+        bali.component.validateArgument('/bali/compiler/Compiler', '$compileType', '$type', type, [
+            '/bali/collections/Catalog'
+        ]);
+    }
+
     // clean the type first
     this.cleanType(type);
 
@@ -93,7 +103,7 @@ Compiler.prototype.compileType = function(type) {
     const types = bali.list([type]);
     var name = type.getAttribute('$parent');
     while (!bali.areEqual(name, bali.pattern.NONE)) {
-        var parent = this.repository.retrieveContract(name);
+        var parent = repository.retrieveContract(name);
         if (!parent) {
             const exception = bali.exception({
                 $module: '/bali/compiler/Compiler',
@@ -147,7 +157,22 @@ Compiler.prototype.compileType = function(type) {
  * @param {Catalog} type The type context for the method being compiled.
  * @param {Catalog} method The method to be compiled.
  */
-Compiler.prototype.compileMethod = function(type, method, parameters) {
+Compiler.prototype.compileMethod = function(repository, type, method) {
+    if (this.debug > 1) {
+        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$repository', repository, [
+            '/javascript/Object'
+        ]);
+        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$type', type, [
+            '/bali/collections/Catalog'
+        ]);
+        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$method', method, [
+            '/bali/collections/Catalog'
+        ]);
+    }
+
+    // TODO: lookup the parameters in the ancestor type definitions
+    const parameters = bali.catalog();
+
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, parameters, this.debug);
     const procedure = method.getAttribute('$procedure');

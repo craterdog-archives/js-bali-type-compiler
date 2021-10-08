@@ -13,14 +13,14 @@ const pfs = require('fs').promises;
 const crypto = require('crypto');
 const mocha = require('mocha');
 const expect = require('chai').expect;
-const bali = require('bali-component-framework').api(debug);
+const bali = require('bali-component-framework').api();
 const account = bali.component('#GTDHQ9B8ZGS7WCBJJJBFF6KDCCF55R2P');
 const directory = 'test/config/';
-const notary = require('bali-digital-notary').test(account, directory, debug);
-const local = require('bali-document-repository').local(notary, directory, debug);
-const cached = require('bali-document-repository').cached(local, debug);
-const repository = require('bali-document-repository').repository(notary, cached, debug);
-const compiler = require('../index').api(repository, debug);
+const notary = require('bali-digital-notary').test(account, directory);
+const local = require('bali-document-repository').local(notary, directory);
+const cached = require('bali-document-repository').cached(local);
+const repository = require('bali-document-repository').repository(notary, cached);
+const compiler = require('../index').api(debug);
 
 
 describe('Bali Nebula™ Type Compiler', function() {
@@ -53,7 +53,7 @@ describe('Bali Nebula™ Type Compiler', function() {
                 compiler.cleanMethod(method);
 
                 // compile the method
-                compiler.compileMethod(type, method);
+                compiler.compileMethod(repository, type, method);
 
                 // assemble the method into bytecode
                 compiler.assembleMethod(type, method);

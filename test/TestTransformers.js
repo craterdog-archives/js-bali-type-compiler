@@ -26,7 +26,7 @@ describe('Bali Method Compiler', function() {
             expect(source).to.exist;
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;
-            const formatter = new Formatter(0, debug);
+            const formatter = new Formatter(debug);
             const formatted = formatter.formatInstructions(procedure);
             expect(formatted).to.equal(source);  // add POSIX compliant <EOL>
         });
@@ -37,8 +37,8 @@ describe('Bali Method Compiler', function() {
             expect(source).to.exist;
             const procedure = parser.parseInstructions(source);
             expect(procedure).to.exist;
-            const formatter = new Formatter(1, debug);
-            const formatted = formatter.formatInstructions(procedure);
+            const formatter = new Formatter(debug);
+            const formatted = formatter.formatInstructions(procedure, 1);
             const expected = source.replace(/^/gm, '    ').replace(/^    $/g, '');
             expect(formatted).to.equal(expected);  // add POSIX compliant <EOL>
         });

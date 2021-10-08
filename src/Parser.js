@@ -22,16 +22,19 @@ const types = require('./Types');
 const EOL = '\n';  // POSIX end of line character
 
 
-// PUBLIC FUNCTIONS
-
 /**
  * This class implements a parser that parses strings containing instructions for the
  * Bali Nebula™ virtual processor and generates the corresponding parse tree structures.
  *
- * @constructor
- * @param {Boolean} debug Whether of not the parser should be run in debug mode, the
- * default is false. Debug mode is only useful for debugging the language grammar and
- * need not be used otherwise.
+ * An optional debug argument may be specified that controls the level of debugging that
+ * should be applied during execution. The allowed levels are as follows:
+ * <pre>
+ *   0: no debugging is applied (this is the default value and has the best performance)
+ *   1: log any exceptions to console.error before throwing them
+ *   2: perform argument validation checks on each call (poor performance)
+ *   3: log interesting arguments, states and results to console.log
+ * </pre>
+ *
  * @returns {Parser} The new string parser.
  */
 function Parser(debug) {
@@ -43,18 +46,20 @@ exports.Parser = Parser;
 exports.parser = new Parser();
 
 
+// PUBLIC METHODS
+
 /**
- * This function takes a string containing instructions for the Bali Nebula™ virtual processor
+ * This method takes a string containing instructions for the Bali Nebula™ virtual processor
  * and parses it into a list of instructions.
  *
- * @param {String} assembly The assembly code defining the instructions.
+ * @param {String} source The assembly source code defining the instructions.
  * @returns {List} The resulting list of instructions.
  */
-Parser.prototype.parseInstructions = function(assembly) {
-    const parser = initializeParser(assembly, this.debug);
+Parser.prototype.parseInstructions = function(source) {
+    const parser = initializeParser(source, this.debug);
     const antlrTree = parser.document();
-    const list = convertParseTree(antlrTree);
-    return list;
+    const instruction = convertParseTree(antlrTree);
+    return instruction;
 };
 
 

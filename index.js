@@ -19,25 +19,24 @@ const Compiler = require('./src/Compiler').Compiler;
 /**
  * This function returns an object that implements the Bali Nebula™ compiler interface.
  *
- * @param {DocumentRepository} repository The document repository from which to retrieve
- * type definitions.
- * @param {Boolean|Number} debug An optional number in the range [0..3] that controls
- * the level of debugging that occurs:
+ * An optional debug argument may be specified that controls the level of debugging that
+ * should be applied during execution. The allowed levels are as follows:
  * <pre>
- *   0 (or false): debugging turned off
- *   1 (or true): log exceptions to console.error
- *   2: perform argument validation and log exceptions to console.error
- *   3: perform argument validation and log exceptions to console.error and debug info to console.log
+ *   0: no debugging is applied (this is the default value and has the best performance)
+ *   1: log any exceptions to console.error before throwing them
+ *   2: perform argument validation checks on each call (poor performance)
+ *   3: log interesting arguments, states and results to console.log
  * </pre>
+ *
  * @returns {Object} An object that implements the Bali Nebula™ compiler interface.
  */
-exports.api = function(repository, debug) {
+exports.api = function(debug) {
     // validate the parameters
-    debug = debug || 0;  // default is off
-    const parser = new Parser(debug);
-    const decoder = new Decoder(debug);
-    const compiler = new Compiler(repository, debug);
-    const assembler = new Assembler(debug);
+    this.debug = debug || 0;  // default is off
+    const parser = new Parser(this.debug);
+    const decoder = new Decoder(this.debug);
+    const compiler = new Compiler(this.debug);
+    const assembler = new Assembler(this.debug);
 
     return {
 
@@ -62,23 +61,27 @@ exports.api = function(repository, debug) {
         /**
          * This function compiles a type definition.
          *
+         * @param {DocumentRepository} repository The document repository from which to retrieve
+         * type definitions.
          * @param {Catalog} type The type definition to be compiled.
          */
-        compileType: function(type) {
-            compiler.compileType(type);
+        compileType: function(repository, type) {
+            compiler.compileType(repository, type);
         },
 
         /**
          * This function compiles the Bali Nebula™ source code for a method into a compilation
          * context containing the corresponding Bali Virtual Machine™ instructions.
          *
+         * @param {DocumentRepository} repository The document repository from which to retrieve
+         * type definitions.
          * @param {Catalog} type A catalog containing the type context for the method being
          * compiled.
          * @param {Catalog} method The method being compiled.
          * @param {Catalog} parameters The parameters that the method accepts.
          */
-        compileMethod: function(type, method, parameters) {
-            compiler.compileMethod(type, method, parameters);
+        compileMethod: function(repository, type, method, parameters) {
+            compiler.compileMethod(repository, type, method, parameters);
         },
 
         /**
@@ -105,8 +108,8 @@ exports.api = function(repository, debug) {
          * @returns {String} A string containing the corresponding assembly code.
          */
         formatInstructions: function(instructions, indentation) {
-            const formatter = new Formatter(indentation, debug);
-            return formatter.formatInstructions(instructions);
+            const formatter = new Formatter(this.debug);
+            return formatter.formatInstructions(instructions, indentation);
         },
 
         /**

@@ -15,24 +15,46 @@
  */
 const bali = require('bali-component-framework').api();
 const types = require('./Types');
+const EOL = '\n';  // POSIX end of line character
 
-
-// PUBLIC FUNCTIONS
 
 /**
- * This class implements a formatter that formats an instruction list into its
+ * This constructor returns a formatter that formats an instruction list into its
  * corresponding source code in a canonical way.
+ *
+ * An optional debug argument may be specified that controls the level of debugging that
+ * should be applied during execution. The allowed levels are as follows:
+ * <pre>
+ *   0: no debugging is applied (this is the default value and has the best performance)
+ *   1: log any exceptions to console.error before throwing them
+ *   2: perform argument validation checks on each call (poor performance)
+ *   3: log interesting arguments, states and results to console.log
+ * </pre>
  *
  * @param {Number} indentation The number of levels of indentation that should be inserted
  * to each formatted line. The default is zero.
- * @param {Boolean} debug An optional flag that determines whether or not exceptions
- * will be logged to the error console.
  * @returns {Formatter} The new component formatter.
  */
-function Formatter(indentation, debug) {
-    debug = debug || false;
+function Formatter(debug) {
+    this.debug = debug || 0;  // default is off
+    return this;
+}
+Formatter.prototype.constructor = Formatter;
+exports.Formatter = Formatter;
+exports.formatter = new Formatter();
 
-    // the indentation is a private attribute so methods that use it are defined in the constructor
+
+// PUBLIC METHODS
+
+/**
+ * This method formats the specified machine instructions into a formatted string indenting
+ * each line to the level specified, or no indentation if nothing is specified.
+ *
+ * @param {List} instructions The list of instructions to be formatted.
+ * @param {Number} indentation The number of levels to indent each line.
+ * @returns {String} The formatted string.
+ */
+Formatter.prototype.formatInstructions = function(instructions, indentation) {
     indentation = indentation || 0;
     if (typeof indentation !== 'number') {
         const exception = bali.exception({
@@ -42,30 +64,19 @@ function Formatter(indentation, debug) {
             $indentation: indentation,
             $message: '"The indentation argument should be the number of levels to indent."'
         });
-        if (debug) console.error(exception.toString());
+        if (this.debug) console.error(exception.toString());
         throw exception;
     }
-
-    this.formatInstructions = function(instructions) {
-        const visitor = new FormattingVisitor(indentation, debug);
-        instructions.acceptVisitor(visitor);
-        return visitor.source;
-    };
-
-    return this;
-}
-Formatter.prototype.constructor = Formatter;
-exports.Formatter = Formatter;
-exports.formatter = new Formatter();
+    const visitor = new FormattingVisitor(indentation, this.debug);
+    instructions.acceptVisitor(visitor);
+    return visitor.source;
+};
 
 
 // PRIVATE CLASSES
 
-const EOL = '\n';  // POSIX end of line character
-
-
 function FormattingVisitor(indentation, debug) {
-    this.debug = debug || false;
+    this.debug = debug;
     this.indentation = indentation;
     this.source = '';
     for (var i = 0; i < this.indentation; i++) {
@@ -166,7 +177,7 @@ FormattingVisitor.prototype.visitCatalog = function(instruction) {
                 $instruction: instruction,
                 $message: 'An invalid operation was found in a procedure instruction.'
             });
-            if (debug) console.error(exception.toString());
+            if (this.debug) console.error(exception.toString());
             throw exception;
     }
 };

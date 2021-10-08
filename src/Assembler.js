@@ -16,22 +16,26 @@
 const Decoder = require('./Decoder').Decoder;
 const types = require('./Types');
 const Parser = require('./Parser').Parser;
-const Formatter = require('./Formatter').Formatter;
 const EOL = '\n';  // POSIX end of line character
 
 
-// PUBLIC FUNCTIONS
-
 /**
- * This class implements an assembler that assembles a compiled method into the corresponding
- * bytecode to be run on the Nebula Virtual Processor.
+ * This constructor returns an assembler that assembles a compiled method into the
+ * corresponding bytecode to be run on the Bali Nebula™ virtual processor.
  *
- * @param {Boolean} debug An optional flag that determines whether or not exceptions
- * will be logged to the error console.
+ * An optional debug argument may be specified that controls the level of debugging that
+ * should be applied during execution. The allowed levels are as follows:
+ * <pre>
+ *   0: no debugging is applied (this is the default value and has the best performance)
+ *   1: log any exceptions to console.error before throwing them
+ *   2: perform argument validation checks on each call (poor performance)
+ *   3: log interesting arguments, states and results to console.log
+ * </pre>
+ *
  * @returns {Assembler} The new instruction assembler.
  */
 function Assembler(debug) {
-    this.debug = debug || false;
+    this.debug = debug || 0;  // default is off
     this.bali = require('bali-component-framework').api(this.debug);
     this.decoder = new Decoder(this.debug);
     return this;
