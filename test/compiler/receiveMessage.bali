@@ -1,6 +1,6 @@
 [
     $parent: none
-    $messages: [
+    $operations: [
         $test: [:]
     ]
     $methods: [
@@ -86,13 +86,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.PostStatement": 1
-                "2.RetrieveStatement": 5
-                "3.RejectStatement": 9
-                "4.RetrieveStatement": 27
-                "5.AcceptStatement": 36
-            ]
             $bytecode: '
                 280280012805980128028002780280066006800760072803D00A80036007
                 C8542806D00AC84F800B60072806600BD874600798032802800460092804
@@ -118,6 +111,13 @@
                 $version-6
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.PostStatement": 1
+                "2.RetrieveStatement": 5
+                "3.RejectStatement": 9
+                "4.RetrieveStatement": 27
+                "5.AcceptStatement": 36
+            ]
         ]
     ]
     $literals: [

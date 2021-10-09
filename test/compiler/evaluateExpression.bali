@@ -251,38 +251,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 11
-                "3.EvaluateStatement": 23
-                "4.EvaluateStatement": 25
-                "5.EvaluateStatement": 29
-                "6.EvaluateStatement": 35
-                "7.EvaluateStatement": 39
-                "8.EvaluateStatement": 47
-                "9.EvaluateStatement": 53
-                "10.EvaluateStatement": 56
-                "11.EvaluateStatement": 60
-                "12.EvaluateStatement": 62
-                "13.EvaluateStatement": 65
-                "14.EvaluateStatement": 69
-                "15.EvaluateStatement": 73
-                "16.EvaluateStatement": 77
-                "17.EvaluateStatement": 81
-                "18.EvaluateStatement": 85
-                "19.EvaluateStatement": 88
-                "20.EvaluateStatement": 92
-                "21.EvaluateStatement": 96
-                "22.EvaluateStatement": 100
-                "23.EvaluateStatement": 104
-                "24.EvaluateStatement": 108
-                "25.EvaluateStatement": 111
-                "26.EvaluateStatement": 115
-                "27.EvaluateStatement": 119
-                "28.EvaluateStatement": 123
-                "29.EvaluateStatement": 127
-                "30.EvaluateStatement": 131
-            ]
             $bytecode: '
                 C013280B2809D009D001280A2804D009D0018013C013280E2808D870C86F
                 280FD0012810D0012811D00180136014801328062804D03C801360016002
@@ -330,6 +298,38 @@
             $messages: [
                 $addItem
             ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 11
+                "3.EvaluateStatement": 23
+                "4.EvaluateStatement": 25
+                "5.EvaluateStatement": 29
+                "6.EvaluateStatement": 35
+                "7.EvaluateStatement": 39
+                "8.EvaluateStatement": 47
+                "9.EvaluateStatement": 53
+                "10.EvaluateStatement": 56
+                "11.EvaluateStatement": 60
+                "12.EvaluateStatement": 62
+                "13.EvaluateStatement": 65
+                "14.EvaluateStatement": 69
+                "15.EvaluateStatement": 73
+                "16.EvaluateStatement": 77
+                "17.EvaluateStatement": 81
+                "18.EvaluateStatement": 85
+                "19.EvaluateStatement": 88
+                "20.EvaluateStatement": 92
+                "21.EvaluateStatement": 96
+                "22.EvaluateStatement": 100
+                "23.EvaluateStatement": 104
+                "24.EvaluateStatement": 108
+                "25.EvaluateStatement": 111
+                "26.EvaluateStatement": 115
+                "27.EvaluateStatement": 119
+                "28.EvaluateStatement": 123
+                "29.EvaluateStatement": 127
+                "30.EvaluateStatement": 131
+            ]
         ]
     ]
     $literals: [

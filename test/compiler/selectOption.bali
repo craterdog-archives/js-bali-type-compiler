@@ -59,18 +59,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.SelectStatement": 1
-                "1.1.OptionClause": 3
-                "1.1.1.EvaluateStatement": 7
-                "1.1.OptionClauseDone": 9
-                "1.2.OptionClause": 10
-                "1.2.1.EvaluateStatement": 14
-                "1.2.OptionClauseDone": 16
-                "1.3.OptionClause": 17
-                "1.3.1.EvaluateStatement": 21
-                "1.SelectStatementDone": 23
-            ]
             $bytecode: '
                 2802800260022803D024180A28018001001760022804D024181128018001
                 001760022805D02418172801800160015000
@@ -86,6 +74,18 @@
                 $selector-2
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.SelectStatement": 1
+                "1.1.OptionClause": 3
+                "1.1.1.EvaluateStatement": 7
+                "1.1.OptionClauseDone": 9
+                "1.2.OptionClause": 10
+                "1.2.1.EvaluateStatement": 14
+                "1.2.OptionClauseDone": 16
+                "1.3.OptionClause": 17
+                "1.3.1.EvaluateStatement": 21
+                "1.SelectStatementDone": 23
+            ]
         ]
     ]
     $literals: [

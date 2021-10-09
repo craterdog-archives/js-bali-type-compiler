@@ -79,19 +79,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.PostStatement": 1
-                "1.PostStatementDone": 6
-                "1.PostStatementHandler": 8
-                "1.1.HandleBlock": 9
-                "1.1.1.EvaluateStatement": 17
-                "1.1.HandleBlockDone": 19
-                "1.2.HandleBlock": 20
-                "1.2.1.EvaluateStatement": 28
-                "1.2.HandleBlockDone": 30
-                "1.PostStatementFailed": 31
-                "1.PostStatementSucceeded": 33
-            ]
             $bytecode: '
                 200828038001600398014000002180026002C01328042805D009D001D024
                 18142801800400216002C01328042806D009D001D024181F280280040021
@@ -110,6 +97,19 @@
                 $result-1
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.PostStatement": 1
+                "1.PostStatementDone": 6
+                "1.PostStatementHandler": 8
+                "1.1.HandleBlock": 9
+                "1.1.1.EvaluateStatement": 17
+                "1.1.HandleBlockDone": 19
+                "1.2.HandleBlock": 20
+                "1.2.1.EvaluateStatement": 28
+                "1.2.HandleBlockDone": 30
+                "1.PostStatementFailed": 31
+                "1.PostStatementSucceeded": 33
+            ]
         ]
     ]
     $literals: [

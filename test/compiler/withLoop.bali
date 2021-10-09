@@ -69,19 +69,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.WithStatement": 1
-                "1.1.ConditionClause": 9
-                "1.1.1.EvaluateStatement": 15
-                "1.1.2.IfStatement": 17
-                "1.1.2.1.ConditionClause": 18
-                "1.1.2.1.1.EvaluateStatement": 20
-                "1.1.2.1.2.BreakStatement": 22
-                "1.1.2.IfStatementDone": 23
-                "1.1.3.EvaluateStatement": 24
-                "1.ConditionRepeat": 26
-                "1.WithStatementDone": 27
-            ]
             $bytecode: '
                 2806C85F2802D0712803D073E00280026002E001181B6002E00380012801
                 800400006004181728058005001B000028048006000960035000
@@ -105,6 +92,19 @@
                 $iterator
                 $next
             ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.WithStatement": 1
+                "1.1.ConditionClause": 9
+                "1.1.1.EvaluateStatement": 15
+                "1.1.2.IfStatement": 17
+                "1.1.2.1.ConditionClause": 18
+                "1.1.2.1.1.EvaluateStatement": 20
+                "1.1.2.1.2.BreakStatement": 22
+                "1.1.2.IfStatementDone": 23
+                "1.1.3.EvaluateStatement": 24
+                "1.ConditionRepeat": 26
+                "1.WithStatementDone": 27
+            ]
         ]
     ]
     $literals: [

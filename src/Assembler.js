@@ -165,7 +165,7 @@ AssemblingVisitor.prototype.visitCatalog = function(instruction) {
                 $expected: this.bali.range(0, 7),
                 $actual: operation,
                 $instruction: instruction,
-                $message: 'An invalid operation was found in a procedure instruction.'
+                $text: 'An invalid operation was found in a procedure instruction.'
             });
             if (this.debug) console.error(exception.toString());
             throw exception;

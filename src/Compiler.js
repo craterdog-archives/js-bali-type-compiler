@@ -73,11 +73,11 @@ Compiler.prototype.cleanType = function(type) {
  */
 Compiler.prototype.cleanMethod = function(method) {
     method.removeAttribute('$instructions');
-    method.removeAttribute('$addresses');
     method.removeAttribute('$bytecode');
     method.removeAttribute('$arguments');
     method.removeAttribute('$variables');
     method.removeAttribute('$messages');
+    method.removeAttribute('$addresses');
 };
 
 
@@ -159,7 +159,7 @@ Compiler.prototype.compileMethod = function(repository, type, symbol, method) {
             $exception: '$unknownMethod',
             $symbol: symbol,
             $method: method,
-            $message: '"There are no functions or messages in the type definition that match the method."'
+            $text: '"There are no functions or operations in the type definition that match the method."'
         });
         if (this.debug) console.error(exception.toString());
         throw exception;
@@ -204,13 +204,13 @@ const searchLibraries = function(type, symbol) {
 
 
 /*
- * This function performs a recursive search of the specified type for a message definition
+ * This function performs a recursive search of the specified type for a operation definition
  * associated with the specified symbol. It searches the entire type ancestry and any interfaces
  * supported by any of the types in the ancestry.
  */
 const searchInterfaces = function(type, symbol) {
     while (!bali.areEqual(type, bali.pattern.NONE)) {
-        var parameters = retrieveParameters(type, '$messages', symbol);
+        var parameters = retrieveParameters(type, '$operations', symbol);
         if (parameters) return parameters;
         var interfaces = type.getAttribute('$interfaces');
         if (interfaces) {
@@ -229,7 +229,7 @@ const searchInterfaces = function(type, symbol) {
 
 /*
  * This function attempts to retrieve any parameter definitions for the specified symbol under
- * the specified catagory ($functions or $messages) in the specified type.
+ * the specified catagory ($functions or $operations) in the specified type.
  */
 const retrieveParameters = function(type, catagory, symbol) {
     const catalog = type.getAttribute(catagory);
@@ -327,7 +327,7 @@ CompilingVisitor.prototype.visitArguments = function(node) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of an arithmetic operation on them.
+ * value of an arithmetic function performed on them.
  */
 // arithmeticExpression: expression ('*' | '/' | '//' | '+' | '-') expression
 CompilingVisitor.prototype.visitArithmeticExpression = function(node) {
@@ -419,7 +419,7 @@ CompilingVisitor.prototype.visitBreakClause = function(node) {
         $module: moduleName,
         $procedure: '$visitBreakClause',
         $exception: '$noEnclosingLoop',
-        $message: 'A break statement was found with no enclosing loop.'
+        $text: 'A break statement was found with no enclosing loop.'
     });
     if (this.debug) console.error(exception.toString());
     throw exception;
@@ -551,7 +551,7 @@ CompilingVisitor.prototype.visitCollection = function(collection) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of a comparison operation on them.
+ * value of a comparison function performed on them.
  */
 // comparisonExpression: expression ('<' | '=' | '>' | 'IS' | 'MATCHES') expression
 CompilingVisitor.prototype.visitComparisonExpression = function(node) {
@@ -596,7 +596,7 @@ CompilingVisitor.prototype.visitComplementExpression = function(node) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of a chain operation on them.
+ * value of a chain function performed on them.
  */
 // chainExpression: expression '&' expression
 CompilingVisitor.prototype.visitChainExpression = function(node) {
@@ -631,7 +631,7 @@ CompilingVisitor.prototype.visitContinueClause = function(node) {
         $module: moduleName,
         $procedure: '$visitContinueClause',
         $exception: '$noEnclosingLoop',
-        $message: 'A continue statement was found with no enclosing loop.'
+        $text: 'A continue statement was found with no enclosing loop.'
     });
     if (this.debug) console.error(exception.toString());
     throw exception;
@@ -762,7 +762,7 @@ CompilingVisitor.prototype.visitEvaluateClause = function(node) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of an exponential operation on them.
+ * value of an exponential function performed on them.
  */
 // exponentialExpression: <assoc=right> expression '^' expression
 CompilingVisitor.prototype.visitExponentialExpression = function(node) {
@@ -804,7 +804,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(node) {
             $procedure: '$visitFunctionExpression',
             $exception: '$argumentCount',
             $function: node,
-            $message: 'The number of arguments to a function must be three or less.'
+            $text: 'The number of arguments to a function must be three or less.'
         });
         if (this.debug) console.error(exception.toString());
         throw exception;
@@ -989,7 +989,7 @@ CompilingVisitor.prototype.visitInversionExpression = function(node) {
 /*
  * This method inserts the instructions that cause the VM to replace the values
  * of two expressions that are on top of the component stack with the resulting
- * value of a logical operation on them.
+ * value of a logical function performed on them.
  */
 // logicalExpression: expression ('AND' | 'SANS' | 'XOR' | 'OR') expression
 CompilingVisitor.prototype.visitLogicalExpression = function(node) {
@@ -1690,19 +1690,19 @@ function InstructionBuilder(type, method, parameters, debug) {
     }
     this.variables = bali.set();
     this.messages = bali.set();
-    this.instructions = '';
     this.addresses = bali.catalog();
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
+    this.instructions = '';
 
     // add the compilation context to the type and method
     type.setAttribute('$literals', this.literals);
     method.setAttribute('$instructions', bali.pattern.NONE);
-    method.setAttribute('$addresses', this.addresses);
     method.setAttribute('$bytecode', bali.pattern.NONE);
     method.setAttribute('$arguments', this.argumentz);
     method.setAttribute('$variables', this.variables);
     method.setAttribute('$messages', this.messages);
+    method.setAttribute('$addresses', this.addresses);
 
     return this;
 }

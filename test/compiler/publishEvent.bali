@@ -41,9 +41,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.PublishStatement": 1
-            ]
             $bytecode: '
                 28028001C01328062803D009D00128052804D009D001280760032801D07D
                 D009D001980160025000
@@ -60,6 +57,9 @@
                 $size
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.PublishStatement": 1
+            ]
         ]
     ]
     $literals: [

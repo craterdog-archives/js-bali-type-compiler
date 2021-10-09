@@ -126,15 +126,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.CheckoutStatement": 1
-                "2.SaveStatement": 22
-                "3.SignStatement": 24
-                "4.CheckoutStatement": 28
-                "5.SaveStatement": 52
-                "6.SignStatement": 61
-                "7.DiscardStatement": 67
-            ]
             $bytecode: '
                 2803800B700B2806D00AC82580066006C8542807D00A2801D04F800F6006
                 2807600FD874480060068005600588032804800C6005900C2804800D700D
@@ -167,6 +158,15 @@
                 $version-9
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.CheckoutStatement": 1
+                "2.SaveStatement": 22
+                "3.SignStatement": 24
+                "4.CheckoutStatement": 28
+                "5.SaveStatement": 52
+                "6.SignStatement": 61
+                "7.DiscardStatement": 67
+            ]
         ]
     ]
     $literals: [

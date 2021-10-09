@@ -1,6 +1,6 @@
 [
     $parent: none
-    $messages: [
+    $operations: [
         $test: [:]
     ]
     $methods: [
@@ -79,14 +79,6 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $addresses: [
-                "1.EvaluateStatement": 1
-                "2.EvaluateStatement": 3
-                "3.EvaluateStatement": 13
-                "4.EvaluateStatement": 22
-                "5.EvaluateStatement": 31
-                "6.EvaluateStatement": 35
-            ]
             $bytecode: '
                 60028006C0452801D0012802D00160072801D022D001800260052806D00A
                 2807D00A28032804D87048006006280560062805D00A2801D07DD8704800
@@ -109,6 +101,14 @@
                 $result-1
             ]($type: /nebula/collections/Set/v1)
             $messages: [ ]($type: /nebula/collections/Set/v1)
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 3
+                "3.EvaluateStatement": 13
+                "4.EvaluateStatement": 22
+                "5.EvaluateStatement": 31
+                "6.EvaluateStatement": 35
+            ]
         ]
     ]
     $literals: [

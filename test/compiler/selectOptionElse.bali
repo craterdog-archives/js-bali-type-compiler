@@ -1,6 +1,6 @@
 [
     $parent: none
-    $messages: [
+    $operations: [
         $test: [:]
     ]
     $methods: [
@@ -74,6 +74,21 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
+            $bytecode: '
+                2802800260022803D024180A28018001001C60022804D024181128018001
+                001C60022805D024181828018001001C000028018001001C60015000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target: none
+            ]
+            $variables: [
+                $result-1
+                $selector-2
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [ ]($type: /nebula/collections/Set/v1)
             $addresses: [
                 "1.SelectStatement": 1
                 "1.1.OptionClause": 3
@@ -90,21 +105,6 @@
                 "1.4.ElseClauseDone": 27
                 "1.SelectStatementDone": 28
             ]
-            $bytecode: '
-                2802800260022803D024180A28018001001C60022804D024181128018001
-                001C60022805D024181828018001001C000028018001001C60015000
-            '(
-                $encoding: $base16
-                $mediaType: "application/bcod"
-            )
-            $arguments: [
-                $target: none
-            ]
-            $variables: [
-                $result-1
-                $selector-2
-            ]($type: /nebula/collections/Set/v1)
-            $messages: [ ]($type: /nebula/collections/Set/v1)
         ]
     ]
     $literals: [
