@@ -34,32 +34,22 @@ describe('Bali Nebula™ Type Compiler', function() {
                 var file = files[i];
                 if (!file.endsWith('.bali')) continue;
 
-                // read in the method source code
+                // read in the type source code
                 console.log('      ' + file);
                 var prefix = file.split('.').slice(0, 1);
                 var baliFile = testFolder + prefix + '.bali';
                 var source = await pfs.readFile(baliFile, 'utf8');
-                var method = bali.component(source);
-                expect(method).to.exist;
+                var type = bali.component(source);
+                expect(type).to.exist;
 
-                // create the type context
-                var literals = bali.list();
-                var constants = bali.catalog();
-                var type = bali.catalog();
-                type.setAttribute('$literals', literals);
-                type.setAttribute('$constants', constants);
+                // clean the type
+                compiler.cleanType(type);
 
-                // clean the method
-                compiler.cleanMethod(method);
-
-                // compile the method
-                compiler.compileMethod(repository, type, method);
-
-                // assemble the method into bytecode
-                compiler.assembleMethod(type, method);
+                // compile the type
+                compiler.compileType(repository, type);
 
                 // check for differences
-                source = bali.document(method);
+                source = bali.document(type);
                 //await pfs.writeFile(baliFile, source, 'utf8');
                 var expected = await pfs.readFile(baliFile, 'utf8');
                 expect(expected).to.exist;

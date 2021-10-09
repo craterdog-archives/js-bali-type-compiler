@@ -1,107 +1,123 @@
 [
-    $procedure: {
-        post message to /acme/blog/v1.3 handle $error matching [
-            $type: "bad"
-        ] with {
-            any
-        } matching [
-            $type: "horrid"
-        ] with {
-            none
-        }
-    }
-    $instructions: "
-        1.PostStatement:
-        PUSH HANDLER 1.PostStatementHandler
-        NOTE --Save the name of the message bag.
-        PUSH LITERAL `/acme/blog/v1.3`
-        SAVE VARIABLE $bag-2
-        NOTE --Post a message to the named message bag.
-        LOAD VARIABLE $message
-        SAVE MESSAGE $bag-2
-        
-        1.PostStatementDone:
-        PULL HANDLER
-        JUMP TO 1.PostStatementSucceeded
-        
-        1.PostStatementHandler:
-        SAVE VARIABLE $error
-        
-        1.1.HandleBlock:
-        LOAD VARIABLE $error
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$type`
-        PUSH LITERAL `"bad"`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.2.HandleBlock ON FALSE
-        
-        1.1.1.EvaluateStatement:
-        PUSH LITERAL `any`
-        SAVE VARIABLE $result-1
-        
-        1.1.HandleBlockDone:
-        JUMP TO 1.PostStatementSucceeded
-        
-        1.2.HandleBlock:
-        LOAD VARIABLE $error
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$type`
-        PUSH LITERAL `"horrid"`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.PostStatementFailed ON FALSE
-        
-        1.2.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
-        
-        1.2.HandleBlockDone:
-        JUMP TO 1.PostStatementSucceeded
-        
-        1.PostStatementFailed:
-        LOAD VARIABLE $error
-        PULL EXCEPTION
-        
-        1.PostStatementSucceeded:
-        LOAD VARIABLE $result-1
-        PULL RESULT
-    "($mediaType: "application/basm")
-    $addresses: [
-        "1.PostStatement": 1
-        "1.PostStatementDone": 6
-        "1.PostStatementHandler": 8
-        "1.1.HandleBlock": 9
-        "1.1.1.EvaluateStatement": 17
-        "1.1.HandleBlockDone": 19
-        "1.2.HandleBlock": 20
-        "1.2.1.EvaluateStatement": 28
-        "1.2.HandleBlockDone": 30
-        "1.PostStatementFailed": 31
-        "1.PostStatementSucceeded": 33
+    $parent: none
+    $messages: [
+        $test: [:]
     ]
-    $bytecode: '
-        200828018001600398014000002180026002C01328022803D009D001D024
-        18142804800400216002C01328022806D009D001D024181F280780040021
-        6002580060045000
-    '(
-        $encoding: $base16
-        $mediaType: "application/bcod"
-    )
-    $arguments: [
-        $target
+    $methods: [
+        $test: [
+            $procedure: {
+                post message to /acme/blog/v1.3 handle $error matching [
+                    $type: "bad"
+                ] with {
+                    any
+                } matching [
+                    $type: "horrid"
+                ] with {
+                    none
+                }
+            }
+            $instructions: "
+                1.PostStatement:
+                PUSH HANDLER 1.PostStatementHandler
+                NOTE --Save the name of the message bag.
+                PUSH LITERAL `/acme/blog/v1.3`
+                SAVE VARIABLE $bag-2
+                NOTE --Post a message to the named message bag.
+                LOAD VARIABLE $message
+                SAVE MESSAGE $bag-2
+                
+                1.PostStatementDone:
+                PULL HANDLER
+                JUMP TO 1.PostStatementSucceeded
+                
+                1.PostStatementHandler:
+                SAVE VARIABLE $error
+                
+                1.1.HandleBlock:
+                LOAD VARIABLE $error
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$type`
+                PUSH LITERAL `"bad"`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.2.HandleBlock ON FALSE
+                
+                1.1.1.EvaluateStatement:
+                PUSH LITERAL `any`
+                SAVE VARIABLE $result-1
+                
+                1.1.HandleBlockDone:
+                JUMP TO 1.PostStatementSucceeded
+                
+                1.2.HandleBlock:
+                LOAD VARIABLE $error
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$type`
+                PUSH LITERAL `"horrid"`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.PostStatementFailed ON FALSE
+                
+                1.2.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $result-1
+                
+                1.2.HandleBlockDone:
+                JUMP TO 1.PostStatementSucceeded
+                
+                1.PostStatementFailed:
+                LOAD VARIABLE $error
+                PULL EXCEPTION
+                
+                1.PostStatementSucceeded:
+                LOAD VARIABLE $result-1
+                PULL RESULT
+            "($mediaType: "application/basm")
+            $addresses: [
+                "1.PostStatement": 1
+                "1.PostStatementDone": 6
+                "1.PostStatementHandler": 8
+                "1.1.HandleBlock": 9
+                "1.1.1.EvaluateStatement": 17
+                "1.1.HandleBlockDone": 19
+                "1.2.HandleBlock": 20
+                "1.2.1.EvaluateStatement": 28
+                "1.2.HandleBlockDone": 30
+                "1.PostStatementFailed": 31
+                "1.PostStatementSucceeded": 33
+            ]
+            $bytecode: '
+                200828038001600398014000002180026002C01328042805D009D001D024
+                18142801800400216002C01328042806D009D001D024181F280280040021
+                6002580060045000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target
+            ]
+            $variables: [
+                $bag-2
+                $error
+                $message
+                $result-1
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [ ]($type: /nebula/collections/Set/v1)
+        ]
     ]
-    $variables: [
-        $bag-2
-        $error
-        $message
-        $result-1
+    $literals: [
+        any
+        none
+        /acme/blog/v1.3
+        $type
+        "bad"
+        "horrid"
     ]($type: /nebula/collections/Set/v1)
-    $messages: [ ]($type: /nebula/collections/Set/v1)
 ]

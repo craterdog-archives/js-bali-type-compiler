@@ -1,102 +1,117 @@
 [
-    $procedure: {
-        select $selection from "alpha" do {
-            none
-        } "beta" do {
-            none
-        } "gamma" do {
-            none
-        } else {
-            none
-        }
-    }
-    $instructions: "
-        1.SelectStatement:
-        PUSH LITERAL `$selection`
-        SAVE VARIABLE $selector-2
-        
-        1.1.OptionClause:
-        LOAD VARIABLE $selector-2
-        PUSH LITERAL `"alpha"`
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.2.OptionClause ON FALSE
-        
-        1.1.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
-        
-        1.1.OptionClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.2.OptionClause:
-        LOAD VARIABLE $selector-2
-        PUSH LITERAL `"beta"`
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.3.OptionClause ON FALSE
-        
-        1.2.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
-        
-        1.2.OptionClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.3.OptionClause:
-        LOAD VARIABLE $selector-2
-        PUSH LITERAL `"gamma"`
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.4.ElseClause ON FALSE
-        
-        1.3.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
-        
-        1.3.OptionClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.4.ElseClause:
-        JUMP TO NEXT INSTRUCTION
-        
-        1.4.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $result-1
-        
-        1.4.ElseClauseDone:
-        JUMP TO 1.SelectStatementDone
-        
-        1.SelectStatementDone:
-        LOAD VARIABLE $result-1
-        PULL RESULT
-    "($mediaType: "application/basm")
-    $addresses: [
-        "1.SelectStatement": 1
-        "1.1.OptionClause": 3
-        "1.1.1.EvaluateStatement": 7
-        "1.1.OptionClauseDone": 9
-        "1.2.OptionClause": 10
-        "1.2.1.EvaluateStatement": 14
-        "1.2.OptionClauseDone": 16
-        "1.3.OptionClause": 17
-        "1.3.1.EvaluateStatement": 21
-        "1.3.OptionClauseDone": 23
-        "1.4.ElseClause": 24
-        "1.4.1.EvaluateStatement": 25
-        "1.4.ElseClauseDone": 27
-        "1.SelectStatementDone": 28
+    $parent: none
+    $messages: [
+        $test: [:]
     ]
-    $bytecode: '
-        2801800260022802D024180A28038001001C60022804D024181128038001
-        001C60022806D024181828038001001C000028038001001C60015000
-    '(
-        $encoding: $base16
-        $mediaType: "application/bcod"
-    )
-    $arguments: [
-        $target
+    $methods: [
+        $test: [
+            $procedure: {
+                select $selection from "alpha" do {
+                    none
+                } "beta" do {
+                    none
+                } "gamma" do {
+                    none
+                } else {
+                    none
+                }
+            }
+            $instructions: "
+                1.SelectStatement:
+                PUSH LITERAL `$selection`
+                SAVE VARIABLE $selector-2
+                
+                1.1.OptionClause:
+                LOAD VARIABLE $selector-2
+                PUSH LITERAL `"alpha"`
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.2.OptionClause ON FALSE
+                
+                1.1.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $result-1
+                
+                1.1.OptionClauseDone:
+                JUMP TO 1.SelectStatementDone
+                
+                1.2.OptionClause:
+                LOAD VARIABLE $selector-2
+                PUSH LITERAL `"beta"`
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.3.OptionClause ON FALSE
+                
+                1.2.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $result-1
+                
+                1.2.OptionClauseDone:
+                JUMP TO 1.SelectStatementDone
+                
+                1.3.OptionClause:
+                LOAD VARIABLE $selector-2
+                PUSH LITERAL `"gamma"`
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.4.ElseClause ON FALSE
+                
+                1.3.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $result-1
+                
+                1.3.OptionClauseDone:
+                JUMP TO 1.SelectStatementDone
+                
+                1.4.ElseClause:
+                JUMP TO NEXT INSTRUCTION
+                
+                1.4.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $result-1
+                
+                1.4.ElseClauseDone:
+                JUMP TO 1.SelectStatementDone
+                
+                1.SelectStatementDone:
+                LOAD VARIABLE $result-1
+                PULL RESULT
+            "($mediaType: "application/basm")
+            $addresses: [
+                "1.SelectStatement": 1
+                "1.1.OptionClause": 3
+                "1.1.1.EvaluateStatement": 7
+                "1.1.OptionClauseDone": 9
+                "1.2.OptionClause": 10
+                "1.2.1.EvaluateStatement": 14
+                "1.2.OptionClauseDone": 16
+                "1.3.OptionClause": 17
+                "1.3.1.EvaluateStatement": 21
+                "1.3.OptionClauseDone": 23
+                "1.4.ElseClause": 24
+                "1.4.1.EvaluateStatement": 25
+                "1.4.ElseClauseDone": 27
+                "1.SelectStatementDone": 28
+            ]
+            $bytecode: '
+                2802800260022803D024180A28018001001C60022804D024181128018001
+                001C60022805D024181828018001001C000028018001001C60015000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target
+            ]
+            $variables: [
+                $result-1
+                $selector-2
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [ ]($type: /nebula/collections/Set/v1)
+        ]
     ]
-    $variables: [
-        $result-1
-        $selector-2
+    $literals: [
+        none
+        $selection
+        "alpha"
+        "beta"
+        "gamma"
     ]($type: /nebula/collections/Set/v1)
-    $messages: [ ]($type: /nebula/collections/Set/v1)
 ]

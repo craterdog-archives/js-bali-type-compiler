@@ -1,427 +1,468 @@
 [
-    $procedure: {
-        -- Note
-        if a < b then {
-            $a := b
-            $b := {
-                $foo := bar
-                $bar := baz
-            }
-            $c := [1..5]
-            throw exception
-        } else if a > 0 then {
-            false
-            $c := factorial(b)
-            return c
-        } else {
-            $d := b.find(tag)
-            (3, 4i)
-            return
-        } handle $exception matching [
-            $type: $warning
-        ] with {
-            $count := count + 1
-            [
-                $message: "Something not too serious happened."
-                $exception: $oops
+    $parent: none
+    $messages: [
+        $test: [
+            $parameters: [
+                $string: [
+                    $type: /nebula/strings/Text/v1
+                    $default: "default"
+                ]
             ]
-        } matching [
-            $type: $moderate
-        ] with {
-            $exception := [
-                $message: "Something serious happened."
-                $exception: $bigOops
-            ]  -- note
-            throw exception
-        }
-        /*
-        Comment
-        */
-        while true do {
-            $foo := bar
-            if foo then {
-                break loop
-            } else {
-                with each $item in sequence do {
-                    select selection from $first do {
-                        true
-                    } $second do {
-                        false
+        ]
+    ]
+    $methods: [
+        $test: [
+            $procedure: {
+                -- Note
+                if a < b then {
+                    $a := b
+                    $b := {
+                        $foo := bar
+                        $bar := baz
+                    }
+                    $c := [1..5]
+                    throw exception
+                } else if a > 0 then {
+                    false
+                    $c := factorial(b)
+                    return c
+                } else {
+                    $d := b.find(tag)
+                    (3, 4i)
+                    return
+                } handle $exception matching [
+                    $type: $warning
+                ] with {
+                    $count := count + 1
+                    [
+                        $message: "Something not too serious happened."
+                        $exception: $oops
+                    ]
+                } matching [
+                    $type: $moderate
+                ] with {
+                    $exception := [
+                        $message: "Something serious happened."
+                        $exception: $bigOops
+                    ]  -- note
+                    throw exception
+                }
+                /*
+                Comment
+                */
+                while true do {
+                    $foo := bar
+                    if foo then {
+                        break loop
                     } else {
-                        continue loop
+                        with each $item in sequence do {
+                            select selection from $first do {
+                                true
+                            } $second do {
+                                false
+                            } else {
+                                continue loop
+                            }
+                        }
                     }
                 }
             }
-        }
-    }($string: /nebula/strings/Text/v1)
-    $instructions: "
-        1.IfStatement:
-        PUSH HANDLER 1.IfStatementHandler
-        
-        1.1.ConditionClause:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        CALL $isLess WITH 2 ARGUMENTS
-        JUMP TO 1.2.ConditionClause ON FALSE
-        
-        1.1.1.EvaluateStatement:
-        LOAD VARIABLE $b
-        SAVE VARIABLE $a
-        
-        1.1.2.EvaluateStatement:
-        PUSH LITERAL `{
+            $instructions: "
+                1.IfStatement:
+                PUSH HANDLER 1.IfStatementHandler
+                
+                1.1.ConditionClause:
+                LOAD VARIABLE $a
+                LOAD VARIABLE $b
+                CALL $isLess WITH 2 ARGUMENTS
+                JUMP TO 1.2.ConditionClause ON FALSE
+                
+                1.1.1.EvaluateStatement:
+                LOAD VARIABLE $b
+                SAVE VARIABLE $a
+                
+                1.1.2.EvaluateStatement:
+                PUSH LITERAL `{
+                    $foo := bar
+                    $bar := baz
+                }`
+                SAVE VARIABLE $b
+                
+                1.1.3.EvaluateStatement:
+                NOTE --Place a range on the stack.
+                PUSH LITERAL `".."`
+                CALL $range WITH 1 ARGUMENT
+                NOTE --Set the first item in the range.
+                PUSH LITERAL `1`
+                CALL $setFirst WITH 2 ARGUMENTS
+                NOTE --Set the last item in the range.
+                PUSH LITERAL `5`
+                CALL $setLast WITH 2 ARGUMENTS
+                SAVE VARIABLE $c
+                
+                1.1.4.ThrowStatement:
+                LOAD VARIABLE $exception
+                PULL EXCEPTION
+                
+                1.1.ConditionClauseDone:
+                JUMP TO 1.IfStatementDone
+                
+                1.2.ConditionClause:
+                LOAD VARIABLE $a
+                PUSH LITERAL `0`
+                CALL $isMore WITH 2 ARGUMENTS
+                JUMP TO 1.3.ElseClause ON FALSE
+                
+                1.2.1.EvaluateStatement:
+                PUSH LITERAL `false`
+                SAVE VARIABLE $result-1
+                
+                1.2.2.EvaluateStatement:
+                LOAD VARIABLE $b
+                CALL $factorial WITH 1 ARGUMENT
+                SAVE VARIABLE $c
+                
+                1.2.3.ReturnStatement:
+                LOAD VARIABLE $c
+                PULL RESULT
+                
+                1.2.ConditionClauseDone:
+                JUMP TO 1.IfStatementDone
+                
+                1.3.ElseClause:
+                JUMP TO NEXT INSTRUCTION
+                
+                1.3.1.EvaluateStatement:
+                LOAD VARIABLE $b
+                NOTE --Place a list of the message arguments on the stack.
+                CALL $list
+                LOAD VARIABLE $tag
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Send the message with its arguments to the recipient.
+                SEND $find TO COMPONENT WITH ARGUMENTS
+                SAVE VARIABLE $d
+                
+                1.3.2.EvaluateStatement:
+                PUSH LITERAL `(3, 4i)`
+                SAVE VARIABLE $result-1
+                
+                1.3.3.ReturnStatement:
+                PUSH LITERAL `none`
+                PULL RESULT
+                
+                1.3.ElseClauseDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                1.IfStatementDone:
+                PULL HANDLER
+                JUMP TO 1.IfStatementSucceeded
+                
+                1.IfStatementHandler:
+                SAVE VARIABLE $exception
+                
+                1.4.HandleBlock:
+                LOAD VARIABLE $exception
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$type`
+                PUSH LITERAL `$warning`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.5.HandleBlock ON FALSE
+                
+                1.4.1.EvaluateStatement:
+                LOAD VARIABLE $count
+                PUSH LITERAL `1`
+                CALL $sum WITH 2 ARGUMENTS
+                SAVE VARIABLE $count
+                
+                1.4.2.EvaluateStatement:
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$message`
+                PUSH LITERAL `"Something not too serious happened."`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Add another item to the catalog.
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$oops`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                1.4.HandleBlockDone:
+                JUMP TO 1.IfStatementSucceeded
+                
+                1.5.HandleBlock:
+                LOAD VARIABLE $exception
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$type`
+                PUSH LITERAL `$moderate`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 1.IfStatementFailed ON FALSE
+                
+                1.5.1.EvaluateStatement:
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$message`
+                PUSH LITERAL `"Something serious happened."`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Add another item to the catalog.
+                PUSH LITERAL `$exception`
+                PUSH LITERAL `$bigOops`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                SAVE VARIABLE $exception
+                
+                1.5.2.ThrowStatement:
+                LOAD VARIABLE $exception
+                PULL EXCEPTION
+                
+                1.5.HandleBlockDone:
+                JUMP TO 1.IfStatementSucceeded
+                
+                1.IfStatementFailed:
+                LOAD VARIABLE $exception
+                PULL EXCEPTION
+                
+                1.IfStatementSucceeded:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.WhileStatement:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.ConditionClause:
+                PUSH LITERAL `true`
+                JUMP TO 2.WhileStatementDone ON FALSE
+                
+                2.1.1.EvaluateStatement:
+                LOAD VARIABLE $bar
+                SAVE VARIABLE $foo
+                
+                2.1.2.IfStatement:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.1.ConditionClause:
+                LOAD VARIABLE $foo
+                JUMP TO 2.1.2.2.ElseClause ON FALSE
+                
+                2.1.2.1.1.BreakStatement:
+                JUMP TO 2.WhileStatementDone
+                
+                2.1.2.1.ConditionClauseDone:
+                JUMP TO 2.1.2.IfStatementDone
+                
+                2.1.2.2.ElseClause:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.2.1.WithStatement:
+                LOAD VARIABLE $sequence
+                SEND $iterator TO COMPONENT
+                SAVE VARIABLE $iterator-2
+                
+                2.1.2.2.1.1.ConditionClause:
+                LOAD VARIABLE $iterator-2
+                SEND $hasNext TO COMPONENT
+                JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
+                LOAD VARIABLE $iterator-2
+                SEND $next TO COMPONENT
+                SAVE VARIABLE $item
+                
+                2.1.2.2.1.1.1.SelectStatement:
+                LOAD VARIABLE $selection
+                SAVE VARIABLE $selector-3
+                
+                2.1.2.2.1.1.1.1.OptionClause:
+                LOAD VARIABLE $selector-3
+                PUSH LITERAL `$first`
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
+                
+                2.1.2.2.1.1.1.1.1.EvaluateStatement:
+                PUSH LITERAL `true`
+                SAVE VARIABLE $result-1
+                
+                2.1.2.2.1.1.1.1.OptionClauseDone:
+                JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+                
+                2.1.2.2.1.1.1.2.OptionClause:
+                LOAD VARIABLE $selector-3
+                PUSH LITERAL `$second`
+                CALL $doesMatch WITH 2 ARGUMENTS
+                JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
+                
+                2.1.2.2.1.1.1.2.1.EvaluateStatement:
+                PUSH LITERAL `false`
+                SAVE VARIABLE $result-1
+                
+                2.1.2.2.1.1.1.2.OptionClauseDone:
+                JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+                
+                2.1.2.2.1.1.1.3.ElseClause:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.2.1.1.1.3.1.ContinueStatement:
+                JUMP TO 2.1.2.2.1.1.ConditionClause
+                
+                2.1.2.2.1.1.1.3.ElseClauseDone:
+                JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
+                
+                2.1.2.2.1.1.1.SelectStatementDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.2.1.ConditionRepeat:
+                JUMP TO 2.1.2.2.1.1.ConditionClause
+                
+                2.1.2.2.1.WithStatementDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.2.ElseClauseDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.1.2.IfStatementDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                2.ConditionRepeat:
+                JUMP TO 2.1.ConditionClause
+                
+                2.WhileStatementDone:
+                LOAD VARIABLE $result-1
+                PULL RESULT
+            "($mediaType: "application/basm")
+            $addresses: [
+                "1.IfStatement": 1
+                "1.1.ConditionClause": 2
+                "1.1.1.EvaluateStatement": 6
+                "1.1.2.EvaluateStatement": 8
+                "1.1.3.EvaluateStatement": 10
+                "1.1.4.ThrowStatement": 17
+                "1.1.ConditionClauseDone": 19
+                "1.2.ConditionClause": 20
+                "1.2.1.EvaluateStatement": 24
+                "1.2.2.EvaluateStatement": 26
+                "1.2.3.ReturnStatement": 29
+                "1.2.ConditionClauseDone": 31
+                "1.3.ElseClause": 32
+                "1.3.1.EvaluateStatement": 33
+                "1.3.2.EvaluateStatement": 39
+                "1.3.3.ReturnStatement": 41
+                "1.3.ElseClauseDone": 43
+                "1.IfStatementDone": 44
+                "1.IfStatementHandler": 46
+                "1.4.HandleBlock": 47
+                "1.4.1.EvaluateStatement": 55
+                "1.4.2.EvaluateStatement": 59
+                "1.4.HandleBlockDone": 69
+                "1.5.HandleBlock": 70
+                "1.5.1.EvaluateStatement": 78
+                "1.5.2.ThrowStatement": 88
+                "1.5.HandleBlockDone": 90
+                "1.IfStatementFailed": 91
+                "1.IfStatementSucceeded": 93
+                "2.WhileStatement": 94
+                "2.1.ConditionClause": 95
+                "2.1.1.EvaluateStatement": 97
+                "2.1.2.IfStatement": 99
+                "2.1.2.1.ConditionClause": 100
+                "2.1.2.1.1.BreakStatement": 102
+                "2.1.2.1.ConditionClauseDone": 103
+                "2.1.2.2.ElseClause": 104
+                "2.1.2.2.1.WithStatement": 105
+                "2.1.2.2.1.1.ConditionClause": 108
+                "2.1.2.2.1.1.1.SelectStatement": 114
+                "2.1.2.2.1.1.1.1.OptionClause": 116
+                "2.1.2.2.1.1.1.1.1.EvaluateStatement": 120
+                "2.1.2.2.1.1.1.1.OptionClauseDone": 122
+                "2.1.2.2.1.1.1.2.OptionClause": 123
+                "2.1.2.2.1.1.1.2.1.EvaluateStatement": 127
+                "2.1.2.2.1.1.1.2.OptionClauseDone": 129
+                "2.1.2.2.1.1.1.3.ElseClause": 130
+                "2.1.2.2.1.1.1.3.1.ContinueStatement": 131
+                "2.1.2.2.1.1.1.3.ElseClauseDone": 132
+                "2.1.2.2.1.1.1.SelectStatementDone": 133
+                "2.1.2.2.1.ConditionRepeat": 134
+                "2.1.2.2.1.WithStatementDone": 135
+                "2.1.2.2.ElseClauseDone": 136
+                "2.1.2.IfStatementDone": 137
+                "2.ConditionRepeat": 138
+                "2.WhileStatementDone": 139
+            ]
+            $bytecode: '
+                202E60016002D03C181460028001281480022811C85F2804D0712806D073
+                800460075800002C60012803D03D18202801800B6002C82B800460045000
+                002C00006002C045600FD001E80180062805800B2807500000004000005D
+                80076007C013280F2810D009D001D024184660052804D07D8005C013280B
+                2812D009D0012809280DD009D001800B005D6007C013280F280CD009D001
+                D024185BC013280B2813D009D00128092808D009D001800760075800005D
+                60075800000000002802188B60038008000060081868008B00890000600E
+                E003800A600AE0021887600AE0048009600C800D600D280AD024187B2802
+                800B0085600D280ED02418822801800B00850000006C00850000006C0000
+                00000000005F600B5000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target
+                $string
+            ]
+            $variables: [
+                $a
+                $b
+                $bar
+                $c
+                $count
+                $d
+                $exception
+                $foo
+                $item
+                $iterator-2
+                $result-1
+                $selection
+                $selector-3
+                $sequence
+                $tag
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [
+                $find
+                $hasNext
+                $iterator
+                $next
+            ]($type: /nebula/collections/Set/v1)
+        ]
+    ]
+    $literals: [
+        false
+        true
+        0
+        1
+        (3, 4i)
+        5
+        none
+        $bigOops
+        $exception
+        $first
+        $message
+        $moderate
+        $oops
+        $second
+        $type
+        $warning
+        ".."
+        "Something not too serious happened."
+        "Something serious happened."
+        {
             $foo := bar
             $bar := baz
-        }`
-        SAVE VARIABLE $b
-        
-        1.1.3.EvaluateStatement:
-        NOTE --Place a range on the stack.
-        PUSH LITERAL `".."`
-        CALL $range WITH 1 ARGUMENT
-        NOTE --Set the first item in the range.
-        PUSH LITERAL `1`
-        CALL $setFirst WITH 2 ARGUMENTS
-        NOTE --Set the last item in the range.
-        PUSH LITERAL `5`
-        CALL $setLast WITH 2 ARGUMENTS
-        SAVE VARIABLE $c
-        
-        1.1.4.ThrowStatement:
-        LOAD VARIABLE $exception
-        PULL EXCEPTION
-        
-        1.1.ConditionClauseDone:
-        JUMP TO 1.IfStatementDone
-        
-        1.2.ConditionClause:
-        LOAD VARIABLE $a
-        PUSH LITERAL `0`
-        CALL $isMore WITH 2 ARGUMENTS
-        JUMP TO 1.3.ElseClause ON FALSE
-        
-        1.2.1.EvaluateStatement:
-        PUSH LITERAL `false`
-        SAVE VARIABLE $result-1
-        
-        1.2.2.EvaluateStatement:
-        LOAD VARIABLE $b
-        CALL $factorial WITH 1 ARGUMENT
-        SAVE VARIABLE $c
-        
-        1.2.3.ReturnStatement:
-        LOAD VARIABLE $c
-        PULL RESULT
-        
-        1.2.ConditionClauseDone:
-        JUMP TO 1.IfStatementDone
-        
-        1.3.ElseClause:
-        JUMP TO NEXT INSTRUCTION
-        
-        1.3.1.EvaluateStatement:
-        LOAD VARIABLE $b
-        NOTE --Place a list of the message arguments on the stack.
-        CALL $list
-        LOAD VARIABLE $tag
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Send the message with its arguments to the recipient.
-        SEND $find TO COMPONENT WITH ARGUMENTS
-        SAVE VARIABLE $d
-        
-        1.3.2.EvaluateStatement:
-        PUSH LITERAL `(3, 4i)`
-        SAVE VARIABLE $result-1
-        
-        1.3.3.ReturnStatement:
-        PUSH LITERAL `none`
-        PULL RESULT
-        
-        1.3.ElseClauseDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        1.IfStatementDone:
-        PULL HANDLER
-        JUMP TO 1.IfStatementSucceeded
-        
-        1.IfStatementHandler:
-        SAVE VARIABLE $exception
-        
-        1.4.HandleBlock:
-        LOAD VARIABLE $exception
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$type`
-        PUSH LITERAL `$warning`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.5.HandleBlock ON FALSE
-        
-        1.4.1.EvaluateStatement:
-        LOAD VARIABLE $count
-        PUSH LITERAL `1`
-        CALL $sum WITH 2 ARGUMENTS
-        SAVE VARIABLE $count
-        
-        1.4.2.EvaluateStatement:
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$message`
-        PUSH LITERAL `"Something not too serious happened."`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Add another item to the catalog.
-        PUSH LITERAL `$exception`
-        PUSH LITERAL `$oops`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        1.4.HandleBlockDone:
-        JUMP TO 1.IfStatementSucceeded
-        
-        1.5.HandleBlock:
-        LOAD VARIABLE $exception
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$type`
-        PUSH LITERAL `$moderate`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 1.IfStatementFailed ON FALSE
-        
-        1.5.1.EvaluateStatement:
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$message`
-        PUSH LITERAL `"Something serious happened."`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Add another item to the catalog.
-        PUSH LITERAL `$exception`
-        PUSH LITERAL `$bigOops`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $exception
-        
-        1.5.2.ThrowStatement:
-        LOAD VARIABLE $exception
-        PULL EXCEPTION
-        
-        1.5.HandleBlockDone:
-        JUMP TO 1.IfStatementSucceeded
-        
-        1.IfStatementFailed:
-        LOAD VARIABLE $exception
-        PULL EXCEPTION
-        
-        1.IfStatementSucceeded:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.WhileStatement:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.ConditionClause:
-        PUSH LITERAL `true`
-        JUMP TO 2.WhileStatementDone ON FALSE
-        
-        2.1.1.EvaluateStatement:
-        LOAD VARIABLE $bar
-        SAVE VARIABLE $foo
-        
-        2.1.2.IfStatement:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.1.ConditionClause:
-        LOAD VARIABLE $foo
-        JUMP TO 2.1.2.2.ElseClause ON FALSE
-        
-        2.1.2.1.1.BreakStatement:
-        JUMP TO 2.WhileStatementDone
-        
-        2.1.2.1.ConditionClauseDone:
-        JUMP TO 2.1.2.IfStatementDone
-        
-        2.1.2.2.ElseClause:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.2.1.WithStatement:
-        LOAD VARIABLE $sequence
-        SEND $iterator TO COMPONENT
-        SAVE VARIABLE $iterator-2
-        
-        2.1.2.2.1.1.ConditionClause:
-        LOAD VARIABLE $iterator-2
-        SEND $hasNext TO COMPONENT
-        JUMP TO 2.1.2.2.1.WithStatementDone ON FALSE
-        LOAD VARIABLE $iterator-2
-        SEND $next TO COMPONENT
-        SAVE VARIABLE $item
-        
-        2.1.2.2.1.1.1.SelectStatement:
-        LOAD VARIABLE $selection
-        SAVE VARIABLE $selector-3
-        
-        2.1.2.2.1.1.1.1.OptionClause:
-        LOAD VARIABLE $selector-3
-        PUSH LITERAL `$first`
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 2.1.2.2.1.1.1.2.OptionClause ON FALSE
-        
-        2.1.2.2.1.1.1.1.1.EvaluateStatement:
-        PUSH LITERAL `true`
-        SAVE VARIABLE $result-1
-        
-        2.1.2.2.1.1.1.1.OptionClauseDone:
-        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-        
-        2.1.2.2.1.1.1.2.OptionClause:
-        LOAD VARIABLE $selector-3
-        PUSH LITERAL `$second`
-        CALL $doesMatch WITH 2 ARGUMENTS
-        JUMP TO 2.1.2.2.1.1.1.3.ElseClause ON FALSE
-        
-        2.1.2.2.1.1.1.2.1.EvaluateStatement:
-        PUSH LITERAL `false`
-        SAVE VARIABLE $result-1
-        
-        2.1.2.2.1.1.1.2.OptionClauseDone:
-        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-        
-        2.1.2.2.1.1.1.3.ElseClause:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.2.1.1.1.3.1.ContinueStatement:
-        JUMP TO 2.1.2.2.1.1.ConditionClause
-        
-        2.1.2.2.1.1.1.3.ElseClauseDone:
-        JUMP TO 2.1.2.2.1.1.1.SelectStatementDone
-        
-        2.1.2.2.1.1.1.SelectStatementDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.2.1.ConditionRepeat:
-        JUMP TO 2.1.2.2.1.1.ConditionClause
-        
-        2.1.2.2.1.WithStatementDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.2.ElseClauseDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.1.2.IfStatementDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        2.ConditionRepeat:
-        JUMP TO 2.1.ConditionClause
-        
-        2.WhileStatementDone:
-        LOAD VARIABLE $result-1
-        PULL RESULT
-    "($mediaType: "application/basm")
-    $addresses: [
-        "1.IfStatement": 1
-        "1.1.ConditionClause": 2
-        "1.1.1.EvaluateStatement": 6
-        "1.1.2.EvaluateStatement": 8
-        "1.1.3.EvaluateStatement": 10
-        "1.1.4.ThrowStatement": 17
-        "1.1.ConditionClauseDone": 19
-        "1.2.ConditionClause": 20
-        "1.2.1.EvaluateStatement": 24
-        "1.2.2.EvaluateStatement": 26
-        "1.2.3.ReturnStatement": 29
-        "1.2.ConditionClauseDone": 31
-        "1.3.ElseClause": 32
-        "1.3.1.EvaluateStatement": 33
-        "1.3.2.EvaluateStatement": 39
-        "1.3.3.ReturnStatement": 41
-        "1.3.ElseClauseDone": 43
-        "1.IfStatementDone": 44
-        "1.IfStatementHandler": 46
-        "1.4.HandleBlock": 47
-        "1.4.1.EvaluateStatement": 55
-        "1.4.2.EvaluateStatement": 59
-        "1.4.HandleBlockDone": 69
-        "1.5.HandleBlock": 70
-        "1.5.1.EvaluateStatement": 78
-        "1.5.2.ThrowStatement": 88
-        "1.5.HandleBlockDone": 90
-        "1.IfStatementFailed": 91
-        "1.IfStatementSucceeded": 93
-        "2.WhileStatement": 94
-        "2.1.ConditionClause": 95
-        "2.1.1.EvaluateStatement": 97
-        "2.1.2.IfStatement": 99
-        "2.1.2.1.ConditionClause": 100
-        "2.1.2.1.1.BreakStatement": 102
-        "2.1.2.1.ConditionClauseDone": 103
-        "2.1.2.2.ElseClause": 104
-        "2.1.2.2.1.WithStatement": 105
-        "2.1.2.2.1.1.ConditionClause": 108
-        "2.1.2.2.1.1.1.SelectStatement": 114
-        "2.1.2.2.1.1.1.1.OptionClause": 116
-        "2.1.2.2.1.1.1.1.1.EvaluateStatement": 120
-        "2.1.2.2.1.1.1.1.OptionClauseDone": 122
-        "2.1.2.2.1.1.1.2.OptionClause": 123
-        "2.1.2.2.1.1.1.2.1.EvaluateStatement": 127
-        "2.1.2.2.1.1.1.2.OptionClauseDone": 129
-        "2.1.2.2.1.1.1.3.ElseClause": 130
-        "2.1.2.2.1.1.1.3.1.ContinueStatement": 131
-        "2.1.2.2.1.1.1.3.ElseClauseDone": 132
-        "2.1.2.2.1.1.1.SelectStatementDone": 133
-        "2.1.2.2.1.ConditionRepeat": 134
-        "2.1.2.2.1.WithStatementDone": 135
-        "2.1.2.2.ElseClauseDone": 136
-        "2.1.2.IfStatementDone": 137
-        "2.ConditionRepeat": 138
-        "2.WhileStatementDone": 139
-    ]
-    $bytecode: '
-        202E60016002D03C181460028001280180022802C85F2803D0712804D073
-        800460075800002C60012805D03D18202806800B6002C82B800460045000
-        002C00006002C045600FD001E80180062807800B2808500000004000005D
-        80076007C0132809280AD009D001D024184660052803D07D8005C013280C
-        280DD009D001280E280FD009D001800B005D6007C01328092811D009D001
-        D024185BC013280C2813D009D001280E2815D009D001800760075800005D
-        60075800000000002816188B60038008000060081868008B00890000600E
-        E003800A600AE0021887600AE0048009600C800D600D2817D024187B2816
-        800B0085600D2819D02418822806800B00850000006C00850000006C0000
-        00000000005F600B5000
-    '(
-        $encoding: $base16
-        $mediaType: "application/bcod"
-    )
-    $arguments: [
-        $target
-    ]
-    $variables: [
-        $a
-        $b
-        $bar
-        $c
-        $count
-        $d
-        $exception
-        $foo
-        $item
-        $iterator-2
-        $result-1
-        $selection
-        $selector-3
-        $sequence
-        $tag
-    ]($type: /nebula/collections/Set/v1)
-    $messages: [
-        $find
-        $hasNext
-        $iterator
-        $next
+        }
     ]($type: /nebula/collections/Set/v1)
 ]

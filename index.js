@@ -62,7 +62,7 @@ exports.api = function(debug) {
          * This function compiles a type definition.
          *
          * @param {DocumentRepository} repository The document repository from which to retrieve
-         * type definitions.
+         * ancestral type definitions.
          * @param {Catalog} type The type definition to be compiled.
          */
         compileType: function(repository, type) {
@@ -74,14 +74,14 @@ exports.api = function(debug) {
          * context containing the corresponding Bali Virtual Machine™ instructions.
          *
          * @param {DocumentRepository} repository The document repository from which to retrieve
-         * type definitions.
+         * ancestral type definitions.
          * @param {Catalog} type A catalog containing the type context for the method being
          * compiled.
+         * @param {Symbol} symbol The symbol associated with the method.
          * @param {Catalog} method The method being compiled.
-         * @param {Catalog} parameters The parameters that the method accepts.
          */
-        compileMethod: function(repository, type, method, parameters) {
-            compiler.compileMethod(repository, type, method, parameters);
+        compileMethod: function(repository, type, symbol, method) {
+            compiler.compileMethod(repository, type, symbol, method);
         },
 
         /**

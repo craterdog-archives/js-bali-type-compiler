@@ -1,327 +1,354 @@
 [
-    $procedure: {
-        [
-            $foo: $bar
-            $baz: 5
-        ]
-        [
-            "alpha"
-            "beta"
-            "gamma"
-        ]($type: /nebula/collections/Set/v1)
-        variable
-        isLess(13, 5)
-        (a + b) * c
-        @reference
-        customer[$order, $item, 5]
-        list.addItem(item)
-        23!
-        2 ^ 8
-        -π
-        *(3, 4i)
-        x * y
-        a / b
-        c // d
-        x + y
-        w - z
-        |(3, 4i)|
-        a < b
-        c = d
-        f > g
-        h IS j
-        k MATCHES m
-        NOT p
-        a AND b
-        c SANS d
-        f XOR g
-        h OR j
-        k & l
-        foo ? 5
-    }
-    $instructions: "
-        1.EvaluateStatement:
-        NOTE --Place an empty catalog on the stack.
-        CALL $catalog
-        NOTE --Add an item to the catalog.
-        PUSH LITERAL `$foo`
-        PUSH LITERAL `$bar`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Add another item to the catalog.
-        PUSH LITERAL `$baz`
-        PUSH LITERAL `5`
-        CALL $association WITH 2 ARGUMENTS
-        CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        2.EvaluateStatement:
-        NOTE --Place an empty set on the stack.
-        NOTE --Place a catalog of the parameters on the stack.
-        CALL $catalog
-        PUSH LITERAL `$type`
-        PUSH LITERAL `/nebula/collections/Set/v1`
-        CALL $setAttribute WITH 3 ARGUMENTS
-        CALL $set WITH 1 ARGUMENT
-        NOTE --Add an item to the set.
-        PUSH LITERAL `"alpha"`
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Add another item to the set.
-        PUSH LITERAL `"beta"`
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Add another item to the set.
-        PUSH LITERAL `"gamma"`
-        CALL $addItem WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        3.EvaluateStatement:
-        LOAD VARIABLE $variable
-        SAVE VARIABLE $result-1
-        
-        4.EvaluateStatement:
-        PUSH LITERAL `13`
-        PUSH LITERAL `5`
-        CALL $isLess WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        5.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        CALL $sum WITH 2 ARGUMENTS
-        LOAD VARIABLE $c
-        CALL $product WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        6.EvaluateStatement:
-        LOAD VARIABLE $reference
-        SAVE VARIABLE $nameOrCitation-2
-        LOAD DOCUMENT $nameOrCitation-2
-        SAVE VARIABLE $result-1
-        
-        7.EvaluateStatement:
-        LOAD VARIABLE $customer
-        PUSH LITERAL `$order`
-        CALL $attribute WITH 2 ARGUMENTS
-        PUSH LITERAL `$item`
-        CALL $attribute WITH 2 ARGUMENTS
-        PUSH LITERAL `5`
-        CALL $attribute WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        8.EvaluateStatement:
-        LOAD VARIABLE $list
-        NOTE --Place a list of the message arguments on the stack.
-        CALL $list
-        LOAD VARIABLE $item
-        CALL $addItem WITH 2 ARGUMENTS
-        NOTE --Send the message with its arguments to the recipient.
-        SEND $addItem TO COMPONENT WITH ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        9.EvaluateStatement:
-        PUSH LITERAL `23`
-        CALL $factorial WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
-        
-        10.EvaluateStatement:
-        PUSH LITERAL `2`
-        PUSH LITERAL `8`
-        CALL $exponential WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        11.EvaluateStatement:
-        PUSH LITERAL `-π`
-        SAVE VARIABLE $result-1
-        
-        12.EvaluateStatement:
-        PUSH LITERAL `(3, 4i)`
-        CALL $conjugate WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
-        
-        13.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
-        CALL $product WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        14.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        CALL $quotient WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        15.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        CALL $remainder WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        16.EvaluateStatement:
-        LOAD VARIABLE $x
-        LOAD VARIABLE $y
-        CALL $sum WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        17.EvaluateStatement:
-        LOAD VARIABLE $w
-        LOAD VARIABLE $z
-        CALL $difference WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        18.EvaluateStatement:
-        PUSH LITERAL `(3, 4i)`
-        CALL $magnitude WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
-        
-        19.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        CALL $isLess WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        20.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        CALL $areEqual WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        21.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
-        CALL $isMore WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        22.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
-        CALL $areSame WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        23.EvaluateStatement:
-        LOAD VARIABLE $k
-        LOAD VARIABLE $m
-        CALL $doesMatch WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        24.EvaluateStatement:
-        LOAD VARIABLE $p
-        CALL $not WITH 1 ARGUMENT
-        SAVE VARIABLE $result-1
-        
-        25.EvaluateStatement:
-        LOAD VARIABLE $a
-        LOAD VARIABLE $b
-        CALL $and WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        26.EvaluateStatement:
-        LOAD VARIABLE $c
-        LOAD VARIABLE $d
-        CALL $sans WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        27.EvaluateStatement:
-        LOAD VARIABLE $f
-        LOAD VARIABLE $g
-        CALL $xor WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        28.EvaluateStatement:
-        LOAD VARIABLE $h
-        LOAD VARIABLE $j
-        CALL $or WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        29.EvaluateStatement:
-        LOAD VARIABLE $k
-        LOAD VARIABLE $l
-        CALL $chain WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        
-        30.EvaluateStatement:
-        LOAD VARIABLE $foo
-        PUSH LITERAL `5`
-        CALL $default WITH 2 ARGUMENTS
-        SAVE VARIABLE $result-1
-        LOAD VARIABLE $result-1
-        PULL RESULT
-    "($mediaType: "application/basm")
-    $addresses: [
-        "1.EvaluateStatement": 1
-        "2.EvaluateStatement": 11
-        "3.EvaluateStatement": 23
-        "4.EvaluateStatement": 25
-        "5.EvaluateStatement": 29
-        "6.EvaluateStatement": 35
-        "7.EvaluateStatement": 39
-        "8.EvaluateStatement": 47
-        "9.EvaluateStatement": 53
-        "10.EvaluateStatement": 56
-        "11.EvaluateStatement": 60
-        "12.EvaluateStatement": 62
-        "13.EvaluateStatement": 65
-        "14.EvaluateStatement": 69
-        "15.EvaluateStatement": 73
-        "16.EvaluateStatement": 77
-        "17.EvaluateStatement": 81
-        "18.EvaluateStatement": 85
-        "19.EvaluateStatement": 88
-        "20.EvaluateStatement": 92
-        "21.EvaluateStatement": 96
-        "22.EvaluateStatement": 100
-        "23.EvaluateStatement": 104
-        "24.EvaluateStatement": 108
-        "25.EvaluateStatement": 111
-        "26.EvaluateStatement": 115
-        "27.EvaluateStatement": 119
-        "28.EvaluateStatement": 123
-        "29.EvaluateStatement": 127
-        "30.EvaluateStatement": 131
-    ]
-    $bytecode: '
-        C01328012802D009D00128032804D009D0018013C01328052806D870C86F
-        2807D0012808D0012809D001801360148013280A2804D03C801360016002
-        D07D6003D059801360128010681080136004280CD00A280DD00A2804D00A
-        8013600EC045600AD001E8018013280FC82B801328102811D02A80132812
-        80132813C81B801360166017D059801360016002D05C801360036005D063
-        801360166017D07D801360156018D02280132813C847801360016002D03C
-        801360036005D007801360066008D03D80136009600BD0088013600C600F
-        D02480136011C851801360016002D003801360036005D06A801360066008
-        D08880136009600BD0538013600C600DD014801360072804D02080136013
-        5000
-    '(
-        $encoding: $base16
-        $mediaType: "application/bcod"
-    )
-    $arguments: [
-        $target
-    ]
-    $variables: [
-        $a
-        $b
-        $c
-        $customer
-        $d
-        $f
-        $foo
-        $g
-        $h
-        $item
-        $j
-        $k
-        $l
-        $list
-        $m
-        $nameOrCitation-2
-        $p
-        $reference
-        $result-1
-        $variable
-        $w
-        $x
-        $y
-        $z
-    ]($type: /nebula/collections/Set/v1)
+    $parent: none
     $messages: [
-        $addItem
+        $test: [:]
+    ]
+    $methods: [
+        $test: [
+            $procedure: {
+                [
+                    $foo: $bar
+                    $baz: 5
+                ]
+                [
+                    "alpha"
+                    "beta"
+                    "gamma"
+                ]($type: /nebula/collections/Set/v1)
+                variable
+                isLess(13, 5)
+                (a + b) * c
+                @reference
+                customer[$order, $item, 5]
+                list.addItem(item)
+                23!
+                2 ^ 8
+                -π
+                *(3, 4i)
+                x * y
+                a / b
+                c // d
+                x + y
+                w - z
+                |(3, 4i)|
+                a < b
+                c = d
+                f > g
+                h IS j
+                k MATCHES m
+                NOT p
+                a AND b
+                c SANS d
+                f XOR g
+                h OR j
+                k & l
+                foo ? 5
+            }
+            $instructions: "
+                1.EvaluateStatement:
+                NOTE --Place an empty catalog on the stack.
+                CALL $catalog
+                NOTE --Add an item to the catalog.
+                PUSH LITERAL `$foo`
+                PUSH LITERAL `$bar`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Add another item to the catalog.
+                PUSH LITERAL `$baz`
+                PUSH LITERAL `5`
+                CALL $association WITH 2 ARGUMENTS
+                CALL $addItem WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                2.EvaluateStatement:
+                NOTE --Place an empty set on the stack.
+                NOTE --Place a catalog of the parameters on the stack.
+                CALL $catalog
+                PUSH LITERAL `$type`
+                PUSH LITERAL `/nebula/collections/Set/v1`
+                CALL $setAttribute WITH 3 ARGUMENTS
+                CALL $set WITH 1 ARGUMENT
+                NOTE --Add an item to the set.
+                PUSH LITERAL `"alpha"`
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Add another item to the set.
+                PUSH LITERAL `"beta"`
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Add another item to the set.
+                PUSH LITERAL `"gamma"`
+                CALL $addItem WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                3.EvaluateStatement:
+                LOAD VARIABLE $variable
+                SAVE VARIABLE $result-1
+                
+                4.EvaluateStatement:
+                PUSH LITERAL `13`
+                PUSH LITERAL `5`
+                CALL $isLess WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                5.EvaluateStatement:
+                LOAD VARIABLE $a
+                LOAD VARIABLE $b
+                CALL $sum WITH 2 ARGUMENTS
+                LOAD VARIABLE $c
+                CALL $product WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                6.EvaluateStatement:
+                LOAD VARIABLE $reference
+                SAVE VARIABLE $nameOrCitation-2
+                LOAD DOCUMENT $nameOrCitation-2
+                SAVE VARIABLE $result-1
+                
+                7.EvaluateStatement:
+                LOAD VARIABLE $customer
+                PUSH LITERAL `$order`
+                CALL $attribute WITH 2 ARGUMENTS
+                PUSH LITERAL `$item`
+                CALL $attribute WITH 2 ARGUMENTS
+                PUSH LITERAL `5`
+                CALL $attribute WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                8.EvaluateStatement:
+                LOAD VARIABLE $list
+                NOTE --Place a list of the message arguments on the stack.
+                CALL $list
+                LOAD VARIABLE $item
+                CALL $addItem WITH 2 ARGUMENTS
+                NOTE --Send the message with its arguments to the recipient.
+                SEND $addItem TO COMPONENT WITH ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                9.EvaluateStatement:
+                PUSH LITERAL `23`
+                CALL $factorial WITH 1 ARGUMENT
+                SAVE VARIABLE $result-1
+                
+                10.EvaluateStatement:
+                PUSH LITERAL `2`
+                PUSH LITERAL `8`
+                CALL $exponential WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                11.EvaluateStatement:
+                PUSH LITERAL `-π`
+                SAVE VARIABLE $result-1
+                
+                12.EvaluateStatement:
+                PUSH LITERAL `(3, 4i)`
+                CALL $conjugate WITH 1 ARGUMENT
+                SAVE VARIABLE $result-1
+                
+                13.EvaluateStatement:
+                LOAD VARIABLE $x
+                LOAD VARIABLE $y
+                CALL $product WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                14.EvaluateStatement:
+                LOAD VARIABLE $a
+                LOAD VARIABLE $b
+                CALL $quotient WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                15.EvaluateStatement:
+                LOAD VARIABLE $c
+                LOAD VARIABLE $d
+                CALL $remainder WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                16.EvaluateStatement:
+                LOAD VARIABLE $x
+                LOAD VARIABLE $y
+                CALL $sum WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                17.EvaluateStatement:
+                LOAD VARIABLE $w
+                LOAD VARIABLE $z
+                CALL $difference WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                18.EvaluateStatement:
+                PUSH LITERAL `(3, 4i)`
+                CALL $magnitude WITH 1 ARGUMENT
+                SAVE VARIABLE $result-1
+                
+                19.EvaluateStatement:
+                LOAD VARIABLE $a
+                LOAD VARIABLE $b
+                CALL $isLess WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                20.EvaluateStatement:
+                LOAD VARIABLE $c
+                LOAD VARIABLE $d
+                CALL $areEqual WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                21.EvaluateStatement:
+                LOAD VARIABLE $f
+                LOAD VARIABLE $g
+                CALL $isMore WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                22.EvaluateStatement:
+                LOAD VARIABLE $h
+                LOAD VARIABLE $j
+                CALL $areSame WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                23.EvaluateStatement:
+                LOAD VARIABLE $k
+                LOAD VARIABLE $m
+                CALL $doesMatch WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                24.EvaluateStatement:
+                LOAD VARIABLE $p
+                CALL $not WITH 1 ARGUMENT
+                SAVE VARIABLE $result-1
+                
+                25.EvaluateStatement:
+                LOAD VARIABLE $a
+                LOAD VARIABLE $b
+                CALL $and WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                26.EvaluateStatement:
+                LOAD VARIABLE $c
+                LOAD VARIABLE $d
+                CALL $sans WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                27.EvaluateStatement:
+                LOAD VARIABLE $f
+                LOAD VARIABLE $g
+                CALL $xor WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                28.EvaluateStatement:
+                LOAD VARIABLE $h
+                LOAD VARIABLE $j
+                CALL $or WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                29.EvaluateStatement:
+                LOAD VARIABLE $k
+                LOAD VARIABLE $l
+                CALL $chain WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                
+                30.EvaluateStatement:
+                LOAD VARIABLE $foo
+                PUSH LITERAL `5`
+                CALL $default WITH 2 ARGUMENTS
+                SAVE VARIABLE $result-1
+                LOAD VARIABLE $result-1
+                PULL RESULT
+            "($mediaType: "application/basm")
+            $addresses: [
+                "1.EvaluateStatement": 1
+                "2.EvaluateStatement": 11
+                "3.EvaluateStatement": 23
+                "4.EvaluateStatement": 25
+                "5.EvaluateStatement": 29
+                "6.EvaluateStatement": 35
+                "7.EvaluateStatement": 39
+                "8.EvaluateStatement": 47
+                "9.EvaluateStatement": 53
+                "10.EvaluateStatement": 56
+                "11.EvaluateStatement": 60
+                "12.EvaluateStatement": 62
+                "13.EvaluateStatement": 65
+                "14.EvaluateStatement": 69
+                "15.EvaluateStatement": 73
+                "16.EvaluateStatement": 77
+                "17.EvaluateStatement": 81
+                "18.EvaluateStatement": 85
+                "19.EvaluateStatement": 88
+                "20.EvaluateStatement": 92
+                "21.EvaluateStatement": 96
+                "22.EvaluateStatement": 100
+                "23.EvaluateStatement": 104
+                "24.EvaluateStatement": 108
+                "25.EvaluateStatement": 111
+                "26.EvaluateStatement": 115
+                "27.EvaluateStatement": 119
+                "28.EvaluateStatement": 123
+                "29.EvaluateStatement": 127
+                "30.EvaluateStatement": 131
+            ]
+            $bytecode: '
+                C013280B2809D009D001280A2804D009D0018013C013280E2808D870C86F
+                280FD0012810D0012811D00180136014801328062804D03C801360016002
+                D07D6003D059801360128010681080136004280DD00A280CD00A2804D00A
+                8013600EC045600AD001E80180132807C82B801328022805D02A80132801
+                80132803C81B801360166017D059801360016002D05C801360036005D063
+                801360166017D07D801360156018D02280132803C847801360016002D03C
+                801360036005D007801360066008D03D80136009600BD0088013600C600F
+                D02480136011C851801360016002D003801360036005D06A801360066008
+                D08880136009600BD0538013600C600DD014801360072804D02080136013
+                5000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target
+            ]
+            $variables: [
+                $a
+                $b
+                $c
+                $customer
+                $d
+                $f
+                $foo
+                $g
+                $h
+                $item
+                $j
+                $k
+                $l
+                $list
+                $m
+                $nameOrCitation-2
+                $p
+                $reference
+                $result-1
+                $variable
+                $w
+                $x
+                $y
+                $z
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [
+                $addItem
+            ]($type: /nebula/collections/Set/v1)
+        ]
+    ]
+    $literals: [
+        -π
+        2
+        (3, 4i)
+        5
+        8
+        13
+        23
+        /nebula/collections/Set/v1
+        $bar
+        $baz
+        $foo
+        $item
+        $order
+        $type
+        "alpha"
+        "beta"
+        "gamma"
     ]($type: /nebula/collections/Set/v1)
 ]

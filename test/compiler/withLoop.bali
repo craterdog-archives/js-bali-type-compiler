@@ -1,102 +1,118 @@
 [
-    $procedure: {
-        with [1..10] do {
-            $x := true
-            if x then {
-                $y := none
-                break loop
-            }
-            $z := any
-        }
-    }
-    $instructions: "
-        1.WithStatement:
-        NOTE --Place a range on the stack.
-        PUSH LITERAL `".."`
-        CALL $range WITH 1 ARGUMENT
-        NOTE --Set the first item in the range.
-        PUSH LITERAL `1`
-        CALL $setFirst WITH 2 ARGUMENTS
-        NOTE --Set the last item in the range.
-        PUSH LITERAL `10`
-        CALL $setLast WITH 2 ARGUMENTS
-        SEND $iterator TO COMPONENT
-        SAVE VARIABLE $iterator-3
-        
-        1.1.ConditionClause:
-        LOAD VARIABLE $iterator-3
-        SEND $hasNext TO COMPONENT
-        JUMP TO 1.WithStatementDone ON FALSE
-        LOAD VARIABLE $iterator-3
-        SEND $next TO COMPONENT
-        SAVE VARIABLE $item-2
-        
-        1.1.1.EvaluateStatement:
-        PUSH LITERAL `true`
-        SAVE VARIABLE $x
-        
-        1.1.2.IfStatement:
-        JUMP TO NEXT INSTRUCTION
-        
-        1.1.2.1.ConditionClause:
-        LOAD VARIABLE $x
-        JUMP TO 1.1.2.IfStatementDone ON FALSE
-        
-        1.1.2.1.1.EvaluateStatement:
-        PUSH LITERAL `none`
-        SAVE VARIABLE $y
-        
-        1.1.2.1.2.BreakStatement:
-        JUMP TO 1.WithStatementDone
-        
-        1.1.2.IfStatementDone:
-        JUMP TO NEXT INSTRUCTION
-        
-        1.1.3.EvaluateStatement:
-        PUSH LITERAL `any`
-        SAVE VARIABLE $z
-        
-        1.ConditionRepeat:
-        JUMP TO 1.1.ConditionClause
-        
-        1.WithStatementDone:
-        LOAD VARIABLE $result-1
-        PULL RESULT
-    "($mediaType: "application/basm")
-    $addresses: [
-        "1.WithStatement": 1
-        "1.1.ConditionClause": 9
-        "1.1.1.EvaluateStatement": 15
-        "1.1.2.IfStatement": 17
-        "1.1.2.1.ConditionClause": 18
-        "1.1.2.1.1.EvaluateStatement": 20
-        "1.1.2.1.2.BreakStatement": 22
-        "1.1.2.IfStatementDone": 23
-        "1.1.3.EvaluateStatement": 24
-        "1.ConditionRepeat": 26
-        "1.WithStatementDone": 27
-    ]
-    $bytecode: '
-        2801C85F2802D0712803D073E00280026002E001181B6002E00380012804
-        800400006004181728058005001B000028068006000960035000
-    '(
-        $encoding: $base16
-        $mediaType: "application/bcod"
-    )
-    $arguments: [
-        $target
-    ]
-    $variables: [
-        $item-2
-        $iterator-3
-        $result-1
-        $x
-        $y
-        $z
-    ]($type: /nebula/collections/Set/v1)
+    $parent: none
     $messages: [
-        $hasNext
-        $iterator
-        $next
+        $test: [:]
+    ]
+    $methods: [
+        $test: [
+            $procedure: {
+                with [1..10] do {
+                    $x := true
+                    if x then {
+                        $y := none
+                        break loop
+                    }
+                    $z := any
+                }
+            }
+            $instructions: "
+                1.WithStatement:
+                NOTE --Place a range on the stack.
+                PUSH LITERAL `".."`
+                CALL $range WITH 1 ARGUMENT
+                NOTE --Set the first item in the range.
+                PUSH LITERAL `1`
+                CALL $setFirst WITH 2 ARGUMENTS
+                NOTE --Set the last item in the range.
+                PUSH LITERAL `10`
+                CALL $setLast WITH 2 ARGUMENTS
+                SEND $iterator TO COMPONENT
+                SAVE VARIABLE $iterator-3
+                
+                1.1.ConditionClause:
+                LOAD VARIABLE $iterator-3
+                SEND $hasNext TO COMPONENT
+                JUMP TO 1.WithStatementDone ON FALSE
+                LOAD VARIABLE $iterator-3
+                SEND $next TO COMPONENT
+                SAVE VARIABLE $item-2
+                
+                1.1.1.EvaluateStatement:
+                PUSH LITERAL `true`
+                SAVE VARIABLE $x
+                
+                1.1.2.IfStatement:
+                JUMP TO NEXT INSTRUCTION
+                
+                1.1.2.1.ConditionClause:
+                LOAD VARIABLE $x
+                JUMP TO 1.1.2.IfStatementDone ON FALSE
+                
+                1.1.2.1.1.EvaluateStatement:
+                PUSH LITERAL `none`
+                SAVE VARIABLE $y
+                
+                1.1.2.1.2.BreakStatement:
+                JUMP TO 1.WithStatementDone
+                
+                1.1.2.IfStatementDone:
+                JUMP TO NEXT INSTRUCTION
+                
+                1.1.3.EvaluateStatement:
+                PUSH LITERAL `any`
+                SAVE VARIABLE $z
+                
+                1.ConditionRepeat:
+                JUMP TO 1.1.ConditionClause
+                
+                1.WithStatementDone:
+                LOAD VARIABLE $result-1
+                PULL RESULT
+            "($mediaType: "application/basm")
+            $addresses: [
+                "1.WithStatement": 1
+                "1.1.ConditionClause": 9
+                "1.1.1.EvaluateStatement": 15
+                "1.1.2.IfStatement": 17
+                "1.1.2.1.ConditionClause": 18
+                "1.1.2.1.1.EvaluateStatement": 20
+                "1.1.2.1.2.BreakStatement": 22
+                "1.1.2.IfStatementDone": 23
+                "1.1.3.EvaluateStatement": 24
+                "1.ConditionRepeat": 26
+                "1.WithStatementDone": 27
+            ]
+            $bytecode: '
+                2806C85F2802D0712803D073E00280026002E001181B6002E00380012801
+                800400006004181728058005001B000028048006000960035000
+            '(
+                $encoding: $base16
+                $mediaType: "application/bcod"
+            )
+            $arguments: [
+                $target
+            ]
+            $variables: [
+                $item-2
+                $iterator-3
+                $result-1
+                $x
+                $y
+                $z
+            ]($type: /nebula/collections/Set/v1)
+            $messages: [
+                $hasNext
+                $iterator
+                $next
+            ]($type: /nebula/collections/Set/v1)
+        ]
+    ]
+    $literals: [
+        true
+        1
+        10
+        any
+        none
+        ".."
     ]($type: /nebula/collections/Set/v1)
 ]

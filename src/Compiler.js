@@ -13,8 +13,9 @@
  * This module defines a class that analyzes and compiles a document written using
  * Bali Document Notation™ into a type document that contains the bytecode for each
  * method defined in the document. The bytecode can then be executed on the
- * Bali Virtual Machine™.
+ * Bali Nebula™ virtual machine.
  */
+const moduleName = '/bali/compiler/Compiler';
 const bali = require('bali-component-framework').api();
 const Assembler = require('./Assembler').Assembler;
 const EOL = '\n';  // POSIX end of line character
@@ -82,16 +83,17 @@ Compiler.prototype.cleanMethod = function(method) {
 
 /**
  * This method compiles and assembles each method in a type definition so that they may be
- * run on the Bali Virtual Machine™.
+ * run on the Bali Nebula™ virtual machine.
  *
+ * @param {DocumentRepository} repository The repository maintaining the type definition documents.
  * @param {Catalog} type The type definition to be compiled.
  */
 Compiler.prototype.compileType = function(repository, type) {
     if (this.debug > 1) {
-        bali.component.validateArgument('/bali/compiler/Compiler', '$compileType', '$repository', repository, [
+        bali.component.validateArgument(moduleName, '$compileType', '$repository', repository, [
             '/javascript/Object'
         ]);
-        bali.component.validateArgument('/bali/compiler/Compiler', '$compileType', '$type', type, [
+        bali.component.validateArgument(moduleName, '$compileType', '$type', type, [
             '/bali/collections/Catalog'
         ]);
     }
@@ -99,79 +101,69 @@ Compiler.prototype.compileType = function(repository, type) {
     // clean the type first
     this.cleanType(type);
 
-    // retrieve the context
-    const types = bali.list([type]);
-    var name = type.getAttribute('$parent');
-    while (!bali.areEqual(name, bali.pattern.NONE)) {
-        var parent = repository.retrieveContract(name);
-        if (!parent) {
-            const exception = bali.exception({
-                $module: '/bali/compiler/Compiler',
-                $procedure: '$compileType',
-                $exception: '$missingParent',
-                $type: name,
-                $message: '"One of the ancestor types is not in the repository."'
-            });
-            if (this.debug) console.error(exception.toString());
-            throw exception;
+    const methods = type.getAttribute('$methods');
+    if (methods) {
+        // compile each method
+        const iterator = methods.getIterator();
+        while (iterator.hasNext()) {
+            const association = iterator.getNext();
+            const symbol = association.getKey();
+            const method = association.getValue();
+            this.compileMethod(repository, type, symbol, method);
         }
-        types.insertItem(1, parent);
-        name = parent.getAttribute('$parent');
-    }
-    console.error("TYPES: " + types);
 
-    var functions = type.getAttribute('$functions') || bali.catalog();
-    var messages = type.getAttribute('$messages') || bali.catalog();
-    var methods = type.getAttribute('$methods') || bali.catalog();
-
-    // compile each method
-    const iterator = methods.getIterator();
-    while (iterator.hasNext()) {
-        const association = iterator.getNext();
-        const name = association.getKey();
-        const method = association.getValue();
-        var definition = functions.getAttribute(name);
-        var parameters = bali.catalog();
-        if (!definition) definition = messages.getAttribute(name);
-        if (definition) {
-            parameters = definition.getAttribute('$parameters');
+        // assemble each method (must occur after the literals have been added by all compilations)
+        const assembler = new Assembler(this.debug);
+        iterator.toStart();
+        while (iterator.hasNext()) {
+            const association = iterator.getNext();
+            const method = association.getValue();
+            assembler.assembleMethod(type, method);
         }
-        this.compileMethod(type, method, parameters);
-    }
-
-    // assemble each method (must occur after the literals have been added by all compilations)
-    const assembler = new Assembler(this.debug);
-    iterator.toStart();
-    while (iterator.hasNext()) {
-        const association = iterator.getNext();
-        const method = association.getValue();
-        assembler.assembleMethod(type, method);
     }
 };
 
 
 /**
- * This method compiles a method containing a Bali procedure into the corresponding
- * assembly instructions for the Bali Virtual Machine™.
+ * This method compiles the specified method containing a procedure into the corresponding
+ * assembly instructions for the Bali Nebula™ virtual machine.
  *
- * @param {Catalog} type The type context for the method being compiled.
+ * @param {DocumentRepository} repository The repository maintaining the type definition documents.
+ * @param {Catalog} type The type definition containing the method to be compiled.
+ * @param {Symbol} symbol The symbol of the method to be compiled.
  * @param {Catalog} method The method to be compiled.
  */
-Compiler.prototype.compileMethod = function(repository, type, method) {
+Compiler.prototype.compileMethod = function(repository, type, symbol, method) {
     if (this.debug > 1) {
-        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$repository', repository, [
+        bali.component.validateArgument(moduleName, '$compileMethod', '$repository', repository, [
             '/javascript/Object'
         ]);
-        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$type', type, [
+        bali.component.validateArgument(moduleName, '$compileMethod', '$type', type, [
             '/bali/collections/Catalog'
         ]);
-        bali.component.validateArgument('/bali/compiler/Compiler', '$compileMethod', '$method', method, [
+        bali.component.validateArgument(moduleName, '$compileMethod', '$symbol', symbol, [
+            '/bali/strings/Symbol'
+        ]);
+        bali.component.validateArgument(moduleName, '$compileMethod', '$method', method, [
             '/bali/collections/Catalog'
         ]);
     }
 
-    // TODO: lookup the parameters in the ancestor type definitions
-    const parameters = bali.catalog();
+    // search for the parameters for the method
+    var parameters = searchLibraries(type, symbol);
+    if (!parameters) parameters = searchInterfaces(type, symbol);
+    if (!parameters) {
+        const exception = bali.exception({
+            $module: moduleName,
+            $procedure: '$compileMethod',
+            $exception: '$unknownMethod',
+            $symbol: symbol,
+            $method: method,
+            $message: '"There are no functions or messages in the type definition that match the method."'
+        });
+        if (this.debug) console.error(exception.toString());
+        throw exception;
+    }
 
     // compile the method into assembly instructions
     const visitor = new CompilingVisitor(type, method, parameters, this.debug);
@@ -185,12 +177,78 @@ Compiler.prototype.compileMethod = function(repository, type, method) {
 };
 
 
+// PRIVATE FUNCTIONS
+
+/*
+ * This function performs a recursive search of the specified type for a function definition
+ * associated with the specified symbol. It searches the entire type ancestry and any libraries
+ * supported by any of the types in the ancestry.
+ */
+const searchLibraries = function(type, symbol) {
+    while (!bali.areEqual(type, bali.pattern.NONE)) {
+        var parameters = retrieveParameters(type, '$functions', symbol);
+        if (parameters) return parameters;
+        var libraries = type.getAttribute('$libraries');
+        if (libraries) {
+            const iterator = libraries.getIterator();
+            while (iterator.hasNext()) {
+                const name = iterator.getNext();
+                const definition = repository.retrieveContract(name);
+                parameters = searchLibraries(definition, symbol);
+                if (parameters) return parameters;
+            }
+        }
+        type = type.getAttribute('$parent');
+    }
+};
+
+
+/*
+ * This function performs a recursive search of the specified type for a message definition
+ * associated with the specified symbol. It searches the entire type ancestry and any interfaces
+ * supported by any of the types in the ancestry.
+ */
+const searchInterfaces = function(type, symbol) {
+    while (!bali.areEqual(type, bali.pattern.NONE)) {
+        var parameters = retrieveParameters(type, '$messages', symbol);
+        if (parameters) return parameters;
+        var interfaces = type.getAttribute('$interfaces');
+        if (interfaces) {
+            const iterator = interfaces.getIterator();
+            while (iterator.hasNext()) {
+                const name = iterator.getNext();
+                const definition = repository.retrieveContract(name);
+                parameters = searchInterfaces(definition, symbol);
+                if (parameters) return parameters;
+            }
+        }
+        type = type.getAttribute('$parent');
+    }
+};
+
+
+/*
+ * This function attempts to retrieve any parameter definitions for the specified symbol under
+ * the specified catagory ($functions or $messages) in the specified type.
+ */
+const retrieveParameters = function(type, catagory, symbol) {
+    const catalog = type.getAttribute(catagory);
+    if (catalog) {
+        const definition = catalog.getAttribute(symbol);
+        if (definition) {
+            const parameters = definition.getAttribute('$parameters');
+            return parameters || bali.catalog();
+        }
+    }
+};
+
+
 // PRIVATE CLASSES
 
 /*
  * This private class uses the Visitor Pattern to traverse the syntax node generated
  * by the parser. It in turn uses another private class, the InstructionBuilder,
- * to construct the corresponding Bali Virtual Machine™ instructions for the
+ * to construct the corresponding Bali Nebula™ virtual machine instructions for the
  * syntax node is it traversing.
  */
 function CompilingVisitor(type, method, parameters, debug) {
@@ -358,7 +416,7 @@ CompilingVisitor.prototype.visitBreakClause = function(node) {
     }
     // there was no matching enclosing loop with that label
     const exception = bali.exception({
-        $module: '/bali/compiler/Compiler',
+        $module: moduleName,
         $procedure: '$visitBreakClause',
         $exception: '$noEnclosingLoop',
         $message: 'A break statement was found with no enclosing loop.'
@@ -570,7 +628,7 @@ CompilingVisitor.prototype.visitContinueClause = function(node) {
     }
     // there was no matching enclosing loop with that label
     const exception = bali.exception({
-        $module: '/bali/compiler/Compiler',
+        $module: moduleName,
         $procedure: '$visitContinueClause',
         $exception: '$noEnclosingLoop',
         $message: 'A continue statement was found with no enclosing loop.'
@@ -742,7 +800,7 @@ CompilingVisitor.prototype.visitFunctionExpression = function(node) {
     const numberOfArguments = argumentz.getSize();
     if (numberOfArguments > 3) {
         const exception = bali.exception({
-            $module: '/bali/compiler/Compiler',
+            $module: moduleName,
             $procedure: '$visitFunctionExpression',
             $exception: '$argumentCount',
             $function: node,
