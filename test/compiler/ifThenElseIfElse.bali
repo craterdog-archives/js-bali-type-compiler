@@ -75,7 +75,7 @@
                 $mediaType: "application/bcod"
             )
             $arguments: [
-                $target
+                $target: none
             ]
             $variables: [
                 $no

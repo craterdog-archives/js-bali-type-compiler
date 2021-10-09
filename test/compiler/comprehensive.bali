@@ -412,8 +412,8 @@
                 $mediaType: "application/bcod"
             )
             $arguments: [
-                $target
-                $string
+                $target: none
+                $string: "default"
             ]
             $variables: [
                 $a

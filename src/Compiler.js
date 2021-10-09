@@ -1677,8 +1677,17 @@ function InstructionBuilder(type, method, parameters, debug) {
     // setup the compilation context
     this.literals = type.getAttribute('$literals') || bali.set();
     this.constants = type.getAttribute('$constants') || bali.catalog();
-    this.argumentz = bali.list(['$target']);  // $target is immutable and is the first argument (not a variable)
-    if (parameters) this.argumentz.addItems(parameters.getKeys());
+    this.argumentz = bali.catalog({$target: 'none'});  // $target is immutable and is the first argument
+    if (parameters) {
+        const iterator = parameters.getIterator();
+        while (iterator.hasNext()) {
+            const association = iterator.getNext();
+            const symbol = association.getKey();
+            const parameter = association.getValue();
+            const value = parameter.getAttribute('$default') || bali.pattern.NONE;
+            this.argumentz.setAttribute(symbol, value);
+        }
+    }
     this.variables = bali.set();
     this.messages = bali.set();
     this.instructions = '';

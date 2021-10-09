@@ -82,7 +82,7 @@
                 $mediaType: "application/bcod"
             )
             $arguments: [
-                $target
+                $target: none
             ]
             $variables: [
                 $iterator-2

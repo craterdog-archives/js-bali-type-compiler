@@ -146,7 +146,7 @@
                 $mediaType: "application/bcod"
             )
             $arguments: [
-                $target
+                $target: none
             ]
             $variables: [
                 $citation-10

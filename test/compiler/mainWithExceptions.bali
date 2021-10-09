@@ -101,7 +101,7 @@
                 $mediaType: "application/bcod"
             )
             $arguments: [
-                $target
+                $target: none
             ]
             $variables: [
                 $bag-2
