@@ -65,8 +65,8 @@ exports.api = function(debug) {
          * ancestral type definitions.
          * @param {Catalog} type The type definition to be compiled.
          */
-        compileType: function(repository, type) {
-            compiler.compileType(repository, type);
+        compileType: async function(repository, type) {
+            await compiler.compileType(repository, type);
         },
 
         /**
@@ -80,8 +80,8 @@ exports.api = function(debug) {
          * @param {Symbol} symbol The symbol associated with the method.
          * @param {Catalog} method The method being compiled.
          */
-        compileMethod: function(repository, type, symbol, method) {
-            compiler.compileMethod(repository, type, symbol, method);
+        compileMethod: async function(repository, type, symbol, method) {
+            await compiler.compileMethod(repository, type, symbol, method);
         },
 
         /**

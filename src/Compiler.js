@@ -88,7 +88,7 @@ Compiler.prototype.cleanMethod = function(method) {
  * @param {DocumentRepository} repository The repository maintaining the type definition documents.
  * @param {Catalog} type The type definition to be compiled.
  */
-Compiler.prototype.compileType = function(repository, type) {
+Compiler.prototype.compileType = async function(repository, type) {
     if (this.debug > 1) {
         bali.component.validateArgument(moduleName, '$compileType', '$repository', repository, [
             '/javascript/Object'
@@ -109,7 +109,7 @@ Compiler.prototype.compileType = function(repository, type) {
             const association = iterator.getNext();
             const symbol = association.getKey();
             const method = association.getValue();
-            this.compileMethod(repository, type, symbol, method);
+            await this.compileMethod(repository, type, symbol, method);
         }
 
         // assemble each method (must occur after the literals have been added by all compilations)
@@ -133,7 +133,7 @@ Compiler.prototype.compileType = function(repository, type) {
  * @param {Symbol} symbol The symbol of the method to be compiled.
  * @param {Catalog} method The method to be compiled.
  */
-Compiler.prototype.compileMethod = function(repository, type, symbol, method) {
+Compiler.prototype.compileMethod = async function(repository, type, symbol, method) {
     if (this.debug > 1) {
         bali.component.validateArgument(moduleName, '$compileMethod', '$repository', repository, [
             '/javascript/Object'
@@ -150,8 +150,8 @@ Compiler.prototype.compileMethod = function(repository, type, symbol, method) {
     }
 
     // search for the parameters for the method
-    var parameters = searchLibraries(type, symbol);
-    if (!parameters) parameters = searchInterfaces(type, symbol);
+    var parameters = await searchLibraries(repository, type, symbol);
+    if (!parameters) parameters = await searchInterfaces(repository, type, symbol);
     if (!parameters) {
         const exception = bali.exception({
             $module: moduleName,
@@ -184,7 +184,7 @@ Compiler.prototype.compileMethod = function(repository, type, symbol, method) {
  * associated with the specified symbol. It searches the entire type ancestry and any libraries
  * supported by any of the types in the ancestry.
  */
-const searchLibraries = function(type, symbol) {
+const searchLibraries = async function(repository, type, symbol) {
     while (!bali.areEqual(type, bali.pattern.NONE)) {
         var parameters = retrieveParameters(type, '$functions', symbol);
         if (parameters) return parameters;
@@ -193,8 +193,8 @@ const searchLibraries = function(type, symbol) {
             const iterator = libraries.getIterator();
             while (iterator.hasNext()) {
                 const name = iterator.getNext();
-                const definition = repository.retrieveContract(name);
-                parameters = searchLibraries(definition, symbol);
+                const definition = await repository.retrieveContract(name);
+                parameters = await searchLibraries(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }
@@ -208,7 +208,7 @@ const searchLibraries = function(type, symbol) {
  * associated with the specified symbol. It searches the entire type ancestry and any interfaces
  * supported by any of the types in the ancestry.
  */
-const searchInterfaces = function(type, symbol) {
+const searchInterfaces = async function(repository, type, symbol) {
     while (!bali.areEqual(type, bali.pattern.NONE)) {
         var parameters = retrieveParameters(type, '$operations', symbol);
         if (parameters) return parameters;
@@ -217,8 +217,8 @@ const searchInterfaces = function(type, symbol) {
             const iterator = interfaces.getIterator();
             while (iterator.hasNext()) {
                 const name = iterator.getNext();
-                const definition = repository.retrieveContract(name);
-                parameters = searchInterfaces(definition, symbol);
+                const definition = await repository.retrieveContract(name);
+                parameters = await searchInterfaces(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }

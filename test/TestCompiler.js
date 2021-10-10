@@ -46,7 +46,7 @@ describe('Bali Nebula™ Type Compiler', function() {
                 compiler.cleanType(type);
 
                 // compile the type
-                compiler.compileType(repository, type);
+                await compiler.compileType(repository, type);
 
                 // check for differences
                 source = bali.document(type);
