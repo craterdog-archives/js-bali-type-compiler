@@ -1498,7 +1498,7 @@ CompilingVisitor.prototype.visitThrowClause = function(node) {
 CompilingVisitor.prototype.visitVariable = function(identifier) {
     // the VM loads the value of the variable onto the top of the component stack
     const variable = '$' + identifier.toString();
-    if (this.builder.argumentz.containsItem(variable)) {
+    if (this.builder.argumentz.getAttribute(variable)) {
         // the $target and arguments take precedence over global constants and local variables
         this.builder.insertPushInstruction('ARGUMENT', variable);
     } else if (this.builder.constants.getAttribute(variable)) {
