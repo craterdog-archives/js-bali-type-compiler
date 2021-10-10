@@ -219,7 +219,7 @@ AssemblingVisitor.prototype.visitPush = function(instruction) {
             value = this.constants.getKeys().getIndex(value);
             break;
         case types.ARGUMENT:
-            value = this.argumentz.getIndex(value);
+            value = this.argumentz.getKeys().getIndex(value);
             break;
     }
     const word = this.decoder.encodeInstruction(types.PUSH, modifier, value);
