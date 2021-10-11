@@ -185,20 +185,22 @@ Compiler.prototype.compileMethod = async function(repository, type, symbol, meth
  * supported by any of the types in the ancestry.
  */
 const searchLibraries = async function(repository, type, symbol) {
-    while (!bali.areEqual(type, bali.pattern.NONE)) {
+    while (type) {
         var parameters = retrieveParameters(type, '$functions', symbol);
         if (parameters) return parameters;
         var libraries = type.getAttribute('$libraries');
         if (libraries) {
             const iterator = libraries.getIterator();
             while (iterator.hasNext()) {
-                const name = iterator.getNext();
-                const definition = await repository.retrieveContract(name);
+                const name = iterator.getNext().toLiteral();
+                const definition = (await repository.retrieveContract(name)).getAttribute('$document');
                 parameters = await searchLibraries(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }
-        type = type.getAttribute('$parent');
+        const parent = type.getAttribute('$parent').toLiteral();
+        if (bali.areEqual(parent, bali.pattern.NONE)) return;
+        type = (await repository.retrieveContract(parent)).getAttribute('$document');
     }
 };
 
@@ -209,20 +211,22 @@ const searchLibraries = async function(repository, type, symbol) {
  * supported by any of the types in the ancestry.
  */
 const searchInterfaces = async function(repository, type, symbol) {
-    while (!bali.areEqual(type, bali.pattern.NONE)) {
+    while (type) {
         var parameters = retrieveParameters(type, '$operations', symbol);
         if (parameters) return parameters;
         var interfaces = type.getAttribute('$interfaces');
         if (interfaces) {
             const iterator = interfaces.getIterator();
             while (iterator.hasNext()) {
-                const name = iterator.getNext();
-                const definition = await repository.retrieveContract(name);
+                const name = iterator.getNext().toLiteral();
+                const definition = (await repository.retrieveContract(name)).getAttribute('$document');
                 parameters = await searchInterfaces(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }
-        type = type.getAttribute('$parent');
+        const parent = type.getAttribute('$parent').toLiteral();
+        if (bali.areEqual(parent, bali.pattern.NONE)) return;
+        type = (await repository.retrieveContract(parent)).getAttribute('$document');
     }
 };
 
