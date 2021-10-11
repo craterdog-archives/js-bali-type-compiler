@@ -193,14 +193,16 @@ const searchLibraries = async function(repository, type, symbol) {
             const iterator = libraries.getIterator();
             while (iterator.hasNext()) {
                 const name = iterator.getNext().toLiteral();
-                const definition = (await repository.retrieveContract(name)).getAttribute('$document');
+                const library = await repository.retrieveContract(name);
+                const definition = library.getAttribute('$document');
                 parameters = await searchLibraries(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }
         const parent = type.getAttribute('$parent').toLiteral();
         if (bali.areEqual(parent, bali.pattern.NONE)) return;
-        type = (await repository.retrieveContract(parent)).getAttribute('$document');
+        const contract = await repository.retrieveContract(parent);
+        type = contract.getAttribute('$document');
     }
 };
 
@@ -219,14 +221,16 @@ const searchInterfaces = async function(repository, type, symbol) {
             const iterator = interfaces.getIterator();
             while (iterator.hasNext()) {
                 const name = iterator.getNext().toLiteral();
-                const definition = (await repository.retrieveContract(name)).getAttribute('$document');
+                const iface = await repository.retrieveContract(name);
+                const definition = iface.getAttribute('$document');
                 parameters = await searchInterfaces(repository, definition, symbol);
                 if (parameters) return parameters;
             }
         }
         const parent = type.getAttribute('$parent').toLiteral();
         if (bali.areEqual(parent, bali.pattern.NONE)) return;
-        type = (await repository.retrieveContract(parent)).getAttribute('$document');
+        const contract = await repository.retrieveContract(parent);
+        type = contract.getAttribute('$document');
     }
 };
 
