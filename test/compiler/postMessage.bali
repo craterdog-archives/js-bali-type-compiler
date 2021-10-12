@@ -27,7 +27,7 @@
                 LOAD VARIABLE $result-1
                 PULL RESULT
             "($mediaType: "application/basm")
-            $bytecode: '28018001C01328022803D009D001980160025000'(
+            $bytecode: '28018001C01228022803D009D001980160025000'(
                 $encoding: $base16
                 $mediaType: "application/bcod"
             )
