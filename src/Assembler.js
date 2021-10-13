@@ -382,6 +382,7 @@ const intrinsics = [
     '$list',
     '$logarithm',
     '$magnitude',
+    '$matchesText',
     '$millisecond',
     '$milliseconds',
     '$minute',
