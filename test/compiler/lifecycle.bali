@@ -9,7 +9,7 @@
                 checkout $document from /acme/documents/example/v1.2
                 save document
                 notarize document as /acme/documents/example/v1.3
-                checkout documents[index] at level from /acme/documents/example/v1.3
+                checkout documents[index] at level 2 from /acme/documents/example/v1.3
                 save documents[index] as citations[index]
                 notarize documents[index] as /acme/documents/example/v1.3.1
                 discard documents[index]
@@ -72,7 +72,7 @@
                 CALL $parameters WITH 1 ARGUMENT
                 PUSH LITERAL `$version`
                 CALL $attribute WITH 2 ARGUMENTS
-                LOAD VARIABLE $level
+                PUSH LITERAL `2`
                 CALL $nextVersion WITH 2 ARGUMENTS
                 SAVE VARIABLE $version-9
                 NOTE --Set the new version string parameter for the new document.
@@ -127,11 +127,11 @@
                 PULL RESULT
             "($mediaType: "application/basm")
             $bytecode: '
-                2802800C700C2805D00AC82480066006C8572806D00A2801D05280106006
-                28066010D878480060068005600588032803800D6005900D2803800E700E
-                2805D00AC82480076007C8572806D00A600AD0528011600728066011D878
+                2803800B700B2806D00AC82480066006C8572807D00A2801D052800F6006
+                2807600FD878480060068005600588032804800C6005900C2804800D700D
+                2806D00AC82480076007C8572807D00A2802D0528010600728076010D878
                 4800600860096007D874480060086009D00A8801600460096001D8744800
-                2804800B60086009D00A900B60086009D00A8002A802600F5000
+                2805800A60086009D00A900A60086009D00A8002A802600E5000
             '(
                 $encoding: $base16
                 $mediaType: "application/bcod"
@@ -149,7 +149,6 @@
                 $document-8
                 $documents
                 $index
-                $level
                 $name-11
                 $name-2
                 $name-6
@@ -172,6 +171,7 @@
     ]
     $literals: [
         0
+        2
         /acme/documents/example/v1.2
         /acme/documents/example/v1.3
         /acme/documents/example/v1.3.1

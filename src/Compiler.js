@@ -439,7 +439,7 @@ CompilingVisitor.prototype.visitBreakClause = function(node) {
  * a new version of a signed contract and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a composite component.
  */
-// checkoutClause: 'checkout' recipient ('at' expression)? 'from' expression;
+// checkoutClause: 'checkout' recipient ('at level' expression)? 'from' expression;
 CompilingVisitor.prototype.visitCheckoutClause = function(node) {
     var index = 1;
     const recipient = node.getItem(index++);
