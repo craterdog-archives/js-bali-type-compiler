@@ -1,6 +1,6 @@
 {
   "name": "bali-type-compiler",
-  "version": "2.59.0",
+  "version": "2.60.0",
   "description": "This library provides a JavaScript based implementation for the compiler for the Bali Virtual Processor.",
   "repository": {
     "type": "git",
@@ -30,11 +30,11 @@
     "grunt-webpack": "^4.0.3",
     "mocha": "^9.1.1",
     "webpack": "^5.52.1",
-    "bali-digital-notary": "^2.50.0",
-    "bali-document-repository": "^2.57.0"
+    "bali-digital-notary": "^2.51.0",
+    "bali-document-repository": "^2.58.0"
   },
   "dependencies": {
     "antlr4": "4.8.0",
-    "bali-component-framework": "^2.80.0"
+    "bali-component-framework": "^2.81.0"
   }
 }

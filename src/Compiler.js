@@ -439,11 +439,11 @@ CompilingVisitor.prototype.visitBreakClause = function(node) {
  * a new version of a signed contract and assign it to a recipient. The recipient may be either
  * a variable or an indexed child of a composite component.
  */
-// checkoutClause: 'checkout' ('level' expression 'of')? recipient 'from' expression
+// checkoutClause: 'checkout' recipient ('at' expression)? 'from' expression;
 CompilingVisitor.prototype.visitCheckoutClause = function(node) {
     var index = 1;
-    const level = (node.getSize() === 3) ? node.getItem(index++) : bali.number();
     const recipient = node.getItem(index++);
+    const level = (node.getSize() > 2) ? node.getItem(index++) : bali.number();
     const expression = node.getItem(index);
 
     this.builder.insertNoteInstruction('Save the name of the contract.');
@@ -1398,15 +1398,15 @@ CompilingVisitor.prototype.visitSelectClause = function(node) {
  * This method inserts the instructions needed to digitally sign the named contract
  * that is on top of the component stack and save it in the repository.
  */
-// signClause: 'sign' expression 'as' expression
-CompilingVisitor.prototype.visitSignClause = function(node) {
+// notarizeClause: 'notarize' expression 'as' expression
+CompilingVisitor.prototype.visitNotarizeClause = function(node) {
     const contract = node.getItem(1);
     const expression = node.getItem(2);
     this.builder.insertNoteInstruction('Save the name of the new contract.');
     expression.acceptVisitor(this);
     const name = this.createTemporaryVariable('name');
     this.builder.insertSaveInstruction('VARIABLE', name);
-    this.builder.insertNoteInstruction('Sign the named contract and save to the repository.');
+    this.builder.insertNoteInstruction('Notarize the named contract and save to the repository.');
     contract.acceptVisitor(this);
     this.builder.insertSaveInstruction('CONTRACT', name);
 };
