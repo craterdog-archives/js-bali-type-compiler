@@ -14,6 +14,7 @@ const Parser = require('./src/Parser').Parser;
 const Formatter = require('./src/Formatter').Formatter;
 const Assembler = require('./src/Assembler').Assembler;
 const Compiler = require('./src/Compiler').Compiler;
+const Analyzer = require('./src/Analyzer').Analyzer;
 
 
 /**
@@ -37,6 +38,7 @@ exports.api = function(debug) {
     const decoder = new Decoder(this.debug);
     const compiler = new Compiler(this.debug);
     const assembler = new Assembler(this.debug);
+    const analyzer = new Analyzer(this.debug);
 
     return {
 

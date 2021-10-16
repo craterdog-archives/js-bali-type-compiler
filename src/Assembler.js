@@ -13,6 +13,7 @@
  * This module defines a class that assembles compiled methods into bytecode that
  * can run on the Bali Virtual Machine™.
  */
+const bali = require('bali-component-framework').api(this.debug);
 const Decoder = require('./Decoder').Decoder;
 const types = require('./Types');
 const Parser = require('./Parser').Parser;
@@ -36,13 +37,11 @@ const EOL = '\n';  // POSIX end of line character
  */
 function Assembler(debug) {
     this.debug = debug || 0;  // default is off
-    this.bali = require('bali-component-framework').api(this.debug);
     this.decoder = new Decoder(this.debug);
     return this;
 }
 Assembler.prototype.constructor = Assembler;
 exports.Assembler = Assembler;
-exports.assembler = new Assembler();
 
 
 /**
@@ -63,8 +62,8 @@ Assembler.prototype.assembleMethod = function(type, method) {
 
     // format the bytecode and add to the method context
     var bytecode = visitor.getBytecode();
-    const base16 = this.bali.decoder(2).base16Encode(this.decoder.bytecodeToBytes(bytecode));
-    bytecode = this.bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
+    const base16 = bali.decoder(2).base16Encode(this.decoder.bytecodeToBytes(bytecode));
+    bytecode = bali.component("'" + base16 + EOL + "        '" + '($encoding: $base16, $mediaType: "application/bcod")');
     method.setAttribute('$bytecode', bytecode);
 };
 
@@ -158,11 +157,11 @@ AssemblingVisitor.prototype.visitCatalog = function(instruction) {
             this.visitSend(instruction);
             break;
         default:
-            const exception = this.bali.exception({
+            const exception = bali.exception({
                 $module: '/bali/compiler/Assembler',
                 $procedure: '$visitCatalog',
                 $exception: '$invalidOperation',
-                $expected: this.bali.range(0, 7),
+                $expected: bali.range(0, 7),
                 $actual: operation,
                 $instruction: instruction,
                 $text: 'An invalid operation was found in a procedure instruction.'
