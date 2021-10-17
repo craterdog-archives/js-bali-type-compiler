@@ -100,6 +100,16 @@ exports.api = function(debug) {
         },
 
         /**
+         * This function analyzes the specified document to verify its structure against its
+         * type definition.
+         *
+         * @param {Catalog} document A catalog containing the document to be analyzed.
+         */
+        analyzeDocument: async function(repository, document) {
+            await analyzer.analyzeDocument(repository, document);
+        },
+
+        /**
          * This function formats a list of Bali Virtual Machine™ instructions into a
          * JavaScript string containing the corresponding Bali Nebula™ assembly code. An optional
          * indentation level may be specified that causes the formatter to indent each line by
