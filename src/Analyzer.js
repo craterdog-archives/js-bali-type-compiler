@@ -63,7 +63,7 @@ const analyzeStructure = async function(repository, catalog, debug) {
     const type = catalog.getParameter('$type');
     if (type && type.toLiteral() !== '/nebula/collections/Catalog/v1') {
         // retrieve the attribute definitions for the typed catalog
-        const definitions = await retrieveAttributes(repository, type, debug);
+        const definitions = await retrieveAttributeDefinitions(repository, type, debug);
 
         // validate each attribute in the catalog against its type definition
         const iterator = definitions.getIterator();
@@ -73,7 +73,7 @@ const analyzeStructure = async function(repository, catalog, debug) {
             const definition = association.getValue();
             const attribute = catalog.getAttribute(symbol);
             if (attribute) {
-                validateAttribute(symbol, definition, attribute, debug);
+                validateAttributeType(symbol, definition, attribute, debug);
             } else if (!definition.getAttribute('$default')) {
                 const exception = bali.exception({
                     $module: moduleName,
@@ -120,13 +120,13 @@ const analyzeStructure = async function(repository, catalog, debug) {
 };
 
 
-const retrieveAttributes = async function(repository, name, debug) {
+const retrieveAttributeDefinitions = async function(repository, name, debug) {
     const contract = await repository.retrieveContract(name.toLiteral());
     const type = contract.getAttribute('$document');
     var result = bali.catalog();
     const parent = type.getAttribute('$parent');
     if (!bali.areEqual(parent, bali.pattern.NONE)) {
-        result = await retrieveAttributes(repository, parent, debug);
+        result = await retrieveAttributeDefinitions(repository, parent, debug);
     }
     const attributes = type.getAttribute('$attributes');
     if (attributes) result.addItems(attributes);
@@ -134,16 +134,18 @@ const retrieveAttributes = async function(repository, name, debug) {
 };
 
 
-const validateAttribute = function(symbol, definition, attribute, debug) {
+const validateAttributeType = function(symbol, definition, attribute, debug) {
     const expectedType = definition.getAttribute('$type');
     const actualType = getTypeName(attribute);
-    if (bali.areEqual(attribute, bali.pattern.NONE)) return;
-    if (bali.areEqual(expectedType, actualType)) return;
-    if (attribute.isType(expectedType.toLiteral().replace('nebula', 'bali').replace('/v1', ''))) return;
-    if (attribute.isType('/bali/trees/Node')) return;  // it's a dynamic expression
+    if (bali.areEqual(expectedType, actualType)) return;      // they match
+    if (bali.areEqual(attribute, bali.pattern.NONE)) return;  // 'none' is fine
+    if (attribute.isType('/bali/trees/Node')) return;         // it's a dynamic expression
+    const superType = expectedType.toLiteral().replace('nebula', 'bali').replace('/v1', '');
+    if (attribute.isType(superType)) return;                  // it's a subtype of the expected type
+    // TODO: handle a symbol attribute with an enumeration type
     const exception = bali.exception({
         $module: moduleName,
-        $procedure: '$validateAttribute',
+        $procedure: '$validateAttributeType',
         $exception: '$incorrectType',
         $attribute: symbol,
         $expected: expectedType,
