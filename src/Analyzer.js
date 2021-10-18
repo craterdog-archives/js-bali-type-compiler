@@ -52,10 +52,24 @@ Analyzer.prototype.analyzeDocument = async function(repository, document) {
 
 // PRIVATE FUNCTIONS
 
-const getTypeName = function(document) {
-    var typeName = document.getParameter('$type');
-    if (!typeName) typeName = document.getType().replace('bali', 'nebula') + '/v1';
-    return typeName;
+const isType = function(component, type) {
+    // check for 'none'
+    if (bali.areEqual(component, bali.pattern.NONE)) return true;  // 'none' matches any type
+
+    // check for an expression
+    if (component.isType('/bali/trees/Node')) return true;  // a dynamic expression can be any type
+
+    // check for parameterized type
+    var actualType = component.getParameter('$type');
+    if (!actualType) actualType = component.getType().replace('bali', 'nebula') + '/v1';
+    if (bali.areEqual(type, actualType)) return true;  // matches the parameterized type
+
+    // check for core subtype
+    const superType = type.toLiteral().replace('nebula', 'bali').replace('/v1', '');
+    if (component.isType(superType)) return true;  // it's a subtype of the expected type
+
+    // the types don't match
+    return false;
 };
 
 
@@ -136,12 +150,7 @@ const retrieveAttributeDefinitions = async function(repository, name, debug) {
 
 const validateAttributeType = function(symbol, definition, attribute, debug) {
     const expectedType = definition.getAttribute('$type');
-    const actualType = getTypeName(attribute);
-    if (bali.areEqual(expectedType, actualType)) return;      // they match
-    if (bali.areEqual(attribute, bali.pattern.NONE)) return;  // 'none' is fine
-    if (attribute.isType('/bali/trees/Node')) return;         // it's a dynamic expression
-    const superType = expectedType.toLiteral().replace('nebula', 'bali').replace('/v1', '');
-    if (attribute.isType(superType)) return;                  // it's a subtype of the expected type
+    if (isType(attribute, expectedType)) return;
     // TODO: handle a symbol attribute with an enumeration type
     const exception = bali.exception({
         $module: moduleName,
