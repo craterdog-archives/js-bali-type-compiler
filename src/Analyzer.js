@@ -52,6 +52,13 @@ Analyzer.prototype.analyzeDocument = async function(repository, document) {
 
 // PRIVATE FUNCTIONS
 
+const getType = function(component) {
+    var type = component.getParameter('$type');
+    if (!type) type = component.getType().replace('bali', 'nebula') + '/v1';
+    return type;
+};
+
+
 const isType = function(component, type) {
     // check for 'none'
     if (bali.areEqual(component, bali.pattern.NONE)) return true;  // 'none' matches any type
@@ -60,8 +67,7 @@ const isType = function(component, type) {
     if (component.isType('/bali/trees/Node')) return true;  // a dynamic expression can be any type
 
     // check for parameterized type
-    var actualType = component.getParameter('$type');
-    if (!actualType) actualType = component.getType().replace('bali', 'nebula') + '/v1';
+    var actualType = getType(component);
     if (bali.areEqual(type, actualType)) return true;  // matches the parameterized type
 
     // check for core subtype
@@ -73,11 +79,30 @@ const isType = function(component, type) {
 };
 
 
-const analyzeStructure = async function(repository, catalog, debug) {
-    const type = catalog.getParameter('$type');
-    if (type && type.toLiteral() !== '/nebula/collections/Catalog/v1') {
+const analyzeStructure = async function(repository, component, debug) {
+    if (!component) return;  // nothing to analyze
+
+    // elements have no structure
+    if (component.isType('/bali/abstractions/Element')) return;
+
+    // analyze any parameterization
+    const parameterizedType = component.getParameter('$type');
+    if (parameterizedType && parameterizedType.toLiteral() !== '/nebula/collections/Catalog/v1') {
+        await analyzeParameterizedComponent(repository, parameterizedType, component, debug);
+    }
+
+    // analyze any nested components
+    if (component.isType('/bali/abstractions/Collection') && component.getType() !== '/bali/collections/Range') {
+        await analyzeNestedComponents(repository, component, debug);
+    }
+};
+
+
+const analyzeParameterizedComponent = async function(repository, parameterizedType, component, debug) {
+    if (component.getType() === '/bali/collections/Catalog') {
+
         // retrieve the attribute definitions for the typed catalog
-        const definitions = await retrieveAttributeDefinitions(repository, type, debug);
+        const definitions = await retrieveAttributeDefinitions(repository, parameterizedType, debug);
 
         // validate each attribute in the catalog against its type definition
         const iterator = definitions.getIterator();
@@ -85,25 +110,12 @@ const analyzeStructure = async function(repository, catalog, debug) {
             const association = iterator.getNext();
             const symbol = association.getKey();
             const definition = association.getValue();
-            const attribute = catalog.getAttribute(symbol);
-            if (attribute) {
-                validateAttributeType(symbol, definition, attribute, debug);
-            } else if (!definition.getAttribute('$default')) {
-                const exception = bali.exception({
-                    $module: moduleName,
-                    $procedure: '$analyzeStructure',
-                    $exception: '$missingAttribute',
-                    $attribute: symbol,
-                    $catalog: catalog,
-                    $text: '"The catalog is missing an attribute found in its type."'
-                });
-                if (debug) console.error(exception.toString());
-                throw exception;
-            }
+            const attribute = component.getAttribute(symbol);
+            validateAttributeType(definition, symbol, component, attribute, debug);
         }
 
         // check for additional attributes in the catalog
-        const catalogKeys = bali.set(catalog.getKeys());
+        const catalogKeys = bali.set(component.getKeys());
         const definitionKeys = bali.set(definitions.getKeys());
         const additional = bali.set.sans(catalogKeys, definitionKeys);
         if (additional.getSize()) {
@@ -113,23 +125,33 @@ const analyzeStructure = async function(repository, catalog, debug) {
                 $exception: '$additionalAttributes',
                 $expected: definitionKeys,
                 $additional: additional,
-                $catalog: catalog,
+                $catalog: component,
                 $text: '"The catalog defines additional attributes not found in its type."'
             });
             if (debug) console.error(exception.toString());
             throw exception;
         }
     }
+};
 
-    // analyze any nested catalogs
-    const iterator = catalog.getIterator();
+
+const analyzeNestedComponents = async function(repository, component, debug) {
+    // retrieve any parameterized types
+    var itemType = component.getParameter('$itemType');
+    if (!itemType) itemType = component.getParameter('$valueType');
+    if (!itemType) itemType = bali.name(['nebula', 'abstractions', 'Component', 'v1']);
+    var keyType = component.getParameter('$keyType');
+    if (!keyType) keyType = bali.name(['nebula', 'strings', 'Symbol', 'v1']);
+
+    // analyze each item
+    const iterator = component.getIterator();
     while (iterator.hasNext()) {
-        const association = iterator.getNext();
-        const symbol = association.getKey();
-        const attribute = association.getValue();
-        if (attribute.getType() === '/bali/collections/Catalog') {
-            await analyzeStructure(repository, attribute, debug);
+        var item = iterator.getNext();
+        if (item.getType() === '/bali/collections/Association') {
+            const key = item.getKey();
+            item = item.getValue();
         }
+        await analyzeStructure(repository, item, debug);
     }
 };
 
@@ -148,10 +170,43 @@ const retrieveAttributeDefinitions = async function(repository, name, debug) {
 };
 
 
-const validateAttributeType = function(symbol, definition, attribute, debug) {
+const validateComponentType = function(component, expectedType, debug) {
+    if (isType(component, expectedType)) return;
+    const actualType = getType(component);
+    const exception = bali.exception({
+        $module: moduleName,
+        $procedure: '$validateComponentType',
+        $exception: '$incorrectType',
+        $expected: expectedType,
+        $actual: actualType,
+        $component: component,
+        $text: '"The type of the component does not match the expected type."'
+    });
+    if (debug) console.error(exception.toString());
+    throw exception;
+};
+
+
+const validateAttributeType = function(definition, symbol, catalog, attribute, debug) {
+    // undefined attributes must have a default value in the definition
+    if (attribute === undefined) {
+        if (definition.getAttribute('$default')) return;
+        const exception = bali.exception({
+            $module: moduleName,
+            $procedure: '$validateAttributeType',
+            $exception: '$missingAttribute',
+            $attribute: symbol,
+            $catalog: catalog,
+            $text: '"The catalog is missing an attribute found in its type."'
+        });
+        if (debug) console.error(exception.toString());
+        throw exception;
+    }
+
     const expectedType = definition.getAttribute('$type');
     if (isType(attribute, expectedType)) return;
     // TODO: handle a symbol attribute with an enumeration type
+    const actualType = getType(component);
     const exception = bali.exception({
         $module: moduleName,
         $procedure: '$validateAttributeType',
