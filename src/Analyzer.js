@@ -73,6 +73,7 @@ const isType = function(component, type) {
     // check for core subtype
     const superType = type.toLiteral().replace('nebula', 'bali').replace('/v1', '');
     if (component.isType(superType)) return true;  // it's a subtype of the expected type
+    if (component.supportsInterface(superType)) return true;  // it's an interface of the expected type
 
     // the types don't match
     return false;
@@ -137,11 +138,18 @@ const analyzeParameterizedComponent = async function(repository, parameterizedTy
 
 const analyzeNestedComponents = async function(repository, component, debug) {
     // retrieve any parameterized types
-    var itemType = component.getParameter('$itemType');
-    if (!itemType) itemType = component.getParameter('$valueType');
-    if (!itemType) itemType = bali.name(['nebula', 'abstractions', 'Component', 'v1']);
-    var keyType = component.getParameter('$keyType');
-    if (!keyType) keyType = bali.name(['nebula', 'strings', 'Symbol', 'v1']);
+    const type = component.getParameter('$type');
+    var keyType;
+    var itemType;
+    if (type) {
+        // retrieve specific types
+        keyType = type.getParameter('$keyType');
+        itemType = type.getParameter('$itemType');
+        if (!itemType) itemType = type.getParameter('$valueType');
+    }
+    // set default types if necessary
+    if (!keyType) keyType = bali.component('/nebula/strings/Symbol/v1');
+    if (!itemType) itemType = bali.component('/nebula/abstractions/Component/v1');
 
     // analyze each item
     const iterator = component.getIterator();
@@ -149,8 +157,10 @@ const analyzeNestedComponents = async function(repository, component, debug) {
         var item = iterator.getNext();
         if (item.getType() === '/bali/collections/Association') {
             const key = item.getKey();
+            validateComponentType(key, keyType, debug);
             item = item.getValue();
         }
+        validateComponentType(item, itemType, debug);
         await analyzeStructure(repository, item, debug);
     }
 };
@@ -158,6 +168,17 @@ const analyzeNestedComponents = async function(repository, component, debug) {
 
 const retrieveAttributeDefinitions = async function(repository, name, debug) {
     const contract = await repository.retrieveContract(name.toLiteral());
+    if (!contract) {
+        const exception = bali.exception({
+            $module: moduleName,
+            $procedure: '$retrieveAttributeDefinitions',
+            $exception: '$missingType',
+            $type: name,
+            $text: '"The named type was not found in the repository."'
+        });
+        if (debug) console.error(exception.toString());
+        throw exception;
+    }
     const type = contract.getAttribute('$document');
     var result = bali.catalog();
     const parent = type.getAttribute('$parent');

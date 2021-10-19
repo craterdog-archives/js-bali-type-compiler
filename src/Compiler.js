@@ -1696,9 +1696,15 @@ function InstructionBuilder(type, method, parameters, debug) {
             this.argumentz.setAttribute(symbol, value);
         }
     }
-    this.variables = bali.set();
-    this.messages = bali.set();
-    this.addresses = bali.catalog();
+    this.variables = bali.set([ ], {
+        $type: bali.component('/nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1)')
+    });
+    this.messages = bali.set([ ], {
+        $type: bali.component('/nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1)')
+    });
+    this.addresses = bali.catalog({ }, {
+        $type: bali.component('/nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1)')
+    });
     this.address = 1;  // cardinal based addressing
     this.stack = [];  // stack of procedure contexts
     this.instructions = '';
