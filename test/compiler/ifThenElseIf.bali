@@ -50,8 +50,8 @@
                 $no
                 $result-1
                 $yes
-            ]($type: /nebula/collections/Set/v1)
-            $messages: [ ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
+            $messages: [ ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.IfStatement": 1
                 "1.1.ConditionClause": 2
@@ -60,7 +60,7 @@
                 "1.2.ConditionClause": 7
                 "1.2.1.EvaluateStatement": 9
                 "1.IfStatementDone": 11
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [

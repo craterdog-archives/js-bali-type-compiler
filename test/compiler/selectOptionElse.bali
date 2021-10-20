@@ -87,8 +87,8 @@
             $variables: [
                 $result-1
                 $selector-2
-            ]($type: /nebula/collections/Set/v1)
-            $messages: [ ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
+            $messages: [ ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.SelectStatement": 1
                 "1.1.OptionClause": 3
@@ -104,7 +104,7 @@
                 "1.4.1.EvaluateStatement": 25
                 "1.4.ElseClauseDone": 27
                 "1.SelectStatementDone": 28
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [

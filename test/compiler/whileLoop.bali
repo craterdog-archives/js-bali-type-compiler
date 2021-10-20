@@ -63,8 +63,8 @@
                 $c
                 $condition
                 $result-1
-            ]($type: /nebula/collections/Set/v1)
-            $messages: [ ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
+            $messages: [ ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.WhileStatement": 1
                 "1.1.ConditionClause": 2
@@ -76,7 +76,7 @@
                 "1.1.3.EvaluateStatement": 11
                 "1.ConditionRepeat": 13
                 "1.WhileStatementDone": 14
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [ ]($type: /nebula/collections/Set/v1)

@@ -373,13 +373,13 @@
                 $selector-3
                 $sequence
                 $tag
-            ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $messages: [
                 $find
                 $hasNext
                 $iterator
                 $next
-            ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.IfStatement": 1
                 "1.1.ConditionClause": 2
@@ -437,7 +437,7 @@
                 "2.1.2.IfStatementDone": 137
                 "2.ConditionRepeat": 138
                 "2.WhileStatementDone": 139
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [

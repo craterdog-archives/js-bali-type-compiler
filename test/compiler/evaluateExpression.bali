@@ -294,10 +294,10 @@
                 $x
                 $y
                 $z
-            ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $messages: [
                 $addItem
-            ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.EvaluateStatement": 1
                 "2.EvaluateStatement": 11
@@ -329,7 +329,7 @@
                 "28.EvaluateStatement": 123
                 "29.EvaluateStatement": 127
                 "30.EvaluateStatement": 131
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [

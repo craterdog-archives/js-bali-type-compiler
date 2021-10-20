@@ -156,8 +156,8 @@
                 $result-1
                 $version-4
                 $version-9
-            ]($type: /nebula/collections/Set/v1)
-            $messages: [ ]($type: /nebula/collections/Set/v1)
+            ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
+            $messages: [ ]($type: /nebula/collections/Set/v1($itemType: /nebula/strings/Symbol/v1))
             $addresses: [
                 "1.CheckoutStatement": 1
                 "2.SaveStatement": 22
@@ -166,7 +166,7 @@
                 "5.SaveStatement": 52
                 "6.NotarizeStatement": 61
                 "7.DiscardStatement": 67
-            ]
+            ]($type: /nebula/collections/Catalog/v1($keyType: /nebula/strings/Text/v1, $valueType: /nebula/interfaces/Discrete/v1))
         ]
     ]
     $literals: [
