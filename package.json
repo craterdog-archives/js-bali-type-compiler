@@ -1,6 +1,6 @@
 {
   "name": "bali-type-compiler",
-  "version": "2.64.0",
+  "version": "2.65.0",
   "description": "This library provides a JavaScript based implementation for the compiler for the Bali Virtual Processor.",
   "repository": {
     "type": "git",
@@ -22,19 +22,19 @@
   },
   "homepage": "https://github.com/craterdog-bali/js-bali-type-compiler#readme",
   "devDependencies": {
-    "chai": "^4.3.4",
-    "grunt": "^1.4.1",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-eslint": "^23.0.0",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "webpack": "^5.72.1",
+    "grunt": "^1.5.3",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-eslint": "^24.0.0",
     "grunt-mocha-test": "^0.13.3",
-    "grunt-webpack": "^4.0.3",
-    "mocha": "^9.1.1",
-    "webpack": "^5.52.1",
-    "bali-digital-notary": "^2.55.0",
-    "bali-document-repository": "^2.62.0"
+    "grunt-webpack": "^5.0.0",
+    "bali-digital-notary": "^2.56.0",
+    "bali-document-repository": "^2.63.0"
   },
   "dependencies": {
     "antlr4": "4.8.0",
-    "bali-component-framework": "^2.85.0"
+    "bali-component-framework": "^2.86.0"
   }
 }
